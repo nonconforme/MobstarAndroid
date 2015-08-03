@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/background_transparent"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="@string/app_settings"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color"
+            android:textSize="22sp"
+             />
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:text="@string/push_notifications"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_color"
+                android:textSize="18sp"
+                 />
+
+            <com.mobstar.custom.CustomTextview
+                android:id="@+id/textFbEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:text="@string/off"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_color"
+                android:textSize="16sp"
+                 />
+        </LinearLayout>
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:text="@string/twitter"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_color"
+                android:textSize="18sp"
+                 />
+
+            <com.mobstar.custom.CustomTextview
+                android:id="@+id/textTwitterName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:text="@string/off"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_color"
+                android:textSize="16sp"
+                 />
+        </LinearLayout>
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white_color" />
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="@string/privacy_policy"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color"
+            android:textSize="22sp"
+             />
+
+        <com.mobstar.custom.CustomTextview
+            android:id="@+id/textPrivacyPolicy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginBottom="10dp"
+            android:singleLine="false"
+            android:text="@string/privacy_policy_text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color"
+            android:textSize="16sp"
+             />
+    </LinearLayout>
+
+</ScrollView>

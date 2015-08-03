@@ -1,0 +1,161 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/splash_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/login_social_margin_top"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/login_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/signup_margin"
+        android:paddingRight="@dimen/signup_margin" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" >
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="@string/email"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_text" />
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/textEmailHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:gravity="right"
+                android:text="@string/email"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/hint_color"
+                android:textSize="@dimen/signup_hint_text" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/edittext_rounded_bg"
+            android:ems="10"
+            
+            android:inputType="textEmailAddress"
+            android:paddingLeft="@dimen/signup_edittext_padding"
+            android:paddingRight="@dimen/signup_edittext_padding"
+            android:singleLine="true"
+            android:textSize="@dimen/signup_edittext" >
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" >
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:text="@string/password"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_text" />
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/textPasswordHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:gravity="right"
+                android:text="@string/password"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/hint_color"
+                android:textSize="@dimen/signup_hint_text" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/edittext_rounded_bg"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:paddingLeft="@dimen/signup_edittext_padding"
+            android:paddingRight="@dimen/signup_edittext_padding"
+            android:singleLine="true"
+            android:textSize="@dimen/signup_edittext" >
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="@dimen/signup_btn_width"
+                android:layout_height="@dimen/signup_btn_height"
+                android:background="@drawable/gray_btn_bg"
+                android:text="@string/back"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_btn_text" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="@dimen/signup_btn_width"
+                android:layout_height="@dimen/signup_btn_height"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/yellow_btn_bg"
+                android:text="@string/login"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_btn_text" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:gravity="center_horizontal" >
+
+        <ImageView
+            android:id="@+id/btnNewUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="20dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/login_new_user" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/login_small_vert_devider" />
+
+        <ImageView
+            android:id="@+id/btnResetPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/login_cant_login" />
+    </LinearLayout>
+
+</LinearLayout>

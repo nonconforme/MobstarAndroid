@@ -1,0 +1,110 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/background_transparent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".upload.ApproveVideoActivity" >
+
+    <LinearLayout
+        android:id="@+id/layoutApproveAudio"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible" >
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="@string/approve_video"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color"
+            android:textSize="18sp"
+             />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextureView
+                android:id="@+id/textureView"
+                android:layout_width="@dimen/texture_view_width"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="@dimen/texture_view_height" />
+
+            <ImageView
+                android:id="@+id/imageFrame"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/texture_view_height"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:contentDescription="@string/app_name" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="21dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/gray_color_progress" >
+
+                <ProgressBar
+                    android:id="@+id/progressMediaPlayer"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingLeft="-5dp"
+                    android:paddingRight="-5dp"
+                    android:progress="10"
+                    android:progressDrawable="@drawable/progessbar_media_player" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/btnPausePlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/btn_play" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/btnRetake"
+                android:layout_width="@dimen/signup_btn_width"
+                android:layout_height="@dimen/signup_btn_height"
+                android:background="@drawable/gray_btn_bg"
+                android:text="@string/retake"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_btn_text" />
+
+            <Button
+                android:id="@+id/btnApprove"
+                android:layout_width="@dimen/signup_btn_width"
+                android:layout_height="@dimen/signup_btn_height"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/yellow_btn_bg"
+                android:text="@string/approve"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_btn_text" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

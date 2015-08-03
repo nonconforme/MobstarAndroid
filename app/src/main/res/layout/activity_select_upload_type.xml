@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/background_transparent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <com.mobstar.custom.CustomTextviewBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="@string/i_want_to"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white_color"
+        android:textSize="18sp"
+         />
+
+    <ImageView
+        android:id="@+id/btnEnterMobstar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/scale_20"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/btn_enter_mobstar" />
+
+    <ImageView
+        android:id="@+id/btnUploadProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/btn_upload_profile" />
+
+    <ImageView
+        android:id="@+id/btnNewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/btn_new_message" />
+
+</LinearLayout>

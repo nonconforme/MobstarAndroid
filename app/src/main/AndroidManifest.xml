@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mobstar"
+    android:versionCode="19"
+    android:versionName="1.8" >
+
+    <!--<uses-sdk-->
+        <!--android:minSdkVersion="14"-->
+        <!--android:targetSdkVersion="20" />-->
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    
+    <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+    <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
+
+    <permission
+        android:name="com.mobstar.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.mobstar.permission.C2D_MESSAGE" />
+
+    <!-- android:anyDensity="false" -->
+    <supports-screens
+        android:largeScreens="false"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="false"
+        android:xlargeScreens="false" />
+
+    <application
+        android:name=".MobstarApplication"
+        android:allowBackup="true"
+        android:exported="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".SplashActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter android:label="@string/app_name" >
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data
+                    android:host="share.mobstar.com"
+                    android:pathPrefix="/"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".login.LoginSocialActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".login.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".login.LoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".login.ResetPasswordActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".home.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeActionbar"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".home.ShareActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".info.report.InformationReportActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".stararea.MyEntriesInformationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".stararea.EditInformationActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".info.report.InformationDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".info.report.ReportActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".home.StatisticsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/fb_app_id" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".upload.SelectUploadTypeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.SelectProfileContentType"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.SelectCategoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.SelectSubCategoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.GuidelinesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.SelectMediaTypeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.TakePictureActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".upload.ApprovePhotoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.ApproveAudioActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.ApproveVideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.RecordAudioActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.RecordVideoActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".upload.UploadFileActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".home.CommentActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".stararea.DeleteEntryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".settings.PersonDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".help.FAQSActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".settings.ChangePasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".settings.LinkedAccountsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".settings.PrivacySettingsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".help.ReportAbuseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".help.LeaveFeedbackActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".help.TakeTourActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".EditProfileActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".help.WelcomeVideoActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".EditTaglineActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".fanconnect.FansActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".fanconnect.FanConnectVotesActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".fanconnect.PositionActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".fanconnect.FanFeedbackActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".talentconnect.TalentConnectVotesActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- Instabug Configuration -->
+
+        <activity
+            android:name="com.instabug.wrapper.impl.v10.InstabugAnnotationActivity"
+            android:theme="@style/AppThemeActionbar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <service android:name="com.instabug.library.network.UploadCacheService" />
+
+        <receiver android:name="com.instabug.library.network.InstabugNetworkReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.instabug.DevelopmentAppToken"
+            android:value="878976c6636d10566d584a19b11a093c" />
+        <meta-data
+            android:name="com.instabug.ProductionMode"
+            android:value="false" />
+
+        <!-- GCM Push Notification -->
+
+        <receiver
+            android:name=".gcm.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.mobstar" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".gcm.GcmIntentService" />
+
+        <activity
+            android:name=".talentconnect.TalentPoolActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".talentconnect.TalentConnectCommentActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".login.VerifyMobileNoActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".login.VerifyMobilenoCodeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".login.WhoToFollowActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".AddContentTypeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".LikesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".login.YouTubeData"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".home.HomeInformationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".blog.BlogDetailActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.MessageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".upload.MessageComposeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".inbox.MessageDetail"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".inbox.GroupMessageDetail"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+        <activity
+            android:name=".inbox.GroupMember"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+
+        <service android:name=".service.NotificationService" />
+
+        <activity android:name="eu.janmuller.android.simplecropimage.CropImage" />
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+    </application>
+
+</manifest>

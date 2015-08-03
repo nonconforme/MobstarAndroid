@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/splash_bg"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/splash_bg" >
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/textVerifyMobileno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:drawableLeft="@drawable/ic_back"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/verify_mobileno"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/header_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <EditText
+            android:id="@+id/edtDigit1"
+            android:layout_width="@dimen/verifyCodeEditbox_width"
+            android:layout_height="@dimen/verifyCodeEditbox_height"
+            android:background="@drawable/white_circle_bg"
+            android:ems="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:hint="@string/hint_dash"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black_color" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/edtDigit2"
+            android:layout_width="@dimen/verifyCodeEditbox_width"
+            android:layout_height="@dimen/verifyCodeEditbox_height"
+            android:layout_marginLeft="2dp"
+            android:background="@drawable/white_circle_bg"
+            android:ems="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:hint="@string/hint_dash"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black_color" >
+        </EditText>
+
+        <EditText
+            android:id="@+id/edtDigit3"
+            android:layout_width="@dimen/verifyCodeEditbox_width"
+            android:layout_height="@dimen/verifyCodeEditbox_height"
+            android:layout_marginLeft="2dp"
+            android:background="@drawable/white_circle_bg"
+            android:ems="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:hint="@string/hint_dash"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black_color" >
+        </EditText>
+
+        <EditText
+            android:id="@+id/edtDigit4"
+            android:layout_width="@dimen/verifyCodeEditbox_width"
+            android:layout_height="@dimen/verifyCodeEditbox_height"
+            android:layout_marginLeft="2dp"
+            android:background="@drawable/white_circle_bg"
+            android:ems="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:hint="@string/hint_dash"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/black_color" >
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_gray_color"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/btnVerifyNo"
+            android:layout_width="@dimen/verify_btn_width"
+            android:layout_height="@dimen/verify_btn_height"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/yellow_btn_bg"
+            android:focusable="false"
+            android:text="@string/verify_mobileno"
+            android:textColor="@color/white_color"
+            android:textSize="@dimen/signup_btn_text" />
+
+        <Button
+            android:id="@+id/btnResendCode"
+            android:layout_width="@dimen/verify_btn_width"
+            android:layout_height="@dimen/verify_btn_height"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/gray_btn_bg"
+            android:text="@string/resend_code"
+            android:textColor="@color/white_color"
+            android:textSize="@dimen/signup_btn_text" />
+    </LinearLayout>
+
+</LinearLayout>

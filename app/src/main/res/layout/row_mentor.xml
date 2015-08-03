@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/texture_view_height"
+            android:layout_gravity="center"
+            android:background="#ffd7d7d7"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/imgPlaceHolder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <com.mobstar.custom.ScaleImageView
+                android:id="@+id/imgMentor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical" >
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/textCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:singleLine="false"
+                android:text="@string/music"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_color"
+                android:textSize="16sp" />
+
+            <com.mobstar.custom.CustomTextview
+                android:id="@+id/textMentorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:singleLine="false"
+                android:text="@string/bono"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_color"
+                android:textSize="28sp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <com.mobstar.custom.CustomTextview
+        android:id="@+id/textMentorInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:lineSpacingExtra="5dp"
+        android:padding="10dp"
+        android:singleLine="false"
+        android:text="@string/bono_description"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+</LinearLayout>

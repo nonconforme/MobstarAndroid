@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+//apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "com.mobstar"
+        minSdkVersion 15
+        targetSdkVersion 20
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+    }
+}
+
+dependencies {
+    compile project(':simple-crop-image-lib')
+    compile files('libs/android-async-http-1.4.6.jar')
+    compile files('libs/bitlyj-2.0.0.jar')
+    compile files('libs/commons-lang3-3.3.2.jar')
+    compile files('libs/httpmime-4.2.5.jar')
+    compile files('libs/picasso-2.4.0.jar')
+    compile files('libs/signpost-commonshttp4-1.2.1.1.jar')
+    compile files('libs/signpost-core-1.2.1.1.jar')
+    compile files('libs/signpost-jetty6-1.2.1.1.jar')
+    compile files('libs/tokenautocomplete-1.3.3.jar')
+    compile files('libs/twitter4j-core-3.0.6-SNAPSHOT.jar')
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v13:22.2.0'
+    compile 'com.google.android.gms:play-services:7.5.0'
+    compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
+    compile 'se.emilsjolander:stickylistheaders:2.7.0'
+    compile 'com.facebook.android:facebook-android-sdk:3.23.1'
+}

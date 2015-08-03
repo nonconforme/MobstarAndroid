@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/splash_bg" >
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/textComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/who_to_follow"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/header_text_size" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <GridView
+            android:id="@+id/gried_whoTOFollow"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/main_bg"
+            android:numColumns="2" >
+
+        </GridView>
+
+        <LinearLayout
+            android:id="@+id/llBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_transparent"
+            android:gravity="center_horizontal"
+            android:padding="10dp" >
+
+            <Button
+                android:id="@+id/btnSkip"
+                android:layout_width="@dimen/signup_btn_width"
+                android:layout_height="@dimen/signup_btn_height"
+                android:background="@drawable/gray_btn_bg"
+                android:text="@string/skip"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_btn_text" />
+
+            <Button
+                android:id="@+id/btnFollow"
+                android:layout_width="@dimen/signup_btn_width"
+                android:layout_height="@dimen/signup_btn_height"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/yellow_btn_bg"
+                android:text="@string/follow"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_btn_text" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

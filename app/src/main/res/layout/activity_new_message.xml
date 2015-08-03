@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/comment_bg"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/splash_bg"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/textBlog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/new_msg"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/header_text_size" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/scale_5"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/scale_10" >
+
+        <LinearLayout
+            android:id="@+id/llMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/scale_10"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" >
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:text="@string/messages"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/signup_text" />
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:id="@+id/textMsgHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="right"
+                    android:text="@string/enter_msg"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/hint_color"
+                    android:textSize="@dimen/signup_hint_text"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/editMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_rounded_bg"
+                android:ems="10"
+                android:gravity="left"
+                android:hint="@string/type_your_message_here"
+                android:inputType="textMultiLine|textShortMessage"
+                android:minLines="5"
+                android:padding="@dimen/signup_edittext_padding"
+                android:textSize="@dimen/signup_edittext" >
+            </EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llMsg"
+            android:layout_marginBottom="@dimen/scale_20"
+            android:layout_marginTop="@dimen/scale_20"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="@dimen/signup_btn_width"
+                android:layout_height="@dimen/signup_btn_height"
+                android:background="@drawable/gray_btn_bg"
+                android:text="@string/back"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_btn_text" />
+
+            <Button
+                android:id="@+id/btnFinish"
+                android:layout_width="@dimen/signup_btn_width"
+                android:layout_height="@dimen/signup_btn_height"
+                android:layout_marginLeft="@dimen/scale_20"
+                android:background="@drawable/yellow_btn_bg"
+                android:text="@string/start_msg"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/signup_btn_text" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

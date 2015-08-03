@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/background_transparent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".stararea.DeleteEntryActivity" >
+
+    <com.mobstar.custom.CustomTextviewBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:singleLine="false"
+        android:text="@string/delete_entry"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white_color"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_pic_small" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:id="@+id/textUserName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:singleLine="false"
+                    android:text="@string/temp_uname"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white_color"
+                    android:textSize="18sp" />
+
+                <com.mobstar.custom.CustomTextview
+                    android:id="@+id/textTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="right"
+                    android:text="@string/temp_time"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/entry_time_text" />
+            </LinearLayout>
+
+            <com.mobstar.custom.CustomTextview
+                android:id="@+id/textDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/temp_description"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_color"
+                android:textSize="@dimen/description_text" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center" >
+
+        <ImageView
+            android:id="@+id/btnDeleteNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/btn_delete_no" />
+
+        <ImageView
+            android:id="@+id/btnDeleteYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/btn_delete_yes" />
+    </LinearLayout>
+
+</LinearLayout>

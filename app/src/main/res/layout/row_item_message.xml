@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_margin="@dimen/scale_10"
+        android:background="@drawable/edittext_rounded_bg"
+        android:orientation="horizontal" >
+        
+        <FrameLayout
+            android:id="@+id/flImgHeader"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_margin="5dp" >
+
+            <ImageView
+                android:id="@+id/imgUserPic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_pic_small" />
+
+            <ImageView
+                android:id="@+id/imgUserCircle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/circle" />
+        </FrameLayout>
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/textName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.9"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/signup_edittext_padding"
+            android:paddingRight="@dimen/signup_edittext_padding"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/signup_edittext" />
+
+        <ImageView
+            android:id="@+id/btnAddTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.1"
+            android:contentDescription="@string/app_name"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp"
+            android:src="@drawable/icon_add_tag" />
+    </LinearLayout>
+
+</LinearLayout>

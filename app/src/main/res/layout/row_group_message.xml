@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
+    android:background="@android:color/transparent"
+    android:orientation="vertical" >
+
+    <com.mobstar.custom.CustomTextview
+        android:id="@+id/textStartTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/scale_10"
+        android:singleLine="true"
+        android:text="Today"
+        android:textColor="@color/white_color"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/llUserThread"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/scale_20"
+            android:layout_marginTop="@dimen/scale_5"
+            android:background="@drawable/round_graybox"
+            android:orientation="vertical" >
+            
+            <com.mobstar.custom.CustomTextview
+                android:id="@+id/textUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_3"
+                android:layout_marginLeft="@dimen/scale_10"
+                android:layout_marginRight="@dimen/scale_5"
+                android:layout_marginTop="@dimen/scale_3"
+                android:gravity="left"
+                android:text="sdadadsadasdasdasdsasdfsfa"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/comment_bg"
+                android:textSize="18sp" />
+            
+            <View  android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/splash_bg"/>
+
+            <com.mobstar.custom.CustomTextview
+                android:id="@+id/textMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_10"
+                android:layout_marginLeft="@dimen/scale_10"
+                android:layout_marginRight="@dimen/scale_5"
+                android:layout_marginTop="@dimen/scale_10"
+                android:gravity="left"
+                android:text="sdadadsadasdasdasdsasdfsfa"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/black_color"
+                android:textSize="18sp" />
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/textTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_5"
+                android:layout_marginLeft="@dimen/scale_10"
+                android:layout_marginRight="@dimen/scale_5"
+                android:gravity="left"
+                android:singleLine="true"
+                android:text="@string/temp_time"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/comment_bg"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMyThread"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/scale_20"
+            android:layout_marginTop="@dimen/scale_5"
+            android:background="@drawable/round_yellowbox"
+            android:orientation="vertical" >
+            
+             <com.mobstar.custom.CustomTextview
+                 android:id="@+id/textMyname"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginBottom="@dimen/scale_3"
+                 android:layout_marginLeft="@dimen/scale_10"
+                 android:layout_marginRight="@dimen/scale_5"
+                 android:layout_marginTop="@dimen/scale_3"
+                 android:gravity="right"
+                 android:text="sdadadsadasdasdasdsasdfsfa"
+                 android:textAppearance="?android:attr/textAppearanceMedium"
+                 android:textColor="@color/comment_bg"
+                 android:textSize="18sp" />
+            
+            <View  android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/splash_bg"/>
+
+            <com.mobstar.custom.CustomTextview
+                android:id="@+id/textMyMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_5"
+                android:layout_marginRight="@dimen/scale_10"
+                android:layout_marginTop="@dimen/scale_3"
+                android:gravity="right"
+                android:text="sdadadsadasdasd asdsasdf dfgdfg dgddfg gfdgfsfa"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/black_color"
+                android:textSize="18sp" />
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/textMyTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/scale_10"
+                android:layout_marginLeft="@dimen/scale_5"
+                android:layout_marginRight="@dimen/scale_10"
+                android:layout_marginTop="@dimen/scale_3"
+                android:gravity="right"
+                android:singleLine="true"
+                android:text="@string/temp_time"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/comment_bg"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

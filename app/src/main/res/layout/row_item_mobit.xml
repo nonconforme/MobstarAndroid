@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_color"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/texture_view_height" >
+
+            <TextureView
+                android:id="@+id/textureView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/texture_view_height" />
+
+            <FrameLayout
+                android:id="@+id/flPlaceHolder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="#ffd7d7d7"
+                android:gravity="center" >
+
+                <ImageView
+                    android:id="@+id/imgPlaceHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+              <!--   <com.mobstar.custom.ScaleImageView
+                    android:id="@+id/imageFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/app_name"
+                    android:visibility="gone" /> -->
+                
+                <ImageView
+                    android:id="@+id/imageFrame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/app_name"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/ivAudioIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_audio_volume" />
+
+            <!--
+                 <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:visibility="visible" />
+            -->
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateDrawable="@drawable/custom_progressbar"
+                android:visibility="visible" />
+            
+            <ImageView
+                android:id="@+id/ivIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/indicator_image" />
+
+            <!--
+                 <com.mobstar.custom.progressbar_circular.RateTextCircularProgressBar
+                android:id="@+id/rate_progress_bar"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="20dp"
+                android:visibility="invisible" />
+            -->
+
+            <LinearLayout
+                android:id="@+id/LinearLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/mobit_bottom_size"
+                android:layout_gravity="bottom"
+                android:background="@color/transparent_black"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/scale_5"
+                android:paddingRight="@dimen/scale_5" >
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:id="@+id/textLikeCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/icon_white_heart"
+                    android:drawablePadding="5dp"
+                    android:text="@string/temp_comments"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white_color"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical" >
+
+                    <com.mobstar.custom.CustomTextview
+                        android:id="@+id/textHedViews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_2"
+                        android:layout_marginRight="@dimen/scale_2"
+                        android:text="@string/views"
+                        android:textColor="@color/white_color"
+                        android:textSize="@dimen/posted_text_size" />
+
+                    <com.mobstar.custom.CustomTextview
+                        android:id="@+id/textViews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_2"
+                        android:layout_marginRight="@dimen/scale_2"
+                        android:text="@string/_127"
+                        android:textColor="@color/white_color"
+                        android:textSize="@dimen/posted_text_size" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" >
+
+                    <com.mobstar.custom.CustomTextview
+                        android:id="@+id/textHedTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/posted"
+                        android:textColor="@color/white_color"
+                        android:textSize="@dimen/posted_text_size" />
+
+                    <com.mobstar.custom.CustomTextview
+                        android:id="@+id/textTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_2"
+                        android:singleLine="true"
+                        android:text="@string/temp_time"
+                        android:textColor="@color/white_color"
+                        android:textSize="@dimen/posted_text_size" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/white_color"
+            android:gravity="center"
+            android:paddingBottom="@dimen/scale_5"
+            android:paddingLeft="@dimen/scale_3"
+            android:paddingRight="@dimen/scale_3" >
+
+           <!--  <FrameLayout
+                android:id="@+id/layoutLike"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/mobit_comment_bg" >
+            </FrameLayout> -->
+
+            <ImageView
+                android:id="@+id/btnLike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_5"
+                android:layout_weight="1" >
+
+            </ImageView>
+           
+
+            <FrameLayout
+                android:id="@+id/layoutComment"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/mobit_comment_bg" >
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:id="@+id/textCommentCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/ic_comment"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/comment_bg"
+                    android:paddingLeft="25dp"
+                    android:text="@string/temp_comments"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                   android:textColor="@color/comment_text_color"
+                    android:textSize="14sp" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/btnShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_5"
+                android:layout_weight="1"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/icon_share" />
+
+            <ImageView
+                android:id="@+id/btnInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_5"
+                android:layout_marginRight="@dimen/scale_5"
+                android:layout_weight="1"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/icon_info" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white_color"
+            android:paddingBottom="@dimen/scale_5"
+            android:paddingLeft="@dimen/scale_3"
+            android:paddingRight="@dimen/scale_3"
+            android:paddingTop="@dimen/scale_5" >
+
+            <FrameLayout
+                android:layout_width="@dimen/userImgSize"
+                android:layout_height="@dimen/userImgSize"
+                android:layout_marginLeft="@dimen/scale_5" >
+
+                <ImageView
+                    android:id="@+id/imgUserPic"
+                    android:layout_width="@dimen/userImgSize"
+                    android:layout_height="@dimen/userImgSize"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_pic_small" />
+
+                <ImageView
+                    android:layout_width="@dimen/userImgSize"
+                    android:layout_height="@dimen/userImgSize"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/circle" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <ImageView
+                        android:id="@+id/btnFollow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/btn_follow" />
+
+                    <com.mobstar.custom.CustomTextviewBold
+                        android:id="@+id/textUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/scale_10"
+                        android:layout_toLeftOf="@id/btnFollow"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="@string/temp_uname"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/black_color"
+                        android:textSize="18sp" />
+
+                </RelativeLayout>
+
+                <com.mobstar.custom.CustomTextview
+                    android:id="@+id/textDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/scale_10"
+                    android:layout_marginRight="@dimen/scale_10"
+                    android:layout_marginTop="@dimen/scale_5"
+                    android:text="@string/temp_description"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/hint_color"
+                    android:textSize="@dimen/description_text" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

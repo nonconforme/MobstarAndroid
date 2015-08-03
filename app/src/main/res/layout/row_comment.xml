@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/comment_list_activated_bg"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" >
+
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="65dp"
+                android:layout_margin="5dp" >
+
+                <ImageView
+                    android:id="@+id/imgUserPic"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_pic_small" />
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/circle" />
+
+                <ImageView
+                    android:id="@+id/imgUserGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/profile_logo"
+                   />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <com.mobstar.custom.CustomTextviewBold
+                        android:id="@+id/textUserName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:singleLine="false"
+                        android:text="@string/temp_uname"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/splash_bg"
+                        android:textSize="16sp" />
+
+                    <com.mobstar.custom.CustomTextview
+                        android:id="@+id/textTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:paddingRight="15dp"
+                        android:text="@string/temp_time"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/splash_bg"
+                        android:textSize="@dimen/entry_time_text" />
+
+                </LinearLayout>
+
+                <com.mobstar.custom.CustomTextview
+                    android:id="@+id/textDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/temp_comment"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/splash_bg"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgPin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:src="@drawable/pin"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
+    android:background="@android:color/transparent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/llMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/scale_5"
+        android:background="@color/white_color"
+        android:orientation="horizontal" >
+
+        <FrameLayout
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="5dp" >
+
+            <ImageView
+                android:id="@+id/imgUserPic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_pic_small" />
+
+            <ImageView
+                android:id="@+id/imgUserCircle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/circle" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/RelativeLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/scale_10"
+                android:layout_marginRight="@dimen/scale_5"
+                android:orientation="horizontal"
+                android:weightSum="1" >
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:id="@+id/textUserName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:text="dhaval,ankit,Matt"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+                
+                <com.mobstar.custom.CustomTextview
+                    android:id="@+id/textTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/scale_5"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="0.4"
+                    android:gravity="right"
+                    android:singleLine="true"
+                    android:text="dfsfdf"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/comment_bg"
+                    android:textSize="18sp" />
+                
+            </LinearLayout>
+            
+            <com.mobstar.custom.CustomTextview
+                android:id="@+id/textMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/scale_10"
+                android:layout_marginRight="@dimen/scale_5"
+                android:layout_marginTop="@dimen/scale_3"
+                android:layout_weight="0.7"
+                android:singleLine="true"
+                android:text="sdadadsadasdasdasdsasdfsfa"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
