@@ -69,7 +69,7 @@ public class EditProfileActivity extends Activity {
 	Context mContext;
 	TextView textEditProfile;
 
-	String[] arrayChangePicture = { getString(R.string.take_from_camera), getString(R.string.choose_from_library)};
+//	String[] arrayChangePicture = { getString(R.string.take_from_camera), getString(R.string.choose_from_library)};
 	Uri tempUri;
 
 	ImageView imgProfilePic, imgCoverImage, imgTagLine,imgAddContent;
@@ -181,7 +181,8 @@ public class EditProfileActivity extends Activity {
 	void onProfilePic() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(getString(R.string.change_picture)).setItems(arrayChangePicture, new DialogInterface.OnClickListener() {
+		builder.setTitle(getString(R.string.change_picture)).setItems(new String[]{getString(R.string.take_from_camera), getString(R.string.choose_from_library)}
+				, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				if (which == 0) {
 					String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
