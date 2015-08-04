@@ -340,42 +340,42 @@ public class UploadFileActivity extends Activity {
 
 					if (editTitle.getText().toString().trim().length() == 0) {
 						editTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-						textTitleHint.setText("Enter Title");
+						textTitleHint.setText(getString(R.string.enter_title));
 						textTitleHint.setVisibility(View.VISIBLE);
 
 					}
 					else if(isModelType){
 						if (posAge==0) {
 							editAge.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-							textAgeHint.setText("Select Age");
+							textAgeHint.setText(getString(R.string.select_age));
 							textAgeHint.setVisibility(View.VISIBLE);
 
 						}
 						else if (posHeight==0) {
 							editHeight.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-							textHeightHint.setText("Select Height");
+							textHeightHint.setText(getString(R.string.select_height));
 							textHeightHint.setVisibility(View.VISIBLE);
 						}
 						else {
-							Utility.ShowProgressDialog(mContext, "Uploading...");
+							Utility.ShowProgressDialog(mContext, getString(R.string.uploading));
 
 							if (Utility.isNetworkAvailable(mContext)) {
 								new UploadImage().execute(Constant.SERVER_URL + Constant.ENTRY);
 							} else {
-								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 								Utility.HideDialog(mContext);
 							}
 						}
 					}
 					else {
 
-						Utility.ShowProgressDialog(mContext, "Uploading...");
+						Utility.ShowProgressDialog(mContext, getString(R.string.uploading));
 
 						if (Utility.isNetworkAvailable(mContext)) {
 							new UploadImage().execute(Constant.SERVER_URL + Constant.ENTRY);
 						} else {
 
-							Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							Utility.HideDialog(mContext);
 						}
 					}

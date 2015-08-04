@@ -59,12 +59,12 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 		gridListAdapter=new GridAdapter();
 		preferences = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 		InitControls();
-		Utility.ShowProgressDialog(mContext, "Loading");
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 		sErrorMessage = "";
 		if (Utility.isNetworkAvailable(mContext)) {
 			new WhoToFollowList().start();
 		} else {
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 		}
 		
 		Utility.SendDataToGA("WhoToFollow Screen", WhoToFollowActivity.this);
@@ -348,7 +348,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 			if (Utility.isNetworkAvailable(mContext)) {
 				new WhoToFollowAdd(star).start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			}
 		}
 		else if(btnSkip.equals(view)){

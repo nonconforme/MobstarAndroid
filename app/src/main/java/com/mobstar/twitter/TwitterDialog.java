@@ -58,7 +58,7 @@ public class TwitterDialog extends Dialog {
 		mSpinner = new ProgressDialog(getContext());
 
 		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		mSpinner.setMessage("Loading...");
+		mSpinner.setMessage(mContext.getString(R.string.loading) + "...");
 
 		mContent = new LinearLayout(getContext());
 
@@ -99,7 +99,7 @@ public class TwitterDialog extends Dialog {
 
 		mTitle = new TextView(getContext());
 
-		mTitle.setText("Twitter");
+		mTitle.setText(mContext.getString(R.string.twitter_));
 		mTitle.setTextColor(Color.WHITE);
 		mTitle.setTypeface(Typeface.DEFAULT_BOLD);
 		mTitle.setBackgroundColor(0xFFbbd7e9);
@@ -187,6 +187,6 @@ public class TwitterDialog extends Dialog {
 			TwitterDialog.this.dismiss();
 
 		}
-		mListener.onError("Request Cancelled");
+		mListener.onError(mContext.getString(R.string.request_cancelled));
 	}
 }

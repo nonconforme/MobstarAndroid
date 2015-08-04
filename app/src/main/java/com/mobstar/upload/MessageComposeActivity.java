@@ -104,7 +104,7 @@ public class MessageComposeActivity extends Activity implements OnClickListener,
 			new UsersFanCall().start();
 		} else {
 
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 

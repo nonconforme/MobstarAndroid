@@ -85,12 +85,12 @@ public class BlogFragment extends Fragment {
 		listBlog = (ListView) view.findViewById(R.id.listBlog);
 		blogAdapter=new BlogAdapter();
 		listBlog.setAdapter(blogAdapter);
-		Utility.ShowProgressDialog(mContext, "Loading");
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 		if (Utility.isNetworkAvailable(mContext)) {
 			new BlogCall().start();
 		} else {
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 		

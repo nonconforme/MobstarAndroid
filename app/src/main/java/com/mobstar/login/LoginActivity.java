@@ -153,12 +153,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			if (editEmail.getText().toString().trim().length() == 0) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText("Enter Email Address");
+				textEmailHint.setText(getString(R.string.enter_email_address));
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else if (!Utility.IsValidEmail(editEmail)) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText("Enter Valid Email Address");
+				textEmailHint.setText(getString(R.string.enter_valid_email_address));
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -168,7 +168,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			if (editPassword.getText().toString().trim().length() == 0) {
 				editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textPasswordHint.setText("Enter Password");
+				textPasswordHint.setText(getString(R.string.enter_password));
 				textPasswordHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -177,7 +177,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 
 			if (isValid) {
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 				sErrorMessage = "";
 				if (Utility.isNetworkAvailable(mContext)) {
 //					String s=Utility.getRegistrationId(mContext);
@@ -186,7 +186,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 				} else {
 
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			}
@@ -348,7 +348,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 //				startActivity(intent);
 //				finish();
 				
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 				sErrorMessage = "";
 				if (Utility.isNetworkAvailable(mContext)) {
 //					String s=Utility.getRegistrationId(mContext);
@@ -357,7 +357,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 				} else {
 
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 

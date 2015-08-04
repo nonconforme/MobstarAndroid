@@ -559,7 +559,7 @@ public class TakePictureActivity extends Activity {
 					onBackPressed();
 
 				} catch (Exception e) {
-					Toast.makeText(TakePictureActivity.this, "Unknown Error, Please Retake Photo!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(TakePictureActivity.this, getString(R.string.error_retke_photo), Toast.LENGTH_SHORT).show();
 				}
 
 			}

@@ -60,7 +60,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 		if (Utility.isNetworkAvailable(mContext)) {
 			new CategoryCall().start();
 		} else {
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -249,7 +249,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 					sErrorMessage = "";
 
 					if (response.trim().equals("[]")) {
-						sErrorMessage = "No Entries Found";
+						sErrorMessage = getString(R.string.no_entries_found);
 					}
 
 					JSONObject jsonObject = new JSONObject(response);

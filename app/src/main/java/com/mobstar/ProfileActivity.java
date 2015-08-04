@@ -391,7 +391,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				if (arrEntryPojos.size() == 0) {
 					//					textNoData.setVisibility(View.VISIBLE);
-					//					textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+					//					textNoData.setText(getString(R.string.there_are_no_entries_yet));
 					isDataNull=true;
 				}
 				else {
@@ -594,7 +594,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				if (!IsMyStar.equalsIgnoreCase("0")) {
 
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 					if (Utility.isNetworkAvailable(mContext)) {
 
@@ -602,11 +602,11 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					} else {
 
-						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 				} else {
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 					if (Utility.isNetworkAvailable(mContext)) {
 
@@ -629,7 +629,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					} else {
 
-						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 
@@ -669,12 +669,12 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		if(isNotfiedUser && EntryId!=null){
 
-			Utility.ShowProgressDialog(mContext,"Loading");
+			Utility.ShowProgressDialog(mContext,getString(R.string.loading));
 			if (Utility.isNetworkAvailable(mContext)) {
 				Log.d("mobstar","api call... isNotifyUser");
 				new GetEntryCall(EntryId).start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 		}
@@ -952,7 +952,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 		}
 
 		if(mContext!=null){
-			Utility.ShowProgressDialog(mContext, "Loading");
+			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 			if (Utility.isNetworkAvailable(mContext)) {
 				Log.d("mobstar","api call.. get data");
@@ -960,14 +960,14 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 			} else {
 
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 		}
 
 		//		if (arrEntryPojos.size() == 0) {
 		////			textNoData.setVisibility(View.VISIBLE);
-		////			textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+		////			textNoData.setText(getString(R.string.there_are_no_entries_yet));
 		//			isDataNull=true;
 		//			arrEntryPojos.add(null);
 		//		}
@@ -1055,7 +1055,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				// Inflate the layout with image
 				convertView = inflater.inflate(R.layout.layout_profile_nodata, parent, false);
 				viewHolderNodata.textNoData=(TextView)convertView.findViewById(R.id.textNoData);
-				viewHolderNodata.textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+				viewHolderNodata.textNoData.setText(getString(R.string.there_are_no_entries_yet));
 
 				convertView.setTag(viewHolderNodata);
 
@@ -1294,7 +1294,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 					//					if (arrEntryPojos.get(position).getIsMyStar() != null) {
 					if (!IsMyStar.equalsIgnoreCase("0")) {
 						//unfollow
-						Utility.ShowProgressDialog(mContext, "Loading");
+						Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 						if (Utility.isNetworkAvailable(mContext)) {
 
@@ -1302,13 +1302,13 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 						} else {
 
-							Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							Utility.HideDialog(mContext);
 						}
 
 					} else {
 						//follow
-						Utility.ShowProgressDialog(mContext, "Loading");
+						Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 						if (Utility.isNetworkAvailable(mContext)) {
 
@@ -1330,7 +1330,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 							timer.schedule(task, 1000);
 
 						} else {
-							Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							Utility.HideDialog(mContext);
 						}
 
@@ -1596,7 +1596,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 										});
 									}
 									else {
-										Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+										Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 									}
 
 
@@ -1786,7 +1786,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 							}
 							else {
-								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							}
 							// Log.v(Constant.TAG, "Download video " +
 							// arrEntryPojos.get(position).getVideoLink());
@@ -2241,7 +2241,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 									addedviewImgId=arrEntryPojos.get(position).getID();
 									new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 								} else {
-									Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+									Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 									Utility.HideDialog(mContext);
 								}
 							}
@@ -2477,7 +2477,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			if (Utility.isNetworkAvailable(mContext)) {
 				new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				//				Utility.HideDialog(mContext);
 			}
 
@@ -2560,7 +2560,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 										if (Utility.isNetworkAvailable(mContext)) {
 											new UpdateViewCountCall(arrEntryPojos.get(indexCurrentPlayAudio).getID()).start();
 										} else {
-											Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+											Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 											Utility.HideDialog(mContext);
 										}
 										mediaPlayer.seekTo(0);
@@ -2620,7 +2620,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			if (Utility.isNetworkAvailable(mContext)) {
 				new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				//				Utility.HideDialog(mContext);
 			}
 
@@ -2671,7 +2671,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 											Log.d("mobstar","update view on completion...");
 											new UpdateViewCountCall(arrEntryPojos.get(indexCurrentPlayAudio).getID()).start();
 										} else {
-											Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+											Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 											Utility.HideDialog(mContext);
 										}
 										mediaPlayer.seekTo(0);
@@ -3076,7 +3076,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				if (arrEntryPojos.size() == 0) {
 					isDataNull=true;
 					//					textNoData.setVisibility(View.VISIBLE);
-					//					textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+					//					textNoData.setText(getString(R.string.there_are_no_entries_yet));
 				}
 				else {
 					isDataNull=false;
@@ -3293,7 +3293,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				if (arrEntryPojos.size() == 0) {
 					isDataNull=true;
 					//					textNoData.setVisibility(View.VISIBLE);
-					//					textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+					//					textNoData.setText(getString(R.string.there_are_no_entries_yet));
 				}
 				else {
 					isDataNull=false;
@@ -3784,7 +3784,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 	//
 	//		if (arrEntryPojos.size() == 0) {
 	////			textNoData.setVisibility(View.VISIBLE);
-	////			textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+	////			textNoData.setText(getString(R.string.there_are_no_entries_yet));
 	//			isDataNull=true;
 	//			arrEntryPojos.add(null);
 	//		}
@@ -4013,7 +4013,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 							}
 							else {
 
-								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 								Utility.HideDialog(mContext);
 							}
 						}

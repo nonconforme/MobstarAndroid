@@ -134,7 +134,7 @@ public class NotificationsFragment extends Fragment {
 				// TODO Auto-generated method stub
 				final int checkedCount = listNotification.getCheckedItemCount();
 				// Set the CAB title according to total checked items
-				arg0.setTitle(checkedCount + " Selected");
+				arg0.setTitle(checkedCount + " " + getString(R.string.selected));
 
 				if (arrSelectionNotificationID.contains(arrNotificationPojos.get(position).getNotificationID() + "")) {
 					arrSelectionNotificationID.remove(arrNotificationPojos.get(position).getNotificationID() + "");
@@ -148,12 +148,12 @@ public class NotificationsFragment extends Fragment {
 		notificationListAdapter = new NotificationListAdapter();
 		listNotification.setAdapter(notificationListAdapter);
 
-		Utility.ShowProgressDialog(mContext, "Loading");
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 		if (Utility.isNetworkAvailable(mContext)) {
 			new NotificationCall().start();
 		} else {
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 		
@@ -193,7 +193,7 @@ public class NotificationsFragment extends Fragment {
 
 	void DeleteNotification() {
 
-		Utility.ShowProgressDialog(mContext, "Loading");
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 		if (Utility.isNetworkAvailable(mContext)) {
 
@@ -201,7 +201,7 @@ public class NotificationsFragment extends Fragment {
 
 		} else {
 
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -386,11 +386,11 @@ public class NotificationsFragment extends Fragment {
 
 			if (msg.what == 1) {
 				notificationListAdapter.notifyDataSetChanged();
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 				if (Utility.isNetworkAvailable(mContext)) {
 					new NotificationReadCall().start();
 				} else {
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			} else {
@@ -717,12 +717,12 @@ public class NotificationsFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 101) {
-			Utility.ShowProgressDialog(mContext, "Loading");
+			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 			if (Utility.isNetworkAvailable(mContext)) {
 				new NotificationCall().start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 		}

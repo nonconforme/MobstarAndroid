@@ -463,7 +463,7 @@ public class VerifyMobileNoActivity extends Activity implements OnClickListener{
 							if (edtMobileno.getText().toString().trim().length() == 0) {
 
 								edtMobileno.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-								textMobilenoHint.setText("Enter FullName");
+								textMobilenoHint.setText(getString(R.string.enter_full_name));
 								textMobilenoHint.setVisibility(View.VISIBLE);
 
 								isValid = false;
@@ -473,7 +473,7 @@ public class VerifyMobileNoActivity extends Activity implements OnClickListener{
 							}
 
 							if (isValid) {
-								Utility.ShowProgressDialog(mContext, "Loading");
+								Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 								sErrorMessage = "";
 								if (Utility.isNetworkAvailable(mContext)) {
 									String fullNo=edtMobileno.getText().toString();
@@ -482,7 +482,7 @@ public class VerifyMobileNoActivity extends Activity implements OnClickListener{
 									new VerifyMobileCall(selectedCountryCode,phone).start();
 
 								} else {
-									Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+									Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 									Utility.HideDialog(mContext);
 								}
 							}

@@ -84,10 +84,10 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 		}
 
 		if (isYesVotes) {
-			textMyVotes.setText("YES VOTES");
+			textMyVotes.setText(getString(R.string.yes_votes));
 			imgMyVotes.setImageResource(R.drawable.ic_my_votes_yes);
 		} else {
-			textMyVotes.setText("NO VOTES");
+			textMyVotes.setText(getString(R.string.no_votes));
 			imgMyVotes.setImageResource(R.drawable.ic_my_votes_no);
 		}
 	}
@@ -126,7 +126,7 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 				runOnUiThread(new Runnable() {
 					public void run() {
 						GetData("up");
-						textMyVotes.setText("YES VOTES");
+						textMyVotes.setText(getString(R.string.yes_votes));
 						imgMyVotes.setImageResource(R.drawable.ic_my_votes_yes);
 						isYesVotes = true;
 					}
@@ -145,7 +145,7 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 					public void run() {
 						GetData("down");
 						isYesVotes = false;
-						textMyVotes.setText("NO VOTES");
+						textMyVotes.setText(getString(R.string.no_votes));
 						imgMyVotes.setImageResource(R.drawable.ic_my_votes_no);
 					}
 				});

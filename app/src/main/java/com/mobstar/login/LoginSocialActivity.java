@@ -144,7 +144,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 					onFBLogin();
 					dialog.dismiss();
 				}
@@ -162,7 +162,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 
 		} else if (btnLoginTwitter.equals(view)) {
 
-			Utility.ShowProgressDialog(mContext, "Loading");
+			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 			boolean authOnly = true;
 			mTweet = new ImageTwitter(LoginSocialActivity.this, authOnly, null,null);
@@ -183,7 +183,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 							pref.edit().putBoolean("isSocialLogin",true).commit();
 							new TwitterLoginCall(mTweet.mUser.getId() + "", mTweet.mUser.getScreenName(), mTweet.mUser.getName(), mTweet.mUser.getScreenName()).start();
 						} else {
-							Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							Utility.HideDialog(mContext);
 						}
 					} else {
@@ -194,7 +194,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			});
 			mTweet.send();
 		} else if (btnLoginGoogle.equals(view)) {
-			Utility.ShowProgressDialog(mContext, "Loading");
+			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 			getUsername();
 		}else if(btnCountinueWOSignin.equals(view)) {           //khyati
 			
@@ -231,7 +231,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			if (Utility.isNetworkAvailable(mContext)) {
 				getTask(LoginSocialActivity.this, mEmail, SCOPE).execute();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 		}
@@ -294,7 +294,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 									} catch (Exception e) {
 										// TODO: handle exception
 										e.printStackTrace();
-										Toast.makeText(mContext, "Error while login with Facebook!", Toast.LENGTH_SHORT).show();
+										Toast.makeText(mContext, getString(R.string.error_while_login_with_facebook), Toast.LENGTH_SHORT).show();
 										Utility.HideDialog(mContext);
 									}
 
@@ -303,7 +303,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 						}).executeAsync();
 					} else {
 
-						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 
@@ -664,7 +664,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 				mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 				getUsername();
 			} else if (resultCode == RESULT_CANCELED) {
-				Toast.makeText(this, "You must pick an account", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.you_must_pick_an_account), Toast.LENGTH_SHORT).show();
 			}
 		} else if ((requestCode == REQUEST_CODE_RECOVER_FROM_AUTH_ERROR || requestCode == REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR) && resultCode == RESULT_OK) {
 			handleAuthorizeResult(resultCode, data);
@@ -675,19 +675,19 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 
 	private void handleAuthorizeResult(int resultCode, Intent data) {
 		if (data == null) {
-			showToast("Unknown error, click the button again");
+			showToast(getString(R.string.unknown_error_click_button));
 			return;
 		}
 		if (resultCode == RESULT_OK) {
-			showToast("Retrying.");
+			showToast(getString(R.string.retrying));
 			getTask(this, mEmail, SCOPE).execute();
 			return;
 		}
 		if (resultCode == RESULT_CANCELED) {
-			showToast("User rejected authorization.");
+			showToast(getString(R.string.user_rejected_authorization));
 			return;
 		}
-		showToast("Unknown error, click the button again");
+		showToast(getString(R.string.unknown_error_click_button));
 	}
 
 	private AbstractGetNameTask getTask(LoginSocialActivity activity, String email, String scope) {

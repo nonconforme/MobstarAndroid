@@ -68,41 +68,41 @@ public class SelectProfileContentType extends Activity implements OnClickListene
 		
 	}
 	
-	public Dialog selectFromGalleryDialog() {
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-		CharSequence[] array = {"Image","Video"};
-		builder.setTitle("Select File Type")
-		.setSingleChoiceItems(array,-1, new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int pos) {
-//				Log.d("Mobstar","Clicked id is=>"+pos);
-				if(pos==0){
-					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-					intent.setType("image/*");
-					startActivityForResult(intent, IMG_PICKER_SELECT);
-				}
-				else {
-					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-					intent.setType("video/*");
-					startActivityForResult(intent,VIDEO_PICKER_SELECT);
-				}
-				dialog.dismiss();
-			}
-		})
-
-
-		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.dismiss();
-			}
-		});
-
-		return builder.create();
-	}
+//	public Dialog selectFromGalleryDialog() {
+//
+//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//
+//		CharSequence[] array = {"Image","Video"};
+//		builder.setTitle(getString(R.string.select_file_type))
+//		.setSingleChoiceItems(array,-1, new DialogInterface.OnClickListener() {
+//
+//			@Override
+//			public void onClick(DialogInterface dialog, int pos) {
+////				Log.d("Mobstar","Clicked id is=>"+pos);
+//				if(pos==0){
+//					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//					intent.setType("image/*");
+//					startActivityForResult(intent, IMG_PICKER_SELECT);
+//				}
+//				else {
+//					Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+//					intent.setType("video/*");
+//					startActivityForResult(intent,VIDEO_PICKER_SELECT);
+//				}
+//				dialog.dismiss();
+//			}
+//		})
+//
+//
+//		.setNegativeButton(getString(R.string.cancel_), new DialogInterface.OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialog, int id) {
+//				dialog.dismiss();
+//			}
+//		});
+//
+//		return builder.create();
+//	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 

@@ -284,7 +284,7 @@ public class SearchListFragment extends Fragment {
 		//					Log.d("mobstar","Call from pull to refresh");
 		//					new EntryCall(currentPage).start();
 		//				} else {
-		//					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+		//					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 		//				}
 		//			}
 		//		});
@@ -317,13 +317,13 @@ public class SearchListFragment extends Fragment {
 					}
 				}
 				if (!loading && !isWebCall && isNextPageAvail && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 					isWebCall = true;
 					currentPage++;
 					if (Utility.isNetworkAvailable(mContext)) {
 						new EntryCall(currentPage).start();
 					} else {
-						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 					loading = true;
@@ -430,7 +430,7 @@ public class SearchListFragment extends Fragment {
 				mediaPlayer.pause();
 			}
 		}
-		Utility.ShowProgressDialog(mContext, "Loading");
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 		if (Utility.isNetworkAvailable(mContext)) {
 			isWebCall = true;
@@ -438,7 +438,7 @@ public class SearchListFragment extends Fragment {
 			new EntryCall(currentPage).start();
 
 		} else {
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -474,7 +474,7 @@ public class SearchListFragment extends Fragment {
 					sErrorMessage = "";
 
 					if (response.trim().equals("[]")) {
-						sErrorMessage = "No Entries Found";
+						sErrorMessage = getString(R.string.no_entries_found);
 					}
 
 					JSONObject jsonObject = new JSONObject(response);
@@ -707,7 +707,7 @@ public class SearchListFragment extends Fragment {
 			else {
 				if (arrEntryPojos.size() == 0) {
 					textNoData.setVisibility(View.VISIBLE);
-					textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+					textNoData.setText(getString(R.string.there_are_no_entries_yet));
 				}
 			}
 		}
@@ -758,7 +758,7 @@ public class SearchListFragment extends Fragment {
 			if (Utility.isNetworkAvailable(mContext)) {
 				new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				//				Utility.HideDialog(mContext);
 			}
 
@@ -809,7 +809,7 @@ public class SearchListFragment extends Fragment {
 										if (Utility.isNetworkAvailable(mContext)) {
 											new UpdateViewCountCall(arrEntryPojos.get(indexCurrentPlayAudio).getID()).start();
 										} else {
-											Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+											Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 											//											Utility.HideDialog(mContext);
 										}
 										mediaPlayer.seekTo(0);
@@ -897,7 +897,7 @@ public class SearchListFragment extends Fragment {
 	//
 	//				} else {
 	//
-	//					Toast.makeText(mContext, "No, Internet Access!",
+	//					Toast.makeText(mContext, getString(R.string.no_internet_access),
 	//							Toast.LENGTH_SHORT).show();
 	//					Utility.HideDialog(mContext);
 	//				}
@@ -1185,17 +1185,17 @@ public class SearchListFragment extends Fragment {
 					if (arrEntryPojos.get(position).getIsMyStar() != null) {
 						if (!arrEntryPojos.get(position).getIsMyStar().equalsIgnoreCase("0")) {
 							//unfollow
-							Utility.ShowProgressDialog(mContext, "Loading");
+							Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 							if (Utility.isNetworkAvailable(mContext)) {
 								unFollowUserId=arrEntryPojos.get(position).getUserID();
 								new DeleteStarCall(arrEntryPojos.get(position).getUserID()).start();
 							} else {
-								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 								Utility.HideDialog(mContext);
 							}
 						} else {
-							Utility.ShowProgressDialog(mContext, "Loading");
+							Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 							if (Utility.isNetworkAvailable(mContext)) {
 
@@ -1219,7 +1219,7 @@ public class SearchListFragment extends Fragment {
 
 							} else {
 
-								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 								Utility.HideDialog(mContext);
 							}
 
@@ -1476,7 +1476,7 @@ public class SearchListFragment extends Fragment {
 										});
 									}
 									else {
-										Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+										Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 									}
 
 
@@ -1681,7 +1681,7 @@ public class SearchListFragment extends Fragment {
 
 							}
 							else {
-								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							}
 							// Log.v(Constant.TAG, "Download video " +
 							// arrEntryPojos.get(position).getVideoLink());
@@ -1825,7 +1825,7 @@ public class SearchListFragment extends Fragment {
 
 									if (arrEntryPojos.size() == 0) {
 										textNoData.setVisibility(View.VISIBLE);
-										textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+										textNoData.setText(getString(R.string.there_are_no_entries_yet));
 									}
 								}
 
@@ -1852,7 +1852,7 @@ public class SearchListFragment extends Fragment {
 
 									if (arrEntryPojos.size() == 0) {
 										textNoData.setVisibility(View.VISIBLE);
-										textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+										textNoData.setText(getString(R.string.there_are_no_entries_yet));
 									}
 								}
 							}
@@ -1985,7 +1985,7 @@ public class SearchListFragment extends Fragment {
 
 									if (arrEntryPojos.size() == 0) {
 										textNoData.setVisibility(View.VISIBLE);
-										textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+										textNoData.setText(getString(R.string.there_are_no_entries_yet));
 									}
 								}
 
@@ -2012,7 +2012,7 @@ public class SearchListFragment extends Fragment {
 
 									if (arrEntryPojos.size() == 0) {
 										textNoData.setVisibility(View.VISIBLE);
-										textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+										textNoData.setText(getString(R.string.there_are_no_entries_yet));
 									}
 								}
 							}
@@ -2111,7 +2111,7 @@ public class SearchListFragment extends Fragment {
 									addedviewImgId=arrEntryPojos.get(position).getID();
 									new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 								} else {
-									Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+									Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 									//										Utility.HideDialog(mContext);
 								}
 							}
@@ -2195,7 +2195,7 @@ public class SearchListFragment extends Fragment {
 			if (Utility.isNetworkAvailable(mContext)) {
 				new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				//					Utility.HideDialog(mContext);
 			}
 
@@ -2280,7 +2280,7 @@ public class SearchListFragment extends Fragment {
 										if (Utility.isNetworkAvailable(mContext)) {
 											new UpdateViewCountCall(arrEntryPojos.get(indexCurrentPlayAudio).getID()).start();
 										} else {
-											Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+											Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 											//												Utility.HideDialog(mContext);
 										}
 										mediaPlayer.seekTo(0);

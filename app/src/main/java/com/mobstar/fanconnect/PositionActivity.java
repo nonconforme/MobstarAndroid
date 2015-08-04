@@ -115,7 +115,7 @@ public class PositionActivity extends Activity {
 					}
 					new TopTalentCall(currentPage).start();
 				} else {
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -148,7 +148,7 @@ public class PositionActivity extends Activity {
 
 				//				Log.d("mobstar","Check... "+"!loading"+loading+"!isWebCall"+isWebCall+"isNextPageAvail"+isNextPageAvail+" "+(totalItemCount - visibleItemCount)+"<="+(firstVisibleItem + visibleThreshold));
 				if (!loading && !isWebCall && isNextPageAvail && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 					isWebCall = true;
 					userPage=userPage+1;
 					if(!isRefresh){
@@ -159,7 +159,7 @@ public class PositionActivity extends Activity {
 					if (Utility.isNetworkAvailable(mContext)) {
 						new TopTalentCall(userPage).start();
 					} else {
-						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 					loading = true;
@@ -193,7 +193,7 @@ public class PositionActivity extends Activity {
 		
 		listUser.setAdapter(topTalentAdapter);
 
-		Utility.ShowProgressDialog(mContext, "Loading");
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 		if (Utility.isNetworkAvailable(mContext)) {
 			isPageToScroll=true;
@@ -201,7 +201,7 @@ public class PositionActivity extends Activity {
 
 		} else {
 
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 

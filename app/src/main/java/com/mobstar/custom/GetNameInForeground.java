@@ -21,6 +21,7 @@ import java.io.IOException;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.mobstar.R;
 import com.mobstar.login.LoginSocialActivity;
 
 /**
@@ -47,7 +48,7 @@ public class GetNameInForeground extends AbstractGetNameTask {
           // recoverable, so we need to show the user some UI through the activity.
           mActivity.handleException(userRecoverableException);
       } catch (GoogleAuthException fatalException) {
-          onError("Unrecoverable error " + fatalException.getMessage(), fatalException);
+          onError(mActivity.getString(R.string.onerror_unrecoverable_error) + " " + fatalException.getMessage(), fatalException);
       }
       return null;
   }

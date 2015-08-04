@@ -100,7 +100,7 @@ public class SettingsFragment extends Fragment {
 				alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
 
 				// set dialog message
-				alertDialogBuilder.setMessage("Coming Soon!").setCancelable(false).setNeutralButton("OK", null);
+				alertDialogBuilder.setMessage(getString(R.string.coming_soon)).setCancelable(false).setNeutralButton("OK", null);
 
 				// create alert dialog
 				AlertDialog alertDialog = alertDialogBuilder.create();

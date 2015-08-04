@@ -185,7 +185,7 @@ public class VerifyMobilenoCodeActivity extends Activity implements OnClickListe
 			}
 
 			if (isValid) {
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 				sErrorMessage = "";
 
 				if (Utility.isNetworkAvailable(mContext)) {
@@ -193,7 +193,7 @@ public class VerifyMobilenoCodeActivity extends Activity implements OnClickListe
 					new VerifyMobileCodeCall(code).start();
 
 				} else {
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			}

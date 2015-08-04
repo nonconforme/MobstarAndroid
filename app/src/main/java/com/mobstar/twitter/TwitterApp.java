@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Window;
 
+import com.mobstar.R;
 import com.mobstar.utils.Constant;
 
 public class TwitterApp {
@@ -132,7 +133,7 @@ public class TwitterApp {
 	}
 
 	public void authorize() {
-		mProgressDlg.setMessage("Initializing ...");
+		mProgressDlg.setMessage(context.getString(R.string.initializing));
 		mProgressDlg.show();
 
 		new Thread() {
@@ -153,7 +154,7 @@ public class TwitterApp {
 	}
 
 	public void processToken(String callbackUrl) {
-		mProgressDlg.setMessage("Finalizing ...");
+		mProgressDlg.setMessage(context.getString(R.string.finalizing));
 		mProgressDlg.show();
 
 		final String verifier = getVerifier(callbackUrl);
@@ -224,7 +225,7 @@ public class TwitterApp {
 			}
 
 			public void onError(String value) {
-				mListener.onError("Failed opening authorization page");
+				mListener.onError(context.getString(R.string.failed_opening_authorization_page));
 			}
 		};
 
@@ -238,9 +239,9 @@ public class TwitterApp {
 
 			if (msg.what == 1) {
 				if (msg.arg1 == 1)
-					mListener.onError("Error getting request token");
+					mListener.onError(context.getString(R.string.error_request_token));
 				else
-					mListener.onError("Error getting access token");
+					mListener.onError(context.getString(R.string.error_access_token));
 			} else {
 				if (msg.arg1 == 1)
 					showLoginDialog((String) msg.obj);

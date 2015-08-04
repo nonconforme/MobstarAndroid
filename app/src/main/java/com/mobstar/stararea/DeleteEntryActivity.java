@@ -82,14 +82,14 @@ public class DeleteEntryActivity extends Activity {
 			
 			@Override
 			public void onClick(View view) {
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 				if (Utility.isNetworkAvailable(mContext)) {
 					new DeleteEntryCall(entryPojo.getID()).start();
 
 				} else {
 
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			}
