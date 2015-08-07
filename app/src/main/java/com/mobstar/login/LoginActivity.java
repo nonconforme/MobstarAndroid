@@ -2,7 +2,6 @@ package com.mobstar.login;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,11 +29,9 @@ import android.widget.Toast;
 
 import com.mobstar.R;
 import com.mobstar.help.WelcomeVideoActivity;
-import com.mobstar.home.HomeActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
-import com.squareup.picasso.Picasso;
 
 public class LoginActivity extends Activity implements OnClickListener {
 

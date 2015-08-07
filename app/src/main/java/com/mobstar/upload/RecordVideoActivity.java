@@ -15,7 +15,6 @@ import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -29,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.R;
-import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 public class RecordVideoActivity extends Activity {

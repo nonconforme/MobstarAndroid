@@ -1,7 +1,6 @@
 package com.mobstar.inbox;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
@@ -17,16 +16,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -37,12 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
-import com.mobstar.inbox.MessageDetail.MessageRead;
 import com.mobstar.pojo.MessageThreadPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
-import com.squareup.picasso.Picasso;
 
 public class GroupMessageDetail extends Activity implements OnClickListener{
 

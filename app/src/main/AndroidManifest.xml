@@ -302,6 +302,11 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity android:name=".home.split.SplitActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme">
+        </activity>
+
         <!-- Instabug Configuration -->
 
         <!--<activity-->

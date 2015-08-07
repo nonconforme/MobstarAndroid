@@ -15,7 +15,6 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
@@ -26,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.mobstar.R;
-import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 public class ApproveVideoActivity extends Activity {

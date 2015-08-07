@@ -210,7 +210,7 @@ public class SplashActivity extends Activity {
 		@Override
 		public void run() {
 
-			String Query=Constant.SERVER_URL + Constant.HOME_INFO;
+			String Query= Constant.SERVER_URL + Constant.HOME_INFO;
 			String response = JSONParser.getRequest(Query,preferences.getString("token", null));
 
 			Log.v(Constant.TAG, "home info response " + response);
@@ -284,7 +284,7 @@ public class SplashActivity extends Activity {
 		@Override
 		public void run() {
 
-			String Query=Constant.SERVER_URL + Constant.BADGE_READ;
+			String Query= Constant.SERVER_URL + Constant.BADGE_READ;
 			String response = JSONParser.postRequest(Query,null,null,preferences.getString("token", null));
 
 			Log.v(Constant.TAG, "home info response " + response);

@@ -3,14 +3,11 @@ package com.mobstar.info.report;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;

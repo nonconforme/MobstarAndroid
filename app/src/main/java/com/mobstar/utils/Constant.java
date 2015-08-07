@@ -142,5 +142,9 @@ public class Constant {
 	public static String BADGE_READ="message/badgeread";
 	
 	public static String LOGOUT="user/logout";
+
+
+//	app constant
+	public static String IMAGE     = "image";
 	
 }

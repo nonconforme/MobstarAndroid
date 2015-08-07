@@ -33,6 +33,7 @@
     <string name="temp_time">3 days ago</string>
     <string name="temp_description">This is first entry</string>
     <string name="temp_comments">15</string>
+    <string name="split">SPLIT</string>
     <string name="deny">DENY</string>
     <string name="allow">ALLOW</string>
     <string name="unknown_person">Unknown</string>
@@ -283,5 +284,6 @@
     <string name="popular">POPULAR</string>
     <string name="nothinh_found_for">NOTHING FOUND FOR</string>
 
+    <string name="next">NEXT</string>
 
 </resources>

@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
-import com.mobstar.home.ShareActivity;
 import com.mobstar.pojo.BlogPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;

@@ -1,17 +1,11 @@
 package com.mobstar;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -224,7 +218,7 @@ public class EditProfileActivity extends Activity {
 					//					intent.setType("video/*");
 					//					startActivityForResult(intent,VIDEO_PICKER_SELECT);
 					Intent intent=new Intent(mContext,AddContentTypeActivity.class);
-					intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
+					intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
 					intent.putExtra("FromProfile", true);
 					startActivity(intent);
 				}
@@ -371,7 +365,7 @@ public class EditProfileActivity extends Activity {
 					//					content://media/external/images/media/6112
 					if(selectedPath!=null){
 						Intent intent = new Intent(mContext, UploadFileActivity.class);
-						intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
+						intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
 						intent.putExtra("file1", selectedPath);
 						intent.putExtra("type", "image");
 						startActivity(intent);
@@ -394,7 +388,7 @@ public class EditProfileActivity extends Activity {
 						Intent intent = new Intent(mContext, UploadFileActivity.class);
 						intent.putExtra("file1", selectedPath);
 						intent.putExtra("type", "video");
-						intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
+						intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
 						startActivity(intent);
 						//					finish();
 						overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

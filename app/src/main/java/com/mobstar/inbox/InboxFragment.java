@@ -38,7 +38,6 @@ import android.widget.Toast;
 import com.mobstar.R;
 import com.mobstar.pojo.MessagePojo;
 import com.mobstar.pojo.ParticipantsPojo;
-import com.mobstar.upload.MessageActivity;
 import com.mobstar.upload.MessageComposeActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;

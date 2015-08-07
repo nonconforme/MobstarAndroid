@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
