@@ -2,20 +2,15 @@ package com.mobstar.home.split;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import com.mobstar.R;
-import com.mobstar.custom.crop_image_view.CropImageView;
-import com.mobstar.custom.crop_image_view.HighlightView;
+import com.mobstar.custom.CropImageView;
 import com.mobstar.utils.Constant;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -72,52 +67,11 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     }
 
     private void setupVideoImage(){
-
+        if (videoThumb != null)
         Picasso.with(mSplitActivity).load(videoThumb)
-                .placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(ivVideoImage, new Callback() {
-            @Override
-            public void onSuccess() {
-                addCrop();
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
+                .placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(ivVideoImage);
     }
 
-    private void addCrop(){
-        HighlightView hv = new HighlightView(ivVideoImage);
-        int width = ivVideoImage.getWidth();
-        int height = ivVideoImage.getHeight();
-
-        Rect imageRect = new Rect(0, 0, width, height);
-
-        RectF faceRect = new RectF(0, 0, 0, 0);
-
-        if (faceRect.left < 0) {
-            faceRect.inset(-faceRect.left, -faceRect.left);
-        }
-
-        if (faceRect.top < 0) {
-            faceRect.inset(-faceRect.top, -faceRect.top);
-        }
-
-        if (faceRect.right > imageRect.right) {
-            faceRect.inset(faceRect.right - imageRect.right,
-                    faceRect.right - imageRect.right);
-        }
-
-        if (faceRect.bottom > imageRect.bottom) {
-            faceRect.inset(faceRect.bottom - imageRect.bottom,
-                    faceRect.bottom - imageRect.bottom);
-        }
-
-        hv.setup(ivVideoImage.getImageMatrix(), imageRect, faceRect, false, false);
-
-        ivVideoImage.add(hv);
-    }
 
     @Override
     public void onClick(View v) {

@@ -11,13 +11,14 @@ import android.widget.Button;
 import android.widget.GridView;
 
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 
 /**
  * Created by vasia on 06.08.15.
  */
 public class SplitLayoutFragment extends Fragment implements View.OnClickListener {
 
-    private Button btnNext, btnBack;
+    private CustomTextviewBold btnNext, btnBack;
     private SplitActivity mSplitActivity;
     private GridView gridView;
 
@@ -38,8 +39,8 @@ public class SplitLayoutFragment extends Fragment implements View.OnClickListene
     }
 
     private void findViews(final View _view){
-        btnBack = (Button) _view.findViewById(R.id.btnBack);
-        btnNext = (Button) _view.findViewById(R.id.btnNext);
+        btnBack = (CustomTextviewBold) _view.findViewById(R.id.btnBack);
+        btnNext = (CustomTextviewBold) _view.findViewById(R.id.btnNext);
         gridView = (GridView) _view.findViewById(R.id.gridViewSplitLayout);
     }
 

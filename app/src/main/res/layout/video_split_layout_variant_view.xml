@@ -20,8 +20,27 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="25dp"
-        android:background="#ff98c9e8"
-        android:id="@+id/flContentContainer"></FrameLayout>
+        android:id="@+id/flContentContainer"
+        android:visibility="visible"></FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="25dp"
+        android:id="@+id/flComingSoonMessage"
+        android:background="@color/background_transparent"
+        android:alpha="0.8"
+        android:visibility="gone">
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_coming_soom"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/yellow_color"
+            android:gravity="center" />
+    </FrameLayout>
 
     <ImageView
         android:layout_width="40dp"

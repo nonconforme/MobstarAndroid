@@ -1,16 +1,9 @@
 package com.mobstar.home.split;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.Checkable;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -24,9 +17,12 @@ public class VideoSplitLayoutVariantsView extends FrameLayout implements Checkab
     private boolean mChecked;
     private FrameLayout frameSelected, contentContainer;
     private ImageView ivSelected;
+    private VideoPositionVariants positionVariants;
+    private FrameLayout comingSoonMessage;
 
-    public VideoSplitLayoutVariantsView(Context context) {
+    public VideoSplitLayoutVariantsView(Context context, VideoPositionVariants _positionVariants) {
         super(context);
+        positionVariants = _positionVariants;
         setupCustomComponentView();
     }
 
@@ -36,12 +32,17 @@ public class VideoSplitLayoutVariantsView extends FrameLayout implements Checkab
         final View inflatedView = inflater.inflate(R.layout.video_split_layout_variant_view, null);
         findViews(inflatedView);
         addView(inflatedView);
+        if (positionVariants.isWorkingPositionVariant())
+            comingSoonMessage.setVisibility(GONE);
+        else comingSoonMessage.setVisibility(VISIBLE);
+        contentContainer.addView(getContentViewFromPositionVariants());
     }
 
     private void findViews(final View _view){
         frameSelected  = (FrameLayout) _view.findViewById(R.id.flFrameSelected);
         contentContainer = (FrameLayout) _view.findViewById(R.id.flContentContainer);
         ivSelected = (ImageView) _view.findViewById(R.id.ivSelected);
+        comingSoonMessage = (FrameLayout) _view.findViewById(R.id.flComingSoonMessage);
     }
 
     @Override
@@ -70,6 +71,32 @@ public class VideoSplitLayoutVariantsView extends FrameLayout implements Checkab
     @Override
     public void toggle() {
         setChecked(!mChecked);
+    }
+
+    public View getContentViewFromPositionVariants(){
+        final LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        int layoutId = R.layout.video_variant_origin_left;
+        switch (positionVariants.getVariant()){
+            case ORIGIN_LEFT:
+                layoutId = R.layout.video_variant_origin_left;
+                break;
+            case ORIGIN_RIGHT:
+                layoutId = R.layout.video_variant_origin_right;
+                break;
+            case ORIGIN_RIGHT_TOP:
+
+                break;
+            case ORIGIN_FULLSCREEN:
+
+                break;
+            case ORIGIN_TOP:
+                layoutId = R.layout.video_variant_origin_top;
+                break;
+            case ORIGIN_BOTTOM:
+                layoutId = R.layout.video_variant_origin_bottom;
+                break;
+        }
+        return layoutInflater.inflate(layoutId, null);
     }
 
 }
