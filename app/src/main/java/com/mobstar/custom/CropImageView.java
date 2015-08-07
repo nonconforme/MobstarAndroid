@@ -1,4 +1,4 @@
-package com.mobstar.custom.crop_image_view;
+package com.mobstar.custom;
 
 import android.content.Context;
 import android.graphics.Bitmap;

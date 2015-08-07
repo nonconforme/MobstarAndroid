@@ -17,22 +17,27 @@
 
         <Button
             android:id="@+id/btnBack"
-            android:layout_width="@dimen/signup_btn_width"
-            android:layout_height="@dimen/signup_btn_height"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_btn_height"
             android:background="@drawable/gray_btn_bg"
             android:text="@string/back"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/signup_btn_text" />
+            android:textSize="@dimen/signup_btn_text"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp" />
 
         <Button
             android:id="@+id/btnNext"
-            android:layout_width="@dimen/signup_btn_width"
-            android:layout_height="@dimen/signup_btn_height"
-            android:layout_marginLeft="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_btn_height"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/yellow_btn_bg"
             android:text="@string/next"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/signup_btn_text" />
+            android:textSize="@dimen/signup_btn_text"
+            android:layout_weight="1"
+            android:layout_marginRight="20dp" />
     </LinearLayout>
 
     <FrameLayout
@@ -43,7 +48,7 @@
         android:layout_alignParentStart="true"
         android:layout_above="@+id/linearLayout">
 
-        <com.mobstar.custom.crop_image_view.CropImageView
+        <com.mobstar.custom.CropImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/ivCropImage"

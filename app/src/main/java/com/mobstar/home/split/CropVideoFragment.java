@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.mobstar.R;
-import com.mobstar.custom.crop_image_view.CropImageView;
+import com.mobstar.custom.CropImageView;
 import com.mobstar.utils.Constant;
 import com.squareup.picasso.Picasso;
 
@@ -67,7 +67,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     }
 
     private void setupVideoImage(){
-
+        if (videoThumb != null)
         Picasso.with(mSplitActivity).load(videoThumb)
                 .placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(ivVideoImage);
     }
