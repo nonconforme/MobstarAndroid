@@ -279,7 +279,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/temp_comments"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/comment_text_color"
+                    android:textColor="@color/comment_color"
                     android:textSize="14sp" />
             </FrameLayout>
 
@@ -301,7 +301,7 @@
                     android:paddingLeft="25dp"
                     android:text="@string/temp_comments"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/comment_text_color"
+                    android:textColor="@color/comment_color"
                     android:textSize="14sp" />
             </FrameLayout>
 
@@ -325,12 +325,12 @@
                     android:id="@+id/splitVideo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/comment_bg"
+                    android:background="@drawable/selector_oval_button"
                     android:drawablePadding="5dp"
                     android:gravity="center"
                     android:text="@string/split"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/comment_text_color"
+                    android:textColor="@color/comment_color"
                     android:textSize="14sp" />
             </FrameLayout>
 

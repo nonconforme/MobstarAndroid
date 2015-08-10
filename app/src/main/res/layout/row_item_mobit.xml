@@ -224,7 +224,7 @@
                     android:paddingLeft="25dp"
                     android:text="@string/temp_comments"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                   android:textColor="@color/comment_text_color"
+                   android:textColor="@color/comment_color"
                     android:textSize="14sp" />
             </FrameLayout>
 

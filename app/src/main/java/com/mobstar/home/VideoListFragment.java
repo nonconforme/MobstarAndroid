@@ -962,16 +962,25 @@ public class VideoListFragment extends Fragment {
 			}
 
             setupViews(viewHolder, position);
-
-            viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), SplitActivity.class);
-                    intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
-                    getActivity().startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                }
-            });
+			if(arrEntryPojos.get(position).getVideoLink() == null) {
+				viewHolder.textVideoSplit.setEnabled(false);
+				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+			}
+			else {
+				viewHolder.textVideoSplit.setEnabled(true);
+				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
+				viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (arrEntryPojos.get(position).getVideoLink() == null)
+							return;
+						Intent intent = new Intent(getActivity(), SplitActivity.class);
+						intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
+						getActivity().startActivity(intent);
+						getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					}
+				});
+			}
 
 
 

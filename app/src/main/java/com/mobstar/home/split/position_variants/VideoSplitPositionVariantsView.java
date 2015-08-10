@@ -84,10 +84,10 @@ public class VideoSplitPositionVariantsView extends FrameLayout implements Check
                 layoutId = R.layout.video_variant_origin_right;
                 break;
             case ORIGIN_RIGHT_TOP:
-
+                layoutId = R.layout.video_varint_origin_right_top;
                 break;
             case ORIGIN_FULLSCREEN:
-
+                layoutId = R.layout.video_variant_origin_fullscreen;
                 break;
             case ORIGIN_TOP:
                 layoutId = R.layout.video_variant_origin_top;

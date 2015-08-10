@@ -4,8 +4,8 @@
 
     <corners android:radius="13dp" />
 
-    <solid android:color="@android:color/transparent" />
-    
-    <stroke android:width="1dp" android:color="@color/comment_color"/>
+    <solid android:color="@color/yellow_color" />
+
+    <stroke android:width="1dp" android:color="@color/comment_color_state_pressed"/>
 
 </shape>
