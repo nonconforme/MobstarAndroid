@@ -1,4 +1,4 @@
-package com.mobstar.home.split;
+package com.mobstar.home.split.position_variants;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -7,16 +7,16 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.GridView;
 
 import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
+import com.mobstar.home.split.SplitActivity;
 
 /**
  * Created by vasia on 06.08.15.
  */
-public class SplitLayoutFragment extends Fragment implements View.OnClickListener {
+public class PositionVariantsFragment extends Fragment implements View.OnClickListener {
 
     private CustomTextviewBold btnNext, btnBack;
     private SplitActivity mSplitActivity;
@@ -50,7 +50,7 @@ public class SplitLayoutFragment extends Fragment implements View.OnClickListene
     }
 
     private void setupAdapter(){
-        SplitLayoutAdapter adapter = new SplitLayoutAdapter(getActivity());
+        PositionVariantsAdapter adapter = new PositionVariantsAdapter(getActivity());
         gridView.setAdapter(adapter);
     }
 

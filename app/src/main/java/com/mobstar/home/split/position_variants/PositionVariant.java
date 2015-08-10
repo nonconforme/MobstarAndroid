@@ -1,4 +1,4 @@
-package com.mobstar.home.split;
+package com.mobstar.home.split.position_variants;
 
 /**
  * Created by vasia on 07.08.15.

@@ -1,4 +1,4 @@
-package com.mobstar.home.split;
+package com.mobstar.home.split.position_variants;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,15 +12,15 @@ import com.mobstar.R;
 /**
  * Created by vasia on 06.08.15.
  */
-public class VideoSplitLayoutVariantsView extends FrameLayout implements Checkable {
+public class VideoSplitPositionVariantsView extends FrameLayout implements Checkable {
 
     private boolean mChecked;
     private FrameLayout frameSelected, contentContainer;
     private ImageView ivSelected;
-    private VideoPositionVariants positionVariants;
+    private VideoPositionVariantsData positionVariants;
     private FrameLayout comingSoonMessage;
 
-    public VideoSplitLayoutVariantsView(Context context, VideoPositionVariants _positionVariants) {
+    public VideoSplitPositionVariantsView(Context context, VideoPositionVariantsData _positionVariants) {
         super(context);
         positionVariants = _positionVariants;
         setupCustomComponentView();

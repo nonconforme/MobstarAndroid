@@ -1,4 +1,4 @@
-package com.mobstar.home.split;
+package com.mobstar.home.split.position_variants;
 
 import android.content.Context;
 import android.view.View;
@@ -10,25 +10,25 @@ import java.util.ArrayList;
 /**
  * Created by vasia on 06.08.15.
  */
-public class SplitLayoutAdapter extends BaseAdapter {
+public class PositionVariantsAdapter extends BaseAdapter {
 
-    private ArrayList<VideoPositionVariants> videoGroupVariant;
+    private ArrayList<VideoPositionVariantsData> videoGroupVariant;
     private Context mContext;
     private int lastCheckedPosition = 0;
 
-    public SplitLayoutAdapter(final Context _context){
+    public PositionVariantsAdapter(final Context _context){
         mContext = _context;
         setupTestItems();
     }
 
     private void setupTestItems(){
         videoGroupVariant = new ArrayList<>();
-        videoGroupVariant.add(new VideoPositionVariants(PositionVariant.ORIGIN_RIGHT, true));
-        videoGroupVariant.add(new VideoPositionVariants(PositionVariant.ORIGIN_LEFT, true));
-        videoGroupVariant.add(new VideoPositionVariants(PositionVariant.ORIGIN_RIGHT_TOP, false));
-        videoGroupVariant.add(new VideoPositionVariants(PositionVariant.ORIGIN_FULLSCREEN, false));
-        videoGroupVariant.add(new VideoPositionVariants(PositionVariant.ORIGIN_TOP, false));
-        videoGroupVariant.add(new VideoPositionVariants(PositionVariant.ORIGIN_BOTTOM, false));
+        videoGroupVariant.add(new VideoPositionVariantsData(PositionVariant.ORIGIN_RIGHT, true));
+        videoGroupVariant.add(new VideoPositionVariantsData(PositionVariant.ORIGIN_LEFT, true));
+        videoGroupVariant.add(new VideoPositionVariantsData(PositionVariant.ORIGIN_RIGHT_TOP, false));
+        videoGroupVariant.add(new VideoPositionVariantsData(PositionVariant.ORIGIN_FULLSCREEN, false));
+        videoGroupVariant.add(new VideoPositionVariantsData(PositionVariant.ORIGIN_TOP, false));
+        videoGroupVariant.add(new VideoPositionVariantsData(PositionVariant.ORIGIN_BOTTOM, false));
     }
 
     @Override
@@ -48,11 +48,11 @@ public class SplitLayoutAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        final VideoSplitLayoutVariantsView variantsView;
+        final VideoSplitPositionVariantsView variantsView;
         if (convertView == null){
-            variantsView = new VideoSplitLayoutVariantsView(mContext, videoGroupVariant.get(position));
+            variantsView = new VideoSplitPositionVariantsView(mContext, videoGroupVariant.get(position));
         }
-        else variantsView = (VideoSplitLayoutVariantsView) convertView;
+        else variantsView = (VideoSplitPositionVariantsView) convertView;
         variantsView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

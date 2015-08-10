@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 
 import com.mobstar.R;
+import com.mobstar.home.split.position_variants.PositionVariantsFragment;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 
@@ -27,7 +28,7 @@ public class SplitActivity extends Activity {
             entry = (EntryPojo) getIntent().getSerializableExtra(Constant.ENTRY);
         findViews();
         if (savedInstanceState == null)
-             replaceTopNavigationFragment(new SplitLayoutFragment());
+             replaceTopNavigationFragment(new PositionVariantsFragment());
     }
 
     private void findViews(){
