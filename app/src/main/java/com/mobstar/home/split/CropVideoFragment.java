@@ -111,7 +111,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 mSplitActivity.onBackPressed();
                 break;
             case R.id.btnNext:
-                mSplitActivity.replaceFragmentWithBackStack(new RecordSplitVideoFragment());
+                mSplitActivity.replaceRecordVideoFragment();
                 break;
         }
     }
