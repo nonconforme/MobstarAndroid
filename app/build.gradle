@@ -25,7 +25,7 @@ android {
 }
 
 dependencies {
-    compile project(':simple-crop-image-lib')
+    compile 'com.edmodo:cropper:1.0.1'
     compile files('libs/android-async-http-1.4.6.jar')
     compile files('libs/bitlyj-2.0.0.jar')
     compile files('libs/commons-lang3-3.3.2.jar')

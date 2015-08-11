@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 
 import com.mobstar.R;
+import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.home.split.position_variants.PositionVariantsFragment;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
@@ -18,7 +19,6 @@ import com.mobstar.utils.Constant;
 public class SplitActivity extends Activity {
 
     private EntryPojo entry;
-    private FrameLayout fragmentContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,13 +26,8 @@ public class SplitActivity extends Activity {
         setContentView(R.layout.activity_split);
         if (getIntent() != null)
             entry = (EntryPojo) getIntent().getSerializableExtra(Constant.ENTRY);
-        findViews();
         if (savedInstanceState == null)
              replaceTopNavigationFragment(new PositionVariantsFragment());
-    }
-
-    private void findViews(){
-        fragmentContainer = (FrameLayout) findViewById(R.id.fragmentContainer);
     }
 
     @Override
@@ -61,9 +56,12 @@ public class SplitActivity extends Activity {
                 .commit();
     }
 
-    public void replaceCropVideoFragment(){
-        replaceFragmentWithBackStack(CropVideoFragment.newInstance(entry.getVideoThumb()));
+    public void replaceCropVideoFragment(final PositionVariant _positionVariant){
+        replaceFragmentWithBackStack(CropVideoFragment.newInstance(entry.getVideoThumb(), _positionVariant));
     }
 
+    public EntryPojo getEntry(){
+        return entry;
+    }
 
 }

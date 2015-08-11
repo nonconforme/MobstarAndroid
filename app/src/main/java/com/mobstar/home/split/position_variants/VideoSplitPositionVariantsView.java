@@ -17,10 +17,10 @@ public class VideoSplitPositionVariantsView extends FrameLayout implements Check
     private boolean mChecked;
     private FrameLayout frameSelected, contentContainer;
     private ImageView ivSelected;
-    private VideoPositionVariantsData positionVariants;
+    private VideoPositionVariantsItem positionVariants;
     private FrameLayout comingSoonMessage;
 
-    public VideoSplitPositionVariantsView(Context context, VideoPositionVariantsData _positionVariants) {
+    public VideoSplitPositionVariantsView(Context context, VideoPositionVariantsItem _positionVariants) {
         super(context);
         positionVariants = _positionVariants;
         setupCustomComponentView();

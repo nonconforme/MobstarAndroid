@@ -43,7 +43,7 @@ import com.mobstar.R;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
-import eu.janmuller.android.simplecropimage.CropImage;
+//import eu.janmuller.android.simplecropimage.CropImage;
 
 public class TakePictureActivity extends Activity {
 
@@ -471,59 +471,59 @@ public class TakePictureActivity extends Activity {
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
-	private void doCrop(Uri mImageCaptureUri) {
-		isCapture = false;
-		// Intent intent = new Intent("com.android.camera.action.CROP");
-		// intent.setType("image/*");
-		// List<ResolveInfo> list =
-		// getPackageManager().queryIntentActivities(intent, 0);
-		// int size = list.size();
-		// if (size == 0) {
-		// Toast.makeText(this, "Can not find image crop application",
-		// Toast.LENGTH_SHORT).show();
-		// } else {
-		// DisplayMetrics metrics = new DisplayMetrics();
-		// getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		// intent.setData(mImageCaptureUri);
-		// intent.putExtra("crop", true);
-		// intent.putExtra("outputX", metrics.widthPixels);
-		// intent.putExtra("outputY", metrics.widthPixels);
-		// intent.putExtra("aspectX", 1);
-		// intent.putExtra("aspectY", 1);
-		// intent.putExtra("scale",true);
-		// Intent i = new Intent(intent);
-		// String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-		// Locale.ENGLISH).format(new Date());
-		// ContentValues values = new ContentValues();
-		// values.put(MediaStore.Images.Media.TITLE, "IMG_" + timeStamp +
-		// ".jpg");
-		// tempUri =
-		// getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-		// values);
-		// i.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
-		// ResolveInfo res = list.get(0);
-		// i.setComponent(new ComponentName(res.activityInfo.packageName,
-		// res.activityInfo.name));
-		// startActivityForResult(i, 27);
-		// }
-
-		Intent intent = new Intent(TakePictureActivity.this, CropImage.class);
-
-		// tell CropImage activity to look for image to crop
-		String filePath = mImageCaptureUri.getPath();
-		intent.putExtra(CropImage.IMAGE_PATH, filePath);
-
-		// allow CropImage activity to rescale image
-		intent.putExtra(CropImage.SCALE, true);
-
-		// if the aspect ratio is fixed to ratio 3/2
-		intent.putExtra(CropImage.ASPECT_X, 3);
-		intent.putExtra(CropImage.ASPECT_Y, 2);
-
-		// start activity CropImage with certain request code and listen
-		// for result
-		startActivityForResult(intent, 27);
-	}
+//	private void doCrop(Uri mImageCaptureUri) {
+//		isCapture = false;
+//		// Intent intent = new Intent("com.android.camera.action.CROP");
+//		// intent.setType("image/*");
+//		// List<ResolveInfo> list =
+//		// getPackageManager().queryIntentActivities(intent, 0);
+//		// int size = list.size();
+//		// if (size == 0) {
+//		// Toast.makeText(this, "Can not find image crop application",
+//		// Toast.LENGTH_SHORT).show();
+//		// } else {
+//		// DisplayMetrics metrics = new DisplayMetrics();
+//		// getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//		// intent.setData(mImageCaptureUri);
+//		// intent.putExtra("crop", true);
+//		// intent.putExtra("outputX", metrics.widthPixels);
+//		// intent.putExtra("outputY", metrics.widthPixels);
+//		// intent.putExtra("aspectX", 1);
+//		// intent.putExtra("aspectY", 1);
+//		// intent.putExtra("scale",true);
+//		// Intent i = new Intent(intent);
+//		// String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+//		// Locale.ENGLISH).format(new Date());
+//		// ContentValues values = new ContentValues();
+//		// values.put(MediaStore.Images.Media.TITLE, "IMG_" + timeStamp +
+//		// ".jpg");
+//		// tempUri =
+//		// getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//		// values);
+//		// i.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
+//		// ResolveInfo res = list.get(0);
+//		// i.setComponent(new ComponentName(res.activityInfo.packageName,
+//		// res.activityInfo.name));
+//		// startActivityForResult(i, 27);
+//		// }
+//
+//		Intent intent = new Intent(TakePictureActivity.this, CropImage.class);
+//
+//		// tell CropImage activity to look for image to crop
+//		String filePath = mImageCaptureUri.getPath();
+//		intent.putExtra(CropImage.IMAGE_PATH, filePath);
+//
+//		// allow CropImage activity to rescale image
+//		intent.putExtra(CropImage.SCALE, true);
+//
+//		// if the aspect ratio is fixed to ratio 3/2
+//		intent.putExtra(CropImage.ASPECT_X, 3);
+//		intent.putExtra(CropImage.ASPECT_Y, 2);
+//
+//		// start activity CropImage with certain request code and listen
+//		// for result
+//		startActivityForResult(intent, 27);
+//	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

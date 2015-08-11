@@ -21,6 +21,7 @@ public class PositionVariantsFragment extends Fragment implements View.OnClickLi
     private CustomTextviewBold btnNext, btnBack;
     private SplitActivity mSplitActivity;
     private GridView gridView;
+    private PositionVariantsAdapter mAdapter;
 
     @Override
     public void onAttach(Activity activity) {
@@ -50,8 +51,8 @@ public class PositionVariantsFragment extends Fragment implements View.OnClickLi
     }
 
     private void setupAdapter(){
-        PositionVariantsAdapter adapter = new PositionVariantsAdapter(getActivity());
-        gridView.setAdapter(adapter);
+        mAdapter = new PositionVariantsAdapter(getActivity());
+        gridView.setAdapter(mAdapter);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class PositionVariantsFragment extends Fragment implements View.OnClickLi
                 mSplitActivity.onBackPressed();
                 break;
             case R.id.btnNext:
-                mSplitActivity.replaceCropVideoFragment();
+                mSplitActivity.replaceCropVideoFragment(mAdapter.getSelectedPositionVariant());
                 break;
         }
     }

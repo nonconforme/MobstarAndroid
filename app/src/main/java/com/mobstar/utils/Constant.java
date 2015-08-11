@@ -145,6 +145,7 @@ public class Constant {
 
 
 //	app constant
-	public static String IMAGE     = "image";
+	public static final String IMAGE              = "image";
+	public static final String POSITION_VARIANT   = "position_variant";
 	
 }

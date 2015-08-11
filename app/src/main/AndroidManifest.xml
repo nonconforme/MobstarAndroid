@@ -415,7 +415,7 @@
 
         <service android:name=".service.NotificationService" />
 
-        <activity android:name="eu.janmuller.android.simplecropimage.CropImage" />
+        <!--<activity android:name="eu.janmuller.android.simplecropimage.CropImage" />-->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
