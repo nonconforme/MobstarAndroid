@@ -20,6 +20,7 @@ import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,6 +29,7 @@ import com.mobstar.R;
 import com.mobstar.utils.Utility;
 
 public class ApproveVideoActivity extends Activity {
+	public static final String APPROVE_SPLIT_VIDEO = "approve split video";
 
 	Context mContext;
 
@@ -54,6 +56,7 @@ public class ApproveVideoActivity extends Activity {
 	Typeface typefaceBtn;
 	
 	String categoryId,subCat;
+	private boolean isSplitVideo = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +68,14 @@ public class ApproveVideoActivity extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			sVideoPath = extras.getString("video_path");
-			
+
 			if(extras.containsKey("categoryId")) {
 				categoryId=extras.getString("categoryId");
 				subCat=extras.getString("subCat");
 			}
+
+			if (extras.containsKey(APPROVE_SPLIT_VIDEO))
+				isSplitVideo=true;
 		}
 
 		calculateVideoSize();
@@ -111,6 +117,11 @@ public class ApproveVideoActivity extends Activity {
 		surfaceTextureListener = new CustomSurfaceTextureListener();
 
 		textureView = (TextureView) findViewById(R.id.textureView);
+
+//		if (isSplitVideo){
+//			textureView.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
+//					, getResources().getDimensionPixelSize(R.dimen.texture_view_height)));
+//		}
 
 		textureView.setSurfaceTextureListener(surfaceTextureListener);
 		if (textureView.isAvailable()) {

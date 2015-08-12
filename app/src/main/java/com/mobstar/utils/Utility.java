@@ -161,6 +161,27 @@ public class Utility {
 		return mediaFile;
 	}
 
+	public static File getTemporaryMediaFile(Context mContext, String name) {
+		String path = Environment.getExternalStorageDirectory().getPath()
+				+ "/Android/data/" + mContext.getPackageName() +"/";
+		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
+		File mediaStorageDir = new File(path);
+		// Create the storage directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				//				Log.d(Constant.TAG, "failed to create directory");
+				return null;
+			}
+		}
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		File mediaFile;
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator + name + timeStamp + ".mp4");
+
+		return mediaFile;
+	}
+
+
 	public static Bitmap rotate(Bitmap bitmap, int degree) {
 		int w = bitmap.getWidth();
 		int h = bitmap.getHeight();

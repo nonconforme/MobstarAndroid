@@ -42,5 +42,6 @@ dependencies {
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'com.facebook.android:facebook-android-sdk:3.23.1'
-//    compile 'com.instabug.library:instabugsupport:1+'
+    //    compile 'com.instabug.library:instabugsupport:1+'
+    compile project(':ffmpeg4android_lib')
 }

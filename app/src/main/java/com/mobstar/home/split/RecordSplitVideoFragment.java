@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
@@ -27,10 +29,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.home.split.ffmpeg.RotationBackground;
+import com.mobstar.home.split.ffmpeg.TranscdingBackground;
 import com.mobstar.upload.ApproveVideoActivity;
-import com.mobstar.upload.RecordVideoActivity;
 import com.mobstar.utils.Utility;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,6 +42,7 @@ import java.util.List;
  * Created by vasia on 06.08.15.
  */
 public class RecordSplitVideoFragment extends Fragment {
+    private static final String LOG_TAG = RecordSplitVideoFragment.class.getName();
 
 //    private ImageView btnRecord;
 //    private TextView textRecordSecond;
@@ -87,12 +92,41 @@ public class RecordSplitVideoFragment extends Fragment {
     String categoryId="7";
     String subCat;
     private TextureView textureView;
+    private String sVideoPathBack= Environment.getExternalStorageDirectory().getPath() + "/videokit/in.mp4";
+    MediaPlayer mediaPlayer;
+    private String readyFilePath;
+    private SplitActivity splitActivity;
+    private boolean isCompleatCam;
+    private boolean isCompleatBack;
+    private String camersRotation ;
+    private String backRotation ;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        splitActivity =(SplitActivity) activity;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle extras =savedInstanceState;
+        if (extras != null) {
+//            sVideoPathBack = extras.getString("video_path");
+
+            if(extras.containsKey("categoryId")) {
+                categoryId=extras.getString("categoryId");
+                subCat=extras.getString("subCat");
+            }
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View inflatedView = inflater.inflate(R.layout.fragment_record_video_split, container, false);
         mContext=getActivity();
+        mediaPlayer = new MediaPlayer();
         findView(inflatedView);
         recordTimer = new CountDownTimer(19000, 1000) {
 
@@ -132,19 +166,13 @@ public class RecordSplitVideoFragment extends Fragment {
         btnRecord = (ImageView) inflatedView.findViewById(R.id.btnRecord);
         textRecordSecond = (TextView) inflatedView.findViewById(R.id.textRecordSecond);
         textureView = (TextureView) inflatedView.findViewById(R.id.textureView);
+
 //        FrameLayout preview = (FrameLayout) inflatedView.findViewById(R.id.camera_preview);
         textRecordSecond.setVisibility(View.GONE);
 
         textRecordSecond.setText(currentCount + "");
 
-        btnRecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // get an image from the camera
-                mPreview.RecordVideo();
 
-            }
-        });
 
         if (checkCameraHardware(getActivity())) {
 
@@ -175,7 +203,9 @@ public class RecordSplitVideoFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     // get an image from the camera
-                    mPreview.RecordVideo();
+//                    mPreview.RecordVideo();
+                    Surface surface = new Surface(textureView.getSurfaceTexture());
+                    PlayVideo(0, surface);
 
                 }
             });
@@ -183,6 +213,45 @@ public class RecordSplitVideoFragment extends Fragment {
 
     }
 
+
+    void PlayVideo(int position, final Surface surface) {
+
+        new Thread() {
+
+            public void run() {
+
+                try {
+                    if (mediaPlayer != null) {
+                        mediaPlayer.reset();
+                    }
+                    sVideoPathBack = splitActivity.getVideoFilePath();
+                    File file = new File(sVideoPathBack);
+                    Log.d(LOG_TAG,"sVideoPathBack="+sVideoPathBack);
+                    if (file.exists()) {
+                        mediaPlayer.setDataSource(sVideoPathBack);
+                        mediaPlayer.setSurface(surface);
+                        mediaPlayer.setScreenOnWhilePlaying(true);
+                        mediaPlayer.prepareAsync();
+
+                        // Play video when the media source is ready for
+                        // playback.
+                        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(final MediaPlayer mediaPlayer) {
+                                if (!isRecording)
+                                    mediaPlayer.start();
+                                mPreview.RecordVideo();
+
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
+    }
 
 
     //todo move to utils
@@ -265,13 +334,15 @@ public class RecordSplitVideoFragment extends Fragment {
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
-            Camera.Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
+//            Camera.Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
 
             // // Step 3: Set a CamcorderProfile (requires API Level 8 or
             // higher)
             CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
-            profile.videoFrameWidth = optimalVideoSize.width;
-            profile.videoFrameHeight = optimalVideoSize.height;
+//            profile.videoFrameWidth = optimalVideoSize.width;
+            profile.videoFrameWidth = desiredwidth;
+//            profile.videoFrameHeight = optimalVideoSize.height;
+            profile.videoFrameHeight = desiredheight;
             mMediaRecorder.setProfile(profile);
 
             // Log.v(Constant.TAG, "optimalVideoSize width " +
@@ -300,10 +371,10 @@ public class RecordSplitVideoFragment extends Fragment {
 
             if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 mMediaRecorder.setOrientationHint(90);
-                //				Log.d("mobstar","setorientation 90");
+                				Log.d(LOG_TAG, "setorientation 90");
             } else {
                 mMediaRecorder.setOrientationHint(270);
-                //				Log.d("mobstar","setorientation 270");
+                				Log.d(LOG_TAG, "setorientation 270");
             }
 
             // Step 6: Prepare configured MediaRecorder
@@ -340,14 +411,37 @@ public class RecordSplitVideoFragment extends Fragment {
                 releaseCamera();
 
                 isRecording = false;
+                camersRotation = Utility.getTemporaryMediaFile(mContext, "camersRotation").toString();
+                backRotation = Utility.getTemporaryMediaFile(mContext, "backRotation").toString();
 
-                Intent intent = new Intent(mContext, ApproveVideoActivity.class);
-                intent.putExtra("video_path", sFilepath);
-                intent.putExtra("categoryId", categoryId);
-                if (subCat != null && subCat.length() > 0) {
-                    intent.putExtra("subCat", subCat);
-                }
-                startActivity(intent);
+                RotationBackground rotationBackground = new RotationBackground(getActivity()
+                        ,sFilepath,camersRotation){
+                    @Override
+                    protected void onPostExecute(String result) {
+                        super.onPostExecute(result);
+                        Log.d(LOG_TAG, "Compleat camersRotation");
+                        isCompleatCam=true;
+                        tryJoinVideo();
+                    }
+                };
+                rotationBackground.execute();
+
+                (new RotationBackground(getActivity()
+                        ,sVideoPathBack,backRotation){
+                    @Override
+                    protected void onPostExecute(String result) {
+                        super.onPostExecute(result);
+                        Log.d(LOG_TAG, "Compleat backRotation");
+                        isCompleatBack=true;
+                        tryJoinVideo();
+
+                    }
+                }).execute();
+
+
+//                startApproveActivity(sFilepath);
+
+
 //                finish();
 //                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 //                onBackPressed();
@@ -446,6 +540,35 @@ public class RecordSplitVideoFragment extends Fragment {
                 //				Log.d(Constant.TAG, "Error starting camera preview: " + e.getMessage());
             }
         }
+    }
+
+    synchronized private void tryJoinVideo() {
+
+        if (isCompleatBack&&isCompleatCam) {
+            readyFilePath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, mContext).toString();
+            TranscdingBackground transcdingBackground = new TranscdingBackground(getActivity()
+                    , camersRotation, backRotation, readyFilePath) {
+                @Override
+                protected void onPostExecute(Integer result) {
+                    super.onPostExecute(result);
+                    Log.d(LOG_TAG, "compleat readyFilePath");
+                    startApproveActivity(readyFilePath);
+                }
+            };
+            transcdingBackground.execute();
+            Log.d(LOG_TAG, "start join video");
+        }
+    }
+
+    private void startApproveActivity(String file) {
+        Intent intent = new Intent(mContext, ApproveVideoActivity.class);
+        intent.putExtra("video_path", file);
+        intent.putExtra("categoryId", categoryId);
+        intent.putExtra(ApproveVideoActivity.APPROVE_SPLIT_VIDEO, true);
+        if (subCat != null && subCat.length() > 0) {
+            intent.putExtra("subCat", subCat);
+        }
+        startActivity(intent);
     }
 
     private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {

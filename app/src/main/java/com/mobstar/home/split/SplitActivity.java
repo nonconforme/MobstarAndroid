@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.R;
+import com.mobstar.home.split.ffmpeg.CropBackground;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.home.split.position_variants.PositionVariantsFragment;
 import com.mobstar.pojo.EntryPojo;
@@ -36,7 +37,8 @@ public class SplitActivity extends Activity {
         if (getIntent() != null)
             entry = (EntryPojo) getIntent().getSerializableExtra(Constant.ENTRY);
         if (savedInstanceState == null)
-             replaceTopNavigationFragment(new PositionVariantsFragment());
+//             replaceTopNavigationFragment(new PositionVariantsFragment());
+             replaceTopNavigationFragment(new RecordSplitVideoFragment());
         if (videoFilePath == null)
             downloadVideoFile();
     }
@@ -76,6 +78,7 @@ public class SplitActivity extends Activity {
     }
 
     public String getVideoFilePath(){
+
         return videoFilePath;
     }
 
@@ -100,12 +103,13 @@ public class SplitActivity extends Activity {
 
                         @Override
                         public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
-
+                            videoFilePath="error";
                         }
 
                         @Override
                         public void onSuccess(int arg0, Header[] arg1, File file) {
                             videoFilePath = currentDirectory + sFileName;
+//                            cropFunction(videoFilePath);
                         }
                     });
                 }
@@ -115,9 +119,23 @@ public class SplitActivity extends Activity {
 
             } else {
                 videoFilePath = currentDirectory + sFileName;
+//                cropFunction(videoFilePath);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void cropFunction(String filePath) {
+        (new CropBackground(this,filePath,Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, this).toString()){
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+                videoFilePath=result;
+                Toast.makeText(SplitActivity.this, "CROPED", Toast.LENGTH_LONG).show();
+            }
+        }).execute();
+        Toast.makeText(this, "video croping", Toast.LENGTH_LONG).show();
     }
 }
