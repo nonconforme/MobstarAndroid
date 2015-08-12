@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.PowerManager;
 import android.util.Log;
 
-import com.netcompss.ffmpeg4android.GeneralUtils;
 import com.netcompss.ffmpeg4android.Prefs;
 import com.netcompss.loader.LoadJNI;
 
@@ -51,7 +50,7 @@ public class TranscdingBackground extends AsyncTask<String, Integer, Integer>
                         "[bg][1:v:0]overlay=w",
 
                 "-s",
-                "640x480",
+                "308x308",
                 "-r",
                 "30",
                 "-b",

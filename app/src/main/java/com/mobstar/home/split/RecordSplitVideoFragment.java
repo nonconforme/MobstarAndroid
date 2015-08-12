@@ -334,15 +334,15 @@ public class RecordSplitVideoFragment extends Fragment {
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
-//            Camera.Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
+            Camera.Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
 
             // // Step 3: Set a CamcorderProfile (requires API Level 8 or
             // higher)
             CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
-//            profile.videoFrameWidth = optimalVideoSize.width;
-            profile.videoFrameWidth = desiredwidth;
-//            profile.videoFrameHeight = optimalVideoSize.height;
-            profile.videoFrameHeight = desiredheight;
+            profile.videoFrameWidth = optimalVideoSize.width;
+//            profile.videoFrameWidth = desiredwidth;
+            profile.videoFrameHeight = optimalVideoSize.height;
+//            profile.videoFrameHeight = desiredheight;
             mMediaRecorder.setProfile(profile);
 
             // Log.v(Constant.TAG, "optimalVideoSize width " +
@@ -426,6 +426,8 @@ public class RecordSplitVideoFragment extends Fragment {
                 };
                 rotationBackground.execute();
 
+//                isCompleatBack=true;
+//                backRotation=sVideoPathBack;
                 (new RotationBackground(getActivity()
                         ,sVideoPathBack,backRotation){
                     @Override
@@ -619,19 +621,19 @@ public class RecordSplitVideoFragment extends Fragment {
 
         switch (rotation) {
             case Surface.ROTATION_0:
-                			Log.d("mobstar", "ROTATION_0");
+                			Log.d(LOG_TAG, "ROTATION_0");
                 degrees = 0;
                 break;
             case Surface.ROTATION_90:
-                			Log.d("mobstar","ROTATION_90");
+                			Log.d(LOG_TAG,"ROTATION_90");
                 degrees = 90;
                 break;
             case Surface.ROTATION_180:
-                			Log.d("mobstar","ROTATION_180");
+                			Log.d(LOG_TAG,"ROTATION_180");
                 degrees = 180;
                 break;
             case Surface.ROTATION_270:
-                			Log.d("mobstar","ROTATION_270");
+                			Log.d(LOG_TAG,"ROTATION_270");
                 degrees = 270;
                 break;
         }

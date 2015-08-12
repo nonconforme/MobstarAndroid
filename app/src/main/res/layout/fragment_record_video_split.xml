@@ -5,6 +5,7 @@
 
     <LinearLayout
         android:id="@+id/combination_layout"
+        android:background="@color/black_color"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="300dp"

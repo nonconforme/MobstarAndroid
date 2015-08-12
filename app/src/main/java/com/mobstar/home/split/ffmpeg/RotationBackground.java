@@ -43,7 +43,7 @@ public class RotationBackground extends AsyncTask<String, Integer, String>
         Log.d(Prefs.TAG, "Acquire wake lock");
         wakeLock.acquire();
 
-        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf transpose=2 -s 640x480 -r 30 -aspect 3:4 -ab 48000 -ac 2 -ar 22050 -vcodec mpeg4 -b 2097152 "+ pathResult;
+        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf transpose=2 -s 154x308 -r 30 -aspect 3:4 -ab 48000 -ac 2 -ar 22050 -vcodec mpeg4 -b 2097152 "+ pathResult;
 
 
         LoadJNI vk = new LoadJNI();

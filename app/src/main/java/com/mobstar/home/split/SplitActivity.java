@@ -7,12 +7,12 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Environment;
 import android.widget.Toast;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.R;
 import com.mobstar.home.split.ffmpeg.CropBackground;
 import com.mobstar.home.split.position_variants.PositionVariant;
-import com.mobstar.home.split.position_variants.PositionVariantsFragment;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -109,7 +109,7 @@ public class SplitActivity extends Activity {
                         @Override
                         public void onSuccess(int arg0, Header[] arg1, File file) {
                             videoFilePath = currentDirectory + sFileName;
-//                            cropFunction(videoFilePath);
+                            cropFunction(videoFilePath);
                         }
                     });
                 }
@@ -119,7 +119,7 @@ public class SplitActivity extends Activity {
 
             } else {
                 videoFilePath = currentDirectory + sFileName;
-//                cropFunction(videoFilePath);
+                cropFunction(videoFilePath);
             }
 
         } catch (Exception e) {

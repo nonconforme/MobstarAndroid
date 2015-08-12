@@ -44,7 +44,8 @@ public class CropBackground extends AsyncTask<String, Integer, String>
         wakeLock.acquire();
 
 //        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf transpose=2 -s 640x480 -r 30 -aspect 3:4 -ab 48000 -ac 2 -ar 22050 -vcodec mpeg4 -b 2097152 "+ pathResult;
-        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf crop=100:100:100:0 -s 640x480 -r 15 -aspect 3:4 -ab 12288 -vcodec mpeg4 "+ pathResult;
+//        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf crop=100:100:100:0 -s 640x480 -r 15 -aspect 3:4 -ab 12288 -vcodec mpeg4 "+ pathResult;
+        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf crop=153:307:100:0 -s 154x308 -vcodec mpeg4 "+ pathResult;
 
 
         LoadJNI vk = new LoadJNI();
