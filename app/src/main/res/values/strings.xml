@@ -287,5 +287,8 @@
     <string name="next">NEXT</string>
     <string name="you">YOU</string>
     <string name="message_coming_soom">COMING SOON</string>
+    <string name="crop_title">Crop video</string>
+    <string name="rotation_title">Initialization video</string>
+    <string name="join_title">Associate video</string>
 
 </resources>

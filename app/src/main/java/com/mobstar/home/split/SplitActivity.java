@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.R;
+import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.CropBackground;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.pojo.EntryPojo;
@@ -128,14 +129,12 @@ public class SplitActivity extends Activity {
     }
 
     private void cropFunction(String filePath) {
-        (new CropBackground(this,filePath,Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, this).toString()){
+        final String newpath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, this).toString();
+        new CropBackground(this, filePath, Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, this).toString(), new AfterDoneBackground() {
             @Override
-            protected void onPostExecute(String result) {
-                super.onPostExecute(result);
-                videoFilePath=result;
-                Toast.makeText(SplitActivity.this, "CROPED", Toast.LENGTH_LONG).show();
+            public void onAfterDone() {
+                videoFilePath = newpath;
             }
-        }).execute();
-        Toast.makeText(this, "video croping", Toast.LENGTH_LONG).show();
+        }).runTranscoding();
     }
 }

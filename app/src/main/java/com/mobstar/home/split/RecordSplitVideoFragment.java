@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.RotationBackground;
 import com.mobstar.home.split.ffmpeg.TranscdingBackground;
 import com.mobstar.upload.ApproveVideoActivity;
@@ -96,8 +97,6 @@ public class RecordSplitVideoFragment extends Fragment {
     MediaPlayer mediaPlayer;
     private String readyFilePath;
     private SplitActivity splitActivity;
-    private boolean isCompleatCam;
-    private boolean isCompleatBack;
     private String camersRotation ;
     private String backRotation ;
 
@@ -413,40 +412,24 @@ public class RecordSplitVideoFragment extends Fragment {
                 isRecording = false;
                 camersRotation = Utility.getTemporaryMediaFile(mContext, "camersRotation").toString();
                 backRotation = Utility.getTemporaryMediaFile(mContext, "backRotation").toString();
+                backRotation=sVideoPathBack;
+               new RotationBackground(getActivity()
+                       , sFilepath, camersRotation, new AfterDoneBackground() {
+                   @Override
+                   public void onAfterDone() {
+                       Log.d(LOG_TAG, "start join video");
+                       readyFilePath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, mContext).toString();
+                       new TranscdingBackground(getActivity()
+                               , camersRotation, backRotation, readyFilePath, new AfterDoneBackground() {
+                           @Override
+                           public void onAfterDone() {
+                               Log.d(LOG_TAG, "compleat readyFilePath");
+                               startApproveActivity(readyFilePath);
+                           }
+                       }).runTranscoding();
+                   }
+               }).runTranscoding();
 
-                RotationBackground rotationBackground = new RotationBackground(getActivity()
-                        ,sFilepath,camersRotation){
-                    @Override
-                    protected void onPostExecute(String result) {
-                        super.onPostExecute(result);
-                        Log.d(LOG_TAG, "Compleat camersRotation");
-                        isCompleatCam=true;
-                        tryJoinVideo();
-                    }
-                };
-                rotationBackground.execute();
-
-//                isCompleatBack=true;
-//                backRotation=sVideoPathBack;
-                (new RotationBackground(getActivity()
-                        ,sVideoPathBack,backRotation){
-                    @Override
-                    protected void onPostExecute(String result) {
-                        super.onPostExecute(result);
-                        Log.d(LOG_TAG, "Compleat backRotation");
-                        isCompleatBack=true;
-                        tryJoinVideo();
-
-                    }
-                }).execute();
-
-
-//                startApproveActivity(sFilepath);
-
-
-//                finish();
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                onBackPressed();
 
             } else {
                 // initialize video camera
@@ -544,23 +527,6 @@ public class RecordSplitVideoFragment extends Fragment {
         }
     }
 
-    synchronized private void tryJoinVideo() {
-
-        if (isCompleatBack&&isCompleatCam) {
-            readyFilePath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, mContext).toString();
-            TranscdingBackground transcdingBackground = new TranscdingBackground(getActivity()
-                    , camersRotation, backRotation, readyFilePath) {
-                @Override
-                protected void onPostExecute(Integer result) {
-                    super.onPostExecute(result);
-                    Log.d(LOG_TAG, "compleat readyFilePath");
-                    startApproveActivity(readyFilePath);
-                }
-            };
-            transcdingBackground.execute();
-            Log.d(LOG_TAG, "start join video");
-        }
-    }
 
     private void startApproveActivity(String file) {
         Intent intent = new Intent(mContext, ApproveVideoActivity.class);
