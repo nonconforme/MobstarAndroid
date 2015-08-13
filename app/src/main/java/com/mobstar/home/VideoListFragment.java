@@ -963,12 +963,8 @@ public class VideoListFragment extends Fragment {
 			}
 
             setupViews(viewHolder, position);
-			if(arrEntryPojos.get(position).getVideoLink() == null) {
-				setEnableSplitButton(viewHolder, position, false);
-			}
-			else {
-				setEnableSplitButton(viewHolder, position, true);
-			}
+			setEnableSplitButton(viewHolder, position, false);
+
 
 			viewHolder.btnFollow.setOnClickListener(new OnClickListener() {
 				@Override
@@ -1393,6 +1389,8 @@ public class VideoListFragment extends Fragment {
 				Picasso.with(mContext).load(R.drawable.indicator_video).into(viewHolder.ivIndicator);
 				viewHolder.ivAudioIcon.setVisibility(View.GONE);
 				viewHolder.progressbar.setVisibility(View.VISIBLE);
+
+				setEnableSplitButton(viewHolder, position, false);
 				//				viewHolder.progressWheel.setVisibility(View.VISIBLE);
 
 				viewHolder.imgPlaceHolder.setVisibility(View.VISIBLE);
@@ -1405,6 +1403,7 @@ public class VideoListFragment extends Fragment {
 					@Override
 					public void onSuccess() {
 						// TODO Auto-generated method stub
+						setEnableSplitButton(viewHolder, position, true);
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
 						notifyDataSetChanged();
@@ -1452,7 +1451,6 @@ public class VideoListFragment extends Fragment {
 						File file = new File(FILEPATH + sFileName);
 
 						if (file!=null && !file.exists()) {
-							viewHolder.textVideoSplit.setEnabled(false);
 							listDownloadingFile.add(sFileName);
 
 							if (Utility.isNetworkAvailable(mContext)) {
@@ -1473,6 +1471,7 @@ public class VideoListFragment extends Fragment {
 										// TODO Auto-generated method stub
 										// Log.v(Constant.TAG,
 										// "onSuccess Video File  downloaded");
+										setEnableSplitButton(viewHolder, position, true);
 										viewHolder.progressbar.setVisibility(View.GONE);
 										viewHolder.textureView.setVisibility(View.GONE);
 
@@ -1533,6 +1532,7 @@ public class VideoListFragment extends Fragment {
 							// }
 							// });
 						} else {
+							setEnableSplitButton(viewHolder, position, true);
 							viewHolder.progressbar.setVisibility(View.GONE);
 							viewHolder.textureView.setVisibility(View.GONE);
 						}
@@ -1542,6 +1542,7 @@ public class VideoListFragment extends Fragment {
 				}
 
 				else {
+					setEnableSplitButton(viewHolder, position, false);
 					viewHolder.progressbar.setVisibility(View.VISIBLE);
 				}
 
@@ -1918,7 +1919,7 @@ public class VideoListFragment extends Fragment {
 							viewHolder.textureView.setVisibility(View.VISIBLE);
 
 							if (mediaPlayer != null && mediaPlayer.isPlaying() && indexCurrentPlayAudio == position) {
-
+								setEnableSplitButton(viewHolder, position, true);
 								viewHolder.flPlaceHolder.setVisibility(View.GONE);
 								viewHolder.progressbar.setVisibility(View.GONE);
 								// viewHolder.textBgGray.setVisibility(View.GONE);
@@ -1926,11 +1927,12 @@ public class VideoListFragment extends Fragment {
 								// Log.v(Constant.TAG,
 								// "isVideoSurfaceReady Play Video " +
 								// position);
-
+								setEnableSplitButton(viewHolder, position, true);
 								viewHolder.flPlaceHolder.setVisibility(View.GONE);
 								viewHolder.progressbar.setVisibility(View.GONE);
 								// viewHolder.textBgGray.setVisibility(View.GONE);
 							} else {
+								setEnableSplitButton(viewHolder, position, false);
 								viewHolder.flPlaceHolder.setVisibility(View.VISIBLE);
 								viewHolder.progressbar.setVisibility(View.VISIBLE);
 								// viewHolder.textBgGray.setVisibility(View.VISIBLE);

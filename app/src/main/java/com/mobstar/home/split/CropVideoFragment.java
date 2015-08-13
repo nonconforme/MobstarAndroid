@@ -142,9 +142,9 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 .append(getOutputVideoSizeString())
                 .append(" -vcodec mpeg4 ")
                 .append(fileOutPath);
-        final String cropComplexCommanr = stringBuilder.toString();
-        Log.d("tag", "complex command: " + cropComplexCommanr);
-        mSplitActivity.cropFunction(cropComplexCommanr);
+        final String cropComplexCommand = stringBuilder.toString();
+        Log.d("tag", "complex command: " + cropComplexCommand);
+        mSplitActivity.cropFunction(cropComplexCommand);
     }
 
     private String getOutputVideoSizeString(){
