@@ -1475,11 +1475,6 @@ public class VideoListFragment extends Fragment {
 										viewHolder.progressbar.setVisibility(View.GONE);
 										viewHolder.textureView.setVisibility(View.GONE);
 
-										MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-										mediaMetadataRetriever.setDataSource(file.getAbsolutePath());
-										String orientation = mediaMetadataRetriever.extractMetadata(
-												MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION );
-										Log.d("tag", "orientation: " + orientation);
 										listDownloadingFile.remove(file.getName());
 
 										notifyDataSetChanged();

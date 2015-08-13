@@ -46,6 +46,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -174,7 +175,7 @@ public class Utility {
 		// Create the storage directory if it does not exist
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
-				//				Log.d(Constant.TAG, "failed to create directory");
+				Toast.makeText(mContext, "failed to create directory", Toast.LENGTH_SHORT).show();
 				return null;
 			}
 		}

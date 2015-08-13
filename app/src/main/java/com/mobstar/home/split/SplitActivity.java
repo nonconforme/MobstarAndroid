@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.widget.Toast;
@@ -38,11 +39,15 @@ public class SplitActivity extends Activity {
 
         if (getIntent() != null)
             entry = (EntryPojo) getIntent().getSerializableExtra(Constant.ENTRY);
+        if (videoFilePath == null) {
+            final String fileName = Utility.GetFileNameFromURl(entry.getVideoLink());
+            final String filePath = Utility.getCurrentDirectory(this);
+            videoFilePath = filePath + fileName;
+        }
+
         if (savedInstanceState == null)
-             replaceTopNavigationFragment(new PositionVariantsFragment());
+            replaceTopNavigationFragment(new PositionVariantsFragment());
 //             replaceTopNavigationFragment(new RecordSplitVideoFragment());
-        if (videoFilePath == null)
-            downloadVideoFile();
     }
 
     @Override
@@ -75,67 +80,20 @@ public class SplitActivity extends Activity {
         replaceFragmentWithBackStack(CropVideoFragment.newInstance(entry.getVideoThumb(), _positionVariant));
     }
 
-    public void replaceRecordVideoFragment(){
-        replaceFragmentWithBackStack(new RecordSplitVideoFragment());
+    public void replaceRecordVideoFragment(final PositionVariant _positionVariant, final Bitmap _imagePreview){
+        replaceFragmentWithBackStack(RecordSplitVideoFragment.newInstance(_positionVariant, _imagePreview));
     }
 
     public String getVideoFilePath(){
-
         return videoFilePath;
+    }
+
+    public void setVideoFilePath(final String _filePath){
+        videoFilePath = _filePath;
     }
 
     public EntryPojo getEntry(){
         return entry;
     }
 
-    public void downloadVideoFile(){
-        final String sFileName = Utility.GetFileNameFromURl(entry.getVideoLink());
-        try {
-            final String currentDirectory = Environment.getExternalStorageDirectory().getPath()
-                    + "/Android/data/" + this.getPackageName() +"/";
-            final File file = new File(currentDirectory + sFileName);
-            if (file != null && !file.exists()) {
-
-                if (Utility.isNetworkAvailable(this)) {
-                    AsyncHttpClient client = new AsyncHttpClient();
-                    final int DEFAULT_TIMEOUT = 60 * 1000;
-
-                    client.setTimeout(DEFAULT_TIMEOUT);
-                    client.get(entry.getVideoLink(), new FileAsyncHttpResponseHandler(file) {
-
-                        @Override
-                        public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
-                            videoFilePath="error";
-                        }
-
-                        @Override
-                        public void onSuccess(int arg0, Header[] arg1, File file) {
-                            videoFilePath = currentDirectory + sFileName;
-//                            cropFunction(videoFilePath);
-                        }
-                    });
-                }
-                else {
-                    Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-                }
-
-            } else {
-                videoFilePath = currentDirectory + sFileName;
-//                cropFunction(videoFilePath);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void cropFunction(String filePath) {
-        final String newpath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, this).toString();
-        new CropBackground(this, filePath, Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, this).toString(), new AfterDoneBackground() {
-            @Override
-            public void onAfterDone() {
-                videoFilePath = newpath;
-            }
-        }).runTranscoding();
-    }
 }

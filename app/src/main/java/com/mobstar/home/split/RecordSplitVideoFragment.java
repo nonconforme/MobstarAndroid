@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
@@ -32,7 +33,9 @@ import com.mobstar.R;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.RotationBackground;
 import com.mobstar.home.split.ffmpeg.TranscdingBackground;
+import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.upload.ApproveVideoActivity;
+import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 import java.io.File;
@@ -100,6 +103,18 @@ public class RecordSplitVideoFragment extends Fragment {
     private String camersRotation ;
     private String backRotation ;
 
+    private Bitmap imageVideoPreview;
+    private PositionVariant positionVariant;
+
+    public static RecordSplitVideoFragment newInstance(final PositionVariant _positionVariant, final Bitmap _videoPreview){
+        final RecordSplitVideoFragment recordSplitVideoFragment = new RecordSplitVideoFragment();
+        final Bundle args = new Bundle();
+        args.putSerializable(Constant.POSITION_VARIANT, _positionVariant);
+        args.putParcelable(Constant.IMAGE, _videoPreview);
+        recordSplitVideoFragment.setArguments(args);
+        return recordSplitVideoFragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -109,6 +124,7 @@ public class RecordSplitVideoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getFragmentArgs();
         Bundle extras =savedInstanceState;
         if (extras != null) {
 //            sVideoPathBack = extras.getString("video_path");
@@ -117,6 +133,14 @@ public class RecordSplitVideoFragment extends Fragment {
                 categoryId=extras.getString("categoryId");
                 subCat=extras.getString("subCat");
             }
+        }
+    }
+
+    private void getFragmentArgs(){
+        final Bundle args = getArguments();
+        if (args != null){
+            imageVideoPreview = args.getParcelable(Constant.IMAGE);
+            positionVariant = (PositionVariant) args.getSerializable(Constant.POSITION_VARIANT);
         }
     }
 
@@ -414,7 +438,7 @@ public class RecordSplitVideoFragment extends Fragment {
                 backRotation = Utility.getTemporaryMediaFile(mContext, "backRotation").toString();
                 backRotation=sVideoPathBack;
                new RotationBackground(getActivity()
-                       , sFilepath, camersRotation, new AfterDoneBackground() {
+                       , sFilepath, camersRotation, 2, new AfterDoneBackground() {
                    @Override
                    public void onAfterDone() {
                        Log.d(LOG_TAG, "start join video");

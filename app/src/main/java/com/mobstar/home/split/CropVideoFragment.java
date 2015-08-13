@@ -8,6 +8,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -20,6 +21,9 @@ import android.widget.ProgressBar;
 
 import com.edmodo.cropper.CropImageView;
 import com.mobstar.R;
+import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
+import com.mobstar.home.split.ffmpeg.CropBackground;
+import com.mobstar.home.split.ffmpeg.RotationBackground;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -116,13 +120,62 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 mSplitActivity.onBackPressed();
                 break;
             case R.id.btnNext:
-                createCroppedVideo();
-//                mSplitActivity.replaceRecordVideoFragment();
+                onClickNext();
                 break;
         }
     }
 
-    private void createCroppedVideo(){
+    private void onClickNext(){
+        final int orientation = getVideoOrientation(mSplitActivity.getVideoFilePath());
+        if (orientation == 0){
+            createCroppedVideoCommand();
+        }else createNormalOrientationVideo(orientation);
+    }
+
+    private void createNormalOrientationVideo(int _orientation){
+        int rotation = 0;
+        switch (_orientation){
+            case 0:
+                rotation = 0;
+                break;
+            case 90:
+                rotation = 1;
+                break;
+            case 270:
+                rotation = 2;
+                break;
+        }
+
+        final String outFile = Utility.getTemporaryMediaFile(mSplitActivity, "backRotation").toString();
+        if (outFile == null)
+            return;
+        new RotationBackground(
+                mSplitActivity,
+                mSplitActivity.getVideoFilePath(),
+                outFile,
+                rotation,
+                new AfterDoneBackground() {
+                    @Override
+                    public void onAfterDone() {
+                        mSplitActivity.setVideoFilePath(outFile);
+                        createCroppedVideoCommand();
+                    }
+                }
+        ).runTranscoding();
+    }
+
+
+    private int getVideoOrientation(final String _videoFilePath){
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        mediaMetadataRetriever.setDataSource(_videoFilePath);
+        String orientation = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION );
+        Log.d("tag", "orientation: " + orientation);
+        if (orientation == null)
+            return 0;
+        return Integer.parseInt(orientation);
+    }
+
+    private void createCroppedVideoCommand(){
         final String fileInPath = mSplitActivity.getVideoFilePath();
         final String fileOutPath = Utility.getTemporaryMediaFile(mSplitActivity, "cropUot").toString();
         final Rect rect = getCropRect();
@@ -144,7 +197,17 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 .append(fileOutPath);
         final String cropComplexCommand = stringBuilder.toString();
         Log.d("tag", "complex command: " + cropComplexCommand);
-        mSplitActivity.cropFunction(cropComplexCommand);
+        startCropTask(cropComplexCommand, fileOutPath);
+    }
+
+    private void startCropTask(final String _stringCommand, final String _fileOutPath){
+        new CropBackground(mSplitActivity, _stringCommand, new AfterDoneBackground() {
+            @Override
+            public void onAfterDone() {
+                mSplitActivity.setVideoFilePath(_fileOutPath);
+                mSplitActivity.replaceRecordVideoFragment(mPositionVariant, ivVideoImage.getCroppedImage());
+            }
+        }).runTranscoding();
     }
 
     private String getOutputVideoSizeString(){

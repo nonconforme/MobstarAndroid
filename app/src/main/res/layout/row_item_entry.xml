@@ -306,15 +306,6 @@
                     android:textSize="14sp" />
             </FrameLayout>
 
-            <ImageView
-                android:id="@+id/btnShare"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/icon_share" />
-
             <FrameLayout
                 android:id="@+id/layoutSplit"
                 android:layout_width="80dp"
@@ -334,6 +325,15 @@
                     android:textColor="@color/comment_color"
                     android:textSize="14sp" />
             </FrameLayout>
+
+            <ImageView
+                android:id="@+id/btnShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/icon_share" />
 
             <ImageView
                 android:id="@+id/btnInfo"
