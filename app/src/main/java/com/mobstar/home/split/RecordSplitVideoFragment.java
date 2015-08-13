@@ -12,7 +12,6 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
@@ -96,12 +95,13 @@ public class RecordSplitVideoFragment extends Fragment {
     String categoryId="7";
     String subCat;
     private TextureView textureView;
-    private String sVideoPathBack= Environment.getExternalStorageDirectory().getPath() + "/videokit/in.mp4";
+    private String sVideoPathBack;
     MediaPlayer mediaPlayer;
     private String readyFilePath;
     private SplitActivity splitActivity;
     private String camersRotation ;
     private String backRotation ;
+    private ImageView vImageVideo;
 
     private Bitmap imageVideoPreview;
     private PositionVariant positionVariant;
@@ -232,6 +232,10 @@ public class RecordSplitVideoFragment extends Fragment {
 
                 }
             });
+
+            vImageVideo = (ImageView) inflatedView.findViewById(R.id.imageFrame);
+            vImageVideo.setImageBitmap(imageVideoPreview);
+
         }
 
     }
@@ -261,8 +265,7 @@ public class RecordSplitVideoFragment extends Fragment {
                         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
                             public void onPrepared(final MediaPlayer mediaPlayer) {
-                                if (!isRecording)
-                                    mediaPlayer.start();
+
                                 mPreview.RecordVideo();
 
                             }
@@ -422,7 +425,8 @@ public class RecordSplitVideoFragment extends Fragment {
             if (isRecording) {
                 // stop recording and release camera
                 try {
-                    mMediaRecorder.stop(); // stop the recording
+                    mMediaRecorder.stop();
+                    mediaPlayer.stop();// stop the recording
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -438,7 +442,7 @@ public class RecordSplitVideoFragment extends Fragment {
                 backRotation = Utility.getTemporaryMediaFile(mContext, "backRotation").toString();
                 backRotation=sVideoPathBack;
                new RotationBackground(getActivity()
-                       , sFilepath, camersRotation, 2, new AfterDoneBackground() {
+                       , sFilepath, camersRotation, 2,"154x308", new AfterDoneBackground() {
                    @Override
                    public void onAfterDone() {
                        Log.d(LOG_TAG, "start join video");
@@ -461,12 +465,14 @@ public class RecordSplitVideoFragment extends Fragment {
                     // Camera is available and unlocked, MediaRecorder is
                     // prepared,
                     // now you can start recording
+                    vImageVideo.setVisibility(GONE);
                     mMediaRecorder.start();
 
 //                    layoutCameraOption.setVisibility(View.GONE);
                     textRecordSecond.setVisibility(View.VISIBLE);
 
                     recordTimer.start();
+                    mediaPlayer.start();
 
                     isRecording = true;
                 } else {
@@ -657,4 +663,17 @@ public class RecordSplitVideoFragment extends Fragment {
         }
         return (result);
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        releaseMediaRecorder();
+        releaseCamera();
+    }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        mCamera.startPreview();
+//    }
 }

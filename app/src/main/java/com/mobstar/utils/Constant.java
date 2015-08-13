@@ -1,9 +1,6 @@
 package com.mobstar.utils;
 
 
-import android.content.Context;
-import android.os.Environment;
-
 public class Constant {
 
 //	public static String SENDER_ID = "397816546137";
@@ -127,7 +124,7 @@ public class Constant {
 	public static String GET_MESSAGE_THREAD="message/";
 	
 	public static String REPLAY_MESSAGE_THREAD="message/reply";
-	
+
 	public static String DELETE_THREAD="message/deleteThread";
 
 	public static String DELETE_MESSAGE="message/deleteMessage";

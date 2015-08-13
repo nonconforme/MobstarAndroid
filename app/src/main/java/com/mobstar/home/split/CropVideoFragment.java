@@ -154,6 +154,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 mSplitActivity.getVideoFilePath(),
                 outFile,
                 rotation,
+                "308x308",
                 new AfterDoneBackground() {
                     @Override
                     public void onAfterDone() {
