@@ -15,14 +15,12 @@ import com.netcompss.loader.LoadJNI;
 public class CropBackground extends AsyncTask<String, Integer, String>
 {
     private final Activity _act;
-    private final String pathLeft;
-    private final String pathResult;
+    private String complexCommand;
     private final String workFolder;
 
-    public CropBackground(Activity act, String pathLeft, String pathResult) {
+    public CropBackground(Activity act, String _complesCommand) {
         _act = act;
-        this.pathLeft=pathLeft;
-        this.pathResult=pathResult;
+        complexCommand = _complesCommand;
         workFolder = _act.getApplicationContext().getFilesDir().getAbsolutePath() + "/";
     }
 
@@ -45,14 +43,14 @@ public class CropBackground extends AsyncTask<String, Integer, String>
 
 //        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf transpose=2 -s 640x480 -r 30 -aspect 3:4 -ab 48000 -ac 2 -ar 22050 -vcodec mpeg4 -b 2097152 "+ pathResult;
 //        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf crop=100:100:100:0 -s 640x480 -r 15 -aspect 3:4 -ab 12288 -vcodec mpeg4 "+ pathResult;
-        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf crop=153:307:100:0 -s 154x308 -vcodec mpeg4 "+ pathResult;
+//        String commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf crop=153:307:100:0 -s 154x308 -vcodec mpeg4 "+ pathResult;
 
 
         LoadJNI vk = new LoadJNI();
         try {
 
             // complex command
-            vk.run(GeneralUtils.utilConvertToComplex(commandStr), workFolder, _act);
+            vk.run(GeneralUtils.utilConvertToComplex(complexCommand), workFolder, _act);
 
         } catch (Throwable e) {
             Log.e(Prefs.TAG, "vk run exeption.", e);
@@ -65,7 +63,7 @@ public class CropBackground extends AsyncTask<String, Integer, String>
             }
         }
         Log.i(Prefs.TAG, "doInBackground finished");
-        return pathResult;
+        return "";
     }
 
     protected void onProgressUpdate(Integer... progress) {

@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -963,26 +964,11 @@ public class VideoListFragment extends Fragment {
 
             setupViews(viewHolder, position);
 			if(arrEntryPojos.get(position).getVideoLink() == null) {
-				viewHolder.textVideoSplit.setEnabled(false);
-				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+				setEnableSplitButton(viewHolder, position, false);
 			}
 			else {
-				viewHolder.textVideoSplit.setEnabled(true);
-				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
-				viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (arrEntryPojos.get(position).getVideoLink() == null)
-							return;
-						Intent intent = new Intent(getActivity(), SplitActivity.class);
-						intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
-						getActivity().startActivity(intent);
-						getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					}
-				});
+				setEnableSplitButton(viewHolder, position, true);
 			}
-
-
 
 			viewHolder.btnFollow.setOnClickListener(new OnClickListener() {
 				@Override
@@ -1466,7 +1452,7 @@ public class VideoListFragment extends Fragment {
 						File file = new File(FILEPATH + sFileName);
 
 						if (file!=null && !file.exists()) {
-
+							viewHolder.textVideoSplit.setEnabled(false);
 							listDownloadingFile.add(sFileName);
 
 							if (Utility.isNetworkAvailable(mContext)) {
@@ -1490,6 +1476,11 @@ public class VideoListFragment extends Fragment {
 										viewHolder.progressbar.setVisibility(View.GONE);
 										viewHolder.textureView.setVisibility(View.GONE);
 
+										MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+										mediaMetadataRetriever.setDataSource(file.getAbsolutePath());
+										String orientation = mediaMetadataRetriever.extractMetadata(
+												MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION );
+										Log.d("tag", "orientation: " + orientation);
 										listDownloadingFile.remove(file.getName());
 
 										notifyDataSetChanged();
@@ -2060,6 +2051,28 @@ public class VideoListFragment extends Fragment {
                 }
             }
         }
+
+		private void setEnableSplitButton(final ViewHolder viewHolder, final int position, boolean enable){
+			if(!enable) {
+				viewHolder.textVideoSplit.setEnabled(false);
+				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+			}
+			else {
+				viewHolder.textVideoSplit.setEnabled(true);
+				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
+				viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (arrEntryPojos.get(position).getVideoLink() == null)
+							return;
+						Intent intent = new Intent(getActivity(), SplitActivity.class);
+						intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
+						getActivity().startActivity(intent);
+						getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					}
+				});
+			}
+		}
 
 		class ViewHolder {
 			TextView textUserName, textDescription, textTime,textViews, textVideoSplit;

@@ -63,6 +63,11 @@ public class Utility {
 	static ProgressDialog dialog;
 	private static boolean isSpinning=false;
 
+	public static final String getCurrentDirectory(final Context context) {
+		return Environment.getExternalStorageDirectory().getPath()
+				+ "/Android/data/" + context.getPackageName() + "/";
+	}
+
 	public static void ShareLink(Context mContext, String link) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");

@@ -13,6 +13,7 @@ import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.R;
 import com.mobstar.home.split.ffmpeg.CropBackground;
 import com.mobstar.home.split.position_variants.PositionVariant;
+import com.mobstar.home.split.position_variants.PositionVariantsFragment;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -37,8 +38,8 @@ public class SplitActivity extends Activity {
         if (getIntent() != null)
             entry = (EntryPojo) getIntent().getSerializableExtra(Constant.ENTRY);
         if (savedInstanceState == null)
-//             replaceTopNavigationFragment(new PositionVariantsFragment());
-             replaceTopNavigationFragment(new RecordSplitVideoFragment());
+             replaceTopNavigationFragment(new PositionVariantsFragment());
+//             replaceTopNavigationFragment(new RecordSplitVideoFragment());
         if (videoFilePath == null)
             downloadVideoFile();
     }
@@ -109,7 +110,7 @@ public class SplitActivity extends Activity {
                         @Override
                         public void onSuccess(int arg0, Header[] arg1, File file) {
                             videoFilePath = currentDirectory + sFileName;
-                            cropFunction(videoFilePath);
+//                            cropFunction(videoFilePath);
                         }
                     });
                 }
@@ -119,7 +120,7 @@ public class SplitActivity extends Activity {
 
             } else {
                 videoFilePath = currentDirectory + sFileName;
-                cropFunction(videoFilePath);
+//                cropFunction(videoFilePath);
             }
 
         } catch (Exception e) {
@@ -127,8 +128,8 @@ public class SplitActivity extends Activity {
         }
     }
 
-    private void cropFunction(String filePath) {
-        (new CropBackground(this,filePath,Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, this).toString()){
+    public void cropFunction(String command) {
+        (new CropBackground(this, command){
             @Override
             protected void onPostExecute(String result) {
                 super.onPostExecute(result);

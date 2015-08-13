@@ -5,9 +5,12 @@ import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,7 @@ import com.edmodo.cropper.CropImageView;
 import com.mobstar.R;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.utils.Constant;
+import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -33,6 +37,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     private String mVideoThumb;
     private PositionVariant mPositionVariant;
     private ProgressBar progress;
+    private Point fullScreenImageSize;
 
     public static CropVideoFragment newInstance(final String videoThumb, PositionVariant positionVariant){
         final CropVideoFragment fragment = new CropVideoFragment();
@@ -111,10 +116,71 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 mSplitActivity.onBackPressed();
                 break;
             case R.id.btnNext:
-                mSplitActivity.replaceRecordVideoFragment();
+                createCroppedVideo();
+//                mSplitActivity.replaceRecordVideoFragment();
                 break;
         }
     }
+
+    private void createCroppedVideo(){
+        final String fileInPath = mSplitActivity.getVideoFilePath();
+        final String fileOutPath = Utility.getTemporaryMediaFile(mSplitActivity, "cropUot").toString();
+        final Rect rect = getCropRect();
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("ffmpeg -y -i ")
+                .append(fileInPath)
+                .append(" -strict experimental -vf crop=")
+                .append(rect.right - rect.left - 1)
+                .append(":")
+                .append(rect.bottom - rect.top - 1)
+                .append(":")
+                .append(rect.left)
+                .append(":")
+                .append(rect.top)
+                .append(" -s ")
+                .append(getOutputVideoSizeString())
+                .append(" -vcodec mpeg4 ")
+                .append(fileOutPath);
+        final String cropComplexCommanr = stringBuilder.toString();
+        Log.d("tag", "complex command: " + cropComplexCommanr);
+        mSplitActivity.cropFunction(cropComplexCommanr);
+    }
+
+    private String getOutputVideoSizeString(){
+        String outSize = "";
+        switch (mPositionVariant){
+            case ORIGIN_LEFT:
+            case ORIGIN_RIGHT:
+                outSize = "154x308";
+                break;
+            case ORIGIN_RIGHT_TOP:
+                outSize = "100x100";
+                break;
+            case ORIGIN_FULLSCREEN:
+                outSize = "308x308";
+                break;
+            case ORIGIN_TOP:
+            case ORIGIN_BOTTOM:
+                outSize = "308x154";
+                break;
+        }
+        return outSize;
+    }
+
+    private Rect getCropRect(){
+        RectF rectF = ivVideoImage.getActualCropRect();
+        Rect originRect = new Rect();
+        float ratio = ((float) Constant.VIDEO_SIZE) / fullScreenImageSize.x;
+        originRect.set(
+                (int) (rectF.left * ratio),
+                (int) (rectF.top * ratio),
+                (int) (rectF.right * ratio),
+                (int) (rectF.bottom * ratio)
+        );
+        return originRect;
+    }
+
 
     private void setupStartCropFrame(){
         switch (mPositionVariant){
@@ -147,7 +213,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     }
 
     public Bitmap getResizedBitmap(Bitmap bm) {
-
+        fullScreenImageSize = new Point();
         int width = bm.getWidth();
         int height = bm.getHeight();
         final Display display = mSplitActivity.getWindowManager().getDefaultDisplay();
@@ -155,12 +221,12 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
         display.getSize(size);
         int newWidth = size.x;
         int newHeight = newWidth * height / width;
+        fullScreenImageSize.set(newWidth, newHeight);
 
         float scaleWidth = ((float) newWidth) / width;
         float scaleHeight = ((float) newHeight) / height;
         final Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
-
         return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
     }
 
