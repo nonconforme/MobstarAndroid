@@ -80,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:indeterminateDrawable="@drawable/custom_progressbar"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:indeterminate="false" />
 
             <!--
                  <com.mobstar.utils.ProgressWheelPercentage
