@@ -8,7 +8,6 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.util.Log;
 
-import com.netcompss.ffmpeg4android.GeneralUtils;
 import com.netcompss.ffmpeg4android.Prefs;
 import com.netcompss.ffmpeg4android.ProgressCalculator;
 import com.netcompss.loader.LoadJNI;
@@ -17,6 +16,8 @@ import com.netcompss.loader.LoadJNI;
  * Created by Kesedi on 13.08.2015.
  */
 public class BaseBackground {
+    private static final String LOG_TAG = BaseBackground.class.getName();
+
     protected  Activity activity;
     protected  String workFolder;
     protected  AfterDoneBackground afterDoneBackground;
@@ -35,6 +36,7 @@ public class BaseBackground {
         this.activity = activity;
         workFolder = activity.getApplicationContext().getFilesDir().getAbsolutePath() + "/";
         vkLogPath = workFolder + "vk.log";
+        Log.d(LOG_TAG,"vkLogPath="+vkLogPath);
     }
 
     private Handler handler = new Handler() {
@@ -72,7 +74,7 @@ public class BaseBackground {
             // complex command
             vk.run(complexCommand, workFolder, activity);
 
-            GeneralUtils.copyFileToFolder(vkLogPath,workFolder);
+//            GeneralUtils.copyFileToFolder(vkLogPath,workFolder);
 
         } catch (Throwable e) {
             Log.e(Prefs.TAG, "vk run exeption.", e);

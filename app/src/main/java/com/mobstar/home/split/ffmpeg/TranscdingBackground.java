@@ -34,12 +34,12 @@ public class TranscdingBackground extends BaseBackground
                 "15496k",
                 "-vcodec",
                 "mpeg4",
-                "-ab",
-                "48000",
-                "-ac",
-                "2",
-                "-ar",
-                "22050",
+//                "-ab",
+//                "48000",
+//                "-ac",
+//                "2",
+//                "-ar",
+//                "22050",
                 pathResult};
         Log.d("tag complex command: ", complexCommand.toString());
     }

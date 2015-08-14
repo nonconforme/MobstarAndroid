@@ -46,18 +46,6 @@ import java.util.List;
  */
 public class RecordSplitVideoFragment extends Fragment {
     private static final String LOG_TAG = RecordSplitVideoFragment.class.getName();
-
-//    private ImageView btnRecord;
-//    private TextView textRecordSecond;
-//    private int currentCount = 15;
-//    List<Camera.Size> videosizes;
-//    private int currentCameraId;
-//    private Camera mCamera;
-//    private CameraPreview mPreview;
-//    private MediaRecorder mMediaRecorder;
-
-
-
     Context mContext;
 
     private Camera mCamera;
@@ -105,6 +93,7 @@ public class RecordSplitVideoFragment extends Fragment {
 
     private Bitmap imageVideoPreview;
     private PositionVariant positionVariant;
+    private FrameLayout vFramePreview;
 
     public static RecordSplitVideoFragment newInstance(final PositionVariant _positionVariant, final Bitmap _videoPreview){
         final RecordSplitVideoFragment recordSplitVideoFragment = new RecordSplitVideoFragment();
@@ -151,6 +140,8 @@ public class RecordSplitVideoFragment extends Fragment {
         mContext=getActivity();
         mediaPlayer = new MediaPlayer();
         findView(inflatedView);
+        initializeView();
+//        initializeCamera();
         recordTimer = new CountDownTimer(19000, 1000) {
 
             @Override
@@ -185,18 +176,7 @@ public class RecordSplitVideoFragment extends Fragment {
         return inflatedView;
     }
 
-    private void findView(View inflatedView) {
-        btnRecord = (ImageView) inflatedView.findViewById(R.id.btnRecord);
-        textRecordSecond = (TextView) inflatedView.findViewById(R.id.textRecordSecond);
-        textureView = (TextureView) inflatedView.findViewById(R.id.textureView);
-
-//        FrameLayout preview = (FrameLayout) inflatedView.findViewById(R.id.camera_preview);
-        textRecordSecond.setVisibility(View.GONE);
-
-        textRecordSecond.setText(currentCount + "");
-
-
-
+    private void initializeCamera() {
         if (checkCameraHardware(getActivity())) {
 
             Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
@@ -218,25 +198,34 @@ public class RecordSplitVideoFragment extends Fragment {
             // activity.
             mPreview = new CameraPreview(getActivity());
             mPreview.setCamera(mCamera);
-            FrameLayout preview = (FrameLayout) inflatedView.findViewById(R.id.camera_preview);
-            preview.addView(mPreview);
-
-            btnRecord = (ImageView) inflatedView.findViewById(R.id.btnRecord);
-            btnRecord.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // get an image from the camera
-//                    mPreview.RecordVideo();
-                    Surface surface = new Surface(textureView.getSurfaceTexture());
-                    PlayVideo(0, surface);
-
-                }
-            });
-
-            vImageVideo = (ImageView) inflatedView.findViewById(R.id.imageFrame);
-            vImageVideo.setImageBitmap(imageVideoPreview);
+            vFramePreview.removeAllViews();
+            vFramePreview.addView(mPreview);
         }
+    }
 
+    private void initializeView() {
+        vImageVideo.setImageBitmap(imageVideoPreview);
+        textRecordSecond.setVisibility(View.GONE);
+        textRecordSecond.setText(currentCount + "");
+        btnRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get an image from the camera
+//                    mPreview.RecordVideo();
+                Surface surface = new Surface(textureView.getSurfaceTexture());
+                PlayVideo(0, surface);
+
+            }
+        });
+    }
+
+    private void findView(View inflatedView) {
+        btnRecord = (ImageView) inflatedView.findViewById(R.id.btnRecord);
+        textRecordSecond = (TextView) inflatedView.findViewById(R.id.textRecordSecond);
+        textureView = (TextureView) inflatedView.findViewById(R.id.textureView);
+        btnRecord = (ImageView) inflatedView.findViewById(R.id.btnRecord);
+        vFramePreview = (FrameLayout) inflatedView.findViewById(R.id.camera_preview);
+        vImageVideo = (ImageView) inflatedView.findViewById(R.id.imageFrame);
     }
 
 
@@ -334,20 +323,6 @@ public class RecordSplitVideoFragment extends Fragment {
         @SuppressWarnings("deprecation")
         public CameraPreview(Context context) {
             super(context);
-
-        }
-
-        void OnOffFlash(boolean isFlashOn) {
-
-            Camera.Parameters parameters = mCamera.getParameters();
-
-            if (!isFlashOn) {
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                mCamera.setParameters(parameters);
-            } else {
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                mCamera.setParameters(parameters);
-            }
 
         }
 
@@ -469,6 +444,7 @@ public class RecordSplitVideoFragment extends Fragment {
                            @Override
                            public void onCancel() {
                                removeTempFile();
+                               splitActivity.finish();
                            }
                        }).runTranscoding();
                    }
@@ -476,6 +452,7 @@ public class RecordSplitVideoFragment extends Fragment {
                    @Override
                    public void onCancel() {
                        removeTempFile();
+                       splitActivity.finish();
                    }
                }).runTranscoding();
 
@@ -695,9 +672,9 @@ public class RecordSplitVideoFragment extends Fragment {
         releaseCamera();
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        mCamera.startPreview();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeCamera();
+    }
 }
