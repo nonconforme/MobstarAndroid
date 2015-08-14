@@ -1,6 +1,7 @@
 package com.mobstar.home.split.ffmpeg;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.mobstar.R;
 
@@ -40,6 +41,7 @@ public class TranscdingBackground extends BaseBackground
                 "-ar",
                 "22050",
                 pathResult};
+        Log.d("tag complex command: ", complexCommand.toString());
     }
 
 }

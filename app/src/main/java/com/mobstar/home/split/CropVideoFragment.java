@@ -129,7 +129,8 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
         final int orientation = getVideoOrientation(mSplitActivity.getVideoFilePath());
         if (orientation == 0){
             createCroppedVideoCommand();
-        }else createNormalOrientationVideo(orientation);
+        }else
+            createNormalOrientationVideo(orientation);
     }
 
     private void createNormalOrientationVideo(int _orientation){
@@ -197,7 +198,6 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 .append(" -vcodec mpeg4 ")
                 .append(fileOutPath);
         final String cropComplexCommand = stringBuilder.toString();
-        Log.d("tag", "complex command: " + cropComplexCommand);
         startCropTask(cropComplexCommand, fileOutPath);
     }
 

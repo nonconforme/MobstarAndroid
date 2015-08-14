@@ -1,6 +1,7 @@
 package com.mobstar.home.split.ffmpeg;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.mobstar.R;
 import com.netcompss.ffmpeg4android.GeneralUtils;
@@ -22,7 +23,9 @@ public class RotationBackground extends BaseBackground
         this.afterDoneBackground = afterDoneBackground;
         this.resolution = resolution;
         title=activity.getString(R.string.rotation_title);
-        commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf transpose=" + rotation + " -s " + resolution + " -r 30 -aspect 3:4 -ab 48000 -ac 2 -ar 22050 -vcodec mpeg4 -b 2097152 "+ pathResult;
+//        commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf transpose=" + rotation + " -s " + resolution + " -metadata:s:v rotate=0 -r 30 -aspect 3:4 -ab 48000 -ac 2 -ar 22050 -vcodec mpeg4 -b 2097152 "+ pathResult;
+        commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf transpose=" + rotation + " -s " + resolution + " -metadata:s:v rotate=0 -vcodec mpeg4 "+ pathResult;
+        Log.d("tag complex command: ", commandStr);
         complexCommand = GeneralUtils.utilConvertToComplex(commandStr);
     }
 
