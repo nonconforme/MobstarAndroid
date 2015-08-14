@@ -29,6 +29,8 @@ public class BaseBackground {
     protected String title;
     protected String[] complexCommand;
 
+    private boolean onCancel = false;
+
     public BaseBackground(Activity activity){
         this.activity = activity;
         workFolder = activity.getApplicationContext().getFilesDir().getAbsolutePath() + "/";
@@ -45,6 +47,7 @@ public class BaseBackground {
                 // stopping the transcoding native
                 if (msg.what == STOP_TRANSCODING_MSG) {
                     Log.i(Prefs.TAG, "Got cancel message, calling fexit");
+                    onCancel = true;
                     vk.fExit(activity);
 
 
@@ -112,7 +115,10 @@ public class BaseBackground {
                     BaseBackground.this.activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            afterDoneBackground.onAfterDone();
+                            if (onCancel)
+                                afterDoneBackground.onCancel();
+                            else
+                                afterDoneBackground.onAfterDone();
                         }
                     });
 

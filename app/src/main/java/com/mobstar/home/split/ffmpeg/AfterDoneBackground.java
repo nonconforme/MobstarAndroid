@@ -5,4 +5,5 @@ package com.mobstar.home.split.ffmpeg;
  */
 public interface AfterDoneBackground  {
     public void onAfterDone();
+    public void onCancel();
 }

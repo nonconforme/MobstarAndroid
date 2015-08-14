@@ -30,6 +30,8 @@ import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.File;
+
 /**
  * Created by vasia on 06.08.15.
  */
@@ -42,6 +44,8 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     private PositionVariant mPositionVariant;
     private ProgressBar progress;
     private Point fullScreenImageSize;
+
+    private String tempRotateFilePth;
 
     public static CropVideoFragment newInstance(final String videoThumb, PositionVariant positionVariant){
         final CropVideoFragment fragment = new CropVideoFragment();
@@ -147,20 +151,25 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 break;
         }
 
-        final String outFile = Utility.getTemporaryMediaFile(mSplitActivity, "backRotation").toString();
-        if (outFile == null)
+        tempRotateFilePth = Utility.getTemporaryMediaFile(mSplitActivity, "backRotation").toString();
+        if (tempRotateFilePth == null)
             return;
         new RotationBackground(
                 mSplitActivity,
                 mSplitActivity.getVideoFilePath(),
-                outFile,
+                tempRotateFilePth,
                 rotation,
                 "308x308",
                 new AfterDoneBackground() {
                     @Override
                     public void onAfterDone() {
-                        mSplitActivity.setVideoFilePath(outFile);
+                        mSplitActivity.setVideoFilePath(tempRotateFilePth);
                         createCroppedVideoCommand();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        removeFile(tempRotateFilePth);
                     }
                 }
         ).runTranscoding();
@@ -170,8 +179,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     private int getVideoOrientation(final String _videoFilePath){
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         mediaMetadataRetriever.setDataSource(_videoFilePath);
-        String orientation = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION );
-        Log.d("tag", "orientation: " + orientation);
+        String orientation = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
         if (orientation == null)
             return 0;
         return Integer.parseInt(orientation);
@@ -205,8 +213,18 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
         new CropBackground(mSplitActivity, _stringCommand, new AfterDoneBackground() {
             @Override
             public void onAfterDone() {
+                if (tempRotateFilePth != null)
+                    removeFile(tempRotateFilePth);
                 mSplitActivity.setVideoFilePath(_fileOutPath);
                 mSplitActivity.replaceRecordVideoFragment(mPositionVariant, ivVideoImage.getCroppedImage());
+            }
+
+            @Override
+            public void onCancel() {
+                if (tempRotateFilePth != null)
+                    removeFile(tempRotateFilePth);
+                removeFile(_fileOutPath);
+                mSplitActivity.setDefaultFilePath();
             }
         }).runTranscoding();
     }
@@ -294,4 +312,8 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
         return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
     }
 
+    private void removeFile(String filePath){
+        final File file = new File(filePath);
+        file.delete();
+    }
 }

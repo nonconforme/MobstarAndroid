@@ -235,7 +235,6 @@ public class RecordSplitVideoFragment extends Fragment {
 
             vImageVideo = (ImageView) inflatedView.findViewById(R.id.imageFrame);
             vImageVideo.setImageBitmap(imageVideoPreview);
-
         }
 
     }
@@ -318,6 +317,17 @@ public class RecordSplitVideoFragment extends Fragment {
         }
         return c; // returns null if camera is unavailable
     }
+
+    private void removeTempFile(){
+        final String[] tempFileList = {backRotation, camersRotation, sFilepath};
+        for (String aTempList : tempFileList) {
+            if (aTempList == null)
+                continue;
+            final File tempFile = new File(aTempList);
+            tempFile.delete();
+        }
+    }
+
     public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
         private SurfaceHolder mHolder;
 
@@ -439,7 +449,7 @@ public class RecordSplitVideoFragment extends Fragment {
 
                 isRecording = false;
                 camersRotation = Utility.getTemporaryMediaFile(mContext, "camersRotation").toString();
-                backRotation = Utility.getTemporaryMediaFile(mContext, "backRotation").toString();
+//                backRotation = Utility.getTemporaryMediaFile(mContext, "backRotation").toString();
                 backRotation=sVideoPathBack;
                new RotationBackground(getActivity()
                        , sFilepath, camersRotation, 2,"154x308", new AfterDoneBackground() {
@@ -452,9 +462,20 @@ public class RecordSplitVideoFragment extends Fragment {
                            @Override
                            public void onAfterDone() {
                                Log.d(LOG_TAG, "compleat readyFilePath");
+                               removeTempFile();
                                startApproveActivity(readyFilePath);
                            }
+
+                           @Override
+                           public void onCancel() {
+                               removeTempFile();
+                           }
                        }).runTranscoding();
+                   }
+
+                   @Override
+                   public void onCancel() {
+                       removeTempFile();
                    }
                }).runTranscoding();
 
@@ -562,11 +583,14 @@ public class RecordSplitVideoFragment extends Fragment {
         Intent intent = new Intent(mContext, ApproveVideoActivity.class);
         intent.putExtra("video_path", file);
         intent.putExtra("categoryId", categoryId);
+        intent.putExtra(Constant.ENTRY, splitActivity.getEntry());
         intent.putExtra(ApproveVideoActivity.APPROVE_SPLIT_VIDEO, true);
         if (subCat != null && subCat.length() > 0) {
             intent.putExtra("subCat", subCat);
         }
         startActivity(intent);
+        splitActivity.finish();
+        splitActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {

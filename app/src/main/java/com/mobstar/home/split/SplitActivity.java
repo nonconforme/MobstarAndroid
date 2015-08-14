@@ -40,14 +40,19 @@ public class SplitActivity extends Activity {
         if (getIntent() != null)
             entry = (EntryPojo) getIntent().getSerializableExtra(Constant.ENTRY);
         if (videoFilePath == null) {
-            final String fileName = Utility.GetFileNameFromURl(entry.getVideoLink());
-            final String filePath = Utility.getCurrentDirectory(this);
-            videoFilePath = filePath + fileName;
+            setDefaultFilePath();
         }
 
         if (savedInstanceState == null)
             replaceTopNavigationFragment(new PositionVariantsFragment());
 //             replaceTopNavigationFragment(new RecordSplitVideoFragment());
+    }
+
+
+    public void setDefaultFilePath(){
+        final String fileName = Utility.GetFileNameFromURl(entry.getVideoLink());
+        final String filePath = Utility.getCurrentDirectory(this);
+        videoFilePath = filePath + fileName;
     }
 
     @Override
@@ -81,7 +86,7 @@ public class SplitActivity extends Activity {
     }
 
     public void replaceRecordVideoFragment(final PositionVariant _positionVariant, final Bitmap _imagePreview){
-        replaceFragmentWithBackStack(RecordSplitVideoFragment.newInstance(_positionVariant, _imagePreview));
+        replaceTopNavigationFragment(RecordSplitVideoFragment.newInstance(_positionVariant, _imagePreview));
     }
 
     public String getVideoFilePath(){

@@ -35,7 +35,7 @@
 
             <TextureView
                 android:id="@+id/textureView"
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/texture_view_width"
                 android:layout_gravity="center_horizontal"
                 android:layout_height="@dimen/texture_view_height" />
 
