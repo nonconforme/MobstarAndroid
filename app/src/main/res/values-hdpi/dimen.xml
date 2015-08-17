@@ -51,4 +51,6 @@
 	<dimen name="userImgSize">45dp</dimen>
 	<dimen name="scale_300">300dp</dimen>
 	<dimen name="scale_200">200dp</dimen>
+
+	<dimen name="default_btn_height">60dp</dimen>
 </resources>

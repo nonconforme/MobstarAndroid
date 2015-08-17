@@ -1,10 +1,7 @@
 package com.mobstar.upload;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -49,14 +46,14 @@ public class SelectProfileContentType extends Activity implements OnClickListene
 	public void onClick(View v) {
 		if(v == btnCaptureNow){
 			Intent intent = new Intent(mContext, AddContentTypeActivity.class);
-			intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
+			intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
 			startActivity(intent);
 			finish();
 			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		}
 		else if(v == btnUploadPhone){
 			Intent intent = new Intent(mContext, AddContentTypeActivity.class);
-			intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
+			intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
 			intent.putExtra("isGallery",true);
 			startActivity(intent);
 			finish();
@@ -118,7 +115,7 @@ public class SelectProfileContentType extends Activity implements OnClickListene
 //				File sVideoPath=new File(selectedPath);
 				
 				Intent intent = new Intent(mContext, UploadFileActivity.class);
-				intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
+				intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
 				intent.putExtra("file1", selectedPath);
 				intent.putExtra("type", "image");
 				startActivity(intent);
@@ -136,7 +133,7 @@ public class SelectProfileContentType extends Activity implements OnClickListene
 				Intent intent = new Intent(mContext, UploadFileActivity.class);
 				intent.putExtra("file1", selectedPath);
 				intent.putExtra("type", "video");
-				intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
+				intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
 				startActivity(intent);
 //				finish();
 				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

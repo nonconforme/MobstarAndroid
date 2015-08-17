@@ -1,9 +1,7 @@
 package com.mobstar.fanconnect;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;

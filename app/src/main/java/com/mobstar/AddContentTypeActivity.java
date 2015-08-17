@@ -18,7 +18,6 @@ import com.mobstar.upload.RecordVideoActivity;
 import com.mobstar.upload.SelectProfileContentType;
 import com.mobstar.upload.TakePictureActivity;
 import com.mobstar.upload.UploadFileActivity;
-import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 public class AddContentTypeActivity extends Activity implements OnClickListener{

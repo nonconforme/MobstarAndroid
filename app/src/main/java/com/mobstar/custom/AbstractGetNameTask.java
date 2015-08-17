@@ -24,7 +24,6 @@ import java.net.URL;
 
 import org.json.JSONException;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 

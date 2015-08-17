@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -48,6 +49,7 @@ import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.custom.PullToRefreshListView.OnRefreshListener;
+import com.mobstar.home.split.SplitActivity;
 import com.mobstar.info.report.InformationReportActivity;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.upload.MessageActivity;
@@ -503,7 +505,7 @@ public class VideoListFragment extends Fragment {
 					Query = Constant.SERVER_URL + Constant.ENTRY + "?excludeVotes=true&orderBy=" + LatestORPopular +"&category="+CategoryId+ "&page=" + pageNo;
 				}
 				else {
-					Query = Constant.SERVER_URL + Constant.ENTRY + "?excludeVotes=true&orderBy=" + LatestORPopular + "&page=" + pageNo;	
+					Query = Constant.SERVER_URL + Constant.ENTRY + "?excludeVotes=true&orderBy=" + LatestORPopular + "&page=" + pageNo;
 				}
 
 			} else if (isVoteAPI) {
@@ -594,15 +596,15 @@ public class VideoListFragment extends Fragment {
 							}
 
 							entryPojo.setID(jsonObjEntry.getString("id"));
-							
+
 							if(jsonObjEntry.has("subcategory")){
 								entryPojo.setSubCategry(jsonObjEntry.getString("subcategory"));
 							}
-							
+
 							if(jsonObjEntry.has("age")){
 								entryPojo.setAge(jsonObjEntry.getString("age"));
 							}
-							
+
 							if(jsonObjEntry.has("height")){
 								entryPojo.setHeight(jsonObjEntry.getString("height"));
 							}
@@ -941,8 +943,8 @@ public class VideoListFragment extends Fragment {
 			return position;
 		}
 
-		public View getView(int position, View convertView, ViewGroup parent) {
-			
+		public View getView(final int position, View convertView, ViewGroup parent) {
+
 			final int pos=position;
 
 			final ViewHolder viewHolder;
@@ -951,27 +953,8 @@ public class VideoListFragment extends Fragment {
 				convertView = inflater.inflate(R.layout.row_item_entry, null);
 
 				viewHolder = new ViewHolder();
+                findViews(viewHolder, convertView);
 
-				viewHolder.textUserName = (TextView) convertView.findViewById(R.id.textUserName);
-				viewHolder.textTime = (TextView) convertView.findViewById(R.id.textTime);
-				viewHolder.textViews = (TextView) convertView.findViewById(R.id.textViews);
-				viewHolder.textDescription = (TextView) convertView.findViewById(R.id.textDescription);
-				viewHolder.imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
-				viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
-				viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
-				viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
-				viewHolder.btnFollow = (ImageView) convertView.findViewById(R.id.btnFollow);
-				viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
-				viewHolder.layoutStatastics = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
-				viewHolder.textStatasticCount = (TextView) convertView.findViewById(R.id.textStatasticCount);
-				viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
-				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
-				viewHolder.textCommentCount = (TextView) convertView.findViewById(R.id.textCommentCount);
-				viewHolder.imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
-				viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
-				viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
-				viewHolder.imgMsg=(ImageView) convertView.findViewById(R.id.imgMsg);
-				viewHolder.ivIndicator=(ImageView) convertView.findViewById(R.id.ivIndicator);
 
 				convertView.setTag(viewHolder);
 
@@ -979,31 +962,8 @@ public class VideoListFragment extends Fragment {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
-			viewHolder.textCommentCount.setText(arrEntryPojos.get(position).getTotalComments());
-			viewHolder.textUserName.setText(arrEntryPojos.get(position).getName());
-			viewHolder.textDescription.setText(Utility.unescape_perl_string(arrEntryPojos.get(position).getDescription()));
-			
-			viewHolder.textTime.setText(arrEntryPojos.get(position).getCreated());
-			viewHolder.textViews.setText(arrEntryPojos.get(position).getTotalViews());
-
-			viewHolder.textStatasticCount.setText(arrEntryPojos.get(position).getUpVotesCount());
-
-			// Added by khyati for follow/following btn
-
-			if(preferences.getString("userid", "0").equalsIgnoreCase(arrEntryPojos.get(position).getUserID())){
-				viewHolder.btnFollow.setVisibility(View.GONE);
-			}
-			else {
-				viewHolder.btnFollow.setVisibility(View.VISIBLE);
-				if (arrEntryPojos.get(position).getIsMyStar() != null) {
-					if (!arrEntryPojos.get(position).getIsMyStar().equalsIgnoreCase("0")) {
-						viewHolder.btnFollow.setImageResource(R.drawable.btn_following);
-					} else {
-						viewHolder.btnFollow.setImageResource(R.drawable.btn_follow);
-					}
-				}
-			}
-			
+            setupViews(viewHolder, position);
+			setEnableSplitButton(viewHolder, position, false);
 
 
 			viewHolder.btnFollow.setOnClickListener(new OnClickListener() {
@@ -1051,7 +1011,7 @@ public class VideoListFragment extends Fragment {
 					}
 				}
 			});
-			
+
 			if (arrEntryPojos.get(position).getIAmStar()!=null && arrEntryPojos.get(position).getIAmStar().equalsIgnoreCase("1")) {
 //				viewHolder.imgMsg.setImageDrawable(drawable)
 				Picasso.with(mContext).load(R.drawable.msg_act_btn).into(viewHolder.imgMsg);
@@ -1059,9 +1019,9 @@ public class VideoListFragment extends Fragment {
 			else{
 				Picasso.with(mContext).load(R.drawable.msg_btn).into(viewHolder.imgMsg);
 			}
-			
+
 			viewHolder.imgMsg.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					if (arrEntryPojos.get(pos).getIAmStar().equalsIgnoreCase("1")) {
@@ -1254,7 +1214,7 @@ public class VideoListFragment extends Fragment {
 
 					}
 				});
-				
+
 				//
 				// Ion.with(mContext).load(arrEntryPojos.get(position).getImageLink()).withBitmap().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder)
 				// .resize(Utility.dpToPx(mContext, 332),
@@ -1278,9 +1238,9 @@ public class VideoListFragment extends Fragment {
 				// });
 
 			} else if (arrEntryPojos.get(position).getType().equals("audio")) {
-				
+
 				Picasso.with(mContext).load(R.drawable.indicator_audio).into(viewHolder.ivIndicator);
-				
+
 				viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
 				viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
 				viewHolder.progressbar.setVisibility(View.VISIBLE);
@@ -1288,7 +1248,7 @@ public class VideoListFragment extends Fragment {
 				viewHolder.imgPlaceHolder.setVisibility(View.VISIBLE);
 				viewHolder.imgPlaceHolder.setImageResource(R.drawable.audio_placeholder);
 				viewHolder.imageFrame.setVisibility(View.GONE);
-				
+
 //				Picasso.with(mContext).load(arrEntryPojos.get(position).getImageLink()).resize(Utility.dpToPx(mContext, 332), Utility.dpToPx(mContext, 360)).centerCrop()
 				Picasso.with(mContext).load(arrEntryPojos.get(position).getImageLink())
 				.into(viewHolder.imageFrame, new Callback() {
@@ -1302,7 +1262,7 @@ public class VideoListFragment extends Fragment {
 						if (!listDownloadingFile.contains(sFileName)) {
 
 							//							File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
-						
+
 							try {
 								File file = new File(FILEPATH + sFileName);
 								if (file!=null && !file.exists()) {
@@ -1331,7 +1291,7 @@ public class VideoListFragment extends Fragment {
 												listDownloadingFile.remove(file.getName());
 												notifyDataSetChanged();
 											}
-											
+
 
 										});
 									}
@@ -1363,7 +1323,7 @@ public class VideoListFragment extends Fragment {
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-						
+
 						} else {
 							viewHolder.progressbar.setVisibility(View.VISIBLE);
 						}
@@ -1425,10 +1385,12 @@ public class VideoListFragment extends Fragment {
 				// });
 
 			} else if (arrEntryPojos.get(position).getType().equals("video")) {
-				
+
 				Picasso.with(mContext).load(R.drawable.indicator_video).into(viewHolder.ivIndicator);
 				viewHolder.ivAudioIcon.setVisibility(View.GONE);
 				viewHolder.progressbar.setVisibility(View.VISIBLE);
+
+				setEnableSplitButton(viewHolder, position, false);
 				//				viewHolder.progressWheel.setVisibility(View.VISIBLE);
 
 				viewHolder.imgPlaceHolder.setVisibility(View.VISIBLE);
@@ -1441,6 +1403,7 @@ public class VideoListFragment extends Fragment {
 					@Override
 					public void onSuccess() {
 						// TODO Auto-generated method stub
+						setEnableSplitButton(viewHolder, position, true);
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
 						notifyDataSetChanged();
@@ -1488,7 +1451,6 @@ public class VideoListFragment extends Fragment {
 						File file = new File(FILEPATH + sFileName);
 
 						if (file!=null && !file.exists()) {
-
 							listDownloadingFile.add(sFileName);
 
 							if (Utility.isNetworkAvailable(mContext)) {
@@ -1509,6 +1471,7 @@ public class VideoListFragment extends Fragment {
 										// TODO Auto-generated method stub
 										// Log.v(Constant.TAG,
 										// "onSuccess Video File  downloaded");
+										setEnableSplitButton(viewHolder, position, true);
 										viewHolder.progressbar.setVisibility(View.GONE);
 										viewHolder.textureView.setVisibility(View.GONE);
 
@@ -1528,10 +1491,10 @@ public class VideoListFragment extends Fragment {
 									//											public void run() {
 									//												viewHolder.progressbar.setProgress(totProgress);
 									////												viewHolder.progressbar.setProgress(totProgress);
-									//												Log.i("Progress::::", "" + totProgress);	
+									//												Log.i("Progress::::", "" + totProgress);
 									//											}
 									//											});
-									//									
+									//
 									//									notifyDataSetChanged();
 									//									}
 
@@ -1564,6 +1527,7 @@ public class VideoListFragment extends Fragment {
 							// }
 							// });
 						} else {
+							setEnableSplitButton(viewHolder, position, true);
 							viewHolder.progressbar.setVisibility(View.GONE);
 							viewHolder.textureView.setVisibility(View.GONE);
 						}
@@ -1573,6 +1537,7 @@ public class VideoListFragment extends Fragment {
 				}
 
 				else {
+					setEnableSplitButton(viewHolder, position, false);
 					viewHolder.progressbar.setVisibility(View.VISIBLE);
 				}
 
@@ -1606,7 +1571,7 @@ public class VideoListFragment extends Fragment {
 										if (mediaPlayer.isPlaying()) {
 											Log.d("mobstar","audio pause");
 											mediaPlayer.pause();
-											
+
 											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
 											viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
 											indexCurrentPauseVideo = pos;
@@ -1631,7 +1596,7 @@ public class VideoListFragment extends Fragment {
 								//will not fire other feed click // khyati
 								Log.d("mobstar","position is===>"+pos);
 								if(indexCurrentPlayAudio == pos || indexCurrentPauseVideo == pos){
-									if (mediaPlayer != null) { 
+									if (mediaPlayer != null) {
 										if (mediaPlayer.isPlaying()) {
 											mediaPlayer.pause();
 											indexCurrentPauseVideo = pos;
@@ -1689,7 +1654,7 @@ public class VideoListFragment extends Fragment {
 									if (mediaPlayer != null) {
 										if(mediaPlayer.isPlaying())
 											mediaPlayer.pause();
-										
+
 //										Log.d("mobstar","on imgframe1 going to reset");
 										mediaPlayer.reset();
 									}
@@ -1717,7 +1682,7 @@ public class VideoListFragment extends Fragment {
 									if (mediaPlayer != null) {
 										if(mediaPlayer.isPlaying())
 											mediaPlayer.pause();
-										
+
 //										Log.d("mobstar","on imgframe2 going to reset");
 										mediaPlayer.reset();
 									}
@@ -1822,7 +1787,7 @@ public class VideoListFragment extends Fragment {
 
 								}
 							}
-							
+
 
 						}
 
@@ -1853,7 +1818,7 @@ public class VideoListFragment extends Fragment {
 									if (mediaPlayer != null) {
 										if(mediaPlayer.isPlaying())
 											mediaPlayer.pause();
-										
+
 //										Log.d("mobstar","on texureview1 going to reset");
 										mediaPlayer.reset();
 									}
@@ -1882,7 +1847,7 @@ public class VideoListFragment extends Fragment {
 									if (mediaPlayer != null) {
 										if(mediaPlayer.isPlaying())
 											mediaPlayer.pause();
-										
+
 //										Log.d("mobstar","on texureview2 going to reset");
 										mediaPlayer.reset();
 									}
@@ -1924,10 +1889,10 @@ public class VideoListFragment extends Fragment {
 							Log.d("mobstar","go for play4");
 							viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
 							PlayAudio(position);
-							
+
 						}
 
-						
+
 
 
 					} else if (arrEntryPojos.get(position).getType().equals("video")) {
@@ -1949,7 +1914,7 @@ public class VideoListFragment extends Fragment {
 							viewHolder.textureView.setVisibility(View.VISIBLE);
 
 							if (mediaPlayer != null && mediaPlayer.isPlaying() && indexCurrentPlayAudio == position) {
-
+								setEnableSplitButton(viewHolder, position, true);
 								viewHolder.flPlaceHolder.setVisibility(View.GONE);
 								viewHolder.progressbar.setVisibility(View.GONE);
 								// viewHolder.textBgGray.setVisibility(View.GONE);
@@ -1957,11 +1922,12 @@ public class VideoListFragment extends Fragment {
 								// Log.v(Constant.TAG,
 								// "isVideoSurfaceReady Play Video " +
 								// position);
-
+								setEnableSplitButton(viewHolder, position, true);
 								viewHolder.flPlaceHolder.setVisibility(View.GONE);
 								viewHolder.progressbar.setVisibility(View.GONE);
 								// viewHolder.textBgGray.setVisibility(View.GONE);
 							} else {
+								setEnableSplitButton(viewHolder, position, false);
 								viewHolder.flPlaceHolder.setVisibility(View.VISIBLE);
 								viewHolder.progressbar.setVisibility(View.VISIBLE);
 								// viewHolder.textBgGray.setVisibility(View.VISIBLE);
@@ -2031,8 +1997,82 @@ public class VideoListFragment extends Fragment {
 			return convertView;
 		}
 
+        private void findViews(ViewHolder viewHolder, View convertView){
+            viewHolder.textVideoSplit = (TextView) convertView.findViewById(R.id.splitVideo);
+            viewHolder.textUserName = (TextView) convertView.findViewById(R.id.textUserName);
+            viewHolder.textTime = (TextView) convertView.findViewById(R.id.textTime);
+            viewHolder.textViews = (TextView) convertView.findViewById(R.id.textViews);
+            viewHolder.textDescription = (TextView) convertView.findViewById(R.id.textDescription);
+            viewHolder.imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
+            viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
+            viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
+            viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
+            viewHolder.btnFollow = (ImageView) convertView.findViewById(R.id.btnFollow);
+            viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
+            viewHolder.layoutStatastics = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
+            viewHolder.textStatasticCount = (TextView) convertView.findViewById(R.id.textStatasticCount);
+            viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
+            viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
+            viewHolder.textCommentCount = (TextView) convertView.findViewById(R.id.textCommentCount);
+            viewHolder.imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
+            viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
+            viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
+            viewHolder.imgMsg=(ImageView) convertView.findViewById(R.id.imgMsg);
+            viewHolder.ivIndicator=(ImageView) convertView.findViewById(R.id.ivIndicator);
+
+        }
+
+        private void setupViews(ViewHolder viewHolder, int position){
+            viewHolder.textCommentCount.setText(arrEntryPojos.get(position).getTotalComments());
+            viewHolder.textUserName.setText(arrEntryPojos.get(position).getName());
+            viewHolder.textDescription.setText(Utility.unescape_perl_string(arrEntryPojos.get(position).getDescription()));
+
+            viewHolder.textTime.setText(arrEntryPojos.get(position).getCreated());
+            viewHolder.textViews.setText(arrEntryPojos.get(position).getTotalViews());
+
+            viewHolder.textStatasticCount.setText(arrEntryPojos.get(position).getUpVotesCount());
+
+            // Added by khyati for follow/following btn
+
+            if(preferences.getString("userid", "0").equalsIgnoreCase(arrEntryPojos.get(position).getUserID())){
+                viewHolder.btnFollow.setVisibility(View.GONE);
+            }
+            else {
+                viewHolder.btnFollow.setVisibility(View.VISIBLE);
+                if (arrEntryPojos.get(position).getIsMyStar() != null) {
+                    if (!arrEntryPojos.get(position).getIsMyStar().equalsIgnoreCase("0")) {
+                        viewHolder.btnFollow.setImageResource(R.drawable.btn_following);
+                    } else {
+                        viewHolder.btnFollow.setImageResource(R.drawable.btn_follow);
+                    }
+                }
+            }
+        }
+
+		private void setEnableSplitButton(final ViewHolder viewHolder, final int position, boolean enable){
+			if(!enable) {
+				viewHolder.textVideoSplit.setEnabled(false);
+				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+			}
+			else {
+				viewHolder.textVideoSplit.setEnabled(true);
+				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
+				viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (arrEntryPojos.get(position).getVideoLink() == null)
+							return;
+						Intent intent = new Intent(getActivity(), SplitActivity.class);
+						intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
+						getActivity().startActivity(intent);
+						getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					}
+				});
+			}
+		}
+
 		class ViewHolder {
-			TextView textUserName, textDescription, textTime,textViews;
+			TextView textUserName, textDescription, textTime,textViews, textVideoSplit;
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;

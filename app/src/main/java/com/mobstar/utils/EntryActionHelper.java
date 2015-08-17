@@ -1,7 +1,5 @@
 package com.mobstar.utils;
 
-import android.util.Log;
-
 public class EntryActionHelper {
 
 	public ActionListener actionListener;

@@ -1,6 +1,5 @@
 package com.mobstar.info.report;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -11,12 +10,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mobstar.R;
 import com.mobstar.custom.RoundedTransformation;

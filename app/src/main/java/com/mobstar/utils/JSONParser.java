@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -330,7 +329,7 @@ public class JSONParser {
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(url);
 			Log.d(Constant.TAG,"Sending Request=>"+url);
-			Log.d(Constant.TAG,"api key is->"+Constant.API_KEY);
+			Log.d(Constant.TAG,"api key is->"+ Constant.API_KEY);
 			Log.d(Constant.TAG,"Token is->"+token);
 			httpGet.addHeader("X-API-KEY", Constant.API_KEY);
 			if (token != null) {

@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -42,9 +41,7 @@ import com.mobstar.login.LoginSocialActivity;
 import com.mobstar.service.NotificationService;
 import com.mobstar.settings.SettingsFragment;
 import com.mobstar.talentconnect.TalentConnectHomeFragment;
-import com.mobstar.upload.SelectCategoryActivity;
 import com.mobstar.upload.SelectUploadTypeActivity;
-import com.mobstar.utils.AppRater;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -687,7 +684,7 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 
 			//			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.GET_NOTIFICATION_COUNT, preferences.getString("token", null));
 
-			String response=JSONParser.postRequest(Constant.SERVER_URL+Constant.MESSAGE_COUNT,null,null,preferences.getString("token", null));
+			String response=JSONParser.postRequest(Constant.SERVER_URL+ Constant.MESSAGE_COUNT,null,null,preferences.getString("token", null));
 			Log.v(Constant.TAG, "GET_INBOX_COUNT response " + response);
 
 			if (response != null) {
@@ -741,7 +738,7 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 			String[] name = {"deviceToken","device"};
 			String[] value = {deviceId,"google"};
 			
-			String response=JSONParser.postRequest(Constant.SERVER_URL+Constant.LOGOUT,name,value,preferences.getString("token", null));
+			String response=JSONParser.postRequest(Constant.SERVER_URL+ Constant.LOGOUT,name,value,preferences.getString("token", null));
 			Log.v(Constant.TAG, "LOGOUT response " + response);
 
 			if (response != null) {

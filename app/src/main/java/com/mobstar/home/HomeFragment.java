@@ -1,7 +1,6 @@
 package com.mobstar.home;
 
 import java.util.ArrayList;
-import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
-import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;

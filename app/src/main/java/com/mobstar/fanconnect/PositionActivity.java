@@ -1,8 +1,6 @@
 package com.mobstar.fanconnect;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,7 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,7 +33,6 @@ import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.custom.PullToRefreshListView.OnRefreshListener;
-import com.mobstar.pojo.StarPojo;
 import com.mobstar.pojo.TopTalentPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;

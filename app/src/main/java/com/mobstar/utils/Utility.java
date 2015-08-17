@@ -46,6 +46,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -62,6 +63,11 @@ public class Utility {
 
 	static ProgressDialog dialog;
 	private static boolean isSpinning=false;
+
+	public static final String getCurrentDirectory(final Context context) {
+		return Environment.getExternalStorageDirectory().getPath()
+				+ "/Android/data/" + context.getPackageName() + "/";
+	}
 
 	public static void ShareLink(Context mContext, String link) {
 		Intent intent = new Intent(Intent.ACTION_SEND);
@@ -160,6 +166,27 @@ public class Utility {
 
 		return mediaFile;
 	}
+
+	public static File getTemporaryMediaFile(Context mContext, String name) {
+		String path = Environment.getExternalStorageDirectory().getPath()
+				+ "/Android/data/" + mContext.getPackageName() +"/";
+		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
+		File mediaStorageDir = new File(path);
+		// Create the storage directory if it does not exist
+		if (!mediaStorageDir.exists()) {
+			if (!mediaStorageDir.mkdirs()) {
+				Toast.makeText(mContext, "failed to create directory", Toast.LENGTH_SHORT).show();
+				return null;
+			}
+		}
+		// Create a media file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		File mediaFile;
+			mediaFile = new File(mediaStorageDir.getPath() + File.separator + name + timeStamp + ".mp4");
+
+		return mediaFile;
+	}
+
 
 	public static Bitmap rotate(Bitmap bitmap, int degree) {
 		int w = bitmap.getWidth();

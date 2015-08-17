@@ -14,8 +14,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Handler;
@@ -23,7 +22,6 @@ import android.os.Message;
 import android.view.Window;
 
 import com.mobstar.R;
-import com.mobstar.utils.Constant;
 
 public class TwitterApp {
 	private Twitter mTwitter;

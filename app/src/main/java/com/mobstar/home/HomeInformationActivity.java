@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -70,7 +69,7 @@ public class HomeInformationActivity extends Activity{
 		@Override
 		public void run() {
 
-			String Query=Constant.SERVER_URL + Constant.HOME_INFO;
+			String Query= Constant.SERVER_URL + Constant.HOME_INFO;
 			String response = JSONParser.getRequest(Query,preferences.getString("token", null));
 
 //			Log.v(Constant.TAG, "home info response " + response);

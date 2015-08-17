@@ -80,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:indeterminateDrawable="@drawable/custom_progressbar"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:indeterminate="false" />
 
             <!--
                  <com.mobstar.utils.ProgressWheelPercentage
@@ -279,7 +280,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/temp_comments"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/comment_text_color"
+                    android:textColor="@color/comment_color"
                     android:textSize="14sp" />
             </FrameLayout>
 
@@ -301,7 +302,27 @@
                     android:paddingLeft="25dp"
                     android:text="@string/temp_comments"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/comment_text_color"
+                    android:textColor="@color/comment_color"
+                    android:textSize="14sp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/layoutSplit"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1" >
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:id="@+id/splitVideo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/selector_oval_button"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="@string/split"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/comment_color"
                     android:textSize="14sp" />
             </FrameLayout>
 

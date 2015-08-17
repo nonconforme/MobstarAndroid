@@ -333,5 +333,5 @@ public class EntryPojo implements Serializable {
 	public String getAge(){
 		return Age;
 	}
-	
+
 }

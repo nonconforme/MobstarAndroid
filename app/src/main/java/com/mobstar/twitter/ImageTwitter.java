@@ -6,12 +6,10 @@ import twitter4j.User;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.StrictMode;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.mobstar.R;
 import com.mobstar.twitter.TwitterApp.TwDialogListener;
-import com.mobstar.utils.Constant;
 
 public class ImageTwitter {
 	private TwitterApp mTwitter;

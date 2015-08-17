@@ -34,7 +34,6 @@ import android.widget.Toast;
 
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
-import com.mobstar.home.CommentActivity.DeleteCommentCall;
 import com.mobstar.inbox.GroupMessageDetail;
 import com.mobstar.inbox.MessageDetail;
 import com.mobstar.pojo.NotificationPojo;
