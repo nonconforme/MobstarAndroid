@@ -208,6 +208,7 @@
 	<!-- <string name="admob_adUnitId">ca-app-pub-2850209089334804/2249032175</string> -->
 	<string name="admob_adUnitId">ca-app-pub-3673264464511081/6592488851</string>
 	  <string name="you_havent_any_messages_yet">YOU HAVEN\'T\n ANY\nMESSAGES YET</string>
+    <string name="split">SPLIT</string>
 
 
     <string name="loading">Loading</string>
