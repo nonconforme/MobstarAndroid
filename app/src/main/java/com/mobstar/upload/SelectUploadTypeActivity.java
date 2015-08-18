@@ -10,11 +10,12 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.utils.Utility;
 
 public class SelectUploadTypeActivity extends Activity implements OnClickListener{
 	
-	private ImageView btnEnterMobstar,btnUploadProfile,btnNewMessage;
+	private CustomTextviewBold btnEnterMobstar,btnUploadProfile,btnNewMessage;
 	private Context mContext;
 	
 	@Override
@@ -27,11 +28,11 @@ public class SelectUploadTypeActivity extends Activity implements OnClickListene
 	}
 
 	private void initControlls() {
-		btnEnterMobstar=(ImageView)findViewById(R.id.btnEnterMobstar);
+		btnEnterMobstar=(CustomTextviewBold)findViewById(R.id.btnEnterMobstar);
 		btnEnterMobstar.setOnClickListener(this);
-		btnUploadProfile=(ImageView)findViewById(R.id.btnUploadProfile);
+		btnUploadProfile=(CustomTextviewBold)findViewById(R.id.btnUploadProfile);
 		btnUploadProfile.setOnClickListener(this);
-		btnNewMessage=(ImageView)findViewById(R.id.btnNewMessage);
+		btnNewMessage=(CustomTextviewBold)findViewById(R.id.btnNewMessage);
 		btnNewMessage.setOnClickListener(this);
 		
 	}

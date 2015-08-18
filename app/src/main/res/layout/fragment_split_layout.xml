@@ -19,27 +19,23 @@
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
             android:layout_height="@dimen/default_btn_height"
-            android:background="@drawable/gray_btn_bg"
             android:text="@string/back"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/signup_btn_text"
             android:gravity="center"
             android:layout_weight="1"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            style="@style/BaseButton.Gray" />
 
         <com.mobstar.custom.CustomTextviewBold
             android:id="@+id/btnNext"
             android:layout_width="match_parent"
             android:layout_height="@dimen/default_btn_height"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/yellow_btn_bg"
             android:text="@string/next"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/signup_btn_text"
             android:gravity="center"
             android:layout_weight="1"
-            android:layout_marginRight="20dp" />
+            android:layout_marginRight="20dp"
+            style="@style/BaseButton.Yellow" />
     </LinearLayout>
 
     <GridView

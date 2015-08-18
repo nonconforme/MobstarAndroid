@@ -14,7 +14,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <com.mobstar.custom.CustomTextviewBold
             android:layout_width="match_parent"
@@ -28,32 +29,38 @@
             android:textColor="@color/white_color"
             android:textSize="18sp" />
 
-        <ImageView
+        <com.mobstar.custom.CustomTextviewBold
             android:id="@+id/btnCaptureNow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_btn_height"
             android:layout_marginTop="@dimen/scale_20"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/btn_capture_now" />
+            style="@style/BaseButton.Yellow"
+            android:drawableLeft="@drawable/icn_btn_enter_mabstar"
+            android:text="@string/capture_now"/>
 
-        <ImageView
+        <com.mobstar.custom.CustomTextviewBold
             android:id="@+id/btnUploadPhone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_btn_height"
             android:layout_marginTop="20dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/btn_upload_from_phone" />
+            android:text="@string/upload_from_phone"
+            android:drawableLeft="@drawable/icn_btn_upload_from_phone"
+            style="@style/BaseButton.Yellow"/>
     </LinearLayout>
     
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_btn_height"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="80dp"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_back" />
+        style="@style/BaseButton.Gray"
+        android:drawableLeft="@drawable/icn_btn_back"
+        android:text="@string/back"/>
 
 </RelativeLayout>

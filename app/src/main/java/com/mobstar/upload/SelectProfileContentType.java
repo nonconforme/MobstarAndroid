@@ -14,12 +14,13 @@ import android.widget.ImageView;
 
 import com.mobstar.AddContentTypeActivity;
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.utils.Constant;
 
 public class SelectProfileContentType extends Activity implements OnClickListener{
 	
 	private Context mContext;
-	private ImageView btnCaptureNow,btnUploadPhone,btnBack;
+	private CustomTextviewBold btnCaptureNow,btnUploadPhone,btnBack;
 	private int IMG_PICKER_SELECT=29;
 	private int VIDEO_PICKER_SELECT=31;
 	
@@ -33,11 +34,11 @@ public class SelectProfileContentType extends Activity implements OnClickListene
 	}
 
 	private void initControlls() {
-		btnCaptureNow=(ImageView)findViewById(R.id.btnCaptureNow);
+		btnCaptureNow=(CustomTextviewBold)findViewById(R.id.btnCaptureNow);
 		btnCaptureNow.setOnClickListener(this);
-		btnUploadPhone=(ImageView)findViewById(R.id.btnUploadPhone);
+		btnUploadPhone=(CustomTextviewBold)findViewById(R.id.btnUploadPhone);
 		btnUploadPhone.setOnClickListener(this);
-		btnBack=(ImageView)findViewById(R.id.btnBack);
+		btnBack=(CustomTextviewBold)findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(this);
 		
 	}

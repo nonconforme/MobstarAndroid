@@ -126,7 +126,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 	ImageView btnEdit;
 
-	ImageView imgUserPic, imgCoverPage, imgFollow, imgMsg;
+	ImageView imgUserPic, imgCoverPage, imgMsg;
+	private TextView imgFollow;
 
 	boolean isVideoSurfaceReady = false;
 	boolean isMoveDone = false;
@@ -361,7 +362,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				}
 				if(imgFollow!=null){
 					IsMyStar="1";
-					imgFollow.setImageResource(R.drawable.btn_following);
+					imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+					imgFollow.setText(getString(R.string.following));
 				}
 
 			} else if (intent.getAction().equalsIgnoreCase("star_removed")) {
@@ -466,7 +468,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 		textFollowers = (CustomTextview)header.findViewById(R.id.textFollowers);
 		imgUserPic = (ImageView)header.findViewById(R.id.imgUserPic);
 		imgCoverPage = (ImageView)header.findViewById(R.id.imgCoverPage);
-		imgFollow=(ImageView)header.findViewById(R.id.imgFollow);
+		imgFollow=(TextView)header.findViewById(R.id.imgFollow);
 		imgMsg=(ImageView)header.findViewById(R.id.imgMsg);
 		btnEdit = (ImageView)header.findViewById(R.id.btnEdit);
 
@@ -485,12 +487,14 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			imgMsg.setVisibility(View.GONE);
 		} else if (IsMyStar!=null && !IsMyStar.equalsIgnoreCase("0")) {
 			btnEdit.setVisibility(View.GONE);
-			imgFollow.setImageResource(R.drawable.btn_following);
+			imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+			imgFollow.setText(getString(R.string.following));
 			imgFollow.setVisibility(View.VISIBLE);
 			imgMsg.setVisibility(View.VISIBLE);
 		} else {
 			btnEdit.setVisibility(View.GONE);
-			imgFollow.setImageResource(R.drawable.btn_follow_yellow);
+			imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+			imgFollow.setText(getString(R.string.follow));
 			imgFollow.setVisibility(View.VISIBLE);
 			imgMsg.setVisibility(View.VISIBLE);
 		}
@@ -1153,7 +1157,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				viewHolder.imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
 				viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
 				viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
-				viewHolder.btnFollow = (ImageView) convertView.findViewById(R.id.btnFollow);
+				viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
 				convertView.setTag(viewHolder);
 
 			} else {
@@ -1279,9 +1283,11 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				//					}
 				//				}
 				if (!IsMyStar.equalsIgnoreCase("0")) {
-					viewHolder.btnFollow.setImageResource(R.drawable.btn_following);
+					viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+					viewHolder.btnFollow.setText(getString(R.string.following));
 				} else {
-					viewHolder.btnFollow.setImageResource(R.drawable.btn_follow);
+					viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.selector_oval_button));
+					viewHolder.btnFollow.setText(getString(R.string.follow));
 				}
 			}
 
@@ -2280,7 +2286,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			ProgressBar progressbar;
 			TextureView textureView;
 			ImageView btnShare;
-			ImageView btnFollow;
+			TextView btnFollow;
 			ImageView btnInfo;
 			ImageView btnLike;
 			ImageView ivAudioIcon;
@@ -3053,10 +3059,12 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 					}
 
 					if(IsMyStar!=null && !IsMyStar.equalsIgnoreCase("0")){
-						imgFollow.setImageResource(R.drawable.btn_following);
+						imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+						imgFollow.setText(getString(R.string.following));
 					}
 					else {
-						imgFollow.setImageResource(R.drawable.btn_follow_yellow);
+						imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+						imgFollow.setText(getString(R.string.follow));
 					}
 
 					if(IAmStar!=null && IAmStar.length()>0 && IAmStar.equalsIgnoreCase("1")){
@@ -3908,11 +3916,12 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
 				Intent searchIntent = new Intent("search_star_removed");
-				searchIntent.putExtra("UserID",UserID);
+				searchIntent.putExtra("UserID", UserID);
 				LocalBroadcastManager.getInstance(mContext).sendBroadcast(searchIntent);
 
 				IsMyStar="0";
-				imgFollow.setImageResource(R.drawable.btn_follow_yellow);
+				imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+				imgFollow.setText(getString(R.string.follow));
 				imgFollow.setVisibility(View.VISIBLE);
 
 

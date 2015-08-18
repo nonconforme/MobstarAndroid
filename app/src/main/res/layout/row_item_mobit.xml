@@ -285,15 +285,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" >
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/btnFollow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:contentDescription="@string/app_name"
-                        android:src="@drawable/btn_follow" />
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:textSize="12sp"
+                        android:background="@drawable/selector_oval_button"
+                        android:text="@string/follow" />
 
                     <com.mobstar.custom.CustomTextviewBold
                         android:id="@+id/textUserName"

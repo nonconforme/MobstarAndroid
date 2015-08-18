@@ -6,7 +6,8 @@
     android:layout_gravity="center"
     android:background="@color/background_transparent"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="20dp">
 
     <com.mobstar.custom.CustomTextviewBold
         android:layout_width="match_parent"
@@ -21,28 +22,34 @@
         android:textSize="18sp"
          />
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnEnterMobstar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_btn_height"
         android:layout_marginTop="@dimen/scale_20"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_enter_mobstar" />
+        android:text="@string/enter_mobstar"
+        android:drawableLeft="@drawable/icn_btn_enter_mabstar"
+        style="@style/BaseButton.Yellow"/>
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnUploadProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_upload_profile" />
+        android:text="@string/upload_to_profile"
+        android:drawableLeft="@drawable/icn_btn_upload_from_phone"
+        style="@style/BaseButton.Yellow"/>
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnNewMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_new_message" />
+        android:text="@string/new_msg"
+        android:drawableLeft="@drawable/icn_btn_new_message"
+        style="@style/BaseButton.Yellow"/>
 
 </LinearLayout>

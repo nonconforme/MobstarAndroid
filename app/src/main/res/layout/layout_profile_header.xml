@@ -38,7 +38,7 @@
                  android:layout_marginRight="@dimen/scale_5"
                  android:src="@drawable/msg_btn" />
 
-             <ImageView
+             <TextView
                  android:id="@+id/imgFollow"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
@@ -46,7 +46,12 @@
                  android:layout_marginRight="10dp"
                  android:layout_toLeftOf="@id/imgMsg"
                  android:contentDescription="@string/app_name"
-                 android:src="@drawable/btn_follow_yellow" />
+                 android:background="@drawable/yellow_btn"
+                 android:paddingTop="3dp"
+                 android:paddingBottom="3dp"
+                 android:paddingRight="10dp"
+                 android:paddingLeft="10dp"
+                 android:text="@string/follow" />
 
              <ImageView
                  android:id="@+id/btnEdit"

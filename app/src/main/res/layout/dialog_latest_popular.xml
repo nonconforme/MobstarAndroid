@@ -5,21 +5,26 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:background="@color/background_transparent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="20dp">
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnLatest"
         android:contentDescription="@string/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/btn_latest" />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_btn_height"
+        android:text="@string/latest"
+        android:drawableLeft="@drawable/icn_btn_latest"
+        style="@style/BaseButton.Gray"/>
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnPopular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_most_popular" />
+        android:text="@string/most_popular"
+        android:drawableLeft="@drawable/icn_btn_most_popular"
+        style="@style/BaseButton.Gray"/>
 
 </LinearLayout>

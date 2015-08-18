@@ -84,36 +84,53 @@
         android:textColor="@color/white_color"
         android:textSize="18sp" />
 
-    <ImageView
+    <TextView
         android:id="@+id/btnSendToFriend"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_send_to_frnd" />
+        android:text="@string/send_to_friend"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:drawableLeft="@drawable/icn_btn_new_message"
+        style="@style/BaseButton.Gray.NoBold"/>
 
-    <ImageView
+    <TextView
         android:id="@+id/btnFBPost"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_post_to_fb" />
+        android:text="@string/post_to_facebook"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:drawableLeft="@drawable/icn_fb"
+        style="@style/BaseButton.Gray.NoBold"/>
 
-    <ImageView
+    <TextView
         android:id="@+id/btnAddToGPlus"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_add_to_gplus" />
+        android:text="@string/add_to_google"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:drawableLeft="@drawable/icn_btn_add_to_gplus"
+        style="@style/BaseButton.Gray.NoBold"/>
 
-    <ImageView
+
+    <TextView
         android:id="@+id/btnTweet"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_tweet" />
+        android:text="@string/tweet_about_this"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:drawableLeft="@drawable/icn_twtr"
+        style="@style/BaseButton.Gray.NoBold"/>
 
 </LinearLayout>

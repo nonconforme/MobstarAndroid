@@ -531,7 +531,7 @@ public class UpdatesFragment extends Fragment{
 					convertView = inflater.inflate(R.layout.row_item_entry, parent, false);
 					viewHolder.layoutStatastics = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
 					viewHolder.textStatasticCount = (TextView) convertView.findViewById(R.id.textStatasticCount);
-					viewHolder.btnFollow = (ImageView) convertView.findViewById(R.id.btnFollow);
+					viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
 					viewHolder.imgMsg= (ImageView) convertView.findViewById(R.id.imgMsg);
 					
 				}
@@ -580,9 +580,11 @@ public class UpdatesFragment extends Fragment{
 					viewHolder.btnFollow.setVisibility(View.VISIBLE);
 					if (arrEntryPojos.get(position).getIsMyStar() != null) {
 						if (arrEntryPojos.get(position).getIsMyStar().equalsIgnoreCase("1")) {
-							viewHolder.btnFollow.setImageResource(R.drawable.btn_following);
+							viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+							viewHolder.btnFollow.setText(getString(R.string.following));
 						} else {
-							viewHolder.btnFollow.setImageResource(R.drawable.btn_follow);
+							viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.selector_oval_button));
+							viewHolder.btnFollow.setText(getString(R.string.follow));
 						}
 					}
 				}
@@ -1541,7 +1543,7 @@ public class UpdatesFragment extends Fragment{
 			ProgressBar progressbar;
 			TextureView textureView;
 			ImageView btnShare;
-			ImageView btnFollow;
+			TextView btnFollow;
 			ImageView btnInfo;
 			ImageView btnLike;
 			ImageView ivAudioIcon;

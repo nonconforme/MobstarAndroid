@@ -2007,7 +2007,7 @@ public class VideoListFragment extends Fragment {
             viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
             viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
             viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
-            viewHolder.btnFollow = (ImageView) convertView.findViewById(R.id.btnFollow);
+            viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
             viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
             viewHolder.layoutStatastics = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
             viewHolder.textStatasticCount = (TextView) convertView.findViewById(R.id.textStatasticCount);
@@ -2041,9 +2041,11 @@ public class VideoListFragment extends Fragment {
                 viewHolder.btnFollow.setVisibility(View.VISIBLE);
                 if (arrEntryPojos.get(position).getIsMyStar() != null) {
                     if (!arrEntryPojos.get(position).getIsMyStar().equalsIgnoreCase("0")) {
-                        viewHolder.btnFollow.setImageResource(R.drawable.btn_following);
+						viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+						viewHolder.btnFollow.setText(getString(R.string.following));
                     } else {
-                        viewHolder.btnFollow.setImageResource(R.drawable.btn_follow);
+						viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.selector_oval_button));
+						viewHolder.btnFollow.setText(getString(R.string.follow));
                     }
                 }
             }
@@ -2077,7 +2079,7 @@ public class VideoListFragment extends Fragment {
 			ProgressBar progressbar;
 			TextureView textureView;
 			ImageView btnShare;
-			ImageView btnFollow;
+			TextView btnFollow;
 			ImageView btnInfo;
 			// ImageView btnStatistics;
 			ImageView ivAudioIcon;
