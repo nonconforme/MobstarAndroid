@@ -2050,24 +2050,29 @@ public class VideoListFragment extends Fragment {
         }
 
 		private void setEnableSplitButton(final ViewHolder viewHolder, final int position, boolean enable){
-			if(!enable) {
-				viewHolder.textVideoSplit.setEnabled(false);
-				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+			try {
+
+				if (!enable) {
+					viewHolder.textVideoSplit.setEnabled(false);
+					viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+				} else {
+					viewHolder.textVideoSplit.setEnabled(true);
+					viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
+					viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (arrEntryPojos.get(position).getVideoLink() == null)
+								return;
+							Intent intent = new Intent(getActivity(), SplitActivity.class);
+							intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
+							getActivity().startActivity(intent);
+							getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+						}
+					});
+				}
 			}
-			else {
-				viewHolder.textVideoSplit.setEnabled(true);
-				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
-				viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (arrEntryPojos.get(position).getVideoLink() == null)
-							return;
-						Intent intent = new Intent(getActivity(), SplitActivity.class);
-						intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
-						getActivity().startActivity(intent);
-						getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					}
-				});
+			catch (IllegalStateException e){
+				e.printStackTrace();
 			}
 		}
 

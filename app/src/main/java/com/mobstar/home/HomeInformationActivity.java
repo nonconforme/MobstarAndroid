@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,11 +22,12 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-public class HomeInformationActivity extends Activity{
+public class HomeInformationActivity extends Activity implements View.OnClickListener {
 	
 	private Context mContext;
 	private TextView textTitle,textDes;
 	private ImageView imgInfo;
+	private ImageButton btnClose;
 	private String sErrorMessage;
 	private String title="",des="",img="";
 	private SharedPreferences preferences;
@@ -51,6 +54,7 @@ public class HomeInformationActivity extends Activity{
 		
 		AppRater.app_launched(mContext);
 		initControlls();
+		setListeners();
 //		new HomeInfoCall().start();
 	}
 
@@ -58,12 +62,25 @@ public class HomeInformationActivity extends Activity{
 		textTitle=(TextView)findViewById(R.id.textTitle);
 		textDes=(TextView)findViewById(R.id.textDes);
 		imgInfo=(ImageView)findViewById(R.id.imgInfo);
-		
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
 		textTitle.setText(title);
 		textDes.setText(des);
 		Picasso.with(mContext).load(img).into(imgInfo);
 	}
-	
+
+	private void setListeners(){
+		btnClose.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnClose:
+				startHomeActivity();
+				break;
+		}
+	}
+
 	class HomeInfoCall extends Thread {
 
 		@Override
@@ -144,10 +161,14 @@ public class HomeInformationActivity extends Activity{
 	};
 	
 	public void onBackPressed() {
+		startHomeActivity();
+	};
+
+	private void startHomeActivity(){
 		Intent intent = new Intent(mContext,HomeActivity.class);
 		startActivity(intent);
 		finish();
-	};
+	}
 	
 
 }
