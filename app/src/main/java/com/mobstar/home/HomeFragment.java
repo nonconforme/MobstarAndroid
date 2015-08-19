@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -280,7 +281,7 @@ public class HomeFragment extends Fragment {
 		}
 
 		class ViewHolder {
-			ImageView btnAll;
+			CustomTextviewBold btnAll;
 			TextView textCategoryName;
 			ImageView imageIcon;
 			LinearLayout llCategory;
@@ -297,7 +298,7 @@ public class HomeFragment extends Fragment {
 
 				viewHolder = new ViewHolder();
 
-				viewHolder.btnAll=(ImageView)convertView.findViewById(R.id.btnAll);
+				viewHolder.btnAll=(CustomTextviewBold)convertView.findViewById(R.id.btnAll);
 				viewHolder.textCategoryName = (TextView) convertView.findViewById(R.id.textCategoryName);
 				viewHolder.imageIcon=(ImageView)convertView.findViewById(R.id.image_icon);
 				viewHolder.llCategory=(LinearLayout)convertView.findViewById(R.id.llCategory);
@@ -327,7 +328,7 @@ public class HomeFragment extends Fragment {
 
 			//set background
 			if(categoryObj.getCategoryActive()){
-				viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.btn_category));
+				viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.oval_yellow_button_background));
 			}
 			else {
 				viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.btn_coming_soon));

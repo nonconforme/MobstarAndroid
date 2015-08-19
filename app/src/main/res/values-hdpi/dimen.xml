@@ -59,4 +59,6 @@
 	<dimen name="base_button_text_size">20sp</dimen>
 	<dimen name="small_btn_height">20dp</dimen>
 	<dimen name="small_button_text_size">12sp</dimen>
+
+	<dimen name="category_button_height">70dp</dimen>
 </resources>
