@@ -1,10 +1,5 @@
 package com.mobstar.upload;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentUris;
@@ -13,9 +8,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Bitmap.CompressFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
@@ -42,6 +37,11 @@ import android.widget.Toast;
 import com.mobstar.R;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 //import eu.janmuller.android.simplecropimage.CropImage;
 
@@ -273,7 +273,7 @@ public class TakePictureActivity extends Activity {
 				mCamera.setPreviewDisplay(holder);
 				mCamera.startPreview();
 				setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// Log.d(Constant.TAG, "Error setting camera preview: " +
 				// e.getMessage());
 			}
