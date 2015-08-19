@@ -40,7 +40,7 @@
                     android:layout_gravity="center"
                     android:contentDescription="@string/app_name"
                     android:visibility="gone" /> -->
-                
+
                 <ImageView
                     android:id="@+id/imageFrame"
                     android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                 android:layout_gravity="center"
                 android:indeterminateDrawable="@drawable/custom_progressbar"
                 android:visibility="visible" />
-            
+
             <ImageView
                 android:id="@+id/ivIndicator"
                 android:layout_width="wrap_content"
@@ -194,20 +194,32 @@
                 android:layout_weight="1"
                 android:background="@drawable/mobit_comment_bg" >
             </FrameLayout> -->
-
-            <ImageView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:id="@+id/btnLike"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
                 android:layout_marginLeft="@dimen/scale_5"
-                android:layout_weight="1" >
+                android:background="@drawable/selector_oval_button">
+                <ImageView
+                    android:id="@+id/ivLike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icn_btn_unlike"
+                    />
+                <TextView
+                    android:id="@+id/tvLikeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/unlike"/>
+            </LinearLayout>
 
-            </ImageView>
-           
 
             <FrameLayout
                 android:id="@+id/layoutComment"
-                android:layout_width="80dp"
+                android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
@@ -228,24 +240,37 @@
                     android:textSize="14sp" />
             </FrameLayout>
 
-            <ImageView
+            <FrameLayout
                 android:id="@+id/btnShare"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/scale_5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/icon_share" />
+                android:background="@drawable/selector_oval_button">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icn_share"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
 
-            <ImageView
+            <FrameLayout
                 android:id="@+id/btnInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/scale_5"
                 android:layout_marginRight="@dimen/scale_5"
                 android:layout_weight="1"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/icon_info" />
+                android:src="@drawable/icon_info"
+                android:background="@drawable/selector_oval_button">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icn_info"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
         </LinearLayout>
 
         <LinearLayout

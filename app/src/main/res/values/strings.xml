@@ -297,6 +297,8 @@
     <string name="delete_entry">DELETE ENTRY</string>
     <string name="continue_without_signing_in">CONTINUE WITHOUT SIGNING IN</string>
     <string name="login_with_twitter">LOGIN WITH <b>TWITTER</b></string>
+    <string name="edit">EDIT</string>
+    <string name="unlike">Unlike</string>
 
     <string name="move_clip">MOVE CLIP</string>
     <string name="image_big">IMAGE</string>

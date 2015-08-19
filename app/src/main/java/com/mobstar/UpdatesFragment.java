@@ -44,6 +44,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -524,8 +525,10 @@ public class UpdatesFragment extends Fragment{
 				if (type == 0) {
 					// Inflate the layout with image
 					convertView = inflater.inflate(R.layout.row_item_mobit, parent, false);
-					viewHolder.btnLike=(ImageView)convertView.findViewById(R.id.btnLike);
+					viewHolder.btnLike=(LinearLayout)convertView.findViewById(R.id.btnLike);
 					viewHolder.textLikeCount=(TextView)convertView.findViewById(R.id.textLikeCount);
+					viewHolder.tvLikeText = (TextView) convertView.findViewById(R.id.tvLikeText);
+					viewHolder.ivLike = (ImageView) convertView.findViewById(R.id.ivLike);
 				}
 				else {
 					convertView = inflater.inflate(R.layout.row_item_entry, parent, false);
@@ -545,9 +548,9 @@ public class UpdatesFragment extends Fragment{
 				viewHolder.imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
 				viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
 				viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
-				viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
+				viewHolder.btnShare = (FrameLayout) convertView.findViewById(R.id.btnShare);
 
-				viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
+				viewHolder.btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
 
 				viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
 				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
@@ -667,10 +670,14 @@ public class UpdatesFragment extends Fragment{
 				viewHolder.textLikeCount.setText(arrEntryPojos.get(position).getUpVotesCount());
 
 				if(arrEntryPojos.get(position).getIsVotedByYou().equalsIgnoreCase("0")){
-					viewHolder.btnLike.setBackground((getActivity().getResources().getDrawable(R.drawable.btn_like)));
+					viewHolder.tvLikeText.setVisibility(View.GONE);
+					viewHolder.ivLike.setImageResource(R.drawable.icn_like);
+//					viewHolder.btnLike.setBackground((getActivity().getResources().getDrawable(R.drawable.btn_like)));
 				}
 				else {
-					viewHolder.btnLike.setBackground((getActivity().getResources().getDrawable(R.drawable.btn_unlike)));
+					viewHolder.tvLikeText.setVisibility(View.VISIBLE);
+					viewHolder.ivLike.setImageResource(R.drawable.icn_btn_unlike);
+//					viewHolder.btnLike.setBackground((getActivity().getResources().getDrawable(R.drawable.btn_unlike)));
 				}
 
 				viewHolder.btnLike.setOnClickListener(new OnClickListener() {
@@ -1542,10 +1549,11 @@ public class UpdatesFragment extends Fragment{
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;
-			ImageView btnShare;
+			FrameLayout btnShare;
 			TextView btnFollow;
-			ImageView btnInfo;
-			ImageView btnLike;
+			FrameLayout btnInfo;
+			LinearLayout btnLike;
+			TextView tvLikeText;
 			ImageView ivAudioIcon;
 			FrameLayout layoutComment;
 			ImageView imgUserPic;
@@ -1554,7 +1562,7 @@ public class UpdatesFragment extends Fragment{
 			FrameLayout flPlaceHolder;
 			FrameLayout layoutStatastics;
 			TextView textStatasticCount;
-			ImageView imgMsg,ivIndicator;
+			ImageView imgMsg,ivIndicator, ivLike;
 		}
 
 

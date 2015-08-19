@@ -48,6 +48,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
@@ -124,7 +125,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 	private String UserID,EntryId, UserName = "", UserPic = "", IsMyStar = "", IAmStar= "", UserDisplayName = "", UserCoverImage = "", UserTagline = "",UserBio="", UserFan="";
 
-	ImageView btnEdit;
+	CustomTextviewBold btnEdit;
 
 	ImageView imgUserPic, imgCoverPage, imgMsg;
 	private TextView imgFollow;
@@ -470,7 +471,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 		imgCoverPage = (ImageView)header.findViewById(R.id.imgCoverPage);
 		imgFollow=(TextView)header.findViewById(R.id.imgFollow);
 		imgMsg=(ImageView)header.findViewById(R.id.imgMsg);
-		btnEdit = (ImageView)header.findViewById(R.id.btnEdit);
+		btnEdit = (CustomTextviewBold)header.findViewById(R.id.btnEdit);
 
 		listEntry.addHeaderView(header);
 		listEntry.setEmptyView(findViewById(R.id.textNoData));
@@ -1127,8 +1128,10 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				if (type == 0) {
 					// Inflate the layout with image
 					convertView = inflater.inflate(R.layout.row_item_mobit, parent, false);
-					viewHolder.btnLike=(ImageView)convertView.findViewById(R.id.btnLike);
+					viewHolder.btnLike=(LinearLayout)convertView.findViewById(R.id.btnLike);
 					viewHolder.textLikeCount=(TextView)convertView.findViewById(R.id.textLikeCount);
+					viewHolder.tvLikeText = (TextView) convertView.findViewById(R.id.tvLikeText);
+					viewHolder.ivLike = (ImageView) convertView.findViewById(R.id.ivLike);
 				}
 				else {
 					convertView = inflater.inflate(R.layout.row_item_entry, parent, false);
@@ -1147,12 +1150,11 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				viewHolder.imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
 				viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
 				viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
-				viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
+				viewHolder.btnShare = (FrameLayout) convertView.findViewById(R.id.btnShare);
 
-				viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
+				viewHolder.btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
 
 				viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
-				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
 				viewHolder.textCommentCount = (TextView) convertView.findViewById(R.id.textCommentCount);
 				viewHolder.imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
 				viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
@@ -1226,10 +1228,14 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				});
 
 				if(arrEntryPojos.get(position).getIsVotedByYou().equalsIgnoreCase("0")){
-					viewHolder.btnLike.setImageResource(R.drawable.btn_like);
+					viewHolder.tvLikeText.setVisibility(View.GONE);
+					viewHolder.ivLike.setImageResource(R.drawable.icn_like);
 				}
 				else {
-					viewHolder.btnLike.setImageResource(R.drawable.btn_unlike);
+					viewHolder.tvLikeText.setVisibility(View.VISIBLE);
+					viewHolder.ivLike.setImageResource(R.drawable.icn_btn_unlike);
+
+//					viewHolder.btnLike.setImageResource(R.drawable.btn_unlike);
 				}
 
 				viewHolder.btnLike.setOnClickListener(new OnClickListener() {
@@ -1455,7 +1461,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				}
 			});
 
-			viewHolder.layoutComment.setOnClickListener(new OnClickListener() {
+			viewHolder.textCommentCount.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -2285,12 +2291,11 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;
-			ImageView btnShare;
+			FrameLayout btnShare;
 			TextView btnFollow;
-			ImageView btnInfo;
-			ImageView btnLike;
+			FrameLayout btnInfo;
+			LinearLayout btnLike;
 			ImageView ivAudioIcon;
-			FrameLayout layoutComment;
 			ImageView imgUserPic;
 			TextView textCommentCount;
 			ImageView imgPlaceHolder;
@@ -2298,6 +2303,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			FrameLayout layoutStatastics;
 			TextView textStatasticCount;
 			ImageView imgMsg,ivIndicator;
+			TextView tvLikeText;
+			ImageView ivLike;
 		}
 
 		class ViewHolderProfile {

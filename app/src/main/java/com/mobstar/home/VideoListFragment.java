@@ -1155,7 +1155,7 @@ public class VideoListFragment extends Fragment {
 				}
 			});
 
-			viewHolder.layoutComment.setOnClickListener(new OnClickListener() {
+			viewHolder.textCommentCount.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -2006,13 +2006,12 @@ public class VideoListFragment extends Fragment {
             viewHolder.imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
             viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
             viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
-            viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
+            viewHolder.btnShare = (FrameLayout) convertView.findViewById(R.id.btnShare);
             viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
-            viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
+            viewHolder.btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
             viewHolder.layoutStatastics = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
             viewHolder.textStatasticCount = (TextView) convertView.findViewById(R.id.textStatasticCount);
             viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
-            viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
             viewHolder.textCommentCount = (TextView) convertView.findViewById(R.id.textCommentCount);
             viewHolder.imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
             viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
@@ -2052,24 +2051,28 @@ public class VideoListFragment extends Fragment {
         }
 
 		private void setEnableSplitButton(final ViewHolder viewHolder, final int position, boolean enable){
-			if(!enable) {
-				viewHolder.textVideoSplit.setEnabled(false);
-				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+			try {
+				if (!enable) {
+					viewHolder.textVideoSplit.setEnabled(false);
+					viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+				} else {
+					viewHolder.textVideoSplit.setEnabled(true);
+					viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
+					viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (arrEntryPojos.get(position).getVideoLink() == null)
+								return;
+							Intent intent = new Intent(getActivity(), SplitActivity.class);
+							intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
+							getActivity().startActivity(intent);
+							getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+						}
+					});
+				}
 			}
-			else {
-				viewHolder.textVideoSplit.setEnabled(true);
-				viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
-				viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						if (arrEntryPojos.get(position).getVideoLink() == null)
-							return;
-						Intent intent = new Intent(getActivity(), SplitActivity.class);
-						intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
-						getActivity().startActivity(intent);
-						getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					}
-				});
+			catch (IllegalStateException e){
+				e.printStackTrace();
 			}
 		}
 
@@ -2078,12 +2081,11 @@ public class VideoListFragment extends Fragment {
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;
-			ImageView btnShare;
+			FrameLayout btnShare;
 			TextView btnFollow;
-			ImageView btnInfo;
+			FrameLayout btnInfo;
 			// ImageView btnStatistics;
 			ImageView ivAudioIcon;
-			FrameLayout layoutComment;
 			ImageView imgUserPic;
 			TextView textCommentCount;
 			ImageView imgPlaceHolder;
