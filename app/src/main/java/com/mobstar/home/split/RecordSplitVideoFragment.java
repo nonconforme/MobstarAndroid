@@ -345,15 +345,15 @@ public class RecordSplitVideoFragment extends Fragment {
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
-            Camera.Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
 
             // // Step 3: Set a CamcorderProfile (requires API Level 8 or
             // higher)
             CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
-            profile.videoFrameWidth = optimalVideoSize.width;
-//            profile.videoFrameWidth = desiredwidth;
-            profile.videoFrameHeight = optimalVideoSize.height;
-//            profile.videoFrameHeight = desiredheight;
+            if (videosizes != null) {
+                Camera.Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
+                profile.videoFrameWidth = optimalVideoSize.width;
+                profile.videoFrameHeight = optimalVideoSize.height;
+            }
             mMediaRecorder.setProfile(profile);
 
             // Log.v(Constant.TAG, "optimalVideoSize width " +
