@@ -197,12 +197,12 @@ public class HomeFragment extends Fragment {
 
 	void LatestPopularDialog() {
 
-		ImageView btnLatest, btnPopular;
+		CustomTextviewBold btnLatest, btnPopular;
 
 		final Dialog dialog = new Dialog(getActivity(), R.style.DialogTheme);
 		dialog.setContentView(R.layout.dialog_latest_popular);
 		dialog.setCancelable(true);
-		btnLatest = (ImageView) dialog.findViewById(R.id.btnLatest);
+		btnLatest = (CustomTextviewBold) dialog.findViewById(R.id.btnLatest);
 		btnLatest.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -220,7 +220,7 @@ public class HomeFragment extends Fragment {
 				dialog.dismiss();
 			}
 		});
-		btnPopular = (ImageView) dialog.findViewById(R.id.btnPopular);
+		btnPopular = (CustomTextviewBold) dialog.findViewById(R.id.btnPopular);
 		btnPopular.setOnClickListener(new OnClickListener() {
 
 			@Override
