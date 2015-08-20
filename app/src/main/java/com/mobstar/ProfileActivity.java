@@ -657,7 +657,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 		});
 
 
-		if (UserCoverImage.equals("")) {
+		if (UserCoverImage == null || UserCoverImage.equals("")) {
 			Log.d("mobstar","cover img is null");
 			imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
 		} else {
@@ -1357,16 +1357,16 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Intent intent = new Intent(mContext, ProfileActivity.class);
-					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
-					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
-					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
-					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
-					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
-					intent.putExtra("IsMyStar", IsMyStar);
-					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
-					startActivity(intent);
-					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//					Intent intent = new Intent(mContext, ProfileActivity.class);
+//					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
+//					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
+//					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
+//					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
+//					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
+//					intent.putExtra("IsMyStar", IsMyStar);
+//					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
+//					startActivity(intent);
+//					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 				}
 			});
 
@@ -2864,7 +2864,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 									IAmStar=jsonObjUser.getString("iAmStar");
 								}
 
-								if(UserCoverImage == ""){
+								if(UserCoverImage == null || UserCoverImage == ""){
 									UserCoverImage = jsonObjUser.getString("profileCover");
 								}
 
@@ -3057,7 +3057,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 						.error(R.drawable.profile_pic_new).transform(new RoundedTransformation(Utility.dpToPx(mContext, 126), 0)).into(imgUserPic);
 					}
 
-					if (UserCoverImage.equals("")) {
+					if (UserCoverImage == null || UserCoverImage.equals("")) {
 						imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
 					} else {
 						imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
@@ -3340,7 +3340,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 						.error(R.drawable.profile_pic_new).transform(new RoundedTransformation(Utility.dpToPx(mContext, 126), 0)).into(imgUserPic);
 					}
 
-					if (UserCoverImage.equals("")) {
+					if (UserCoverImage == null || UserCoverImage.equals("")) {
 						imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
 					} else {
 						imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
