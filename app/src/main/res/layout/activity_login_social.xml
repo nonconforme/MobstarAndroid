@@ -48,7 +48,7 @@
             <com.mobstar.custom.CustomTextview
                 android:id="@+id/btnLoginGoogle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/default_btn_height"
+                android:layout_height="@dimen/default_big_btn_height"
                 android:layout_marginTop="30dp"
                 android:contentDescription="@string/app_name"
                 android:text="@string/login_with_google"
@@ -59,7 +59,7 @@
             <com.mobstar.custom.CustomTextview
                 android:id="@+id/btnLoginFB"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/default_btn_height"
+                android:layout_height="@dimen/default_big_btn_height"
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/app_name"
                 android:text="@string/login_with_facebook"
@@ -69,7 +69,7 @@
             <com.mobstar.custom.CustomTextviewBold
                 android:id="@+id/btnCountinueWOSignin"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/default_btn_height"
+                android:layout_height="@dimen/default_big_btn_height"
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/app_name"
                 android:text="@string/continue_without_signing_in"
@@ -79,7 +79,7 @@
             <com.mobstar.custom.CustomTextview
                 android:id="@+id/btnLoginTwitter"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/default_btn_height"
+                android:layout_height="@dimen/default_big_btn_height"
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/app_name"
                 android:text="@string/login_with_twitter"

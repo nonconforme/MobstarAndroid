@@ -94,7 +94,7 @@
             <Button
                 android:id="@+id/btnBack"
                 android:layout_width="@dimen/signup_btn_width"
-                android:layout_height="@dimen/signup_btn_height"
+                android:layout_height="@dimen/default_big_btn_height"
                 android:background="@drawable/gray_btn"
                 android:text="@string/back"
                 android:textColor="@android:color/white"
@@ -103,7 +103,7 @@
             <Button
                 android:id="@+id/btnFinish"
                 android:layout_width="@dimen/signup_btn_width"
-                android:layout_height="@dimen/signup_btn_height"
+                android:layout_height="@dimen/default_big_btn_height"
                 android:layout_marginLeft="@dimen/scale_20"
                 android:background="@drawable/yellow_btn"
                 android:text="@string/start_msg"

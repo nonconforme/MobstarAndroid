@@ -87,7 +87,7 @@
     <TextView
         android:id="@+id/btnSendToFriend"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/send_to_friend"
@@ -99,7 +99,7 @@
     <TextView
         android:id="@+id/btnFBPost"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/post_to_facebook"
@@ -111,7 +111,7 @@
     <TextView
         android:id="@+id/btnAddToGPlus"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/add_to_google"
@@ -124,7 +124,7 @@
     <TextView
         android:id="@+id/btnTweet"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/tweet_about_this"

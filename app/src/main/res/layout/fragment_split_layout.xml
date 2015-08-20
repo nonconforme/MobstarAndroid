@@ -18,7 +18,7 @@
         <com.mobstar.custom.CustomTextviewBold
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/default_btn_height"
+            android:layout_height="@dimen/default_big_btn_height"
             android:text="@string/back"
             android:gravity="center"
             android:layout_weight="1"
@@ -29,7 +29,7 @@
         <com.mobstar.custom.CustomTextviewBold
             android:id="@+id/btnNext"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/default_btn_height"
+            android:layout_height="@dimen/default_big_btn_height"
             android:layout_marginLeft="10dp"
             android:text="@string/next"
             android:gravity="center"

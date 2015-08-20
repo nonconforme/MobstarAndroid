@@ -12,7 +12,7 @@
         android:id="@+id/btnYesVotes"
         android:contentDescription="@string/app_name"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:text="@string/yes_votes"
         android:drawableLeft="@drawable/icn_btn_yes_votes"
         style="@style/BaseButton.Gray"/>
@@ -20,7 +20,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnNotVotes"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
         android:text="@string/no_votes"

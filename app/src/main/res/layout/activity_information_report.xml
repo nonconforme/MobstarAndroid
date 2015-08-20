@@ -73,7 +73,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnEntryInformation"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/entry_information"
@@ -85,7 +85,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnReportThis"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/report_this_entry"
@@ -97,7 +97,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnDeleteEntry"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/delete_entry"

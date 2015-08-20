@@ -129,6 +129,8 @@ public class MessageComposeActivity extends Activity implements OnClickListener,
 			onBackPressed();
 		}
 		else if (btnFinish.equals(v)) {
+			if (recipent == null)
+				return;
 			boolean isValid=false;
 			if (recipent.length() == 0) {
 				isValid = false;

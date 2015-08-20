@@ -25,7 +25,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnMovieClip"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
         android:text="@string/movie_clip"
@@ -35,7 +35,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnImage"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
         android:text="@string/take_image"
@@ -45,7 +45,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnAudioClip"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
         style="@style/BaseButton.Yellow"
@@ -55,7 +55,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
         android:text="@string/back"

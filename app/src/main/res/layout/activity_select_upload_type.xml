@@ -25,7 +25,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnEnterMobstar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="@dimen/scale_20"
         android:contentDescription="@string/app_name"
         android:text="@string/enter_mobstar"
@@ -35,7 +35,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnUploadProfile"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
         android:text="@string/upload_to_profile"
@@ -45,7 +45,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnNewMessage"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
         android:text="@string/new_msg"

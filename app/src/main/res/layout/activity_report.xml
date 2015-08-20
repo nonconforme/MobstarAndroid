@@ -86,7 +86,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnInAppropriateImage"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/inappropriate_imagery"
@@ -98,7 +98,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnInAppropriateLanguage"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/inappropriate_language"
@@ -110,7 +110,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnSpam"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/spam"
@@ -122,7 +122,7 @@
     <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnOthers"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_btn_height"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
         android:text="@string/other"
