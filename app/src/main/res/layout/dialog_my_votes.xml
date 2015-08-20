@@ -5,21 +5,26 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:background="@color/background_transparent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="20dp">
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnYesVotes"
         android:contentDescription="@string/app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/btn_yes_votes" />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_big_btn_height"
+        android:text="@string/yes_votes"
+        android:drawableLeft="@drawable/icn_btn_yes_votes"
+        style="@style/BaseButton.Gray"/>
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnNotVotes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_no_votes" />
+        android:text="@string/no_votes"
+        android:drawableLeft="@drawable/icn_btn_no_votes"
+        style="@style/BaseButton.Gray"/>
 
 </LinearLayout>

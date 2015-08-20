@@ -6,8 +6,10 @@
     <color name="splash_bg">#ff333333</color>
     <color name="hint_color">#ff888888</color>
     <color name="gray_color">#ff888888</color>
+    <color name="gray_dark_color">#5b5b5b</color>
     <color name="light_gray_color">#e0e0e0</color>
     <color name="yellow_color">#fff7ba00</color>
+    <color name="yellow_color_dark">#8f6b00</color>
     <color name="green_color">#ff02d174</color>
     
     <color name="red_color">#ffff0000</color>

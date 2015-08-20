@@ -159,28 +159,35 @@
         android:gravity="center"
         android:paddingBottom="5dp" >
 
-        <ImageView
+        <TextView
             android:id="@+id/btnStatistics"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/icon_statics" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="@string/temp_comments"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/comment_color"
+            android:textSize="14sp"
+            android:background="@drawable/selector_oval_button"
+            android:drawableLeft="@drawable/icn_statics"
+            android:drawableRight="@drawable/icn_statics_check"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="5dp"/><![CDATA[
 
-        <ImageView
-            android:id="@+id/btnShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/icon_share" />
+        >
+
+        ]]>
 
         <FrameLayout
             android:id="@+id/layoutComment"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp" >
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1">
 
             <com.mobstar.custom.CustomTextviewBold
                 android:id="@+id/textCommentCount"
@@ -197,14 +204,37 @@
                 android:textSize="14sp" />
         </FrameLayout>
 
+        <FrameLayout
+            android:id="@+id/btnShare"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/app_name"
+            android:background="@drawable/selector_oval_button" >
         <ImageView
-            android:id="@+id/btnInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/icn_share"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/btnInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_weight="1"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/icon_info" />
+            android:background="@drawable/selector_oval_button">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/icn_info"
+            android:layout_weight="1" />
+        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>

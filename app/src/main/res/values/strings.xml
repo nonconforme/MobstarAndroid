@@ -69,7 +69,7 @@
     <string name="notifications">NOTIFICATIONS</string>
     <string name="temp_notification_text">mattf has commented on your entry "entrytitle"</string>
     <string name="my_entries">MY ENTRIES</string>
-    <string name="delete_entry">DELETE ENTRY?</string>
+    <string name="delete_entry_question">DELETE ENTRY?</string>
     <string name="meet_the_mentors">MEET THE MENTORS</string>
     <string name="bono">Bono</string>
     <string name="bono_description">Bono is the frontman of the Irish rock brand U2.He\'s also known for participating in global charity efforts.</string>
@@ -335,4 +335,54 @@
     <string name="privacy_settings">PRIVACY SETTINGS</string>
 
 
+    <!-- strings in imageButton-->
+    <string name="take_image">IMAGE</string>
+    <string name="edit_information">EDIT INFORMATION</string>
+    <string name="delete_entry">DELETE ENTRY</string>
+    <string name="continue_without_signing_in">CONTINUE WITHOUT SIGNING IN</string>
+    <string name="login_with_twitter">LOGIN WITH <b>TWITTER</b></string>
+    <string name="edit">EDIT</string>
+    <string name="unlike">Unlike</string>
+
+    <string name="move_clip">MOVE CLIP</string>
+    <string name="image_big">IMAGE</string>
+    <string name="select_file">SELECT FILE</string>
+    <string name="entry_information_big">ENTRY INFARMATION</string>
+    <string name="report_this_entry">REPORT THIS ENTRY</string>
+    <string name="delete_entry_big">DELETE ENTRY</string>
+    <string name="login_with_google">LOGIN WITH <b>GOOGLE+</b></string>
+    <string name="login_with_facebook">LOGIN WITH <b>FACEBOOK</b></string>
+    <string name="edit_info">EDIT INFORMATION</string>
+    <string name="capture_now">CAPTURE NOW</string>
+    <string name="upload_from_phone">UPLOAD FROM PHONE</string>
+    <string name="inappropriate_imagery">INAPPROPRIATE IMAGERY</string>
+    <string name="inappropriate_language">INAPPROPRIATE LANGUAGE</string>
+    <string name="spam">SPAM</string>
+    <string name="other">OTHER</string>
+    <string name="audio_clip">AUDIO CLIP</string>
+    <string name="enter_mostar">ENTER MOBSTAR</string>
+    <string name="upload_to_profile">UPLOAD TO PROFILE</string>
+    <string name="new_message">NEW MESSAGE</string>
+    <string name="send_to_friend"><b>SEND</b> TO A FRIEND</string>
+    <string name="post_to_facebook">POST TO <b>FACEBOOK</b></string>
+    <string name="add_to_google">ADD TO <b>GOOGLE+</b></string>
+    <string name="tweet_about_this"><b>TWEET</b> ABOUT THIS</string>
+    <string name="you_are_now_following_this_user">YOU ARE NOW FOLLOWING THIS USER</string>
+    <string name="mobstar_would_like_access_your_facebook">MOBSTAR WOULD LIKE TO ACCESS YOUR FACEBOOK ACCOUNT</string>
+    <string name="thank_you_for_giving_your_feedback">THANK YOU FOR GIVING YOUR FEEDBACK</string>
+    <string name="you_just_liked_this_mobit">YOU JUST LIKED THIS MOBIT</string>
+    <string name="most_popular">MOST POPULAR</string>
+    <string name="reported">REPORTED</string>
+    <string name="your_complaint_will_be_reviewed">YOUR COMPLAINT WILL BE REVIEWED AND DEALT WITH PROMPTLY</string>
+    <string name="this_entry_will_reviewed">THIS ENTRY WILL BE REVIEWED</string>
+    <string name="your_tagline_update">YOUR TAGLINE HAS BEEN UPDATED</string>
+    <string name="your_details_update">YOUR DETAILS HAS BEEN CHANGED</string>
+    <string name="mobile_number_success">MOBILE NUMBER SUCCESSFULLY VERIFIED</string>
+    <string name="mobile_number_succes_update_to">MOBILE NUMBER SUCCESSFULLY UPDATED TO:</string>
+    <string name="is_it_correct">IS IT CORRECT?</string>
+    <string name="count">COUNTRY</string>
+    <string name="is_your_mobile_number_correct">IS YOUR MOBILE NUMBER ABOVE CORRECT?</string>
+    <string name="app_tour">APP TOUR</string>
+    <string name="linked_account">LINKED ACCOUNT</string>
+    <string name="privacy_settings">PRIVACY SETTINGS</string>
 </resources>

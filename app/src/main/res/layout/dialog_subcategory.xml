@@ -20,12 +20,12 @@
 
     <LinearLayout
         android:id="@+id/llMale"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/category_button_height"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/btn_category"
+        android:background="@drawable/oval_yellow_button_background"
         android:orientation="horizontal" >
 
         <ImageView
@@ -64,12 +64,12 @@
 
     <LinearLayout
         android:id="@+id/llFemale"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/category_button_height"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/btn_category"
+        android:background="@drawable/oval_yellow_button_background"
         android:orientation="horizontal" >
 
         <ImageView
@@ -108,12 +108,12 @@
 
     <LinearLayout
         android:id="@+id/llCurve"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/category_button_height"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/btn_category" >
+        android:background="@drawable/oval_yellow_button_background" >
 
         <ImageView
             android:layout_width="wrap_content"

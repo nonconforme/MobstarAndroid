@@ -1040,9 +1040,9 @@ public class SearchListFragment extends Fragment {
 				viewHolder.imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
 				viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
 				viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
-				viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
-				viewHolder.btnFollow = (ImageView) convertView.findViewById(R.id.btnFollow);
-				viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
+				viewHolder.btnShare = (FrameLayout) convertView.findViewById(R.id.btnShare);
+				viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
+				viewHolder.btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
 
 				viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
 				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
@@ -1118,10 +1118,14 @@ public class SearchListFragment extends Fragment {
 				});
 
 				if(arrEntryPojos.get(position).getIsVotedByYou().equalsIgnoreCase("0")){
-					viewHolder.btnLike.setBackground((getResources().getDrawable(R.drawable.btn_like)));
+					viewHolder.tvLikeText.setVisibility(View.GONE);
+					viewHolder.ivLike.setImageResource(R.drawable.icn_like);
 				}
 				else {
-					viewHolder.btnLike.setBackground((getResources().getDrawable(R.drawable.btn_unlike)));
+					viewHolder.tvLikeText.setVisibility(View.VISIBLE);
+					viewHolder.ivLike.setImageResource(R.drawable.icn_btn_unlike);
+
+//					viewHolder.btnLike.setImageResource(R.drawable.btn_unlike);
 				}
 
 				viewHolder.btnLike.setOnClickListener(new OnClickListener() {
@@ -1171,9 +1175,11 @@ public class SearchListFragment extends Fragment {
 				viewHolder.btnFollow.setVisibility(View.VISIBLE);
 				if (arrEntryPojos.get(position).getIsMyStar() != null) {
 					if (!arrEntryPojos.get(position).getIsMyStar().equalsIgnoreCase("0")) {
-						viewHolder.btnFollow.setImageResource(R.drawable.btn_following);
+						viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+						viewHolder.btnFollow.setText(getString(R.string.following));
 					} else {
-						viewHolder.btnFollow.setImageResource(R.drawable.btn_follow);
+						viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.selector_oval_button));
+						viewHolder.btnFollow.setText(getString(R.string.follow));
 					}
 				}
 			}
@@ -2146,9 +2152,9 @@ public class SearchListFragment extends Fragment {
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;
-			ImageView btnShare;
-			ImageView btnFollow;
-			ImageView btnInfo;
+			FrameLayout btnShare;
+			TextView btnFollow;
+			FrameLayout btnInfo;
 			ImageView btnLike;
 			// ImageView btnStatistics;
 			ImageView ivAudioIcon;
@@ -2160,6 +2166,8 @@ public class SearchListFragment extends Fragment {
 			FrameLayout layoutStatastics;
 			TextView textStatasticCount;
 			ImageView imgMsg,ivIndicator;
+			TextView tvLikeText;
+			ImageView ivLike;
 
 		}
 

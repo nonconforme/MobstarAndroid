@@ -62,7 +62,7 @@ public class ShareActivity extends Activity {
 	TextView textUserName, textTime, textDescription;
 	ImageView imgUserPic;
 
-	ImageView btnTweet, btnSendToFriend, btnAddToGPlus, btnFBPost;
+	TextView btnTweet, btnSendToFriend, btnAddToGPlus, btnFBPost;
 	File picFile;
 	Uri pngUri;
 	private ImageDownloader mDownloader;
@@ -205,7 +205,7 @@ public class ShareActivity extends Activity {
 		}
 
 
-		btnTweet = (ImageView) findViewById(R.id.btnTweet);
+		btnTweet = (TextView) findViewById(R.id.btnTweet);
 		btnTweet.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -261,7 +261,7 @@ public class ShareActivity extends Activity {
 			}
 		});
 
-		btnSendToFriend = (ImageView) findViewById(R.id.btnSendToFriend);
+		btnSendToFriend = (TextView) findViewById(R.id.btnSendToFriend);
 		btnSendToFriend.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -297,7 +297,7 @@ public class ShareActivity extends Activity {
 			}
 		});
 
-		btnAddToGPlus = (ImageView) findViewById(R.id.btnAddToGPlus);
+		btnAddToGPlus = (TextView) findViewById(R.id.btnAddToGPlus);
 		btnAddToGPlus.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -323,7 +323,7 @@ public class ShareActivity extends Activity {
 			}
 		});
 
-		btnFBPost = (ImageView) findViewById(R.id.btnFBPost);
+		btnFBPost = (TextView) findViewById(R.id.btnFBPost);
 		btnFBPost.setOnClickListener(new OnClickListener() {
 
 			@Override

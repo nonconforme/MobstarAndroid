@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.home.VideoListFragment;
 import com.mobstar.utils.Utility;
 
@@ -113,12 +114,12 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 
 	void MyVoteDialog() {
 
-		ImageView btnYesVotes, btnNotVotes;
+		CustomTextviewBold btnYesVotes, btnNotVotes;
 
 		final Dialog dialog = new Dialog(mContext, R.style.DialogTheme);
 		dialog.setContentView(R.layout.dialog_my_votes);
 		dialog.setCancelable(true);
-		btnYesVotes = (ImageView) dialog.findViewById(R.id.btnYesVotes);
+		btnYesVotes = (CustomTextviewBold) dialog.findViewById(R.id.btnYesVotes);
 		btnYesVotes.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -135,7 +136,7 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 				dialog.dismiss();
 			}
 		});
-		btnNotVotes = (ImageView) dialog.findViewById(R.id.btnNotVotes);
+		btnNotVotes = (CustomTextviewBold) dialog.findViewById(R.id.btnNotVotes);
 		btnNotVotes.setOnClickListener(new OnClickListener() {
 
 			@Override

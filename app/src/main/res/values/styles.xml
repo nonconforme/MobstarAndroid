@@ -83,4 +83,30 @@
         <item name="android:background">@android:drawable/list_selector_background</item>
     </style>
 
+    <style name="BaseButton">
+        <item name="android:textSize">@dimen/base_button_text_size</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">25dp</item>
+    </style>
+
+    <style name="BaseButton.Yellow" parent="BaseButton">
+        <item name="android:background">@drawable/yellow_btn</item>
+    </style>
+
+    <style name="BaseButton.Gray" parent="BaseButton">
+        <item name="android:background">@drawable/gray_btn</item>
+    </style>
+
+    <style name="BaseButton.Gray.NoBold" parent="BaseButton.Gray">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="BaseButton.Yellow.NoBold">
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>
