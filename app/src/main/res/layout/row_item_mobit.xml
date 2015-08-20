@@ -195,7 +195,7 @@
                 android:background="@drawable/mobit_comment_bg" >
             </FrameLayout> -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/btnLike"
                 android:layout_weight="1"
@@ -219,7 +219,7 @@
 
             <FrameLayout
                 android:id="@+id/layoutComment"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
@@ -242,7 +242,7 @@
 
             <FrameLayout
                 android:id="@+id/btnShare"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
@@ -257,7 +257,7 @@
 
             <FrameLayout
                 android:id="@+id/btnInfo"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/scale_5"
                 android:layout_marginRight="@dimen/scale_5"
