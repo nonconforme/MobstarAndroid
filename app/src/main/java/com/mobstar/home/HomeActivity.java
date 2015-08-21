@@ -22,9 +22,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -115,8 +118,12 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 		mActionBar.setDisplayShowHomeEnabled(false);
 		mActionBar.setDisplayShowTitleEnabled(false);
 		mActionBar.setDisplayUseLogoEnabled(false);
-		mActionBar.setCustomView(R.layout.layout_actionbar);
+		final View customView = LayoutInflater.from(this).inflate(R.layout.layout_actionbar, null);
+		mActionBar.setCustomView(customView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		mActionBar.setDisplayShowCustomEnabled(true);
+		Toolbar parent =(Toolbar) customView.getParent();
+		parent.setContentInsetsAbsolute(0, 0);
+
 
 		mFragmentManager = getSupportFragmentManager();
 
