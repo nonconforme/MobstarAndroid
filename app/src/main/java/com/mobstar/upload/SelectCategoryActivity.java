@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -119,7 +120,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 		}
 
 		class ViewHolder {
-			ImageView btnAll;
+			CustomTextviewBold btnAll;
 			TextView textCategoryName;
 			ImageView imageIcon;
 			LinearLayout llCategory;
@@ -136,7 +137,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 
 				viewHolder = new ViewHolder();
 
-				viewHolder.btnAll=(ImageView)convertView.findViewById(R.id.btnAll);
+				viewHolder.btnAll=(CustomTextviewBold)convertView.findViewById(R.id.btnAll);
 				viewHolder.textCategoryName = (TextView) convertView.findViewById(R.id.textCategoryName);
 				viewHolder.imageIcon=(ImageView)convertView.findViewById(R.id.image_icon);
 				viewHolder.llCategory=(LinearLayout)convertView.findViewById(R.id.llCategory);
@@ -165,10 +166,10 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 			//set background
 			if(categoryObj.getCategoryActive()){
 				if(categoryObj.getID().equalsIgnoreCase("8")){
-					viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.red_cat));
+					viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.oval_red_button_background));
 				}
 				else {
-					viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.btn_category));
+					viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.oval_yellow_button_background));
 					viewHolder.textCategoryName.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 					viewHolder.textCategoryName.setCompoundDrawablePadding(0);
 				}

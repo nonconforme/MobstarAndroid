@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.stararea.DeleteEntryActivity;
@@ -28,7 +29,7 @@ public class InformationReportActivity extends Activity {
 
 	private Context mContext;
 
-	private ImageView btnReportThis, btnEntryInformation,btnDeleteEntry;
+	private CustomTextviewBold btnReportThis, btnEntryInformation,btnDeleteEntry;
 
 	private EntryPojo entryPojo;
 	private ImageView imgUserPic;
@@ -66,7 +67,7 @@ public class InformationReportActivity extends Activity {
 		textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
 		textTime.setText(entryPojo.getCreated());
 
-		btnReportThis = (ImageView) findViewById(R.id.btnReportThis);
+		btnReportThis = (CustomTextviewBold) findViewById(R.id.btnReportThis);
 		btnReportThis.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -82,7 +83,7 @@ public class InformationReportActivity extends Activity {
 			}
 		});
 
-		btnEntryInformation = (ImageView) findViewById(R.id.btnEntryInformation);
+		btnEntryInformation = (CustomTextviewBold) findViewById(R.id.btnEntryInformation);
 		btnEntryInformation.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -97,7 +98,7 @@ public class InformationReportActivity extends Activity {
 			}
 		});
 		
-		btnDeleteEntry=(ImageView)findViewById(R.id.btnDeleteEntry);
+		btnDeleteEntry=(CustomTextviewBold)findViewById(R.id.btnDeleteEntry);
 		if(entryPojo.getUserID().equalsIgnoreCase(UserID)){
 			btnDeleteEntry.setVisibility(View.VISIBLE);
 			btnDeleteEntry.setOnClickListener(new OnClickListener() {

@@ -6,7 +6,8 @@
     android:layout_gravity="center"
     android:background="@color/background_transparent"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="20dp">
 
     <com.mobstar.custom.CustomTextviewBold
         android:layout_width="match_parent"
@@ -21,36 +22,44 @@
         android:textSize="18sp"
          />
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnMovieClip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_movieclip" />
+        android:text="@string/movie_clip"
+        android:drawableLeft="@drawable/icn_btn_enter_mabstar"
+        style="@style/BaseButton.Yellow"/>
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_image" />
+        android:text="@string/take_image"
+        android:drawableLeft="@drawable/icn_btn_image"
+        style="@style/BaseButton.Yellow"/>
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnAudioClip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_audio" />
+        style="@style/BaseButton.Yellow"
+        android:drawableLeft="@drawable/icn_btn_audio"
+        android:text="@string/audio_clip"/>
 
-    <ImageView
+    <com.mobstar.custom.CustomTextviewBold
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/default_big_btn_height"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_back" />
+        android:text="@string/back"
+        android:drawableLeft="@drawable/icn_btn_back"
+        style="@style/BaseButton.Gray"/>
 
 </LinearLayout>

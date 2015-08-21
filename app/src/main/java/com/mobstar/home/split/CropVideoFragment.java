@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 
 import com.edmodo.cropper.CropImageView;
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.CropBackground;
 import com.mobstar.home.split.ffmpeg.RotationBackground;
@@ -37,7 +38,7 @@ import java.io.File;
  */
 public class CropVideoFragment extends Fragment implements View.OnClickListener {
 
-    private Button btnNext, btnBack;
+    private CustomTextviewBold btnNext, btnBack;
     private CropImageView ivVideoImage;
     private SplitActivity mSplitActivity;
     private String mVideoThumb;
@@ -83,8 +84,8 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     }
 
     private void findViews(final View _view){
-        btnBack       = (Button) _view.findViewById(R.id.btnBack);
-        btnNext       = (Button) _view.findViewById(R.id.btnNext);
+        btnBack       = (CustomTextviewBold) _view.findViewById(R.id.btnBack);
+        btnNext       = (CustomTextviewBold) _view.findViewById(R.id.btnNext);
         ivVideoImage  = (CropImageView) _view.findViewById(R.id.ivCropImage);
         progress      = (ProgressBar) _view.findViewById(R.id.progressbar);
     }

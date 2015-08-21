@@ -168,7 +168,7 @@
                         android:textColor="@color/splash_bg"
                         android:textSize="18sp" />
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/btnFollow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -176,7 +176,13 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:contentDescription="@string/app_name"
-                        android:src="@drawable/btn_follow" />
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:textSize="12sp"
+                        android:background="@drawable/selector_oval_button"
+                        android:text="@string/follow" />
 
                     <ImageView
                         android:id="@+id/imgMsg"
@@ -256,10 +262,12 @@
             <FrameLayout
                 android:id="@+id/layoutStatastic"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/icon_statics" >
+                android:background="@drawable/selector_oval_button"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
                 <!--
                      <ImageView
@@ -277,73 +285,84 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:text="@string/temp_comments"
+                    android:drawableLeft="@drawable/icn_statics"
+                    android:drawableRight="@drawable/icn_statics_check"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/comment_color"
                     android:textSize="14sp" />
             </FrameLayout>
 
-            <FrameLayout
-                android:id="@+id/layoutComment"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1" >
 
                 <com.mobstar.custom.CustomTextviewBold
                     android:id="@+id/textCommentCount"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@drawable/comment_bg"
                     android:drawableLeft="@drawable/ic_comment"
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
-                    android:paddingLeft="25dp"
+                    android:paddingLeft="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
                     android:text="@string/temp_comments"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/comment_color"
                     android:textSize="14sp" />
-            </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/layoutSplit"
-                android:layout_width="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1" >
 
-                <com.mobstar.custom.CustomTextviewBold
+                <TextView
                     android:id="@+id/splitVideo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/selector_oval_button"
-                    android:drawablePadding="5dp"
+                    android:paddingLeft="8dp"
                     android:gravity="center"
                     android:text="@string/split"
+                    android:drawableLeft="@drawable/icn_vcam"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/comment_color"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
             </FrameLayout>
 
-            <ImageView
+            <FrameLayout
                 android:id="@+id/btnShare"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/icon_share" />
+                android:background="@drawable/selector_oval_button">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icn_share"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
 
-            <ImageView
+            <FrameLayout
                 android:id="@+id/btnInfo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_weight="1"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/icon_info" />
+                android:src="@drawable/icon_info"
+                android:background="@drawable/selector_oval_button">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icn_info"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 

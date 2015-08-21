@@ -37,6 +37,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mobstar.R;
 import com.mobstar.custom.AbstractGetNameTask;
+import com.mobstar.custom.CustomTextview;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.GetNameInForeground;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.twitter.ImageTwitter;
@@ -49,7 +51,9 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 
 	Context mContext;
 
-	ImageView btnGetStarted, btnSignIn, btnLoginFB, btnLoginTwitter, btnLoginGoogle, btnCountinueWOSignin;
+	ImageView btnGetStarted, btnSignIn;
+	private CustomTextview btnLoginFB,  btnLoginTwitter, btnLoginGoogle;
+	private CustomTextviewBold btnCountinueWOSignin;
 
 	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 	private static final List<String> READ_PERMISSIONS = Arrays.asList("email","public_profile");
@@ -103,16 +107,16 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 		btnSignIn = (ImageView) findViewById(R.id.btnSignIn);
 		btnSignIn.setOnClickListener(this);
 
-		btnLoginFB = (ImageView) findViewById(R.id.btnLoginFB);
+		btnLoginFB = (CustomTextview) findViewById(R.id.btnLoginFB);
 		btnLoginFB.setOnClickListener(this);
 
-		btnLoginTwitter = (ImageView) findViewById(R.id.btnLoginTwitter);
+		btnLoginTwitter = (CustomTextview) findViewById(R.id.btnLoginTwitter);
 		btnLoginTwitter.setOnClickListener(this);
 
-		btnLoginGoogle = (ImageView) findViewById(R.id.btnLoginGoogle);
+		btnLoginGoogle = (CustomTextview) findViewById(R.id.btnLoginGoogle);
 		btnLoginGoogle.setOnClickListener(this);
 		
-		btnCountinueWOSignin=(ImageView) findViewById(R.id.btnCountinueWOSignin);
+		btnCountinueWOSignin= (CustomTextviewBold) findViewById(R.id.btnCountinueWOSignin);
 		btnCountinueWOSignin.setOnClickListener(this);
 
 	}

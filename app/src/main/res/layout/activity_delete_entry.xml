@@ -16,7 +16,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:singleLine="false"
-        android:text="@string/delete_entry"
+        android:text="@string/delete_entry_question"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/white_color"
         android:textSize="18sp" />

@@ -69,7 +69,7 @@
     <string name="notifications">NOTIFICATIONS</string>
     <string name="temp_notification_text">mattf has commented on your entry "entrytitle"</string>
     <string name="my_entries">MY ENTRIES</string>
-    <string name="delete_entry">DELETE ENTRY?</string>
+    <string name="delete_entry_question">DELETE ENTRY?</string>
     <string name="meet_the_mentors">MEET THE MENTORS</string>
     <string name="bono">Bono</string>
     <string name="bono_description">Bono is the frontman of the Irish rock brand U2.He\'s also known for participating in global charity efforts.</string>
@@ -333,6 +333,14 @@
     <string name="app_tour">APP TOUR</string>
     <string name="linked_account">LINKED ACCOUNT</string>
     <string name="privacy_settings">PRIVACY SETTINGS</string>
+
+    <string name="take_image">IMAGE</string>
+    <string name="edit_information">EDIT INFORMATION</string>
+    <string name="delete_entry">DELETE ENTRY</string>
+    <string name="continue_without_signing_in">CONTINUE WITHOUT SIGNING IN</string>
+    <string name="login_with_twitter">LOGIN WITH <b>TWITTER</b></string>
+    <string name="edit">EDIT</string>
+    <string name="unlike">Unlike</string>
 
 
 </resources>
