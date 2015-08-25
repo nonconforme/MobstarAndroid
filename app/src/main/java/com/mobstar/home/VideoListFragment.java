@@ -41,6 +41,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.loopj.android.http.AsyncHttpClient;
@@ -922,12 +924,27 @@ public class VideoListFragment extends Fragment {
 	}
 
 
-	public class EntryListAdapter extends BaseAdapter {
+	public class EntryListAdapter extends BaseSwipeAdapter {
 
 		private LayoutInflater inflater = null;
 
 		public EntryListAdapter() {
 			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		}
+
+		@Override
+		public int getSwipeLayoutResourceId(int i) {
+			return R.id.swipe;
+		}
+
+//		@Override
+//		public View generateView(int i, ViewGroup viewGroup) {
+//			return null;
+//		}
+
+		@Override
+		public void fillValues(int position, View convertView) {
 
 		}
 
@@ -943,10 +960,10 @@ public class VideoListFragment extends Fragment {
 			return position;
 		}
 
-		public View getView(final int position, View convertView, ViewGroup parent) {
+		public View generateView(final int position, ViewGroup viewGroup) {
 
 			final int pos=position;
-
+			View convertView = null;
 			final ViewHolder viewHolder;
 			if (convertView == null) {
 
@@ -961,6 +978,9 @@ public class VideoListFragment extends Fragment {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
+
+			viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.leftView));
+			viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, convertView.findViewById(R.id.rigthView));
 
             setupViews(viewHolder, position);
 			setEnableSplitButton(viewHolder, position, false);
@@ -2018,6 +2038,7 @@ public class VideoListFragment extends Fragment {
             viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
             viewHolder.imgMsg=(ImageView) convertView.findViewById(R.id.imgMsg);
             viewHolder.ivIndicator=(ImageView) convertView.findViewById(R.id.ivIndicator);
+			viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
 
         }
 
@@ -2093,6 +2114,7 @@ public class VideoListFragment extends Fragment {
 			FrameLayout layoutStatastics;
 			TextView textStatasticCount;
 			ImageView imgMsg,ivIndicator;
+			SwipeLayout swipeLayout;
 		}
 
 	}
