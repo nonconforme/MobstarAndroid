@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardElevation="4dp"
+    card_view:cardCornerRadius="4dp">
+
+<com.daimajia.swipe.SwipeLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:id="@+id/swipe">
 
     <!-- xmlns:app="http://schemas.android.com/apk/lib/com.mobstar.utils" -->
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="120dp"
         android:background="@drawable/action_no"
-        android:id="@+id/rigthView"
-        android:weightSum="10"/>
+        android:id="@+id/rigthView"/>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="120dp"
         android:background="@drawable/action_yes"
-        android:id="@+id/leftView"
-        android:weightSum="10"/>
+        android:id="@+id/leftView" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <FrameLayout
@@ -272,7 +280,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white_color"
             android:gravity="center"
-            android:paddingBottom="5dp" >
+            android:paddingBottom="5dp">
 
             <FrameLayout
                 android:id="@+id/layoutStatastic"
@@ -382,3 +390,4 @@
     </LinearLayout>
 
 </com.daimajia.swipe.SwipeLayout>
+    </android.support.v7.widget.CardView>
