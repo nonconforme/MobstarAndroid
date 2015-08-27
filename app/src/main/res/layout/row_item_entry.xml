@@ -10,7 +10,6 @@
     card_view:cardCornerRadius="4dp">
 
 <com.daimajia.swipe.SwipeLayout
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/swipe">
@@ -19,15 +18,17 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="@drawable/action_no"
-        android:id="@+id/rigthView"/>
+        android:layout_height="match_parent"
+        android:id="@+id/rigthView">
+        <include layout="@layout/voting_no"/>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="@drawable/action_yes"
-        android:id="@+id/leftView" />
+        android:layout_height="match_parent"
+        android:id="@+id/leftView" >
+        <include layout="@layout/voting_yes"/>
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

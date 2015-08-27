@@ -10,6 +10,7 @@
     <dimen name="login_social_margin_bottom">20dp</dimen>
     
     <dimen name="signup_edittext">16sp</dimen>
+	<dimen name="voting_big_text_size">80sp</dimen>
     
     <dimen name="signup_text">16sp</dimen>
     
