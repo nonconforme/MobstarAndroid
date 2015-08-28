@@ -150,5 +150,6 @@ public class Constant {
 	public static final String IMAGE              = "image";
 	public static final String POSITION_VARIANT   = "position_variant";
 	public static final int VIDEO_SIZE            = 308; // px
+	public static final String MOBSTAR_PREF       = "mobstar_pref";
 
 }
