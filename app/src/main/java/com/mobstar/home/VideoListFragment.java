@@ -61,6 +61,7 @@ import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
