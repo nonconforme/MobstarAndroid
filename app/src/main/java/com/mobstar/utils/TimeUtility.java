@@ -14,8 +14,7 @@ import java.util.Date;
  */
 public class TimeUtility {
     private static final String LOG_TAG = TimeUtility.class.getName();
-    //    public static long TIME_LAPSE=0;
-    public static long TIME_LAPSE = 1000 * 60 * 60 * 3;
+        public static long TIME_LAPSE=0;
 
     public static long getDiffTime(String arg) {
         Calendar today = Calendar.getInstance();
@@ -23,10 +22,6 @@ public class TimeUtility {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Date gmtTime = null;
-//        if (TIME_LAPSE==0){
-//            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        }
-
 
         try {
             gmtTime = formatter.parse(arg);// catch exception
@@ -46,20 +41,10 @@ public class TimeUtility {
             @Override
             public void run() {
                 super.run();
-//                String response = JSONParser.getRequest(Constant.SERVER_URL+"time",null);
-
-                JSONObject mock = new JSONObject();
-                Calendar qwe = Calendar.getInstance();
-                try {
-                    mock.put("serverCurrentTime", qwe.getTimeInMillis() - TIME_LAPSE);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                String response = mock.toString();
-                TIME_LAPSE = 0;
-
+                String response = JSONParser.getRequest(Constant.SERVER_URL+Constant.GET_CURRENT_SERVER_TIME
+                        ,null);
                 Log.d(LOG_TAG, "TIME_LAPSE=" + TIME_LAPSE);
+                Log.d(LOG_TAG, "response=" + response);
                 if (!response.isEmpty()) {
                     try {
 
