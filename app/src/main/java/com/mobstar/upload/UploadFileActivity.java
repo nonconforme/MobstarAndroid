@@ -6,18 +6,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -404,7 +413,7 @@ public class UploadFileActivity extends Activity {
 				httpPost.addHeader("X-API-KEY", Constant.API_KEY);
 
 				httpPost.addHeader("X-API-TOKEN", preferences.getString("token", null));
-
+				Charset chars = Charset.forName("UTF-8");
 				MultipartEntity multipartContent = new MultipartEntity();
 
 				String sMimeType = "";
@@ -434,14 +443,12 @@ public class UploadFileActivity extends Activity {
 				Log.d("mobstar","sending post request=> type"+sType+"category="+categoryId+" subCategory= "+subCat +" age="+editAge.getText().toString()+" height="+editHeight.getText().toString()+" language"+"english"+" name"+preferences.getString("username", null)+" description="+editTitle.getText().toString());
 				}
 				multipartContent.addPart("language", new StringBody("english"));
-				multipartContent.addPart("name", new StringBody(preferences.getString("username", null)));
-				
+				multipartContent.addPart("name", new StringBody(preferences.getString("username", null), chars));
 				//remove quote from string
 				String strTitle=editTitle.getText().toString().trim();
 				String ContentTitle=strTitle.replace("\"","");
 				Log.d("mobstar","new title is=>"+ContentTitle);
 				multipartContent.addPart("description", new StringBody(StringEscapeUtils.escapeJava(ContentTitle)));
-
 				//if category is 3 model type need to pass following param
 				
 				
