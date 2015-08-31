@@ -1024,9 +1024,9 @@ public class VideoListFragment extends Fragment {
 
 				@Override
 				public void onClick(View v) {
-					if (arrEntryPojos.get(pos).getIAmStar().equalsIgnoreCase("1")) {
+					if (arrEntryPojos.get(position).getIAmStar() != null && arrEntryPojos.get(pos).getIAmStar().equalsIgnoreCase("1")) {
 						//following
-						Intent intent=new Intent(mContext,MessageActivity.class);
+ 						Intent intent=new Intent(mContext,MessageActivity.class);
 						intent.putExtra("recipent",arrEntryPojos.get(pos).getUserID());
 						intent.putExtra("isDisableCompose",true);
 						startActivity(intent);
