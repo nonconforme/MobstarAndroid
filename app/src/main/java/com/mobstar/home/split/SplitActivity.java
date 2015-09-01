@@ -29,6 +29,7 @@ import java.io.File;
  */
 public class SplitActivity extends Activity {
 
+    public static final String ENTRY_SPLIT = "entry split";
     private EntryPojo entry;
     private String videoFilePath;
 
@@ -38,7 +39,7 @@ public class SplitActivity extends Activity {
         setContentView(R.layout.activity_split);
 
         if (getIntent() != null)
-            entry = (EntryPojo) getIntent().getSerializableExtra(Constant.ENTRY);
+            entry = (EntryPojo) getIntent().getSerializableExtra(ENTRY_SPLIT);
         if (videoFilePath == null) {
             setDefaultFilePath();
         }

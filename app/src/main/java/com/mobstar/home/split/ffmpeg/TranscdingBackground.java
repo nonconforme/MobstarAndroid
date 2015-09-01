@@ -25,7 +25,7 @@ public class TranscdingBackground extends BaseBackground
         String audioMixCommand = "";
         if (isHeadphonesOn)
             audioMixCommand = ";amix=inputs=2:duration=first:dropout_transition=3";
-        this.complexCommand = new String[]{"ffmpeg", "-y", "-i", pathLeft, "-i", pathRight, "-strict", "experimental",
+        this.complexCommand = new String[] {"ffmpeg", "-y", "-i", pathLeft, "-i", pathRight, "-strict", "experimental",
                 "-filter_complex",
                 "[0:v:0]pad=iw*2:ih[bg];" +
                         "[bg][1:v:0]overlay=w" +

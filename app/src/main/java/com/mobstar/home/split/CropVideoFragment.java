@@ -11,12 +11,10 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.edmodo.cropper.CropImageView;
@@ -24,7 +22,6 @@ import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.CropBackground;
-import com.mobstar.home.split.ffmpeg.RotationBackground;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -131,16 +128,17 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     }
 
     private void onClickNext(){
-        final int orientation = getVideoOrientation(mSplitActivity.getVideoFilePath());
-        if (orientation == 0){
-            createCroppedVideoCommand();
-        }else
-            createNormalOrientationVideo(orientation);
+        createComplexVideoCommand();
     }
 
-    private void createNormalOrientationVideo(int _orientation){
+    private int getVideoRotation(final String _videoFilePath){
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        mediaMetadataRetriever.setDataSource(_videoFilePath);
+        String orientationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+        if (orientationStr == null)
+            return 0;
         int rotation = 0;
-        switch (_orientation){
+        switch (Integer.parseInt(orientationStr)) {
             case 0:
                 rotation = 0;
                 break;
@@ -151,42 +149,10 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 rotation = 2;
                 break;
         }
-
-        tempRotateFilePth = Utility.getTemporaryMediaFile(mSplitActivity, "backRotation").toString();
-        if (tempRotateFilePth == null)
-            return;
-        new RotationBackground(
-                mSplitActivity,
-                mSplitActivity.getVideoFilePath(),
-                tempRotateFilePth,
-                rotation,
-                "308x308",
-                new AfterDoneBackground() {
-                    @Override
-                    public void onAfterDone() {
-                        mSplitActivity.setVideoFilePath(tempRotateFilePth);
-                        createCroppedVideoCommand();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        removeFile(tempRotateFilePth);
-                    }
-                }
-        ).runTranscoding();
+        return rotation;
     }
 
-
-    private int getVideoOrientation(final String _videoFilePath){
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(_videoFilePath);
-        String orientation = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-        if (orientation == null)
-            return 0;
-        return Integer.parseInt(orientation);
-    }
-
-    private void createCroppedVideoCommand(){
+    private void createComplexVideoCommand(){
         final String fileInPath = mSplitActivity.getVideoFilePath();
         final String fileOutPath = Utility.getTemporaryMediaFile(mSplitActivity, "cropUot").toString();
         final Rect rect = getCropRect();
@@ -201,13 +167,21 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
                 .append(":")
                 .append(rect.left)
                 .append(":")
-                .append(rect.top)
+                .append(rect.top);
+        final int rotation = getVideoRotation(mSplitActivity.getVideoFilePath());
+        if (rotation != 0){
+            stringBuilder
+                    .append(",transpose=")
+                    .append(rotation);
+        }
+        stringBuilder
                 .append(" -s ")
                 .append(getOutputVideoSizeString())
+                .append(" -metadata:s:v rotate=0")
                 .append(" -vcodec mpeg4 ")
                 .append(fileOutPath);
-        final String cropComplexCommand = stringBuilder.toString();
-        startCropTask(cropComplexCommand, fileOutPath);
+        final String complexCommand = stringBuilder.toString();
+        startCropTask(complexCommand, fileOutPath);
     }
 
     private void startCropTask(final String _stringCommand, final String _fileOutPath){
