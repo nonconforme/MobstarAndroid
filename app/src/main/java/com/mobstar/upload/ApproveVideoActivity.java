@@ -1,7 +1,5 @@
 package com.mobstar.upload;
 
-import java.io.File;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -31,6 +29,8 @@ import com.mobstar.home.split.SplitActivity;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
+
+import java.io.File;
 
 public class ApproveVideoActivity extends Activity {
 	public static final String APPROVE_SPLIT_VIDEO = "approve split video";
@@ -231,6 +231,10 @@ public class ApproveVideoActivity extends Activity {
 				intent.putExtra("file1", sVideoPath);
 				intent.putExtra("type", "video");
 				intent.putExtra("categoryId",categoryId);
+                if (isSplitVideo) {
+                    intent.putExtra(SplitActivity.ENTRY_SPLIT,entry);
+                }
+
 				if(subCat!=null && subCat.length()>0){
 					intent.putExtra("subCat",subCat);
 				}

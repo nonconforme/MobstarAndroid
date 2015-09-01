@@ -6,28 +6,20 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Environment;
-import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.R;
-import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
-import com.mobstar.home.split.ffmpeg.CropBackground;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.home.split.position_variants.PositionVariantsFragment;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
-import org.apache.http.Header;
-
-import java.io.File;
-
 /**
  * Created by vasia on 06.08.15.
  */
 public class SplitActivity extends Activity {
+
+    public static final String ENTRY_SPLIT = "entry split";
 
     private EntryPojo entry;
     private String videoFilePath;

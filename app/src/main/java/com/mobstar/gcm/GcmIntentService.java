@@ -75,12 +75,24 @@ public class GcmIntentService extends IntentService {
 							sendNotification(message,entryId);
 						}
 					}
+                    else if(extras.getString("Type").toString().equalsIgnoreCase("splitScreen")){
+                        String entryName=extras.getString("entry_name").toString();
+                        String userName=extras.getString("name").toString();
+                        String entryId=extras.getString("entry_id").toString();
+                        String message = getResources().getString(R.string.notif_split_screen_1)+" "
+                                +entryName+" "
+                                +getResources().getString(R.string.notif_split_screen_2)
+                                + " "
+                                + userName
+                                +getResources().getString(R.string.notif_split_screen_3);
+                        sendNotification(message,entryId);
+                    }
 					else{
 						if(extras.getString("message").toString()!=null) {
 							sendNotification(extras.getString("message").toString());
 						}
 					}
-					
+
 					Utility.setBadgeSamsung(getApplicationContext(), Integer.parseInt(badgeCount));
 					Utility.setBadgeSony(getApplicationContext(), Integer.parseInt(badgeCount));
 				}

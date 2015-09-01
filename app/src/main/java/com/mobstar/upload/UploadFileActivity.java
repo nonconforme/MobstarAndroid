@@ -1,25 +1,5 @@
 package com.mobstar.upload;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -50,8 +30,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.home.split.SplitActivity;
+import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UploadFileActivity extends Activity {
 
@@ -81,9 +83,10 @@ public class UploadFileActivity extends Activity {
 	private List<String> listHeight;
 	private double cm=2.54;
 	int posHeight=0,posAge=0;
+    private EntryPojo parentSplitEntry;
 
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_upload_file);
@@ -105,6 +108,9 @@ public class UploadFileActivity extends Activity {
 			if(extras.containsKey("subCat")){
 				subCat=extras.getString("subCat");
 			}
+            if(extras.containsKey(SplitActivity.ENTRY_SPLIT)){
+                parentSplitEntry=(EntryPojo) extras.getSerializable(SplitActivity.ENTRY_SPLIT);
+            }
 		}
 
 		Log.d("mobstar","upload category type is=>"+categoryId);
@@ -435,7 +441,10 @@ public class UploadFileActivity extends Activity {
 				}
 				multipartContent.addPart("language", new StringBody("english"));
 				multipartContent.addPart("name", new StringBody(preferences.getString("username", null)));
-				
+                //parent split video id
+                if (parentSplitEntry!=null)
+				    multipartContent.addPart("splitVideoId", new StringBody(parentSplitEntry.getID()+""));
+
 				//remove quote from string
 				String strTitle=editTitle.getText().toString().trim();
 				String ContentTitle=strTitle.replace("\"","");
