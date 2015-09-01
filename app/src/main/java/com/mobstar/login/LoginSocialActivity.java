@@ -41,6 +41,7 @@ import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.GetNameInForeground;
 import com.mobstar.help.WelcomeVideoActivity;
+import com.mobstar.home.HomeActivity;
 import com.mobstar.twitter.ImageTwitter;
 import com.mobstar.twitter.ImageTwitter.OnCompleteListener;
 import com.mobstar.utils.Constant;
@@ -606,22 +607,32 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 				pref.edit().putString("bio", UserBio).commit();
 				pref.edit().putBoolean("isLogin", true).commit();
 
-//				Intent intent = new Intent(mContext, HomeActivity.class);
-//				startActivity(intent);
-//				finish();
 				
-				
-				Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(intent);
-				finish();
+				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
+					startWelcomeActivity();
+				}else {
+					startHomeActivity();
+				}
 				
 			} else {
 				OkayAlertDialog(sErrorMessage);
 			}
 		}
 	};
+
+	private void startWelcomeActivity(){
+		Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startHomeActivity(){
+		Intent intent = new Intent(mContext, HomeActivity.class);
+		startActivity(intent);
+		finish();
+	}
 
 	void OkayAlertDialog(final String msg) {
 
