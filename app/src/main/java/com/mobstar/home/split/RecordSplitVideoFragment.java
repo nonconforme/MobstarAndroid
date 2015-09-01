@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.mobstar.R;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
+import com.mobstar.home.split.ffmpeg.FFCommandCreator;
 import com.mobstar.home.split.ffmpeg.RotationBackground;
 import com.mobstar.home.split.ffmpeg.TranscdingBackground;
 import com.mobstar.home.split.position_variants.PositionVariant;
@@ -433,7 +434,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 //                backRotation = Utility.getTemporaryMediaFile(mContext, "backRotation").toString();
                 backRotation=sVideoPathBack;
                new RotationBackground(getActivity()
-                       , sFilepath, camersRotation, 2,"154x308", new AfterDoneBackground() {
+                       , sFilepath, camersRotation, 2, FFCommandCreator.getOutputVideoSizeString(positionVariant), new AfterDoneBackground() {
                    @Override
                    public void onAfterDone() {
                        Log.d(LOG_TAG, "start join video");

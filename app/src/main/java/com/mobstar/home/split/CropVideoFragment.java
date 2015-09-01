@@ -22,6 +22,7 @@ import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.CropBackground;
+import com.mobstar.home.split.ffmpeg.FFCommandCreator;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -42,8 +43,6 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     private PositionVariant mPositionVariant;
     private ProgressBar progress;
     private Point fullScreenImageSize;
-
-    private String tempRotateFilePth;
 
     public static CropVideoFragment newInstance(final String videoThumb, PositionVariant positionVariant){
         final CropVideoFragment fragment = new CropVideoFragment();
@@ -131,56 +130,14 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
         createComplexVideoCommand();
     }
 
-    private int getVideoRotation(final String _videoFilePath){
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(_videoFilePath);
-        String orientationStr = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-        if (orientationStr == null)
-            return 0;
-        int rotation = 0;
-        switch (Integer.parseInt(orientationStr)) {
-            case 0:
-                rotation = 0;
-                break;
-            case 90:
-                rotation = 1;
-                break;
-            case 270:
-                rotation = 2;
-                break;
-        }
-        return rotation;
-    }
-
     private void createComplexVideoCommand(){
         final String fileInPath = mSplitActivity.getVideoFilePath();
-        final String fileOutPath = Utility.getTemporaryMediaFile(mSplitActivity, "cropUot").toString();
+        final File file = Utility.getTemporaryMediaFile(mSplitActivity, "cropUot");
+        if (file == null)
+            return;
+        final String fileOutPath = file.toString();
         final Rect rect = getCropRect();
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append("ffmpeg -y -i ")
-                .append(fileInPath)
-                .append(" -strict experimental -vf crop=")
-                .append(rect.right - rect.left - 1)
-                .append(":")
-                .append(rect.bottom - rect.top - 1)
-                .append(":")
-                .append(rect.left)
-                .append(":")
-                .append(rect.top);
-        final int rotation = getVideoRotation(mSplitActivity.getVideoFilePath());
-        if (rotation != 0){
-            stringBuilder
-                    .append(",transpose=")
-                    .append(rotation);
-        }
-        stringBuilder
-                .append(" -s ")
-                .append(getOutputVideoSizeString())
-                .append(" -metadata:s:v rotate=0")
-                .append(" -vcodec mpeg4 ")
-                .append(fileOutPath);
-        final String complexCommand = stringBuilder.toString();
+        final String complexCommand = FFCommandCreator.getCropAndRotationComplexCommand(fileInPath, fileOutPath, rect, mPositionVariant);
         startCropTask(complexCommand, fileOutPath);
     }
 
@@ -188,42 +145,18 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
         new CropBackground(mSplitActivity, _stringCommand, new AfterDoneBackground() {
             @Override
             public void onAfterDone() {
-                if (tempRotateFilePth != null)
-                    removeFile(tempRotateFilePth);
                 mSplitActivity.setVideoFilePath(_fileOutPath);
                 mSplitActivity.replaceRecordVideoFragment(mPositionVariant, ivVideoImage.getCroppedImage());
             }
 
             @Override
             public void onCancel() {
-                if (tempRotateFilePth != null)
-                    removeFile(tempRotateFilePth);
                 removeFile(_fileOutPath);
                 mSplitActivity.setDefaultFilePath();
             }
         }).runTranscoding();
     }
 
-    private String getOutputVideoSizeString(){
-        String outSize = "";
-        switch (mPositionVariant){
-            case ORIGIN_LEFT:
-            case ORIGIN_RIGHT:
-                outSize = "154x308";
-                break;
-            case ORIGIN_RIGHT_TOP:
-                outSize = "100x100";
-                break;
-            case ORIGIN_FULLSCREEN:
-                outSize = "308x308";
-                break;
-            case ORIGIN_TOP:
-            case ORIGIN_BOTTOM:
-                outSize = "308x154";
-                break;
-        }
-        return outSize;
-    }
 
     private Rect getCropRect(){
         RectF rectF = ivVideoImage.getActualCropRect();
