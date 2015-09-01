@@ -508,7 +508,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				
 				sendAnalytics();
 				
-				if (!pref.getBoolean("welcome_is_checked", false)) {
+				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
 					Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
 					startActivity(intent);
 					finish();
