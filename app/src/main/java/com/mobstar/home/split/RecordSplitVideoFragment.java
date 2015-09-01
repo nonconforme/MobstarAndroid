@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.media.AudioManager;
 import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -36,6 +38,7 @@ import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.upload.ApproveVideoActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
+import com.mobstar.utils.receiver.HeadsetPlugReceiver;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +47,7 @@ import java.util.List;
 /**
  * Created by vasia on 06.08.15.
  */
-public class RecordSplitVideoFragment extends Fragment {
+public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugReceiver.OnHeadsetPlugListener {
     private static final String LOG_TAG = RecordSplitVideoFragment.class.getName();
     Context mContext;
 
@@ -94,6 +97,8 @@ public class RecordSplitVideoFragment extends Fragment {
     private Bitmap imageVideoPreview;
     private PositionVariant positionVariant;
     private FrameLayout vFramePreview;
+    private HeadsetPlugReceiver headsetPlugReceiver;
+    private boolean onHeadsetConnect;
 
     public static RecordSplitVideoFragment newInstance(final PositionVariant _positionVariant, final Bitmap _videoPreview){
         final RecordSplitVideoFragment recordSplitVideoFragment = new RecordSplitVideoFragment();
@@ -137,6 +142,7 @@ public class RecordSplitVideoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View inflatedView = inflater.inflate(R.layout.fragment_record_video_split, container, false);
+        registerHeadsetReceiver();
         mContext=getActivity();
         mediaPlayer = new MediaPlayer();
         findView(inflatedView);
@@ -432,8 +438,13 @@ public class RecordSplitVideoFragment extends Fragment {
                    public void onAfterDone() {
                        Log.d(LOG_TAG, "start join video");
                        readyFilePath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, mContext).toString();
-                       new TranscdingBackground(getActivity()
-                               , camersRotation, backRotation, readyFilePath, new AfterDoneBackground() {
+                       new TranscdingBackground(
+                               getActivity()
+                               , camersRotation,
+                               backRotation,
+                               readyFilePath,
+                               onHeadsetConnect,
+                               new AfterDoneBackground() {
                            @Override
                            public void onAfterDone() {
                                Log.d(LOG_TAG, "compleat readyFilePath");
@@ -676,5 +687,36 @@ public class RecordSplitVideoFragment extends Fragment {
     public void onResume() {
         super.onResume();
         initializeCamera();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unregisterHeadsetReceiver();
+    }
+
+    private void registerHeadsetReceiver(){
+        headsetPlugReceiver = new HeadsetPlugReceiver();
+        headsetPlugReceiver.setOnHeadsetPlugListener(this);
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(HeadsetPlugReceiver.HEADSET_PLUG_ACTION);
+        splitActivity.registerReceiver(headsetPlugReceiver, intentFilter);
+    }
+
+    private void unregisterHeadsetReceiver(){
+        if (headsetPlugReceiver == null)
+            return;
+        splitActivity.unregisterReceiver(headsetPlugReceiver);
+        headsetPlugReceiver = null;
+    }
+
+    @Override
+    public void onHeadsetConnect(boolean connectedMicrophone, String headsetName) {
+        onHeadsetConnect = true;
+    }
+
+    @Override
+    public void onHeadsetDisconnect() {
+        onHeadsetConnect = false;
     }
 }
