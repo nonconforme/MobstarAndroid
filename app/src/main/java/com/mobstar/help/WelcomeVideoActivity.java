@@ -505,7 +505,7 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 		} else if (v.equals(btnEnterMobstar)) {
 			intent = new Intent(mContext, WhoToFollowActivity.class);
 		}
-		preferences.edit().putBoolean(WELCOME_IS_CHECKED, cbDonTShowAgain.isChecked()).apply();
+		preferences.edit().putBoolean(WELCOME_IS_CHECKED, !cbDonTShowAgain.isChecked()).apply();
 		startActivity(intent);
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		finish();
