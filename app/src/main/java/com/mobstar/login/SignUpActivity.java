@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.mobstar.R;
 import com.mobstar.help.WelcomeVideoActivity;
+import com.mobstar.home.HomeActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -377,22 +378,15 @@ public class SignUpActivity extends Activity implements OnClickListener {
 				pref.edit().putBoolean("isLogin", true).commit();
 				pref.edit().putString("profile_image", ProfileImage).commit();
 				pref.edit().putString("cover_image", ProfileCover).commit();
-				
-//				Intent intent = new Intent(mContext, HomeActivity.class);
-//				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//				startActivity(intent);
-//				finish();
-				
-				
-				
-					Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					startActivity(intent);
-					finish();
-				
-				
+
+
+
+				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
+					startWelcomeActivity();
+				}else {
+					startHomeActivity();
+				}
+
 				
 //				Intent intent = new Intent(mContext, VerifyMobileNoActivity.class);
 //				startActivity(intent);
@@ -416,6 +410,21 @@ public class SignUpActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
+
+	private void startWelcomeActivity(){
+		Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startHomeActivity(){
+		Intent intent = new Intent(mContext, HomeActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(mContext, LoginSocialActivity.class);
