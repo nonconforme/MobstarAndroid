@@ -2063,7 +2063,7 @@ public class VideoListFragment extends Fragment {
 							if (arrEntryPojos.get(position).getVideoLink() == null)
 								return;
 							Intent intent = new Intent(getActivity(), SplitActivity.class);
-							intent.putExtra(Constant.ENTRY, arrEntryPojos.get(position));
+							intent.putExtra(SplitActivity.ENTRY_SPLIT, arrEntryPojos.get(position));
 							getActivity().startActivity(intent);
 							getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 						}
