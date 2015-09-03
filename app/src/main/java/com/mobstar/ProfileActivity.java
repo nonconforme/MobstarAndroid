@@ -704,203 +704,9 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		listEntry.setOnScrollListener(new EndlessScrollListener());
 
-		//		listEntry.setOnScrollListener(new EndlessScrollListener() {
-		//
-		//			@Override
-		//			public void onLoadMore(int page, int totalItemsCount) {
-		//				Log.d("mobstar","api page call1"+page);
-		//				if ( isNextPageAvail && !isPageLoaded) {
-		//					Log.d("mobstar","api page call2 is"+page);
-		//					if(Utility.isNetworkAvailable(mContext)){
-		//						Log.d("mobstar","api call.. on scroll");
-		//						isPageLoaded=true;
-		//						Utility.ShowProgressDialog(mContext, "Loading11111111");
-		//						new EntryCall(UserID,page).start();
-		//					}
-		//					else {
-		//
-		//						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
-		//						Utility.HideDialog(mContext);
-		//					}
-		//
-		//				}
-		//			}
-		//
-		//			public void onScrollStateChanged(AbsListView view, int scrollState) {
-		//				// TODO Auto-generated method stub
-		//				isScrolling = true;
-		//				// Log.i(Constant.TAG, "scrolling..." + isScrolling +
-		//				// " scrollState " + scrollState);
-		//				if (scrollState == 0 && !disLikedialog.isShowing() && !Likedialog.isShowing()) {
-		//
-		//					int previousFirstVisibleItem = mFirstVisibleItem;
-		//					//					Log.d("mobstar","priviousvisible"+previousFirstVisibleItem);
-		//
-		//					isVideoSurfaceReady = false;
-		//
-		//					isScrolling = false;
-		//
-		//					//					Log.i(Constant.TAG, "***scrolling stopped..." + isScrolling);
-		//
-		//					mFirstVisibleItem = listEntry.getFirstVisiblePosition();
-		//
-		//					if (listEntry.getChildAt(0) != null) {
-		//						int height = view.getChildAt(0).getHeight();
-		//						int d=(height/2)+ dpToPx(30);
-		//
-		//						//						Log.d("mobstar", "top"+view.getChildAt(0).getTop()+" < "+d);
-		//						////						int d=height/2;
-		//						//						Log.d("mobstar","height"+d);
-		//
-		//
-		//						if (mFirstVisibleItem != 0) {
-		//							mFirstVisibleItem--;
-		//						}
-		//						//						if (view.getChildAt(0).getTop() < -((height / 2)))
-		//						if (view.getChildAt(0).getTop() < -((height / 2))+dpToPx(30)){
-		//							mFirstVisibleItem++;
-		//						}
-		//					}
-		//
-		//					if (previousFirstVisibleItem != mFirstVisibleItem) {
-		//						indexCurrentPlayAudio = -1;
-		//					}
-		//
-		//					//					Log.v(Constant.TAG, "*********mFirstVisibleItem " + mFirstVisibleItem);
-		//					entryListAdapter.notifyDataSetChanged();
-		//
-		//				}
-		//			}
-		//		});
-
-		//		listEntry.setOnScrollListener(new OnScrollListener() {
-		//
-		//
-		//			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		//
-		//
-		//
-		//			}
-		//
-		//			public void onScrollStateChanged(AbsListView view, int scrollState) {
-		//				// TODO Auto-generated method stub
-		//				isScrolling = true;
-		//				// Log.i(Constant.TAG, "scrolling..." + isScrolling +
-		//				// " scrollState " + scrollState);
-		//				if (scrollState == 0 && !disLikedialog.isShowing() && !Likedialog.isShowing()) {
-		//
-		//					int previousFirstVisibleItem = mFirstVisibleItem;
-		//					//					Log.d("mobstar","priviousvisible"+previousFirstVisibleItem);
-		//
-		//					isVideoSurfaceReady = false;
-		//
-		//					isScrolling = false;
-		//
-		//					//					Log.i(Constant.TAG, "***scrolling stopped..." + isScrolling);
-		//
-		//					mFirstVisibleItem = listEntry.getFirstVisiblePosition();
-		//
-		//					if (listEntry.getChildAt(0) != null) {
-		//						int height = view.getChildAt(0).getHeight();
-		//						int d=(height/2)+ dpToPx(30);
-		//
-		//						//						Log.d("mobstar", "top"+view.getChildAt(0).getTop()+" < "+d);
-		//						////						int d=height/2;
-		//						//						Log.d("mobstar","height"+d);
-		//
-		//
-		//						if (mFirstVisibleItem != 0) {
-		//							mFirstVisibleItem--;
-		//						}
-		//						//						if (view.getChildAt(0).getTop() < -((height / 2)))
-		//						if (view.getChildAt(0).getTop() < -((height / 2))+dpToPx(30)){
-		//							mFirstVisibleItem++;
-		//						}
-		//					}
-		//
-		//					if (previousFirstVisibleItem != mFirstVisibleItem) {
-		//						indexCurrentPlayAudio = -1;
-		//					}
-		//
-		//					//					Log.v(Constant.TAG, "*********mFirstVisibleItem " + mFirstVisibleItem);
-		//					entryListAdapter.notifyDataSetChanged();
-		//
-		//				}
-		//			}
-		//		});
-
-
-
-
-
-		//		listEntry.getViewTreeObserver().addOnGlobalLayoutListener(
-		//				new ViewTreeObserver.OnGlobalLayoutListener() {
-		//					@SuppressLint("NewApi")
-		//					@SuppressWarnings("deprecation")
-		//					@Override
-		//					public void onGlobalLayout() {
-		//						onScrollChanged();
-		//
-		//						ViewTreeObserver obs = listEntry.getViewTreeObserver();
-		//						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-		//							obs.removeOnGlobalLayoutListener(this);
-		//						} else {
-		//							obs.removeGlobalOnLayoutListener(this);
-		//						}
-		//					}
-		//				});
-
-		/*listEntry.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//				onScrollChanged();
-			}
-		});*/
-
-
 
 
 	}
-
-	//	private void onScrollChanged() {
-	//		View v = listEntry.getChildAt(0);
-	//
-	//		int top = (v == null) ? 0 : v.getTop();
-	//		// This check is needed because when the first element reaches the top of the window, the top values from top are not longer valid.
-	//		if (listEntry.getFirstVisiblePosition() == 0) {
-	//			llSticky.setTranslationY(Math.max(0, mPlaceholderView.getTop() + top));
-	//			int m=mPlaceholderView.getTop()+top;
-	//			Log.d("mobstar","topview"+m);
-	//			Log.d("mobstar","top"+top);
-	//			// Set the image to scroll half of the amount scrolled in the ListView.
-	////			llTop.setTranslationY((top / 2)-150);
-	//			if(top!=0){
-	//				llHeader.setTranslationY((top / 2));
-	//			}
-	//			else {
-	//				llHeader.setTranslationY((top / 2));
-	//			}
-	//
-	//		}
-	//		else {
-	//			if(llSticky.getY()!=0){
-	//				llSticky.setTranslationY(0);
-	//			}
-	//
-	//		}
-	//	}
-
-	//	private void replaceFragment(Fragment mFragment, String fragmentName) {
-	//
-	//		mFragmentTransaction = mFragmentManager.beginTransaction();
-	//		mFragmentTransaction.replace(R.id.childFragmentContent, mFragment, fragmentName);
-	//		mFragmentTransaction.commitAllowingStateLoss();
-	//	}
 
 	public class CustomSurfaceTextureListener implements SurfaceTextureListener {
 
@@ -1198,7 +1004,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 //									if(view!=null && !isFinishing()){
 //										Log.d("mobstar","open dialog dislike");
 //																					Utility.DisLikeDialog(ProfileActivity.this);
-										DisLikeDialog();
+//										DisLikeDialog();
 //									}
 
 
@@ -1207,11 +1013,12 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 											mediaPlayer.reset();
 										}
 										indexCurrentPlayAudio = -1;
-										swipeLayout.close();
 //									entryListAdapter.notifyDataSetChanged();
 									}
 
 								}
+
+								swipeLayout.close();
 								break;
 							case Right:
 								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
@@ -1227,7 +1034,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 //										Log.d("mobstar","imageFrame touch--- view not null");
 //										Log.d("mobstar","open dialog like");
 //										//													Utility.LikeDialog(ProfileActivity.this);
-										LikeDialog();
+//										LikeDialog();
 //
 //									}
 
@@ -1236,12 +1043,12 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 											mediaPlayer.reset();
 										}
 										indexCurrentPlayAudio = -1;
-										swipeLayout.close();
 //									entryListAdapter.notifyDataSetChanged();
 
 									}
 
 								}
+								swipeLayout.close();
 
 								break;
 						}

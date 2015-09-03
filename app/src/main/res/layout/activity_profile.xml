@@ -13,11 +13,12 @@
             android:id="@+id/listEntries"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/main_bg"
             android:clipToPadding="false"
             android:drawSelectorOnTop="true"
             android:overScrollMode="never"
-            android:scrollbarStyle="outsideOverlay" >
+            android:scrollbarStyle="outsideOverlay"
+            android:background="@color/light_gray_color"
+            android:divider="@android:color/transparent">
 
         </se.emilsjolander.stickylistheaders.StickyListHeadersListView>
 

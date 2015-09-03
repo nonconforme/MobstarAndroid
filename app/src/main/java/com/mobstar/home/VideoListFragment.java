@@ -990,7 +990,7 @@ public class VideoListFragment extends Fragment {
 								String[] name = { "entry", "type" };
 								String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "down" };
 								entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-								Utility.DisLikeDialog(getActivity());
+//								Utility.DisLikeDialog(getActivity());
 								Log.d("tagLog", "dislike");
 								arrEntryPojos.remove(mFirstVisibleItem);
 								entryListAdapter.closeAllItems();
@@ -1017,7 +1017,7 @@ public class VideoListFragment extends Fragment {
 								String[] name = {"entry", "type"};
 								String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "up"};
 								entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-								Utility.LikeDialog(getActivity());
+//								Utility.LikeDialog(getActivity());
 								Log.d("tagLog", "like");
 								arrEntryPojos.remove(mFirstVisibleItem);
 								entryListAdapter.closeAllItems();
