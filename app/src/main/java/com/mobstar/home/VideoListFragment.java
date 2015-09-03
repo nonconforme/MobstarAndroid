@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -2023,7 +2022,7 @@ public class VideoListFragment extends Fragment {
 
         private void setupViews(ViewHolder viewHolder, int position){
             viewHolder.textCommentCount.setText(arrEntryPojos.get(position).getTotalComments());
-            viewHolder.textUserName.setText(arrEntryPojos.get(position).getName());
+            viewHolder.textUserName.setText(arrEntryPojos.get(position).getUserDisplayName());
             viewHolder.textDescription.setText(Utility.unescape_perl_string(arrEntryPojos.get(position).getDescription()));
 
             viewHolder.textTime.setText(arrEntryPojos.get(position).getCreated());

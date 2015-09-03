@@ -82,11 +82,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:button="@drawable/custom_checkbox"
+        style="@style/BaseCheck"
         android:gravity="center_vertical|start"
         android:paddingLeft="5dp"
         android:text="@string/agree_privacy_policy"
-        android:textColor="@color/white_color"
         android:textSize="12dp" />
 
     <LinearLayout

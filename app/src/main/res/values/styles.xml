@@ -109,4 +109,14 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="WhiteTextView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="BaseCheck">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:button">@drawable/custom_checkbox</item>
+    </style>
+
 </resources>
