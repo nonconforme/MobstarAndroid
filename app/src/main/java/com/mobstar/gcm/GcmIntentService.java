@@ -22,7 +22,8 @@ import com.mobstar.utils.Utility;
 
 public class GcmIntentService extends IntentService {
 
-	public static int NOTIFICATION_ID = 1;
+    private static final String LOG_TAG = GcmIntentService.class.getName();
+    public static int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
 
@@ -57,6 +58,8 @@ public class GcmIntentService extends IntentService {
 					if(extras.getString("badge").toString()!=null){
 						badgeCount=extras.getString("badge");
 					}
+
+                    Log.d(LOG_TAG, "Type=" + extras.getString("Type"));
 					
 					if(extras.getString("Type").toString().equalsIgnoreCase("Message")){
 						String messageGroup=extras.getString("messageGroup");
@@ -76,19 +79,24 @@ public class GcmIntentService extends IntentService {
 						}
 					}
                     else if(extras.getString("Type").toString().equalsIgnoreCase("splitScreen")){
-                        String entryName=extras.getString("entry_name").toString();
-                        String userName=extras.getString("name").toString();
-                        String entryId=extras.getString("entry_id").toString();
-                        String message = getResources().getString(R.string.notif_split_screen_1)+" "
-                                +entryName+" "
-                                +getResources().getString(R.string.notif_split_screen_2)
-                                + " "
-                                + userName
-                                +getResources().getString(R.string.notif_split_screen_3);
-                        sendNotification(message,entryId);
+                        if (extras.containsKey("entry_name")&&extras.containsKey("name")&&extras.containsKey("entry_id")) {
+                            String entryName = extras.getString("entry_name").toString();
+                            String userName = extras.getString("name").toString();
+                            String entryId = extras.getString("entry_id").toString();
+                            String message = getResources().getString(R.string.notif_split_screen_1) + " "
+                                    + entryName + " "
+                                    + getResources().getString(R.string.notif_split_screen_2)
+                                    + " "
+                                    + userName
+                                    + getResources().getString(R.string.notif_split_screen_3);
+                            Log.d(LOG_TAG, "splitScreen message=" + message);
+                            Log.d(LOG_TAG, "splitScreen entryId=" + entryId);
+                            sendNotification(message, entryId);
+                        }
                     }
 					else{
 						if(extras.getString("message").toString()!=null) {
+                            Log.d(LOG_TAG,"message="+extras.getString("message"));
 							sendNotification(extras.getString("message").toString());
 						}
 					}

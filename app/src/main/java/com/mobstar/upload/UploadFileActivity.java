@@ -57,7 +57,8 @@ import java.util.List;
 
 public class UploadFileActivity extends Activity {
 
-	ArrayList<String> arrayTags = new ArrayList<String>();
+    private static final String LOG_TAG = UploadFileActivity.class.getName();
+    ArrayList<String> arrayTags = new ArrayList<String>();
 	Context mContext;
 
 	TagListAdapter tagListAdapter;
@@ -442,8 +443,10 @@ public class UploadFileActivity extends Activity {
 				multipartContent.addPart("language", new StringBody("english"));
 				multipartContent.addPart("name", new StringBody(preferences.getString("username", null)));
                 //parent split video id
-                if (parentSplitEntry!=null)
-				    multipartContent.addPart("splitVideoId", new StringBody(parentSplitEntry.getID()+""));
+                if (parentSplitEntry!=null) {
+                    multipartContent.addPart("splitVideoId", new StringBody(parentSplitEntry.getID() + ""));
+                    Log.d(LOG_TAG,"add splitVideoId="+parentSplitEntry.getID());
+                }
 
 				//remove quote from string
 				String strTitle=editTitle.getText().toString().trim();
@@ -465,11 +468,14 @@ public class UploadFileActivity extends Activity {
 
 
 				Log.d("mobstar","sending post request=> type"+sType+"category"+categoryId+" language"+"english"+" name"+preferences.getString("username", null)+" description"+editTitle.getText().toString());
+                Log.d(LOG_TAG,"multipartContent="+multipartContent.toString());
 				httpPost.setEntity(multipartContent);
+                Log.d(LOG_TAG, "httpPost=" + httpPost.getURI().toString());
 
 				HttpResponse httpResponse = httpClient.execute(httpPost);
 
 				Log.v(Constant.TAG, "Response code " + httpResponse.getStatusLine());
+				Log.v(LOG_TAG, "Response code " + httpResponse.getStatusLine());
 
 				HttpEntity httpEntity = httpResponse.getEntity();
 				is = httpEntity.getContent();
@@ -523,6 +529,7 @@ public class UploadFileActivity extends Activity {
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
+                Log.d(LOG_TAG,"JsonError="+e.toString());
 
 			}
 
