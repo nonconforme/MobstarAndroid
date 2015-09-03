@@ -1201,7 +1201,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onClick(View v) {
-						if (arrEntryPojos.get(position).getIAmStar().equalsIgnoreCase("1")) {
+						if (arrEntryPojos.get(position).getIAmStar() !=null && arrEntryPojos.get(position).getIAmStar().equalsIgnoreCase("1")) {
 							//following
 							Intent intent=new Intent(mContext,MessageActivity.class);
 							intent.putExtra("recipent",arrEntryPojos.get(position).getUserID());

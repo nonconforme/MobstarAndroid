@@ -2,6 +2,7 @@ package com.mobstar.help;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.mobstar.R;
+import com.mobstar.home.HomeActivity;
 import com.mobstar.utils.Utility;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
@@ -236,7 +238,13 @@ public class TakeTourActivity extends FragmentActivity implements OnClickListene
 		if (v.equals(btnStartOver)) {
 			mPager.setCurrentItem(0);
 		} else if (v.equals(btnFinishTour)) {
-			onBackPressed();
+			startHomeActivity();
 		}
+	}
+
+	private void startHomeActivity(){
+		Intent intent = new Intent(mContext,HomeActivity.class);
+		startActivity(intent);
+		finish();
 	}
 }
