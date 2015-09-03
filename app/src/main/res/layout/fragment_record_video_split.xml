@@ -2,46 +2,71 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <LinearLayout
-        android:id="@+id/combination_layout"
-        android:background="@color/black_color"
-        android:layout_gravity="center"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:orientation="horizontal">
+        android:layout_gravity="center"
+        android:background="@color/black_color">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/combination_layout"-->
+            <!--android:background="@color/black_color"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="300dp"-->
+            <!--android:orientation="horizontal">-->
 
-        <FrameLayout
-            android:layout_weight="1"
-            android:id="@+id/camera_preview"
+            <!--<FrameLayout-->
+                <!--android:id="@+id/camera_preview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1">-->
+
+            <!--</FrameLayout>-->
+            <!--<FrameLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/video_preview"-->
+                <!--android:layout_weight="1">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/imageFrame"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:contentDescription="@string/app_name"-->
+                    <!--android:adjustViewBounds="true"-->
+                    <!--android:scaleType="fitXY"-->
+                    <!--android:visibility="visible" />-->
+                <!--<TextureView-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:id="@+id/textureView"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</FrameLayout>-->
+
+        <!--</LinearLayout>-->
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
-        </FrameLayout>
-        <FrameLayout
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/imageFrame"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:contentDescription="@string/app_name"
-                android:adjustViewBounds="true"
-                android:scaleType="fitXY"
-                android:visibility="visible" />
-            <TextureView
                 android:layout_weight="1"
-                android:id="@+id/textureView"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content" />
-        </FrameLayout>
+                android:id="@+id/verticalLeft"/>
 
-    </LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/verticalRight"/>
+        </LinearLayout>
+
+    </FrameLayout>
 
 
     <FrameLayout
@@ -68,7 +93,7 @@
             <!--android:id="@+id/layoutCameraOption"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center" >-->
+            <!--android:id="@+id/cameraViewContainer">-->
 
             <!--<ImageView-->
                 <!--android:id="@+id/btnFlash"-->

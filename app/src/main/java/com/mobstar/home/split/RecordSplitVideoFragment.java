@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
-import android.media.AudioManager;
 import android.media.CamcorderProfile;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -17,6 +16,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -48,56 +48,42 @@ import java.util.List;
 /**
  * Created by vasia on 06.08.15.
  */
-public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugReceiver.OnHeadsetPlugListener {
+public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugReceiver.OnHeadsetPlugListener, View.OnClickListener {
     private static final String LOG_TAG = RecordSplitVideoFragment.class.getName();
-    Context mContext;
 
     private Camera mCamera;
     private CameraPreview mPreview;
-
-    ImageView btnRecord, btnFlash, btnChangeCamera;
-
-    boolean isFlashOn = false;
-    int currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
-    boolean isFrontCameraAvailable = false;
-
+    private FrameLayout flVideoPreview;
+    private FrameLayout flVerticalLeft, flVerticalRight;
+    private ImageView btnRecord;
+    private int currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+    private boolean isFrontCameraAvailable = false;
     private boolean isRecording = false;
-
     private MediaRecorder mMediaRecorder;
-
-    LinearLayout layoutCameraOption;
-    TextView textRecordSecond;
-
-    int currentCount = 15;
-    CountDownTimer recordTimer;
-
-    String sFilepath;
-
-    int desiredwidth = 480;
-    int desiredheight = 720;
-
-    List<Camera.Size> videosizes;
-
+    private LinearLayout layoutCameraOption;
+    private TextView textRecordSecond;
+    private int currentCount = 15;
+    private CountDownTimer recordTimer;
+    private String sFilepath;
+    private int desiredWidth = 480;
+    private int desiredHeight = 720;
+    private List<Camera.Size> videoSizes;
     private final int cMaxRecordDurationInMs = 30099;
-
     private final long cMaxFileSizeInBytes = 8000000;
-
     private final long cMaxFileSizeInBytesProfile = 52428800; //50MB
-
-    String categoryId="7";
-    String subCat;
+    private String categoryId="7";
+    private String subCat;
     private TextureView textureView;
     private String sVideoPathBack;
-    MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
     private String readyFilePath;
     private SplitActivity splitActivity;
     private String camersRotation ;
     private String backRotation ;
-    private ImageView vImageVideo;
-
+    private ImageView ivVideoPreview;
     private Bitmap imageVideoPreview;
     private PositionVariant positionVariant;
-    private FrameLayout vFramePreview;
+    private FrameLayout flCameraPreview;
     private HeadsetPlugReceiver headsetPlugReceiver;
     private boolean onHeadsetConnect;
 
@@ -144,9 +130,10 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View inflatedView = inflater.inflate(R.layout.fragment_record_video_split, container, false);
         registerHeadsetReceiver();
-        mContext=getActivity();
         mediaPlayer = new MediaPlayer();
         findView(inflatedView);
+        createRecordPreview();
+        combinationRecordViews();
         initializeView();
 //        initializeCamera();
         recordTimer = new CountDownTimer(19000, 1000) {
@@ -205,38 +192,54 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             // activity.
             mPreview = new CameraPreview(getActivity());
             mPreview.setCamera(mCamera);
-            vFramePreview.removeAllViews();
-            vFramePreview.addView(mPreview);
+            flCameraPreview.removeAllViews();
+            flCameraPreview.addView(mPreview);
         }
     }
 
     private void initializeView() {
-        vImageVideo.setImageBitmap(imageVideoPreview);
+        ivVideoPreview.setImageBitmap(imageVideoPreview);
         textRecordSecond.setVisibility(View.GONE);
         textRecordSecond.setText(currentCount + "");
-        btnRecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // get an image from the camera
-//                    mPreview.RecordVideo();
-                Surface surface = new Surface(textureView.getSurfaceTexture());
-                PlayVideo(0, surface);
+        btnRecord.setOnClickListener(this);
+    }
 
-            }
-        });
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnRecord:
+                Surface surface = new Surface(textureView.getSurfaceTexture());
+                startRecord(surface);
+                break;
+        }
     }
 
     private void findView(View inflatedView) {
         btnRecord = (ImageView) inflatedView.findViewById(R.id.btnRecord);
         textRecordSecond = (TextView) inflatedView.findViewById(R.id.textRecordSecond);
-        textureView = (TextureView) inflatedView.findViewById(R.id.textureView);
         btnRecord = (ImageView) inflatedView.findViewById(R.id.btnRecord);
-        vFramePreview = (FrameLayout) inflatedView.findViewById(R.id.camera_preview);
-        vImageVideo = (ImageView) inflatedView.findViewById(R.id.imageFrame);
+        flVerticalLeft = (FrameLayout) inflatedView.findViewById(R.id.verticalLeft);
+        flVerticalRight = (FrameLayout) inflatedView.findViewById(R.id.verticalRight);
+    }
+
+    private void createRecordPreview(){
+        flCameraPreview = new FrameLayout(splitActivity);
+
+        flVideoPreview = new FrameLayout(splitActivity);
+        ivVideoPreview = new ImageView(splitActivity);
+        ivVideoPreview.setAdjustViewBounds(true);
+        ivVideoPreview.setScaleType(ImageView.ScaleType.FIT_XY);
+        textureView = new TextureView(splitActivity);
+        FrameLayout.LayoutParams mathParentParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mathParentParams.gravity = Gravity.CENTER;
+        FrameLayout.LayoutParams wrapContentParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        wrapContentParams.gravity = Gravity.CENTER;
+        flVideoPreview.addView(ivVideoPreview, mathParentParams);
+        flVideoPreview.addView(textureView, wrapContentParams);
     }
 
 
-    void PlayVideo(int position, final Surface surface) {
+    private void startRecord(final Surface surface) {
 
         new Thread() {
 
@@ -303,7 +306,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             params.set("orientation", "portrait");
             params.setRotation(90);
 
-            videosizes = params.getSupportedVideoSizes();
+            videoSizes = params.getSupportedVideoSizes();
 
             c.setParameters(params); // instance
 
@@ -356,8 +359,8 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             // // Step 3: Set a CamcorderProfile (requires API Level 8 or
             // higher)
             CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
-            if (videosizes != null) {
-                Camera.Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
+            if (videoSizes != null) {
+                Camera.Size optimalVideoSize = getOptimalPreviewSize(videoSizes, desiredWidth, desiredHeight);
                 profile.videoFrameWidth = optimalVideoSize.width;
                 profile.videoFrameHeight = optimalVideoSize.height;
             }
@@ -379,7 +382,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
             mMediaRecorder.setVideoFrameRate(30);
 
-            sFilepath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, mContext).toString();
+            sFilepath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, splitActivity).toString();
 
             // Step 4: Set output file
             mMediaRecorder.setOutputFile(sFilepath);
@@ -430,7 +433,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                 releaseCamera();
 
                 isRecording = false;
-                camersRotation = Utility.getTemporaryMediaFile(mContext, "camersRotation").toString();
+                camersRotation = Utility.getTemporaryMediaFile(splitActivity, "camersRotation").toString();
 //                backRotation = Utility.getTemporaryMediaFile(mContext, "backRotation").toString();
                 backRotation=sVideoPathBack;
                new RotationBackground(getActivity()
@@ -438,13 +441,14 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                    @Override
                    public void onAfterDone() {
                        Log.d(LOG_TAG, "start join video");
-                       readyFilePath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, mContext).toString();
+                       readyFilePath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, splitActivity).toString();
                        new TranscdingBackground(
                                getActivity()
                                , camersRotation,
                                backRotation,
                                readyFilePath,
                                onHeadsetConnect,
+                               positionVariant,
                                new AfterDoneBackground() {
                            @Override
                            public void onAfterDone() {
@@ -475,7 +479,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                     // Camera is available and unlocked, MediaRecorder is
                     // prepared,
                     // now you can start recording
-                    vImageVideo.setVisibility(GONE);
+                    ivVideoPreview.setVisibility(GONE);
                     mMediaRecorder.start();
 
 //                    layoutCameraOption.setVisibility(View.GONE);
@@ -509,7 +513,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             try {
                 mCamera.setPreviewDisplay(holder);
                 mCamera.startPreview();
-                setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
+                setCameraDisplayOrientation((Activity) splitActivity, currentCameraId, mCamera);
             } catch (Exception e) {
                 //				Log.d(Constant.TAG, "Error setting camera preview: " + e.getMessage());
             }
@@ -548,7 +552,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                     } else {
 
                     }
-                    setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
+                    setCameraDisplayOrientation((Activity) splitActivity, currentCameraId, mCamera);
 
                     mCamera.setParameters(parameters);
                 }
@@ -569,7 +573,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
 
     private void startApproveActivity(String file) {
-        Intent intent = new Intent(mContext, ApproveVideoActivity.class);
+        Intent intent = new Intent(splitActivity, ApproveVideoActivity.class);
         intent.putExtra("video_path", file);
         intent.putExtra("categoryId", categoryId);
         intent.putExtra(Constant.ENTRY, splitActivity.getEntry());
@@ -719,5 +723,57 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     @Override
     public void onHeadsetDisconnect() {
         onHeadsetConnect = false;
+    }
+
+    private void combinationRecordViews(){
+        switch (positionVariant){
+            case ORIGIN_LEFT:
+                onOriginLeft();
+                break;
+            case ORIGIN_RIGHT:
+                onOriginRight();
+                break;
+            case ORIGIN_RIGHT_TOP:
+                onOriginRightTop();
+                break;
+            case ORIGIN_FULLSCREEN:
+                onOriginFullscreen();
+                break;
+            case ORIGIN_TOP:
+                onOriginTop();
+                break;
+            case ORIGIN_BOTTOM:
+                onOriginBottom();
+                break;
+        }
+    }
+
+    private void onOriginLeft(){
+        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        flVerticalLeft.addView(flVideoPreview, layoutParams);
+        flVerticalRight.addView(flCameraPreview, layoutParams);
+
+    }
+
+    private void onOriginRight(){
+        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        flVerticalLeft.addView(flCameraPreview, layoutParams);
+        flVerticalRight.addView(flVideoPreview, layoutParams);
+    }
+
+    private void onOriginRightTop(){
+
+    }
+
+    private void onOriginFullscreen(){
+
+    }
+
+    private void onOriginTop(){
+
+    }
+
+    private void onOriginBottom(){
+
     }
 }

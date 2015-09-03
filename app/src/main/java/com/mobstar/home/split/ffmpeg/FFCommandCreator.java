@@ -32,29 +32,99 @@ public class FFCommandCreator {
         stringBuilder
                 .append(" -s ")
                 .append(getOutputVideoSizeString(positionVariant))
-                .append(" -metadata:s:v rotate=0")
-                .append(" -vcodec mpeg4 ")
+                .append(" -metadata:s:v rotate=0 -vcodec mpeg4 ")
                 .append(fileOutPath);
         final String complexCommand = stringBuilder.toString();
         return complexCommand;
     }
+
+    public static String getMergeVideoCommandString(String pathLeft, String pathRight, String pathResult, boolean isHeadphonesOn, PositionVariant positionVariant) {
+
+        String firstVideoPath = pathRight;
+        String secondVideoPath = pathLeft;
+        switch (positionVariant){
+            case ORIGIN_LEFT:
+
+                break;
+            case ORIGIN_RIGHT:
+                firstVideoPath = pathLeft;
+                secondVideoPath = pathRight;
+                break;
+            case ORIGIN_RIGHT_TOP:
+
+                break;
+            case ORIGIN_FULLSCREEN:
+
+                break;
+            case ORIGIN_TOP:
+
+                break;
+            case ORIGIN_BOTTOM:
+
+                break;
+
+        }
+
+        String audioMixCommand = "";
+        if (isHeadphonesOn)
+            audioMixCommand = ";amix=inputs=2:duration=first:dropout_transition=3";
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("ffmpeg -y -i ")
+                .append(firstVideoPath)
+                .append(" -i ")
+                .append(secondVideoPath)
+                .append(" -strict experimental -filter_complex ")
+//                        оригінал справа, з камери - зліва
+                .append("[0:v:0]pad=iw*2:ih[bg];")
+                .append("[bg][1:v:0]overlay=w")
+//                        оригінал справа знизу на пів екрана б з камери - зліва
+//                .append("pad=iw*2:ih[bg];")
+//                .append("overlay=w:150")
+
+//                .append("[0:v]setpts=PTS-STARTPTS, pad=iw*2:ih[bg];")
+//                .append("[1:v]setpts=PTS-STARTPTS[fg];")
+//                .append("[bg][fg]overlay=w")
+
+//                .append("[0:v]pad=iw*2:ih[bg];")
+//                .append("[1:v][bg][fg]overlay=w")
+
+                .append(audioMixCommand)
+                .append(" -s 308x308 -r 30 -b 15496k -vcodec mpeg4 ")
+                .append(pathResult);
+
+        return stringBuilder.toString();
+    }
+
+//    final StringBuilder stringBuilder = new StringBuilder();
+//    stringBuilder
+//            .append("ffmpeg -y -i ")
+//            .append(pathLeft)
+//    .append(" -i ")
+//    .append(pathRight)
+//    .append(" -strict experimental -filter_complex ")
+//    .append("[0:v:0]pad=iw*2:ih[bg];")
+//    .append("[bg][1:v:0]overlay=w")
+//    .append(audioMixCommand)
+//    .append(" -s 308x308 -r 30 -b 15496k -vcodec mpeg4 ")
+//    .append(pathResult);
 
     public static String getOutputVideoSizeString(final PositionVariant positionVariant){
         String outSize = "";
         switch (positionVariant){
             case ORIGIN_LEFT:
             case ORIGIN_RIGHT:
-                outSize = "154x308";
+                outSize = "153x306";
                 break;
             case ORIGIN_RIGHT_TOP:
                 outSize = "100x100";
                 break;
             case ORIGIN_FULLSCREEN:
-                outSize = "308x308";
+                outSize = "306x306";
                 break;
             case ORIGIN_TOP:
             case ORIGIN_BOTTOM:
-                outSize = "308x154";
+                outSize = "306x153";
                 break;
         }
         return outSize;
