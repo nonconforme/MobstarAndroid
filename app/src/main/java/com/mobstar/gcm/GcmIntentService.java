@@ -60,7 +60,8 @@ public class GcmIntentService extends IntentService {
 					}
 
                     Log.d(LOG_TAG, "Type=" + extras.getString("Type"));
-					
+                    Log.d(LOG_TAG, "extras=" + extras.toString());
+
 					if(extras.getString("Type").toString().equalsIgnoreCase("Message")){
 						String messageGroup=extras.getString("messageGroup");
 						String threadId=extras.getString("entry_id");
