@@ -44,6 +44,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.loopj.android.http.SyncHttpClient;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.custom.PullToRefreshListView;
@@ -66,8 +67,12 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class VideoListFragment extends Fragment {
 
@@ -305,7 +310,7 @@ public class VideoListFragment extends Fragment {
 		textNoData = (TextView) view.findViewById(R.id.textNoData);
 		textNoData.setVisibility(View.GONE);
 
-		entryListAdapter = new EntryListAdapter();
+		entryListAdapter = new EntryListAdapter(getActivity());
 		listEntry = (PullToRefreshListView) view.findViewById(R.id.listEntries);
 		
 		adView = (AdView) view.findViewById(R.id.adView);
@@ -922,11 +927,20 @@ public class VideoListFragment extends Fragment {
 
 
 	public class EntryListAdapter extends BaseAdapter {
+        private static final int MAX_THREAD_POOL = 3;
+        private final String LOG_TAG = EntryListAdapter.class.getName();
 
-		private LayoutInflater inflater = null;
+        private final ThreadPoolExecutor executor;
+        private final LinkedList<Runnable> queue;
+        private final Activity mActivity;
+        private LayoutInflater inflater = null;
 
-		public EntryListAdapter() {
+		public EntryListAdapter(Activity activity) {
 			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mActivity = activity;
+            executor = new ThreadPoolExecutor(MAX_THREAD_POOL,MAX_THREAD_POOL
+                    ,60L, TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(MAX_THREAD_POOL));
+            queue = new LinkedList<Runnable>();
 
 		}
 
@@ -1268,6 +1282,7 @@ public class VideoListFragment extends Fragment {
 
 									listDownloadingFile.add(sFileName);
 									if (Utility.isNetworkAvailable(mContext)) {
+
 										AsyncHttpClient client = new AsyncHttpClient();
 										final int DEFAULT_TIMEOUT = 60 * 1000;
 										client.setTimeout(DEFAULT_TIMEOUT);
@@ -1447,84 +1462,38 @@ public class VideoListFragment extends Fragment {
 					//					File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
 
 					try {
-						File file = new File(FILEPATH + sFileName);
+						final File file = new File(FILEPATH + sFileName);
 
 						if (file!=null && !file.exists()) {
 							listDownloadingFile.add(sFileName);
 
 							if (Utility.isNetworkAvailable(mContext)) {
-								AsyncHttpClient client = new AsyncHttpClient();
-								final int DEFAULT_TIMEOUT = 60 * 1000;
+                                downloadFile(arrEntryPojos.get(position).getVideoLink(), new FileAsyncHttpResponseHandler(file) {
 
-								client.setTimeout(DEFAULT_TIMEOUT);
-								client.get(arrEntryPojos.get(position).getVideoLink(), new FileAsyncHttpResponseHandler(file) {
+                                    @Override
+                                    public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
+										Log.d(LOG_TAG,"Download fail video=>"+arrEntryPojos.get(position).getVideoLink());
 
-									@Override
-									public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
-//										Log.d("mobstar","Download fail video=>"+arrEntryPojos.get(position).getVideoLink());
+                                    }
 
-									}
-
-									@Override
-									public void onSuccess(int arg0, Header[] arg1, File file) {
-										// TODO Auto-generated method stub
-										// Log.v(Constant.TAG,
-										// "onSuccess Video File  downloaded");
-										setEnableSplitButton(viewHolder, position, true);
-										viewHolder.progressbar.setVisibility(View.GONE);
-										viewHolder.textureView.setVisibility(View.GONE);
-
-										listDownloadingFile.remove(file.getName());
-
-										notifyDataSetChanged();
-
-									}
-
-									//								@Override
-									//								public void onProgress(int bytesWritten, int totalSize) {
-									//									super.onProgress(bytesWritten, totalSize);
-									//									final int totProgress = (int) (((float) bytesWritten * 100) / totalSize);
-									//										getActivity().runOnUiThread(new Runnable() {
-									//
-									//											@Override
-									//											public void run() {
-									//												viewHolder.progressbar.setProgress(totProgress);
-									////												viewHolder.progressbar.setProgress(totProgress);
-									//												Log.i("Progress::::", "" + totProgress);
-									//											}
-									//											});
-									//
-									//									notifyDataSetChanged();
-									//									}
-
-								});
+                                    @Override
+                                    public void onSuccess(int arg0, Header[] arg1, File file) {
+                                        mActivity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                viewHolder.progressbar.setVisibility(View.GONE);
+                                                viewHolder.textureView.setVisibility(View.GONE);
+                                                notifyDataSetChanged();
+                                            }
+                                        });
+                                        listDownloadingFile.remove(file.getName());
+                                    }
+                                });
 							}
 							else {
 								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							}
-							// Log.v(Constant.TAG, "Download video " +
-							// arrEntryPojos.get(position).getVideoLink());
-							//						commented by khyati
 
-
-
-							// Ion.with(mContext).load(arrEntryPojos.get(position).getVideoLink()).write(file).setCallback(new
-							// FutureCallback<File>() {
-							// @Override
-							// public void onCompleted(Exception e, File file) {
-							// if (file != null && e == null) {
-							//
-							// viewHolder.progressbar.setVisibility(View.GONE);
-							// viewHolder.textureView.setVisibility(View.GONE);
-							//
-							// listDownloadingFile.remove(file.getName());
-							//
-							// notifyDataSetChanged();
-							//
-							// }
-							//
-							// }
-							// });
 						} else {
 							setEnableSplitButton(viewHolder, position, true);
 							viewHolder.progressbar.setVisibility(View.GONE);
@@ -1995,6 +1964,33 @@ public class VideoListFragment extends Fragment {
 
 			return convertView;
 		}
+
+        private void downloadFile(final String link, final FileAsyncHttpResponseHandler fileAsyncHttpResponseHandler) {
+            Thread task = new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    SyncHttpClient client = new SyncHttpClient();
+                    final int DEFAULT_TIMEOUT = 60 * 1000;
+
+                    client.setTimeout(DEFAULT_TIMEOUT);
+                    client.get(link, fileAsyncHttpResponseHandler);
+                }
+            };
+            queue.add(task);
+            Log.d(LOG_TAG, "add task=" + task.hashCode());
+            if (queue.size()>MAX_THREAD_POOL) {
+                Runnable runnable = queue.get(queue.size() - MAX_THREAD_POOL);
+                executor.remove(runnable);
+                Log.d(LOG_TAG, "del task=" + runnable.hashCode());
+                queue.remove(runnable);
+            }
+//                                if (queue.size()<2)
+            executor.execute(queue.getLast());
+            Log.d(LOG_TAG, "executor getCompletedTaskCount=" + executor.getCompletedTaskCount());
+            Log.d(LOG_TAG, "executor getTaskCount=" + executor.getTaskCount());
+            Log.d(LOG_TAG, "queue size=" + queue.size());
+        }
 
         private void findViews(ViewHolder viewHolder, View convertView){
             viewHolder.textVideoSplit = (TextView) convertView.findViewById(R.id.splitVideo);
