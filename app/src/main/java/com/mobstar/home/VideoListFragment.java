@@ -71,6 +71,7 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -931,16 +932,18 @@ public class VideoListFragment extends Fragment {
         private final String LOG_TAG = EntryListAdapter.class.getName();
 
         private final ThreadPoolExecutor executor;
-        private final LinkedList<Runnable> queue;
+        private final LinkedList<Future> queue;
+        private final LinkedList<DownLoadThread> queueTask;
         private final Activity mActivity;
         private LayoutInflater inflater = null;
 
 		public EntryListAdapter(Activity activity) {
 			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mActivity = activity;
-            executor = new ThreadPoolExecutor(MAX_THREAD_POOL,MAX_THREAD_POOL
-                    ,60L, TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(MAX_THREAD_POOL));
-            queue = new LinkedList<Runnable>();
+            executor = new ThreadPoolExecutor(1,1
+                    ,60L, TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(10));
+            queue = new LinkedList<Future>();
+            queueTask = new LinkedList<DownLoadThread>();
 
 		}
 
@@ -1467,8 +1470,12 @@ public class VideoListFragment extends Fragment {
 						if (file!=null && !file.exists()) {
 							listDownloadingFile.add(sFileName);
 
+                            Log.d(LOG_TAG, "sFileName=" + sFileName);
+//                            Log.d(LOG_TAG, "arrEntryPojos.get(position).getVideoLink()="+arrEntryPojos.get(position).getVideoLink());
+                            Log.d(LOG_TAG,"what to dowmload="+arrEntryPojos.get(position).getDescription());
+
 							if (Utility.isNetworkAvailable(mContext)) {
-                                downloadFile(arrEntryPojos.get(position).getVideoLink(), new FileAsyncHttpResponseHandler(file) {
+                                downloadFile(sFileName,listDownloadingFile,arrEntryPojos.get(position).getVideoLink(), new FileAsyncHttpResponseHandler(file) {
 
                                     @Override
                                     public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
@@ -1478,6 +1485,9 @@ public class VideoListFragment extends Fragment {
 
                                     @Override
                                     public void onSuccess(int arg0, Header[] arg1, File file) {
+                                        Log.d(LOG_TAG,"download file="+file.getName());
+//                                        Log.d(LOG_TAG,"index of file="+listDownloadingFile.indexOf(file.getName()));
+//                                        Log.d(LOG_TAG,"listDownloadingFile.size="+listDownloadingFile.size());
                                         mActivity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
@@ -1965,31 +1975,80 @@ public class VideoListFragment extends Fragment {
 			return convertView;
 		}
 
-        private void downloadFile(final String link, final FileAsyncHttpResponseHandler fileAsyncHttpResponseHandler) {
-            Thread task = new Thread() {
+        private class DownLoadThread extends Thread {
+            private final String link;
+            private final FileAsyncHttpResponseHandler fileAsyncHttpResponseHandler;
+            private final SyncHttpClient client;
+            public final String fileName;
+
+            DownLoadThread (final String fileName,final String link, final FileAsyncHttpResponseHandler fileAsyncHttpResponseHandler) {
+                this.link = link;
+                this.fileName = fileName;
+                this.fileAsyncHttpResponseHandler = fileAsyncHttpResponseHandler;
+                client = new SyncHttpClient();
+            }
+            @Override
+            public void run() {
+                super.run();
+                final int DEFAULT_TIMEOUT = 20 * 1000;
+
+                client.setTimeout(DEFAULT_TIMEOUT);
+                client.setConnectTimeout(DEFAULT_TIMEOUT);
+                client.setResponseTimeout(DEFAULT_TIMEOUT);
+                client.get(link, fileAsyncHttpResponseHandler);
+            }
+
+            public void cancelThread() {
+                Log.d(LOG_TAG,"cancelThread");
+                client.cancelAllRequests(true);
+            }
+        }
+
+        private void downloadFile(final String fileName,final ArrayList<String> listDownloadingFile, String link, final FileAsyncHttpResponseHandler fileAsyncHttpResponseHandler) {
+            DownLoadThread task = new DownLoadThread(fileName,link,fileAsyncHttpResponseHandler);
+            queueTask.add(task);
+            Future threadFuture= executor.submit(task);
+            queue.add(threadFuture);
+            Log.d(LOG_TAG, "add task=" + task.hashCode());
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    super.run();
-                    SyncHttpClient client = new SyncHttpClient();
-                    final int DEFAULT_TIMEOUT = 60 * 1000;
-
-                    client.setTimeout(DEFAULT_TIMEOUT);
-                    client.get(link, fileAsyncHttpResponseHandler);
+                    listDownloadingFile.remove(fileName);
+                    Log.d(LOG_TAG,"extrenal delet="+fileName);
                 }
-            };
-            queue.add(task);
-            Log.d(LOG_TAG, "add task=" + task.hashCode());
+            },20000);
             if (queue.size()>MAX_THREAD_POOL) {
-                Runnable runnable = queue.get(queue.size() - MAX_THREAD_POOL);
-                executor.remove(runnable);
+                DownLoadThread runnable = queueTask.getFirst();
+                Future future = queue.getFirst();
                 Log.d(LOG_TAG, "del task=" + runnable.hashCode());
-                queue.remove(runnable);
+                Log.d(LOG_TAG, "del file=" + runnable.fileName);
+                listDownloadingFile.remove(runnable.fileName);
+                Log.d(LOG_TAG, "listDownloadingFile.size=" + listDownloadingFile.size());
+                runnable.cancelThread();
+                future.cancel(true);
+
+                queue.remove(future);
+                Log.d(LOG_TAG, "queue.size=" + queue.size());
+                queueTask.remove(runnable);
+
+//                Thread runnable = queue.get(queue.size() - MAX_THREAD_POOL);
+//                DownLoadThread runnable = queue.getFirst();
+//                runnable.cancelThread();
+
+//                runnable.interrupt();
+                executor.getQueue().clear();
+//                Log.d(LOG_TAG, "executor.queue=" + executor.getQueue().size());
+
+//                Log.d(LOG_TAG, " executor.remove=" + executor.remove(runnable));
+//                executor.remove(runnable);
+
+//                queue.remove(runnable);
             }
 //                                if (queue.size()<2)
-            executor.execute(queue.getLast());
-            Log.d(LOG_TAG, "executor getCompletedTaskCount=" + executor.getCompletedTaskCount());
+//            executor.execute(queue.getLast());
+//            Log.d(LOG_TAG, "executor getCompletedTaskCount=" + executor.getCompletedTaskCount());
             Log.d(LOG_TAG, "executor getTaskCount=" + executor.getTaskCount());
-            Log.d(LOG_TAG, "queue size=" + queue.size());
+//            Log.d(LOG_TAG, "queue size=" + queue.size());
         }
 
         private void findViews(ViewHolder viewHolder, View convertView){
