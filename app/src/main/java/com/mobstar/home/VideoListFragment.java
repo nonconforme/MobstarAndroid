@@ -960,7 +960,7 @@ public class VideoListFragment extends Fragment {
 		}
 
 		public View getView(final int position, View convertView, ViewGroup parent) {
-
+//            Log.d(LOG_TAG,"getView.position="+position);
 			final int pos=position;
 
 			final ViewHolder viewHolder;
@@ -2013,8 +2013,10 @@ public class VideoListFragment extends Fragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    listDownloadingFile.remove(fileName);
-                    Log.d(LOG_TAG,"extrenal delet="+fileName);
+                    if (listDownloadingFile.remove(fileName)) {
+                        notifyDataSetChanged();
+                        Log.d(LOG_TAG, "extrenal delet=" + fileName);
+                    }
                 }
             },20000);
             if (queue.size()>MAX_THREAD_POOL) {
