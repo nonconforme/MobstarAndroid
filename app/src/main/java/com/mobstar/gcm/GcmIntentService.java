@@ -80,10 +80,10 @@ public class GcmIntentService extends IntentService {
 						}
 					}
                     else if(extras.getString("Type").toString().equalsIgnoreCase("splitScreen")){
-                        if (extras.containsKey("entry_name")&&extras.containsKey("name")&&extras.containsKey("entry_id")) {
-                            String entryName = extras.getString("entry_name").toString();
-                            String userName = extras.getString("name").toString();
-                            String entryId = extras.getString("entry_id").toString();
+                        if (extras.containsKey("usedEntryName")&&extras.containsKey("creatorName")&&extras.containsKey("createdEntryId")) {
+                            String entryName = extras.getString("usedEntryName").toString();
+                            String userName = extras.getString("creatorName").toString();
+                            String entryId = extras.getString("createdEntryId").toString();
                             String message = getResources().getString(R.string.notif_split_screen_1) + " "
                                     + entryName + " "
                                     + getResources().getString(R.string.notif_split_screen_2)
