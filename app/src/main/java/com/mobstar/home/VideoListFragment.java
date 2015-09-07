@@ -594,6 +594,9 @@ public class VideoListFragment extends Fragment {
 
 							}
 
+							if (jsonObjEntry.has("splitVideoId"))
+								entryPojo.setSplitVideoId(jsonObjEntry.getString("splitVideoId"));
+
 							entryPojo.setID(jsonObjEntry.getString("id"));
 
 							if(jsonObjEntry.has("subcategory")){
@@ -962,7 +965,9 @@ public class VideoListFragment extends Fragment {
 			}
 
             setupViews(viewHolder, position);
-			setEnableSplitButton(viewHolder, position, false);
+			if (arrEntryPojos.get(position).getType().equals("video"))
+				setEnableSplitButton(viewHolder, position, true);
+			else setEnableSplitButton(viewHolder, position, false);
 
 
 			viewHolder.btnFollow.setOnClickListener(new OnClickListener() {
@@ -1389,7 +1394,6 @@ public class VideoListFragment extends Fragment {
 				viewHolder.ivAudioIcon.setVisibility(View.GONE);
 				viewHolder.progressbar.setVisibility(View.VISIBLE);
 
-				setEnableSplitButton(viewHolder, position, false);
 				//				viewHolder.progressWheel.setVisibility(View.VISIBLE);
 
 				viewHolder.imgPlaceHolder.setVisibility(View.VISIBLE);
@@ -1402,7 +1406,6 @@ public class VideoListFragment extends Fragment {
 					@Override
 					public void onSuccess() {
 						// TODO Auto-generated method stub
-						setEnableSplitButton(viewHolder, position, true);
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
 						notifyDataSetChanged();
@@ -1470,7 +1473,6 @@ public class VideoListFragment extends Fragment {
 										// TODO Auto-generated method stub
 										// Log.v(Constant.TAG,
 										// "onSuccess Video File  downloaded");
-										setEnableSplitButton(viewHolder, position, true);
 										viewHolder.progressbar.setVisibility(View.GONE);
 										viewHolder.textureView.setVisibility(View.GONE);
 
@@ -1526,7 +1528,6 @@ public class VideoListFragment extends Fragment {
 							// }
 							// });
 						} else {
-							setEnableSplitButton(viewHolder, position, true);
 							viewHolder.progressbar.setVisibility(View.GONE);
 							viewHolder.textureView.setVisibility(View.GONE);
 						}
@@ -1536,7 +1537,6 @@ public class VideoListFragment extends Fragment {
 				}
 
 				else {
-					setEnableSplitButton(viewHolder, position, false);
 					viewHolder.progressbar.setVisibility(View.VISIBLE);
 				}
 
@@ -1913,7 +1913,6 @@ public class VideoListFragment extends Fragment {
 							viewHolder.textureView.setVisibility(View.VISIBLE);
 
 							if (mediaPlayer != null && mediaPlayer.isPlaying() && indexCurrentPlayAudio == position) {
-								setEnableSplitButton(viewHolder, position, true);
 								viewHolder.flPlaceHolder.setVisibility(View.GONE);
 								viewHolder.progressbar.setVisibility(View.GONE);
 								// viewHolder.textBgGray.setVisibility(View.GONE);
@@ -1921,12 +1920,10 @@ public class VideoListFragment extends Fragment {
 								// Log.v(Constant.TAG,
 								// "isVideoSurfaceReady Play Video " +
 								// position);
-								setEnableSplitButton(viewHolder, position, true);
 								viewHolder.flPlaceHolder.setVisibility(View.GONE);
 								viewHolder.progressbar.setVisibility(View.GONE);
 								// viewHolder.textBgGray.setVisibility(View.GONE);
 							} else {
-								setEnableSplitButton(viewHolder, position, false);
 								viewHolder.flPlaceHolder.setVisibility(View.VISIBLE);
 								viewHolder.progressbar.setVisibility(View.VISIBLE);
 								// viewHolder.textBgGray.setVisibility(View.VISIBLE);
@@ -1997,7 +1994,7 @@ public class VideoListFragment extends Fragment {
 		}
 
         private void findViews(ViewHolder viewHolder, View convertView){
-            viewHolder.textVideoSplit = (TextView) convertView.findViewById(R.id.splitVideo);
+            viewHolder.buttonVideoSplit = (TextView) convertView.findViewById(R.id.splitVideoButton);
             viewHolder.textUserName = (TextView) convertView.findViewById(R.id.textUserName);
             viewHolder.textTime = (TextView) convertView.findViewById(R.id.textTime);
             viewHolder.textViews = (TextView) convertView.findViewById(R.id.textViews);
@@ -2051,21 +2048,16 @@ public class VideoListFragment extends Fragment {
 
 		private void setEnableSplitButton(final ViewHolder viewHolder, final int position, boolean enable){
 			try {
-				if (!enable) {
-					viewHolder.textVideoSplit.setEnabled(false);
-					viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+				if (!enable || arrEntryPojos.get(position).getSplitVideoId() != null) {
+					viewHolder.buttonVideoSplit.setEnabled(false);
+					viewHolder.buttonVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
 				} else {
-					viewHolder.textVideoSplit.setEnabled(true);
-					viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
-					viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
+					viewHolder.buttonVideoSplit.setEnabled(true);
+					viewHolder.buttonVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
+					viewHolder.buttonVideoSplit.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							if (arrEntryPojos.get(position).getVideoLink() == null)
-								return;
-							Intent intent = new Intent(getActivity(), SplitActivity.class);
-							intent.putExtra(SplitActivity.ENTRY_SPLIT, arrEntryPojos.get(position));
-							getActivity().startActivity(intent);
-							getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+							startSplitActivity(position);
 						}
 					});
 				}
@@ -2075,8 +2067,17 @@ public class VideoListFragment extends Fragment {
 			}
 		}
 
+		private void startSplitActivity(final int position){
+			if (arrEntryPojos.get(position).getVideoLink() == null)
+				return;
+			Intent intent = new Intent(getActivity(), SplitActivity.class);
+			intent.putExtra(SplitActivity.ENTRY_SPLIT, arrEntryPojos.get(position));
+			getActivity().startActivity(intent);
+			getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		}
+
 		class ViewHolder {
-			TextView textUserName, textDescription, textTime,textViews, textVideoSplit;
+			TextView textUserName, textDescription, textTime,textViews, buttonVideoSplit;
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;

@@ -34,7 +34,7 @@ import java.io.File;
 /**
  * Created by vasia on 06.08.15.
  */
-public class CropVideoFragment extends Fragment implements View.OnClickListener {
+public class CropVideoFragment extends Fragment implements View.OnClickListener, OnDownloadFileCompletedListener {
 
     private CustomTextviewBold btnNext, btnBack;
     private CropImageView ivVideoImage;
@@ -127,7 +127,26 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     }
 
     private void onClickNext(){
+        if (progress.getVisibility() == View.VISIBLE)
+            return;
+        if (mSplitActivity.getVideoFilePath() == null){
+            progress.setVisibility(View.VISIBLE);
+            mSplitActivity.downloadVideo();
+            mSplitActivity.setOnDownloadFileCompletedListener(this);
+        }
         createComplexVideoCommand();
+    }
+
+
+    @Override
+    public void onCompleted(String filePath) {
+        progress.setVisibility(View.GONE);
+        createComplexVideoCommand();
+    }
+
+    @Override
+    public void onFailed() {
+        progress.setVisibility(View.GONE);
     }
 
     private void createComplexVideoCommand(){
@@ -223,5 +242,11 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     private void removeFile(String filePath){
         final File file = new File(filePath);
         file.delete();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSplitActivity.setOnDownloadFileCompletedListener(null);
     }
 }

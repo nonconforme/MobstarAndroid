@@ -20,6 +20,8 @@ public class EntryPojo implements Serializable {
 	private String ID, UserID, TotalComments,TotalViews, Category, Type, Name, Description, Created, Modified, VideoLink, ImageLink, AudioLink, UpVotesCount, DownvotesCount, Rank, Language, Deleted, Filetype;
 	private String ProfileImage, IsMyStar,IAmStar,UserName, UserDisplayName, ProfileCover, Tagline,isVotedByYou="",Bio,SubCategory="",Height="",Age="";
 	private ArrayList<String> arrayTags = new ArrayList<String>();
+	private String splitVideoId;
+
 	private String VideoThumb;
 	private boolean isFeed=true;
 
@@ -332,6 +334,14 @@ public class EntryPojo implements Serializable {
 	
 	public String getAge(){
 		return Age;
+	}
+
+	public String getSplitVideoId() {
+		return splitVideoId;
+	}
+
+	public void setSplitVideoId(String splitVideoId) {
+		this.splitVideoId = splitVideoId;
 	}
 
 }
