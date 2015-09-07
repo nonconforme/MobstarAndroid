@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by Kesedi on 29.08.2015.
@@ -56,9 +57,8 @@ public class TimeUtility {
                             Calendar deviceTime = Calendar.getInstance();
                             Calendar serverTime = Calendar.getInstance();
                             serverTime.setTimeInMillis(serverCurrentTime);
-                            TIME_LAPSE = deviceTime.getTimeInMillis() - serverTime.getTimeInMillis();
+                            TIME_LAPSE = (deviceTime.getTimeInMillis() - serverTime.getTimeInMillis())+TimeZone.getDefault().getOffset(System.currentTimeMillis());
                             Log.d(LOG_TAG, "TIME_LAPSE=" + TIME_LAPSE);
-
                         }
 
 
