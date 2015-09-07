@@ -35,6 +35,7 @@ import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -449,10 +450,9 @@ public class UploadFileActivity extends Activity {
 
 				//remove quote from string
 				String strTitle=editTitle.getText().toString().trim();
-				String ContentTitle=strTitle.replace("\"","");
-				Log.d("mobstar","new title is=>"+ContentTitle);
-//				multipartContent.addPart("description", new StringBody(StringEscapeUtils.escapeJava(ContentTitle)));
-				multipartContent.addPart("description", new StringBody(ContentTitle));
+				String ContentTitle = strTitle.replace("\"", "");
+                Log.d("mobstar", "new title is=>" + ContentTitle);
+				multipartContent.addPart("description", new StringBody(StringEscapeUtils.escapeJava(ContentTitle)));
 
 				//if category is 3 model type need to pass following param
 				
@@ -507,7 +507,7 @@ public class UploadFileActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(String jsonString) {
-			Log.v(Constant.TAG, "Upload Response " + jsonString);
+			Log.v(LOG_TAG, "Upload Response " + jsonString);
 
 			Utility.HideDialog(mContext);
 

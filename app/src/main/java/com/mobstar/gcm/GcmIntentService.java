@@ -55,12 +55,11 @@ public class GcmIntentService extends IntentService {
 
 				if(extras.containsKey("Type")){
 					String badgeCount="";
-					if(extras.getString("badge").toString()!=null){
-						badgeCount=extras.getString("badge");
-					}
+                    badgeCount=extras.getString("badge","");
 
                     Log.d(LOG_TAG, "Type=" + extras.getString("Type"));
                     Log.d(LOG_TAG, "extras=" + extras.toString());
+                    Log.d(LOG_TAG, "badge=" + badgeCount);
 
 					if(extras.getString("Type").toString().equalsIgnoreCase("Message")){
 						String messageGroup=extras.getString("messageGroup");
@@ -81,9 +80,9 @@ public class GcmIntentService extends IntentService {
 					}
                     else if(extras.getString("Type").toString().equalsIgnoreCase("splitScreen")){
                         if (extras.containsKey("usedEntryName")&&extras.containsKey("creatorName")&&extras.containsKey("createdEntryId")) {
-                            String entryName = extras.getString("usedEntryName").toString();
-                            String userName = extras.getString("creatorName").toString();
-                            String entryId = extras.getString("createdEntryId").toString();
+                            String entryName = Utility.unescape_perl_string(extras.getString("usedEntryName"));
+                            String userName = extras.getString("creatorName");
+                            String entryId = extras.getString("createdEntryId");
                             String message = getResources().getString(R.string.notif_split_screen_1) + " "
                                     + entryName + " "
                                     + getResources().getString(R.string.notif_split_screen_2)
@@ -102,8 +101,10 @@ public class GcmIntentService extends IntentService {
 						}
 					}
 
-					Utility.setBadgeSamsung(getApplicationContext(), Integer.parseInt(badgeCount));
-					Utility.setBadgeSony(getApplicationContext(), Integer.parseInt(badgeCount));
+                    if (!badgeCount.isEmpty()) {
+                        Utility.setBadgeSamsung(getApplicationContext(), Integer.parseInt(badgeCount));
+                        Utility.setBadgeSony(getApplicationContext(), Integer.parseInt(badgeCount));
+                    }
 				}
 
 				Log.v(Constant.TAG, "Received: " + extras.toString());
