@@ -17,13 +17,8 @@
     <string name="reset">RESET</string>
     <string name="temp_uname">lukeymo</string>
     <string name="temp_name">Luke Mowatt</string>
-    <string name="my_account">MY ACCOUNT</string>
     <string name="messages">MESSAGES</string>
-    <string name="entries">ENTRIES FEED</string>
-    <string name="stars">STARS</string>
     <string name="mentors">MENTORS</string>
-    <string name="winners">WINNERS</string>
-    <string name="goodies">GOODIES</string>
     <string name="blog">BLOG</string>
     <string name="help">HELP</string>
     <string name="settings">SETTINGS</string>
@@ -35,9 +30,6 @@
     <string name="temp_comments">15</string>
     <string name="deny">DENY</string>
     <string name="allow">ALLOW</string>
-    <string name="unknown_person">Unknown</string>
-    <string name="play_services_error">Google Play services is not available.  This application will close.</string>
-    <string name="close">Close</string>
     <string name="share_this">SHARE THIS...</string>
     <string name="reason_for_report">REASON FOR REPORTING...</string>
     <string name="entry_information">ENTRY INFORMATION</string>
@@ -78,9 +70,7 @@
     <string name="cancel">CANCEL</string>
     <string name="my_stars">MY STARS</string>
     <string name="my_feedback">MY FEEDBACK</string>
-    <string name="all_winners">ALL WINNERS</string>
     <string name="date">DATE</string>
-    <string name="music_winner">Music Winner</string>
     <string name="faqs">FAQS</string>
     <string name="faq_string">This is frequently ask question that is currently open?</string>
     <string name="old_password">OLD PASSWORD</string>
@@ -95,7 +85,6 @@
     <string name="temp_google_name">lukeymo@gmail.com</string>
     <string name="pinterest">PINTEREST</string>
     <string name="connect_your_account">CONNECT YOUR ACCOUNT</string>
-    <string name="title_activity_privacy_policy">PrivacyPolicyActivity</string>
     <string name="app_settings">APP SETTINGS</string>
     <string name="push_notifications">PUSH NOTIFICATIONS</string>
     <string name="off">OFF</string>
@@ -123,7 +112,6 @@
     <string name="add_content">ADD\nCONTENT</string>
     <string name="edit_tagline">EDIT TAGLINE</string>
     <string name="edit_bio">EDIT BIO</string>
-    <string name="pick_account">Pick Account</string>
     <string name="unrecoverable_error">Unrecoverable Play Services error</string>
     <string name="logout">LOGOUT</string>
     <string name="talent_connect">TALENT CONNECT</string>
@@ -136,7 +124,6 @@
     <string name="mobstar_points">MOBSTAR POINTS</string>
     <string name="available">AVAILABLE</string>
     <string name="use_points">USE POINTS</string>
-    <string name="fans">FANS</string>
     <string name="followers">FOLLOWERS</string>
     <string name="feedback">FEEDBACK</string>
     <string name="votes">MY VOTES</string>
@@ -156,7 +143,6 @@
     <string name="ptr_release_to_refresh">Release to refresh</string>
     <string name="ptr_refreshing">Refreshing…</string>
     <string name="ptr_last_updated">Updated: %1$s</string>
-    <string name="talent_pool">TALENT POOL</string>
     <string name="you_havent_added_any_comment_yet">YOU HAVEN\'T\nADDED ANY\nCOMMENT YET</string>
     <string name="you_havent_added_any_talent_yet">YOU HAVEN\'T\nADDED ANY\nTALENT YET</string>
     <string name="you_have_no_feedback">YOU HAVE\nNO FEEDBACK</string>
@@ -175,15 +161,12 @@
     <string name="who_to_follow">WHO TO FOLLOW</string>
     <string name="skip">SKIP</string>
     <string name="follow">FOLLOW</string>
-    <string name="mobit">MOBITS</string>
-    <string name="liked_mobit">Liked MOBIT</string>
     <string name="bio">BIO</string>
     <string name="update">UPDATES</string>
     <string name="profile">PROFILE</string>
     <string name="ok">OK</string>
     <string name="likes">Likes</string>
     <string name="you_have_no_likes_yet">YOU HAVE\nNO LIKES YET</string>
-    <string name="rank">Rank</string>
     <string name="male">MALE</string>
     <string name="female">FEMALE</string>
     <string name="curve">CURVE</string>
@@ -201,7 +184,6 @@
 	<string name="you_have_no_blog_yet">YOU HAVE\nNO BLOGS YET</string>
 	<string name="to">TO:</string>
 	<string name="start_msg">START\nMESSAGE</string>
-	<string name="message">MESSAGE</string>
 	<string name="enter_msg">ENTER MESSAGE</string>
 	<string name="new_msg">NEW MESSAGE</string>
 	<string name="group_member">GROUP MEMBER</string>
@@ -292,15 +274,10 @@
     <string name="join_title">Associate video</string>
     <!-- strings in imageButton-->
 
-    <string name="move_clip">MOVE CLIP</string>
-    <string name="image_big">IMAGE</string>
     <string name="select_file">SELECT FILE</string>
-    <string name="entry_information_big">ENTRY INFARMATION</string>
     <string name="report_this_entry">REPORT THIS ENTRY</string>
-    <string name="delete_entry_big">DELETE ENTRY</string>
     <string name="login_with_google">LOGIN WITH GOOGLE+</string>
     <string name="login_with_facebook">LOGIN WITH FACEBOOK</string>
-    <string name="edit_info">EDIT INFORMATION</string>
     <string name="capture_now">CAPTURE NOW</string>
     <string name="upload_from_phone">UPLOAD FROM PHONE</string>
     <string name="inappropriate_imagery">INAPPROPRIATE IMAGERY</string>
@@ -308,31 +285,15 @@
     <string name="spam">SPAM</string>
     <string name="other">OTHER</string>
     <string name="audio_clip">AUDIO CLIP</string>
-    <string name="enter_mostar">ENTER MOBSTAR</string>
     <string name="upload_to_profile">UPLOAD TO PROFILE</string>
-    <string name="new_message">NEW MESSAGE</string>
+
     <string name="send_to_friend">SEND TO A FRIEND</string>
     <string name="post_to_facebook">POST TO FACEBOOK</string>
     <string name="add_to_google">ADD TO GOOGLE+</string>
     <string name="tweet_about_this">TWEET ABOUT THIS</string>
-    <string name="you_are_now_following_this_user">YOU ARE NOW FOLLOWING THIS USER</string>
-    <string name="mobstar_would_like_access_your_facebook">MOBSTAR WOULD LIKE TO ACCESS YOUR FACEBOOK ACCOUNT</string>
-    <string name="thank_you_for_giving_your_feedback">THANK YOU FOR GIVING YOUR FEEDBACK</string>
-    <string name="you_just_liked_this_mobit">YOU JUST LIKED THIS MOBIT</string>
+
     <string name="most_popular">MOST POPULAR</string>
-    <string name="reported">REPORTED</string>
-    <string name="your_complaint_will_be_reviewed">YOUR COMPLAINT WILL BE REVIEWED AND DEALT WITH PROMPTLY</string>
-    <string name="this_entry_will_reviewed">THIS ENTRY WILL BE REVIEWED</string>
-    <string name="your_tagline_update">YOUR TAGLINE HAS BEEN UPDATED</string>
-    <string name="your_details_update">YOUR DETAILS HAS BEEN CHANGED</string>
-    <string name="mobile_number_success">MOBILE NUMBER SUCCESSFULLY VERIFIED</string>
-    <string name="mobile_number_succes_update_to">MOBILE NUMBER SUCCESSFULLY UPDATED TO:</string>
-    <string name="is_it_correct">IS IT CORRECT?</string>
-    <string name="count">COUNTRY</string>
-    <string name="is_your_mobile_number_correct">IS YOUR MOBILE NUMBER ABOVE CORRECT?</string>
-    <string name="app_tour">APP TOUR</string>
-    <string name="linked_account">LINKED ACCOUNT</string>
-    <string name="privacy_settings">PRIVACY SETTINGS</string>
+
 
     <string name="take_image">IMAGE</string>
     <string name="edit_information">EDIT INFORMATION</string>
