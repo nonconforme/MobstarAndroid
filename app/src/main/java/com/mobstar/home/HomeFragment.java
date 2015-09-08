@@ -1,10 +1,5 @@
 package com.mobstar.home;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -40,9 +35,15 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-public class HomeFragment extends Fragment {
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-	private Context mContext;
+import java.util.ArrayList;
+
+public class HomeFragment extends Fragment implements OnClickListener {
+
+    private static final String LOG_TAG = HomeFragment.class.getName();
+    private Context mContext;
 
 	SharedPreferences preferences;
 
@@ -60,9 +61,10 @@ public class HomeFragment extends Fragment {
 	private ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
 	private CategoryAdapter categoryAdapter;
 	private Dialog categoryDialog;
-	
+    private ImageView vCategoryButton;
 
-	@Override
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle extras = getArguments();
@@ -144,6 +146,9 @@ public class HomeFragment extends Fragment {
 				LatestPopularDialog();
 			}
 		});
+
+        vCategoryButton = (ImageView) view.findViewById(R.id.btn_category_home);
+        vCategoryButton.setOnClickListener(this);
 
 
 		if (!isDataLoaded) {
@@ -253,7 +258,24 @@ public class HomeFragment extends Fragment {
 		categoryDialog.show();
 	}
 
-	public class CategoryAdapter extends BaseAdapter {
+    @Override
+    public void onClick(View v) {
+        Log.d(LOG_TAG,"onClick");
+        switch (v.getId()){
+            case R.id.btn_category_home:
+                ListView listCategory;
+
+                Dialog continentDialog = new Dialog(getActivity(), R.style.DialogTheme);
+                continentDialog.setContentView(R.layout.dialog_continets);
+                listCategory = (ListView) categoryDialog.findViewById(R.id.listContinents);
+                listCategory.setAdapter(categoryAdapter);
+
+                categoryDialog.show();
+                break;
+        }
+    }
+
+    public class CategoryAdapter extends BaseAdapter {
 
 		private LayoutInflater inflater = null;
 
