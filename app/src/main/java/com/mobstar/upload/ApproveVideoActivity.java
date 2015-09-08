@@ -231,6 +231,10 @@ public class ApproveVideoActivity extends Activity {
 				intent.putExtra("file1", sVideoPath);
 				intent.putExtra("type", "video");
 				intent.putExtra("categoryId",categoryId);
+                if (isSplitVideo) {
+                    intent.putExtra(SplitActivity.ENTRY_SPLIT,entry);
+                }
+
 				if(subCat!=null && subCat.length()>0){
 					intent.putExtra("subCat",subCat);
 				}

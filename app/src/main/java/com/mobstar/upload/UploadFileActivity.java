@@ -30,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.home.split.SplitActivity;
+import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
@@ -56,7 +58,8 @@ import java.util.List;
 
 public class UploadFileActivity extends Activity {
 
-	ArrayList<String> arrayTags = new ArrayList<String>();
+    private static final String LOG_TAG = UploadFileActivity.class.getName();
+    ArrayList<String> arrayTags = new ArrayList<String>();
 	Context mContext;
 
 	TagListAdapter tagListAdapter;
@@ -82,9 +85,10 @@ public class UploadFileActivity extends Activity {
 	private List<String> listHeight;
 	private double cm=2.54;
 	int posHeight=0,posAge=0;
+    private EntryPojo parentSplitEntry;
 
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_upload_file);
@@ -106,6 +110,9 @@ public class UploadFileActivity extends Activity {
 			if(extras.containsKey("subCat")){
 				subCat=extras.getString("subCat");
 			}
+            if(extras.containsKey(SplitActivity.ENTRY_SPLIT)){
+                parentSplitEntry=(EntryPojo) extras.getSerializable(SplitActivity.ENTRY_SPLIT);
+            }
 		}
 
 		Log.d("mobstar","upload category type is=>"+categoryId);
@@ -436,11 +443,17 @@ public class UploadFileActivity extends Activity {
 				}
 				multipartContent.addPart("language", new StringBody("english"));
 				multipartContent.addPart("name", new StringBody(preferences.getString("username", null), chars));
-				//remove quote from string
+                //parent split video id
+                if (parentSplitEntry!=null) {
+                    multipartContent.addPart("splitVideoId", new StringBody(parentSplitEntry.getID() + ""));
+                    Log.d(LOG_TAG,"add splitVideoId="+parentSplitEntry.getID());
+                }
+                //remove quote from string
 				String strTitle=editTitle.getText().toString().trim();
-				String ContentTitle=strTitle.replace("\"","");
-				Log.d("mobstar","new title is=>"+ContentTitle);
+				String ContentTitle = strTitle.replace("\"", "");
+                Log.d("mobstar", "new title is=>" + ContentTitle);
 				multipartContent.addPart("description", new StringBody(StringEscapeUtils.escapeJava(ContentTitle)));
+
 				//if category is 3 model type need to pass following param
 				
 				
@@ -460,6 +473,7 @@ public class UploadFileActivity extends Activity {
 				HttpResponse httpResponse = httpClient.execute(httpPost);
 
 				Log.v(Constant.TAG, "Response code " + httpResponse.getStatusLine());
+				Log.v(LOG_TAG, "Response code " + httpResponse.getStatusLine());
 
 				HttpEntity httpEntity = httpResponse.getEntity();
 				is = httpEntity.getContent();
@@ -491,7 +505,7 @@ public class UploadFileActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(String jsonString) {
-			Log.v(Constant.TAG, "Upload Response " + jsonString);
+			Log.v(LOG_TAG, "Upload Response " + jsonString);
 
 			Utility.HideDialog(mContext);
 
@@ -513,6 +527,9 @@ public class UploadFileActivity extends Activity {
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
+                Log.d(LOG_TAG,"JsonError="+e.toString());
+                setResult(Activity.RESULT_CANCELED);
+                onBackPressed();
 
 			}
 
