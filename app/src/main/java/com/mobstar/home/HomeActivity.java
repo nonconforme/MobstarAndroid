@@ -1,9 +1,6 @@
 package com.mobstar.home;
 
-import java.io.File;
-
-import org.json.JSONObject;
-
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -49,6 +46,10 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import java.io.File;
 
 public class HomeActivity extends ActionBarActivity implements OnClickListener, DrawerListener {
 
@@ -165,6 +166,17 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 		LocalBroadcastManager.getInstance(mContext).registerReceiver(mReceiver, new IntentFilter("notification_count_changed"));
 
 		registerReceiver(mReceiver, new IntentFilter("notification_count_update_from_service"));
+		startHowToVoteActivity();
+	}
+
+	private void startHowToVoteActivity(){
+		final SharedPreferences preferences = getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
+		final boolean isShowingHowToVote = preferences.getBoolean(HowToVoteActivity.HOW_TO_VOTE, true);
+		if (isShowingHowToVote){
+			final Intent intent = new Intent(this, HowToVoteActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		}
 	}
 
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {

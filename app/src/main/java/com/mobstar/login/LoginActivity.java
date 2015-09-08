@@ -1,10 +1,5 @@
 package com.mobstar.login;
 
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -32,6 +27,11 @@ import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
@@ -508,7 +508,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				
 				sendAnalytics();
 				
-				if (!pref.getBoolean("welcome_is_checked", false)) {
+				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
 					Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
 					startActivity(intent);
 					finish();

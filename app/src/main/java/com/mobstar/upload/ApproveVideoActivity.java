@@ -252,7 +252,7 @@ public class ApproveVideoActivity extends Activity {
 		Intent intent;
 		if (isSplitVideo){
 			intent = new Intent(this, SplitActivity.class);
-			intent.putExtra(Constant.ENTRY, entry);
+			intent.putExtra(SplitActivity.ENTRY_SPLIT, entry);
 		}
 		else {
 			intent = new Intent(mContext, RecordVideoActivity.class);

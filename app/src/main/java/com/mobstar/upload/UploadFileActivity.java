@@ -1,5 +1,25 @@
 package com.mobstar.upload;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,30 +50,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
-import com.mobstar.home.split.SplitActivity;
-import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UploadFileActivity extends Activity {
 
@@ -411,7 +409,7 @@ public class UploadFileActivity extends Activity {
 				httpPost.addHeader("X-API-KEY", Constant.API_KEY);
 
 				httpPost.addHeader("X-API-TOKEN", preferences.getString("token", null));
-
+				Charset chars = Charset.forName("UTF-8");
 				MultipartEntity multipartContent = new MultipartEntity();
 
 				String sMimeType = "";
@@ -441,14 +439,13 @@ public class UploadFileActivity extends Activity {
 				Log.d("mobstar","sending post request=> type"+sType+"category="+categoryId+" subCategory= "+subCat +" age="+editAge.getText().toString()+" height="+editHeight.getText().toString()+" language"+"english"+" name"+preferences.getString("username", null)+" description="+editTitle.getText().toString());
 				}
 				multipartContent.addPart("language", new StringBody("english"));
-				multipartContent.addPart("name", new StringBody(preferences.getString("username", null)));
+				multipartContent.addPart("name", new StringBody(preferences.getString("username", null), chars));
                 //parent split video id
                 if (parentSplitEntry!=null) {
                     multipartContent.addPart("splitVideoId", new StringBody(parentSplitEntry.getID() + ""));
                     Log.d(LOG_TAG,"add splitVideoId="+parentSplitEntry.getID());
                 }
-
-				//remove quote from string
+                //remove quote from string
 				String strTitle=editTitle.getText().toString().trim();
 				String ContentTitle = strTitle.replace("\"", "");
                 Log.d("mobstar", "new title is=>" + ContentTitle);
@@ -468,9 +465,7 @@ public class UploadFileActivity extends Activity {
 
 
 				Log.d("mobstar","sending post request=> type"+sType+"category"+categoryId+" language"+"english"+" name"+preferences.getString("username", null)+" description"+editTitle.getText().toString());
-                Log.d(LOG_TAG,"multipartContent="+multipartContent.toString());
 				httpPost.setEntity(multipartContent);
-                Log.d(LOG_TAG, "httpPost=" + httpPost.getURI().toString());
 
 				HttpResponse httpResponse = httpClient.execute(httpPost);
 
@@ -530,6 +525,8 @@ public class UploadFileActivity extends Activity {
 				// TODO: handle exception
 				e.printStackTrace();
                 Log.d(LOG_TAG,"JsonError="+e.toString());
+                setResult(Activity.RESULT_CANCELED);
+                onBackPressed();
 
 			}
 
