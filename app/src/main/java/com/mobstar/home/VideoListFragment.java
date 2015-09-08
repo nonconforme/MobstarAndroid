@@ -979,12 +979,12 @@ public class VideoListFragment extends Fragment {
 					if (!onVoitingSwipeItem)
 						return;
 					onVoitingSwipeItem = false;
-					switch (swipeLayout.getDragEdge()){
+					switch (swipeLayout.getDragEdge()) {
 						case Left:
 
 							if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-								String[] name = { "entry", "type" };
-								String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "down" };
+								String[] name = {"entry", "type"};
+								String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "down"};
 								entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
 //								Utility.DisLikeDialog(getActivity());
 								Log.d("tagLog", "dislike");
@@ -993,7 +993,7 @@ public class VideoListFragment extends Fragment {
 								entryListAdapter.notifyDataSetChanged();
 								mFirstVisibleItem = 0;
 								if (mediaPlayer != null) {
-									if(mediaPlayer.isPlaying())
+									if (mediaPlayer.isPlaying())
 										mediaPlayer.pause();
 
 //										Log.d("mobstar","on imgframe1 going to reset");
@@ -1062,7 +1062,10 @@ public class VideoListFragment extends Fragment {
 				}
 			});
 			setupViews(viewHolder, position);
-			setEnableSplitButton(viewHolder, position, false);
+			if (arrEntryPojos.get(pos).getType().equals("video")) {
+				setEnableSplitButton(viewHolder, position, true);
+			}
+			else setEnableSplitButton(viewHolder, position, false);
 
 
 			viewHolder.btnFollow.setOnClickListener(new OnClickListener() {
