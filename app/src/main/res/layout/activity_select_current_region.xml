@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/background_transparent">
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp" />
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/where_are_you"
+            android:gravity="center"
+            android:textColor="@color/white_color"
+            android:textSize="25sp"/>
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/select_current_region_activity_description"
+            android:textColor="@color/white_color"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioGroup
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/europe"
+                    android:id="@+id/cbEurope"
+                    android:drawableLeft="@drawable/icn_btn_audio"
+                    style="@style/RadioButtonYellow"
+                    android:checked="false" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/south_america"
+                    android:id="@+id/cbSouthAmerica"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    style="@style/RadioButtonYellow"
+                    android:textSize="14sp"
+                    android:singleLine="true"
+                    android:checked="false" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/oceania"
+                    android:id="@+id/cbOceania"
+                    style="@style/RadioButtonYellow"
+                    android:checked="false" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/asia"
+                    android:id="@+id/cbAsia"
+                    style="@style/RadioButtonYellow"
+                    android:checked="false" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/north_america"
+                    android:id="@+id/cbNorthAmerica"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    style="@style/RadioButtonYellow"
+                    android:singleLine="true"
+                    android:checked="false" />
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/africa"
+                    android:id="@+id/cbAfrica"
+                    style="@style/RadioButtonYellow"
+                    android:checked="false" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/change_current_region_message"
+            android:textColor="@color/white_color"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="@dimen/default_big_btn_height"
+            android:text="@string/ok"
+            android:id="@+id/btnOk"
+            android:layout_gravity="center"
+            style="@style/BaseButton.Yellow"
+            android:gravity="center"
+            android:layout_marginBottom="30dp"/>
+
+    </LinearLayout>
+</ScrollView>

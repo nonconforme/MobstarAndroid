@@ -312,4 +312,16 @@
     <string name="swipe_right">Swipe <b>RIGHT</b></string>
     <string name="to_vote_yes">To vote <b>YES</b></string>
 
+    <!--list of continents -->
+    <string name="europe">EUROPE</string>
+    <string name="south_america">SOUTH AMERICA</string>
+    <string name="oceania">OCEANIA</string>
+    <string name="asia">ASIA</string>
+    <string name="north_america">NORTH AMERICA</string>
+    <string name="africa">AFRICA</string>
+
+    <!-- current location activity-->
+    <string name="where_are_you">WHERE ARE YOU?</string>
+    <string name="select_current_region_activity_description">To help us all our users the\ncontent they are most interested in,\nplease choose your home location\n from the regions below:</string>
+    <string name="change_current_region_message">You can change you region anytime in\napp setting</string>
 </resources>
