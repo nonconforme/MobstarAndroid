@@ -1,5 +1,7 @@
 package com.mobstar.pojo;
 
+import com.mobstar.utils.TimeUtility;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -343,5 +345,20 @@ public class EntryPojo implements Serializable {
 	public void setSplitVideoId(String splitVideoId) {
 		this.splitVideoId = splitVideoId;
 	}
+    public void setHeight(String height) {
+        Height = height;
+    }
+
+    public String getHeight() {
+        return Height;
+    }
+
+    public void setAge(String age) {
+        Age = age;
+    }
+
+    public String getAge() {
+        return Age;
+    }
 
 }

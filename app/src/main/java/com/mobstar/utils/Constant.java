@@ -102,6 +102,8 @@ public class Constant {
 	public static String GET_ENTRY= "entry/";
 	
 	public static String GET_CATEGORY= "category";
+
+    public static String GET_CURRENT_SERVER_TIME= "server/time";
 	
 	public static String DELETE_ENTRY="entry/";
 	

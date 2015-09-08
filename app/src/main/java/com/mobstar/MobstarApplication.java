@@ -1,13 +1,13 @@
 package com.mobstar;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.HashMap;
-
 import android.app.Application;
 import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.mobstar.utils.TimeUtility;
+
+import java.util.HashMap;
 
 
 public class MobstarApplication extends Application{
@@ -18,7 +18,8 @@ public class MobstarApplication extends Application{
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		//upload time--please uncomment instabug and uncaught exception handler 
+        new TimeUtility().requestServerTime();
+        //upload time--please uncomment instabug and uncaught exception handler
 //		Instabug.initialize(this).setAnnotationActivityClass(InstabugAnnotationActivity.class).setShowIntroDialog(false).setEnableOverflowMenuItem(false);
 //
 //		androidDefaultUEH = Thread.getDefaultUncaughtExceptionHandler();

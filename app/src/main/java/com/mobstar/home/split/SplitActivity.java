@@ -25,6 +25,7 @@ import java.io.File;
 public class SplitActivity extends Activity {
 
     public static final String ENTRY_SPLIT = "entry split";
+
     private EntryPojo entry;
     private String videoFilePath;
     private OnDownloadFileCompletedListener onDownloadFileCompletedListener;
