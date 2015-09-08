@@ -345,4 +345,12 @@
     <string name="no_voting">No!</string>
 
 
+    // how to vote activity
+    <string name="not_a_fan">Not a fan?</string>
+    <string name="like_it">Like it?</string>
+    <string name="swipe_left">Swipe <b>LEFT</b></string>
+    <string name="to_vote_no">To vote <b>NO</b></string>
+    <string name="swipe_right">Swipe <b>RIGHT</b></string>
+    <string name="to_vote_yes">To vote <b>YES</b></string>
+
 </resources>

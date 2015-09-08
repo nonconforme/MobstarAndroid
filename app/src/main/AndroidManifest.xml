@@ -413,6 +413,12 @@
             android:theme="@style/DialogTheme" >
         </activity>
 
+        <activity
+            android:name=".home.HowToVoteActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+
         <service android:name=".service.NotificationService" />
 
         <!--<activity android:name="eu.janmuller.android.simplecropimage.CropImage" />-->

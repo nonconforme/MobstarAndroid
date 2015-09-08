@@ -11,12 +11,10 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.edmodo.cropper.CropImageView;
@@ -24,7 +22,7 @@ import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.CropBackground;
-import com.mobstar.home.split.ffmpeg.RotationBackground;
+import com.mobstar.home.split.ffmpeg.FFCommandCreator;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -45,8 +43,6 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     private PositionVariant mPositionVariant;
     private ProgressBar progress;
     private Point fullScreenImageSize;
-
-    private String tempRotateFilePth;
 
     public static CropVideoFragment newInstance(final String videoThumb, PositionVariant positionVariant){
         final CropVideoFragment fragment = new CropVideoFragment();
@@ -131,125 +127,36 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener 
     }
 
     private void onClickNext(){
-        final int orientation = getVideoOrientation(mSplitActivity.getVideoFilePath());
-        if (orientation == 0){
-            createCroppedVideoCommand();
-        }else
-            createNormalOrientationVideo(orientation);
+        createComplexVideoCommand();
     }
 
-    private void createNormalOrientationVideo(int _orientation){
-        int rotation = 0;
-        switch (_orientation){
-            case 0:
-                rotation = 0;
-                break;
-            case 90:
-                rotation = 1;
-                break;
-            case 270:
-                rotation = 2;
-                break;
-        }
-
-        tempRotateFilePth = Utility.getTemporaryMediaFile(mSplitActivity, "backRotation").toString();
-        if (tempRotateFilePth == null)
-            return;
-        new RotationBackground(
-                mSplitActivity,
-                mSplitActivity.getVideoFilePath(),
-                tempRotateFilePth,
-                rotation,
-                "308x308",
-                new AfterDoneBackground() {
-                    @Override
-                    public void onAfterDone() {
-                        mSplitActivity.setVideoFilePath(tempRotateFilePth);
-                        createCroppedVideoCommand();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        removeFile(tempRotateFilePth);
-                    }
-                }
-        ).runTranscoding();
-    }
-
-
-    private int getVideoOrientation(final String _videoFilePath){
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(_videoFilePath);
-        String orientation = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
-        if (orientation == null)
-            return 0;
-        return Integer.parseInt(orientation);
-    }
-
-    private void createCroppedVideoCommand(){
+    private void createComplexVideoCommand(){
         final String fileInPath = mSplitActivity.getVideoFilePath();
-        final String fileOutPath = Utility.getTemporaryMediaFile(mSplitActivity, "cropUot").toString();
+        final File file = Utility.getTemporaryMediaFile(mSplitActivity, "cropUot");
+        if (file == null)
+            return;
+        final String fileOutPath = file.toString();
         final Rect rect = getCropRect();
-        final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append("ffmpeg -y -i ")
-                .append(fileInPath)
-                .append(" -strict experimental -vf crop=")
-                .append(rect.right - rect.left - 1)
-                .append(":")
-                .append(rect.bottom - rect.top - 1)
-                .append(":")
-                .append(rect.left)
-                .append(":")
-                .append(rect.top)
-                .append(" -s ")
-                .append(getOutputVideoSizeString())
-                .append(" -vcodec mpeg4 ")
-                .append(fileOutPath);
-        final String cropComplexCommand = stringBuilder.toString();
-        startCropTask(cropComplexCommand, fileOutPath);
+        final String complexCommand = FFCommandCreator.getCropAndRotationComplexCommand(fileInPath, fileOutPath, rect, mPositionVariant);
+        startCropTask(complexCommand, fileOutPath);
     }
 
     private void startCropTask(final String _stringCommand, final String _fileOutPath){
         new CropBackground(mSplitActivity, _stringCommand, new AfterDoneBackground() {
             @Override
             public void onAfterDone() {
-                if (tempRotateFilePth != null)
-                    removeFile(tempRotateFilePth);
                 mSplitActivity.setVideoFilePath(_fileOutPath);
                 mSplitActivity.replaceRecordVideoFragment(mPositionVariant, ivVideoImage.getCroppedImage());
             }
 
             @Override
             public void onCancel() {
-                if (tempRotateFilePth != null)
-                    removeFile(tempRotateFilePth);
                 removeFile(_fileOutPath);
                 mSplitActivity.setDefaultFilePath();
             }
         }).runTranscoding();
     }
 
-    private String getOutputVideoSizeString(){
-        String outSize = "";
-        switch (mPositionVariant){
-            case ORIGIN_LEFT:
-            case ORIGIN_RIGHT:
-                outSize = "154x308";
-                break;
-            case ORIGIN_RIGHT_TOP:
-                outSize = "100x100";
-                break;
-            case ORIGIN_FULLSCREEN:
-                outSize = "308x308";
-                break;
-            case ORIGIN_TOP:
-            case ORIGIN_BOTTOM:
-                outSize = "308x154";
-                break;
-        }
-        return outSize;
-    }
 
     private Rect getCropRect(){
         RectF rectF = ivVideoImage.getActualCropRect();
