@@ -8,14 +8,15 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.mobstar.R;
+import com.mobstar.custom.CheckableView;
 
 /**
  * Created by lipcha on 08.09.15.
  */
-public class SelectCurrentRegionActivity extends Activity implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class SelectCurrentRegionActivity extends Activity implements CheckableView.OnCheckedChangeListener, View.OnClickListener {
 
-//    private CheckBox cbEurope, cbSouthAmerica, cbOceania, cbAsia, cbNorthAmerica, cbAfrica;
-//    private Button btnOk;
+    private CheckableView cbEurope, cbSouthAmerica, cbOceania, cbAsia, cbNorthAmerica, cbAfrica;
+    private Button btnOk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,29 +27,25 @@ public class SelectCurrentRegionActivity extends Activity implements CompoundBut
     }
 
     private void findViews(){
-//        cbEurope         = (Ra) findViewById(R.id.cbEurope);
-//        cbSouthAmerica   = (CheckBox) findViewById(R.id.cbSouthAmerica);
-//        cbOceania        = (CheckBox) findViewById(R.id.cbOceania);
-//        cbAsia           = (CheckBox) findViewById(R.id.cbAsia);
-//        cbNorthAmerica   = (CheckBox) findViewById(R.id.cbNorthAmerica);
-//        cbAfrica         = (CheckBox) findViewById(R.id.cbAfrica);
-//        btnOk            = (Button) findViewById(R.id.btnOk);
+        cbEurope         = (CheckableView) findViewById(R.id.cbEurope);
+        cbSouthAmerica   = (CheckableView) findViewById(R.id.cbSouthAmerica);
+        cbOceania        = (CheckableView) findViewById(R.id.cbOceania);
+        cbAsia           = (CheckableView) findViewById(R.id.cbAsia);
+        cbNorthAmerica   = (CheckableView) findViewById(R.id.cbNorthAmerica);
+        cbAfrica         = (CheckableView) findViewById(R.id.cbAfrica);
+        btnOk            = (Button) findViewById(R.id.btnOk);
     }
 
     private void setListeners(){
-//        cbEurope.setOnCheckedChangeListener(this);
-//        cbSouthAmerica.setOnCheckedChangeListener(this);
-//        cbOceania.setOnCheckedChangeListener(this);
-//        cbAsia.setOnCheckedChangeListener(this);
-//        cbNorthAmerica.setOnCheckedChangeListener(this);
-//        cbAfrica.setOnCheckedChangeListener(this);
-//        btnOk.setOnClickListener(this);
+        cbEurope.setOnCheckedChangeListener(this);
+        cbSouthAmerica.setOnCheckedChangeListener(this);
+        cbOceania.setOnCheckedChangeListener(this);
+        cbAsia.setOnCheckedChangeListener(this);
+        cbNorthAmerica.setOnCheckedChangeListener(this);
+        cbAfrica.setOnCheckedChangeListener(this);
+        btnOk.setOnClickListener(this);
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-    }
 
     @Override
     public void onClick(View v) {
@@ -57,5 +54,10 @@ public class SelectCurrentRegionActivity extends Activity implements CompoundBut
 
                 break;
         }
+    }
+
+    @Override
+    public void onCheckedChange(CheckableView _view, boolean _checked) {
+
     }
 }

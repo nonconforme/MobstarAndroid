@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/background_transparent">
+    android:background="@color/background_transparent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
@@ -36,78 +38,65 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <RadioGroup
+            <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_horizontal">
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp">
 
-                <RadioButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/europe"
+                <com.mobstar.custom.CheckableView
                     android:id="@+id/cbEurope"
-                    android:drawableLeft="@drawable/icn_btn_audio"
-                    style="@style/RadioButtonYellow"
-                    android:checked="false" />
-
-                <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/south_america"
+                    custom:isChowChecked="true"
+                    custom:checkedTitle="@string/europe"/>
+
+                <com.mobstar.custom.CheckableView
                     android:id="@+id/cbSouthAmerica"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp"
-                    style="@style/RadioButtonYellow"
-                    android:textSize="14sp"
-                    android:singleLine="true"
-                    android:checked="false" />
-
-                <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/oceania"
-                    android:id="@+id/cbOceania"
-                    style="@style/RadioButtonYellow"
-                    android:checked="false" />
-            </RadioGroup>
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    custom:checkedTitle="@string/south_america"/>
 
-            <RadioGroup
+                <com.mobstar.custom.CheckableView
+                    android:id="@+id/cbOceania"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    custom:checkedTitle="@string/oceania"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_horizontal">
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="5dp">
 
-                <RadioButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/asia"
+                <com.mobstar.custom.CheckableView
                     android:id="@+id/cbAsia"
-                    style="@style/RadioButtonYellow"
-                    android:checked="false" />
-
-                <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/north_america"
+                    custom:checkedTitle="@string/asia"/>
+
+                <com.mobstar.custom.CheckableView
                     android:id="@+id/cbNorthAmerica"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp"
-                    style="@style/RadioButtonYellow"
-                    android:singleLine="true"
-                    android:checked="false" />
-
-                <RadioButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/africa"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    custom:checkedTitle="@string/north_america"/>
+
+                <com.mobstar.custom.CheckableView
                     android:id="@+id/cbAfrica"
-                    style="@style/RadioButtonYellow"
-                    android:checked="false" />
-            </RadioGroup>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    custom:checkedTitle="@string/africa"
+                    custom:leftImage="@drawable/ic_back"/>
+            </LinearLayout>
         </LinearLayout>
 
         <com.mobstar.custom.CustomTextviewBold
