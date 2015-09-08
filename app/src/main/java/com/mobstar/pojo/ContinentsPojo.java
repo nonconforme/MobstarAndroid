@@ -23,6 +23,6 @@ public class ContinentsPojo {
     }
 
     public enum Continents {
-        ALL_WORLD ,AFRICA, ASIA, EUROPE, SUOTH_AMERICA, OCEANIA,NORTH_AMERICA
+        ALL_WORLD ,AFRICA, ASIA, EUROPE, SOUTH_AMERICA, OCEANIA, NORTH_AMERICA
     }
 }
