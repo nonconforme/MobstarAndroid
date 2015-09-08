@@ -1,12 +1,5 @@
 package com.mobstar.login;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -47,6 +40,13 @@ import com.mobstar.twitter.ImageTwitter.OnCompleteListener;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class LoginSocialActivity extends Activity implements OnClickListener {
 
