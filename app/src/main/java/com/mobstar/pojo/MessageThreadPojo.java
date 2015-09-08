@@ -1,126 +1,141 @@
 package com.mobstar.pojo;
 
+import com.mobstar.utils.TimeUtility;
+
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import android.text.format.DateUtils;
+public class MessageThreadPojo implements Serializable {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-import com.mobstar.utils.Utility;
+    private String ThreadId, messageId, message, senderId, senderprofileImage, senderdisplayName, senderUserName, messageReceived, messageRead;
 
-public class MessageThreadPojo implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    public String getMessageRead() {
+        return messageRead;
+    }
 
-	private String ThreadId,messageId,message,senderId,senderprofileImage,senderdisplayName,senderUserName,messageReceived,messageRead;
+    public void setMessageRead(String messageRead) {
+        this.messageRead = messageRead;
+    }
 
-	public String getMessageRead() {
-		return messageRead;
-	}
-	public void setMessageRead(String messageRead) {
-		this.messageRead = messageRead;
-	}
-	public String getThreadId() {
-		return ThreadId;
-	}
-	public void setThreadId(String threadId) {
-		ThreadId = threadId;
-	}
-	public String getMessage() {
-		return message;
-	}
-	public String getMessageId() {
-		return messageId;
-	}
-	public void setMessageId(String messageId) {
-		this.messageId = messageId;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public String getSenderId() {
-		return senderId;
-	}
-	public void setSenderId(String senderId) {
-		this.senderId = senderId;
-	}
-	public String getSenderprofileImage() {
-		return senderprofileImage;
-	}
-	public void setSenderprofileImage(String senderprofileImage) {
-		this.senderprofileImage = senderprofileImage;
-	}
-	public String getSenderdisplayName() {
-		return senderdisplayName;
-	}
-	public void setSenderdisplayName(String senderdisplayName) {
-		this.senderdisplayName = senderdisplayName;
-	}
-	public String getSenderUserName() {
-		return senderUserName;
-	}
-	public void setSenderUserName(String senderUserName) {
-		this.senderUserName = senderUserName;
-	}
-	public void setMessageReceived(String messageReceived) {
-		this.messageReceived = messageReceived;
-	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	public String getCreated() {
+    public String getThreadId() {
+        return ThreadId;
+    }
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date testDate = null;
-		try {
-			testDate = sdf.parse(messageReceived);
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
+    public void setThreadId(String threadId) {
+        ThreadId = threadId;
+    }
 
-		SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
-		String time = formatter.format(testDate);
+    public String getMessage() {
+        return message;
+    }
 
-		SimpleDateFormat monthFormatter = new SimpleDateFormat("MMM dd");
-		String month = monthFormatter.format(testDate);
+    public String getMessageId() {
+        return messageId;
+    }
 
-		//		String Time=month+" at "+time;
-		return time + "";
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
 
-	}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	public String getMessageReceived() {
+    public String getSenderId() {
+        return senderId;
+    }
 
-		String tempDate = null;
-		Calendar today = Calendar.getInstance();
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		Date gmtTime = null;
+    public String getSenderprofileImage() {
+        return senderprofileImage;
+    }
 
-		try {
-			gmtTime = formatter.parse(messageReceived);// catch exception
+    public void setSenderprofileImage(String senderprofileImage) {
+        this.senderprofileImage = senderprofileImage;
+    }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    public String getSenderdisplayName() {
+        return senderdisplayName;
+    }
 
-		Calendar thatDay = Calendar.getInstance();
-		thatDay.setTime(gmtTime);
+    public void setSenderdisplayName(String senderdisplayName) {
+        this.senderdisplayName = senderdisplayName;
+    }
 
-		long diff = (today.getTimeInMillis() - thatDay.getTimeInMillis()) / 1000;
-		tempDate=Utility.GetDifferenceTime(diff);
+    public String getSenderUserName() {
+        return senderUserName;
+    }
 
-		if(tempDate.equalsIgnoreCase("")){
-			SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
-			tempDate=formatter1.format(gmtTime);
-		}
+    public void setSenderUserName(String senderUserName) {
+        this.senderUserName = senderUserName;
+    }
 
-		return tempDate + "";
-	}
+    public void setMessageReceived(String messageReceived) {
+        this.messageReceived = messageReceived;
+    }
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
+
+    public String getCreated() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date testDate = null;
+        try {
+            testDate = sdf.parse(messageReceived);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+        String time = formatter.format(testDate);
+
+        SimpleDateFormat monthFormatter = new SimpleDateFormat("MMM dd");
+        String month = monthFormatter.format(testDate);
+
+        //		String Time=month+" at "+time;
+        return time + "";
+
+    }
+
+    public String getMessageReceived() {
+
+        String tempDate = null;
+        Calendar today = Calendar.getInstance();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date gmtTime = null;
+
+        try {
+            gmtTime = formatter.parse(messageReceived);// catch exception
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Calendar thatDay = Calendar.getInstance();
+        thatDay.setTime(gmtTime);
+
+        long diff = (today.getTimeInMillis() - thatDay.getTimeInMillis()) / 1000;
+        tempDate = TimeUtility.getDifferenceStringTime(diff);
+
+        if (tempDate.equalsIgnoreCase("")) {
+            SimpleDateFormat formatter1 = new SimpleDateFormat("dd-MM-yyyy");
+            tempDate = formatter1.format(gmtTime);
+        }
+
+        return tempDate + "";
+    }
 }

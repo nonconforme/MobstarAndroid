@@ -1,137 +1,112 @@
 package com.mobstar.pojo;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import com.mobstar.utils.TimeUtility;
 
-import com.mobstar.utils.Utility;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 public class MessagePojo implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	private String threadId,userId,messageContent,profileImage,userName,displayName,messageReceived,coverImage;
-	private ArrayList<ParticipantsPojo> arrParticipants=new ArrayList<ParticipantsPojo>();
-	
-	public ArrayList<ParticipantsPojo> getArrParticipants() {
-		return arrParticipants;
-	}
+    private String threadId, userId, messageContent, profileImage, userName, displayName, messageReceived, coverImage;
+    private ArrayList<ParticipantsPojo> arrParticipants = new ArrayList<ParticipantsPojo>();
 
-	public void setArrParticipants(ArrayList<ParticipantsPojo> arrParticipants) {
-		this.arrParticipants.clear();
-		this.arrParticipants.addAll(arrParticipants);
-	}
+    public ArrayList<ParticipantsPojo> getArrParticipants() {
+        return arrParticipants;
+    }
 
-	public String getCoverImage() {
-		return coverImage;
-	}
+    public void setArrParticipants(ArrayList<ParticipantsPojo> arrParticipants) {
+        this.arrParticipants.clear();
+        this.arrParticipants.addAll(arrParticipants);
+    }
 
-	public void setCoverImage(String coverImage) {
-		this.coverImage = coverImage;
-	}
+    public String getCoverImage() {
+        return coverImage;
+    }
 
-	private int read,messageGroup;
-	
-	public int getMessageGroup() {
-		return messageGroup;
-	}
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
 
-	public void setMessageGroup(int messageGroup) {
-		this.messageGroup = messageGroup;
-	}
+    private int read, messageGroup;
+
+    public int getMessageGroup() {
+        return messageGroup;
+    }
+
+    public void setMessageGroup(int messageGroup) {
+        this.messageGroup = messageGroup;
+    }
 
 
-	public int getRead() {
-		return read;
-	}
+    public int getRead() {
+        return read;
+    }
 
-	public void setRead(int read) {
-		this.read = read;
-	}
+    public void setRead(int read) {
+        this.read = read;
+    }
 
-	public String getMessageReceived() {
+    public String getMessageReceived() {
+        String tempDate = null;
+        tempDate = TimeUtility.getStringTime(TimeUtility.getDiffTime(messageReceived));
+        return tempDate + "";
+    }
 
-		String tempDate = null;
-		Calendar today = Calendar.getInstance();
+    public String getUserId() {
+        return userId;
+    }
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		Date gmtTime = null;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-		try {
-			gmtTime = formatter.parse(messageReceived);// catch exception
+    public String getUserName() {
+        return userName;
+    }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-		Calendar thatDay = Calendar.getInstance();
-		thatDay.setTime(gmtTime);
+    public void setMessageReceived(String messageReceived) {
+        this.messageReceived = messageReceived;
+    }
 
-		long diff = (today.getTimeInMillis() - thatDay.getTimeInMillis()) / 1000;
-		
+    public String getDisplayName() {
+        return displayName;
+    }
 
-		tempDate=Utility.GetStringTime(diff);
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-		return tempDate + "";
-	}
+    public String getThreadId() {
+        return threadId;
+    }
 
-	public String getUserId() {
-		return userId;
-	}
+    public void setThreadId(String threadId) {
+        this.threadId = threadId;
+    }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public String getMessageContent() {
+        return messageContent;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public String getProfileImage() {
+        return profileImage;
+    }
 
-	public void setMessageReceived(String messageReceived) {
-		this.messageReceived = messageReceived;
-	}
-
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
-
-	public String getThreadId() {
-		return threadId;
-	}
-
-	public void setThreadId(String threadId) {
-		this.threadId = threadId;
-	}
-
-	public String getMessageContent() {
-		return messageContent;
-	}
-
-	public void setMessageContent(String messageContent) {
-		this.messageContent = messageContent;
-	}
-
-	public String getProfileImage() {
-		return profileImage;
-	}
-
-	public void setProfileImage(String profileImage) {
-		this.profileImage = profileImage;
-	}
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 
 }
