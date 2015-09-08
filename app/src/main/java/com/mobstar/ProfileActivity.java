@@ -1,16 +1,5 @@
 package com.mobstar;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -40,7 +29,6 @@ import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -54,6 +42,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.custom.CustomTextview;
@@ -74,6 +63,18 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 
 public class ProfileActivity extends Activity implements OnClickListener,AdapterView.OnItemClickListener, StickyListHeadersListView.OnHeaderClickListener,
@@ -267,7 +268,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				{
 					imgUserPic.setImageResource(R.drawable.profile_pic_new);
 				}
-				else 
+				else
 				{
 					imgUserPic.setImageResource(R.drawable.profile_pic_new);
 
@@ -422,7 +423,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		//		childFragmentContent=(FrameLayout)findViewById(R.id.childFragmentContent);
 
-		//		
+		//
 
 		//		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		//		View v = inflater.inflate(R.layout.top_layout, null);
@@ -512,7 +513,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 
 		if(UserDisplayName!=null && UserDisplayName.length()>0){
-			textUserDisplayName.setText(UserDisplayName);	
+			textUserDisplayName.setText(UserDisplayName);
 		}
 		else {
 			textUserDisplayName.setText(UserName);
@@ -520,7 +521,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		if(UserTagline!=null && UserTagline.length()>0){
 			textTagline.setVisibility(View.VISIBLE);
-			textTagline.setText(Utility.unescape_perl_string(UserTagline));	
+			textTagline.setText(Utility.unescape_perl_string(UserTagline));
 		}
 		else {
 			textTagline.setVisibility(View.GONE);
@@ -703,203 +704,9 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		listEntry.setOnScrollListener(new EndlessScrollListener());
 
-		//		listEntry.setOnScrollListener(new EndlessScrollListener() {
-		//			
-		//			@Override
-		//			public void onLoadMore(int page, int totalItemsCount) {
-		//				Log.d("mobstar","api page call1"+page);
-		//				if ( isNextPageAvail && !isPageLoaded) {
-		//					Log.d("mobstar","api page call2 is"+page);
-		//					if(Utility.isNetworkAvailable(mContext)){
-		//						Log.d("mobstar","api call.. on scroll");
-		//						isPageLoaded=true;
-		//						Utility.ShowProgressDialog(mContext, "Loading11111111");
-		//						new EntryCall(UserID,page).start();
-		//					}
-		//					else {
-		//
-		//						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
-		//						Utility.HideDialog(mContext);
-		//					}
-		//
-		//				} 
-		//			}
-		//			
-		//			public void onScrollStateChanged(AbsListView view, int scrollState) {
-		//				// TODO Auto-generated method stub
-		//				isScrolling = true;
-		//				// Log.i(Constant.TAG, "scrolling..." + isScrolling +
-		//				// " scrollState " + scrollState);
-		//				if (scrollState == 0 && !disLikedialog.isShowing() && !Likedialog.isShowing()) {
-		//
-		//					int previousFirstVisibleItem = mFirstVisibleItem;
-		//					//					Log.d("mobstar","priviousvisible"+previousFirstVisibleItem);
-		//
-		//					isVideoSurfaceReady = false;
-		//
-		//					isScrolling = false;
-		//
-		//					//					Log.i(Constant.TAG, "***scrolling stopped..." + isScrolling);
-		//
-		//					mFirstVisibleItem = listEntry.getFirstVisiblePosition();
-		//
-		//					if (listEntry.getChildAt(0) != null) {
-		//						int height = view.getChildAt(0).getHeight();
-		//						int d=(height/2)+ dpToPx(30);
-		//
-		//						//						Log.d("mobstar", "top"+view.getChildAt(0).getTop()+" < "+d);
-		//						////						int d=height/2;
-		//						//						Log.d("mobstar","height"+d);
-		//
-		//
-		//						if (mFirstVisibleItem != 0) {
-		//							mFirstVisibleItem--;
-		//						}
-		//						//						if (view.getChildAt(0).getTop() < -((height / 2)))
-		//						if (view.getChildAt(0).getTop() < -((height / 2))+dpToPx(30)){
-		//							mFirstVisibleItem++;
-		//						}
-		//					}
-		//
-		//					if (previousFirstVisibleItem != mFirstVisibleItem) {
-		//						indexCurrentPlayAudio = -1;
-		//					}
-		//
-		//					//					Log.v(Constant.TAG, "*********mFirstVisibleItem " + mFirstVisibleItem);
-		//					entryListAdapter.notifyDataSetChanged();
-		//
-		//				}
-		//			}
-		//		});
-
-		//		listEntry.setOnScrollListener(new OnScrollListener() {
-		//
-		//
-		//			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		//
-		//
-		//
-		//			}
-		//
-		//			public void onScrollStateChanged(AbsListView view, int scrollState) {
-		//				// TODO Auto-generated method stub
-		//				isScrolling = true;
-		//				// Log.i(Constant.TAG, "scrolling..." + isScrolling +
-		//				// " scrollState " + scrollState);
-		//				if (scrollState == 0 && !disLikedialog.isShowing() && !Likedialog.isShowing()) {
-		//
-		//					int previousFirstVisibleItem = mFirstVisibleItem;
-		//					//					Log.d("mobstar","priviousvisible"+previousFirstVisibleItem);
-		//
-		//					isVideoSurfaceReady = false;
-		//
-		//					isScrolling = false;
-		//
-		//					//					Log.i(Constant.TAG, "***scrolling stopped..." + isScrolling);
-		//
-		//					mFirstVisibleItem = listEntry.getFirstVisiblePosition();
-		//
-		//					if (listEntry.getChildAt(0) != null) {
-		//						int height = view.getChildAt(0).getHeight();
-		//						int d=(height/2)+ dpToPx(30);
-		//
-		//						//						Log.d("mobstar", "top"+view.getChildAt(0).getTop()+" < "+d);
-		//						////						int d=height/2;
-		//						//						Log.d("mobstar","height"+d);
-		//
-		//
-		//						if (mFirstVisibleItem != 0) {
-		//							mFirstVisibleItem--;
-		//						}
-		//						//						if (view.getChildAt(0).getTop() < -((height / 2)))
-		//						if (view.getChildAt(0).getTop() < -((height / 2))+dpToPx(30)){
-		//							mFirstVisibleItem++;
-		//						}
-		//					}
-		//
-		//					if (previousFirstVisibleItem != mFirstVisibleItem) {
-		//						indexCurrentPlayAudio = -1;
-		//					}
-		//
-		//					//					Log.v(Constant.TAG, "*********mFirstVisibleItem " + mFirstVisibleItem);
-		//					entryListAdapter.notifyDataSetChanged();
-		//
-		//				}
-		//			}
-		//		});
-
-
-
-
-
-		//		listEntry.getViewTreeObserver().addOnGlobalLayoutListener(
-		//				new ViewTreeObserver.OnGlobalLayoutListener() {
-		//					@SuppressLint("NewApi")
-		//					@SuppressWarnings("deprecation")
-		//					@Override
-		//					public void onGlobalLayout() {
-		//						onScrollChanged();
-		//
-		//						ViewTreeObserver obs = listEntry.getViewTreeObserver();
-		//						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-		//							obs.removeOnGlobalLayoutListener(this);
-		//						} else {
-		//							obs.removeGlobalOnLayoutListener(this);
-		//						}
-		//					}
-		//				});
-
-		/*listEntry.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//				onScrollChanged();
-			}
-		});*/
-
-
 
 
 	}
-
-	//	private void onScrollChanged() {
-	//		View v = listEntry.getChildAt(0);
-	//		
-	//		int top = (v == null) ? 0 : v.getTop();
-	//		// This check is needed because when the first element reaches the top of the window, the top values from top are not longer valid. 
-	//		if (listEntry.getFirstVisiblePosition() == 0) {
-	//			llSticky.setTranslationY(Math.max(0, mPlaceholderView.getTop() + top));
-	//			int m=mPlaceholderView.getTop()+top;
-	//			Log.d("mobstar","topview"+m);
-	//			Log.d("mobstar","top"+top);
-	//			// Set the image to scroll half of the amount scrolled in the ListView.
-	////			llTop.setTranslationY((top / 2)-150);
-	//			if(top!=0){
-	//				llHeader.setTranslationY((top / 2));	
-	//			}
-	//			else {
-	//				llHeader.setTranslationY((top / 2));
-	//			}
-	//			
-	//		}	
-	//		else {
-	//			if(llSticky.getY()!=0){
-	//				llSticky.setTranslationY(0);
-	//			}
-	//			
-	//		}
-	//	}
-
-	//	private void replaceFragment(Fragment mFragment, String fragmentName) {
-	//
-	//		mFragmentTransaction = mFragmentManager.beginTransaction();
-	//		mFragmentTransaction.replace(R.id.childFragmentContent, mFragment, fragmentName);
-	//		mFragmentTransaction.commitAllowingStateLoss();
-	//	}
 
 	public class CustomSurfaceTextureListener implements SurfaceTextureListener {
 
@@ -985,6 +792,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		private LayoutInflater inflater = null;
 
+		private boolean onVoitingSwipeItem = false;
+
 		public EntryListAdapter() {
 			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -1019,7 +828,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 					return 3;//null data
 				}
 				else {
-					return (arrEntryPojos.get(position).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(position).getCategory().equalsIgnoreCase(MixContactType2)) ? 0 : 1;	
+					return (arrEntryPojos.get(position).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(position).getCategory().equalsIgnoreCase(MixContactType2)) ? 0 : 1;
 				}
 
 			}
@@ -1160,10 +969,115 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
 				viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
 				viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
+				viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
 				convertView.setTag(viewHolder);
 
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
+			}
+
+			if (!arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || !arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
+
+
+				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, convertView.findViewById(R.id.rigthView));
+				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.leftView));
+				viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+					@Override
+					public void onStartOpen(SwipeLayout swipeLayout) {
+
+					}
+
+					@Override
+					public void onOpen(SwipeLayout swipeLayout) {
+						if (!onVoitingSwipeItem)
+							return;
+						onVoitingSwipeItem = false;
+						switch (swipeLayout.getDragEdge()) {
+							case Left:
+								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
+									if (arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
+
+									} else {
+										String[] name = {"entry", "type"};
+										String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "down"};
+										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
+//									if(view!=null && !isFinishing()){
+//										Log.d("mobstar","open dialog dislike");
+//																					Utility.DisLikeDialog(ProfileActivity.this);
+//										DisLikeDialog();
+//									}
+
+
+										mFirstVisibleItem = 0;
+										if (mediaPlayer != null) {
+											mediaPlayer.reset();
+										}
+										indexCurrentPlayAudio = -1;
+//									entryListAdapter.notifyDataSetChanged();
+									}
+
+								}
+
+								swipeLayout.close();
+								break;
+							case Right:
+								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
+									if (arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
+
+									} else {
+										String[] name = {"entry", "type"};
+										String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "up"};
+										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
+										Log.d("mobstar", "imageFrame touch--- likedialog");
+
+//									if(view!=null && !isFinishing()){
+//										Log.d("mobstar","imageFrame touch--- view not null");
+//										Log.d("mobstar","open dialog like");
+//										//													Utility.LikeDialog(ProfileActivity.this);
+//										LikeDialog();
+//
+//									}
+
+										mFirstVisibleItem = 0;
+										if (mediaPlayer != null) {
+											mediaPlayer.reset();
+										}
+										indexCurrentPlayAudio = -1;
+//									entryListAdapter.notifyDataSetChanged();
+
+									}
+
+								}
+								swipeLayout.close();
+
+								break;
+						}
+
+//					entryListAdapter.notifyDataSetChanged();
+					}
+
+					@Override
+					public void onStartClose(SwipeLayout swipeLayout) {
+
+					}
+
+					@Override
+					public void onClose(SwipeLayout swipeLayout) {
+
+					}
+
+					@Override
+					public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
+						onVoitingSwipeItem = true;
+					}
+
+					@Override
+					public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
+
+					}
+				});
+			}else {
+
 			}
 
 			viewHolder.textCommentCount.setText(arrEntryPojos.get(position).getTotalComments());
@@ -1492,7 +1406,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			if (arrEntryPojos.get(position).getType().equals("image")) {
 
 				if(type==1){
-					Picasso.with(mContext).load(R.drawable.indicator_image).into(viewHolder.ivIndicator);	
+					Picasso.with(mContext).load(R.drawable.indicator_image).into(viewHolder.ivIndicator);
 				}
 
 				// Log.v(Constant.TAG, "image position " + position);
@@ -1699,7 +1613,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			} else if (arrEntryPojos.get(position).getType().equals("video")) {
 
 				if(type==1){
-					Picasso.with(mContext).load(R.drawable.indicator_video).into(viewHolder.ivIndicator);	
+					Picasso.with(mContext).load(R.drawable.indicator_video).into(viewHolder.ivIndicator);
 				}
 
 				viewHolder.ivAudioIcon.setVisibility(View.GONE);
@@ -1837,335 +1751,131 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 			}
 
-			viewHolder.imageFrame.setOnTouchListener(new OnTouchListener() {
-
+			viewHolder.imageFrame.setOnClickListener(new OnClickListener() {
 				@Override
-				public boolean onTouch(View view, MotionEvent event) {
-					// TODO Auto-generated method stub
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-
-						touchX = event.getX();
-						touchY = event.getY();
-
-						isMoveDone = false;
-
-						break;
-
-					case MotionEvent.ACTION_UP:
-
-						final float yDistance = Math.abs(touchY - event.getY());
-
-						if (yDistance < Utility.dpToPx(mContext, 5)) {
-							if (arrEntryPojos.get(position).getType().equals("audio") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								//will not fire other feed click // khayti
-								if(indexCurrentPlayAudio == position){
-									if (mediaPlayer != null) {
-										if (mediaPlayer.isPlaying()) {
-											mediaPlayer.pause();
-											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-											viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-											indexCurrentPauseVideo = position;
-										} else {
-											PlayAudio(position);
-											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
-											viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
-											indexCurrentPauseVideo = -1;
-										}
-									} else {
-										PlayAudio(position);
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
-										viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
-										indexCurrentPauseVideo = -1;
-
-									}
+				public void onClick(View v) {
+					if (arrEntryPojos.get(position).getType().equals("audio") && !listDownloadingFile.contains(sFileName)) {
+						//will not fire other feed click // khayti
+						if(indexCurrentPlayAudio == position){
+							if (mediaPlayer != null) {
+								if (mediaPlayer.isPlaying()) {
+									mediaPlayer.pause();
+									viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+									viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
+									indexCurrentPauseVideo = position;
+								} else {
+									PlayAudio(position);
+									viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
+									viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
+									indexCurrentPauseVideo = -1;
 								}
-
-							} else if (arrEntryPojos.get(position).getType().equals("video") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								//will not fire other feed click // khayti
-								if(indexCurrentPlayAudio == position || indexCurrentPauseVideo == position){
-									if (mediaPlayer != null) {
-										if (mediaPlayer.isPlaying()) {
-											mediaPlayer.pause();
-											indexCurrentPauseVideo = position;
-											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-											viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-										} else {
-											// isVideoSurfaceReady = false;
-											// Log.v(Constant.TAG,
-											// "imageFrame ACTION_UP1");
-											indexCurrentPauseVideo = -1;
-											isVideoSurfaceReady = true;
-											notifyDataSetChanged();
-										}
-									} else {
-
-										// isVideoSurfaceReady = false;
-										// Log.v(Constant.TAG,
-										// "imageFrame ACTION_UP2");
-										indexCurrentPlayAudio = -1;
-										indexCurrentPauseVideo = -1;
-
-										isVideoSurfaceReady = true;
-										notifyDataSetChanged();
-									}
-								}
+							} else {
+								PlayAudio(position);
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
+								viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
+								indexCurrentPauseVideo = -1;
 
 							}
 						}
 
-						break;
-
-					case MotionEvent.ACTION_MOVE:
-
-						final float yDistance1 = Math.abs(touchY - event.getY());
-
-						if (yDistance1 < Utility.dpToPx(mContext, 50) && !isMoveDone) {
-
-							if (touchX > event.getX() + Utility.dpToPx(mContext, 100)) {
-
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									if(arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)){
-
-									}
-									else {
-										String[] name = { "entry", "type" };
-										String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "down" };
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-										if(view!=null && !isFinishing()){
-											Log.d("mobstar","open dialog dislike");
-											//											Utility.DisLikeDialog(ProfileActivity.this);
-											DisLikeDialog();
-										}
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-										entryListAdapter.notifyDataSetChanged();
-									}
-
-
-
-
+					} else if (arrEntryPojos.get(position).getType().equals("video") && !listDownloadingFile.contains(sFileName)) {
+						//will not fire other feed click // khayti
+						if(indexCurrentPlayAudio == position || indexCurrentPauseVideo == position){
+							if (mediaPlayer != null) {
+								if (mediaPlayer.isPlaying()) {
+									mediaPlayer.pause();
+									indexCurrentPauseVideo = position;
+									viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+									viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
+								} else {
+									// isVideoSurfaceReady = false;
+									// Log.v(Constant.TAG,
+									// "imageFrame ACTION_UP1");
+									indexCurrentPauseVideo = -1;
+									isVideoSurfaceReady = true;
+									notifyDataSetChanged();
 								}
+							} else {
 
-							} else if (touchX < event.getX() - Utility.dpToPx(mContext, 100)) {
+								// isVideoSurfaceReady = false;
+								// Log.v(Constant.TAG,
+								// "imageFrame ACTION_UP2");
+								indexCurrentPlayAudio = -1;
+								indexCurrentPauseVideo = -1;
 
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									if(arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)){
-
-									}
-									else{
-										String[] name = { "entry", "type" };
-										String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "up" };
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-										Log.d("mobstar","imageFrame touch--- likedialog");
-
-										if(view!=null && !isFinishing()){
-											Log.d("mobstar","imageFrame touch--- view not null");
-											Log.d("mobstar","open dialog like");
-											//													Utility.LikeDialog(ProfileActivity.this);
-											LikeDialog();
-
-										}
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-
-										entryListAdapter.notifyDataSetChanged();
-
-									}
-
-								}
+								isVideoSurfaceReady = true;
+								notifyDataSetChanged();
 							}
 						}
 
-						break;
-					default:
-						break;
 					}
-
-					return true;
-
 				}
 			});
 
-			viewHolder.textureView.setOnTouchListener(new OnTouchListener() {
-
+			viewHolder.textureView.setOnClickListener(new OnClickListener() {
 				@Override
-				public boolean onTouch(View view, MotionEvent event) {
-					// TODO Auto-generated method stub
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
+				public void onClick(View v) {
+					if (arrEntryPojos.get(position).getType().equals("video") && !listDownloadingFile.contains(sFileName)) {
+						if (mediaPlayer != null) {
+							if (mediaPlayer.isPlaying()) {
+								mediaPlayer.pause();
 
-						touchX = event.getX();
-						touchY = event.getY();
+								indexCurrentPauseVideo = position;
 
-						isMoveDone = false;
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+								viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
 
-						break;
+							} else {
 
-					case MotionEvent.ACTION_UP:
+								indexCurrentPauseVideo = -1;
 
-						final float yDistance = Math.abs(touchY - event.getY());
+								isVideoSurfaceReady = true;
+								entryListAdapter.notifyDataSetChanged();
 
-						if (yDistance < Utility.dpToPx(mContext, 5)) {
-							if (arrEntryPojos.get(position).getType().equals("video") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								if (mediaPlayer != null) {
-									if (mediaPlayer.isPlaying()) {
-										mediaPlayer.pause();
-
-										indexCurrentPauseVideo = position;
-
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-										viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-
-									} else {
-
-										indexCurrentPauseVideo = -1;
-
-										isVideoSurfaceReady = true;
-										entryListAdapter.notifyDataSetChanged();
-
-										// Log.v(Constant.TAG,
-										// "textureView ACTION_UP1");
-									}
-								} else {
-									indexCurrentPlayAudio = -1;
-									indexCurrentPauseVideo = -1;
-									isVideoSurfaceReady = true;
-									entryListAdapter.notifyDataSetChanged();
-
-									// Log.v(Constant.TAG,
-									// "textureView ACTION_UP2");
-
-								}
+								// Log.v(Constant.TAG,
+								// "textureView ACTION_UP1");
 							}
-							else if(arrEntryPojos.get(position).getType().equals("audio") && !listDownloadingFile.contains(sFileName) && !isMoveDone){
-								if (mediaPlayer != null) {
-									if (mediaPlayer.isPlaying()) {
-										mediaPlayer.pause();
+						} else {
+							indexCurrentPlayAudio = -1;
+							indexCurrentPauseVideo = -1;
+							isVideoSurfaceReady = true;
+							entryListAdapter.notifyDataSetChanged();
 
-										indexCurrentPauseVideo = position;
-										Log.d("mobstar","audio pause 2");
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-										viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-
-									} else {
-										Log.d("mobstar","go for play3");
-										PlayAudio(position);
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
-										viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
-										indexCurrentPauseVideo = -1;
-										//										 Log.v(Constant.TAG,
-										//										 "textureView ACTION_UP1");
-									}
-								} else {
-									indexCurrentPlayAudio = -1;
-									indexCurrentPauseVideo = -1;
-									isVideoSurfaceReady = true;
-									entryListAdapter.notifyDataSetChanged();
-
-									//									 Log.v(Constant.TAG,
-									//									 "textureView ACTION_UP2");
-
-								}
-							}
+							// Log.v(Constant.TAG,
+							// "textureView ACTION_UP2");
 
 						}
-
-						break;
-
-					case MotionEvent.ACTION_MOVE:
-
-						final float yDistance1 = Math.abs(touchY - event.getY());
-
-						if (yDistance1 < Utility.dpToPx(mContext, 50) && !isMoveDone) {
-
-							if (touchX > event.getX() + Utility.dpToPx(mContext, 100)) {
-
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-
-									if(arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)){
-
-									}
-									else {
-										String[] name = { "entry", "type" };
-										String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "down" };
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-										if(view!=null && !isFinishing()){
-											Log.d("mobstar","open dialog dislike");
-											//											Utility.DisLikeDialog(ProfileActivity.this);
-											DisLikeDialog();
-										}
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-
-										entryListAdapter.notifyDataSetChanged();
-									}
-
-								}
-
-							} else if (touchX < event.getX() - Utility.dpToPx(mContext, 100)) {
-
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-
-									if(arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)){
-
-									}
-									else {
-										String[] name = { "entry", "type" };
-										String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "up" };
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-										Log.d("mobstar","texttureview touch-- open likedialog");
-										if(view!=null){
-											Log.d("mobstar","texttureview touch-- view not null");
-											if(view!=null && !isFinishing()){
-												Log.d("mobstar","open dialog like");
-												//												Utility.LikeDialog(ProfileActivity.this);
-												LikeDialog();
-											}
-
-										}
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-
-										entryListAdapter.notifyDataSetChanged();
-
-									}
-
-								}
-							}
-						}
-
-						break;
-					default:
-						break;
 					}
+					else if(arrEntryPojos.get(position).getType().equals("audio") && !listDownloadingFile.contains(sFileName)){
+						if (mediaPlayer != null) {
+							if (mediaPlayer.isPlaying()) {
+								mediaPlayer.pause();
 
-					return true;
+								indexCurrentPauseVideo = position;
+								Log.d("mobstar","audio pause 2");
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+								viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
 
+							} else {
+								Log.d("mobstar","go for play3");
+								PlayAudio(position);
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
+								viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
+								indexCurrentPauseVideo = -1;
+								//										 Log.v(Constant.TAG,
+								//										 "textureView ACTION_UP1");
+							}
+						} else {
+							indexCurrentPlayAudio = -1;
+							indexCurrentPauseVideo = -1;
+							isVideoSurfaceReady = true;
+							entryListAdapter.notifyDataSetChanged();
+
+							//									 Log.v(Constant.TAG,
+							//									 "textureView ACTION_UP2");
+
+						}
+					}
 				}
 			});
 
@@ -2305,6 +2015,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			ImageView imgMsg,ivIndicator;
 			TextView tvLikeText;
 			ImageView ivLike;
+			SwipeLayout swipeLayout;
 		}
 
 		class ViewHolderProfile {

@@ -1,7 +1,5 @@
 package com.mobstar.upload;
 
-import java.io.File;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -31,6 +29,8 @@ import com.mobstar.home.split.SplitActivity;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
+
+import java.io.File;
 
 public class ApproveVideoActivity extends Activity {
 	public static final String APPROVE_SPLIT_VIDEO = "approve split video";

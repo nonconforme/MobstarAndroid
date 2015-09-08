@@ -1,7 +1,5 @@
 package com.mobstar.login;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +23,8 @@ import com.mobstar.home.HomeActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
+
+import org.json.JSONObject;
 
 public class SignUpActivity extends Activity implements OnClickListener {
 
