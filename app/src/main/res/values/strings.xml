@@ -336,5 +336,5 @@
     <!--</string-array>-->
 
     <string name="no_select_current_region_message">Please, choose a continent</string>
-    <string name="please_wait">Please wait…</string>
+    <string name="location_settings">LOCATION SETTINGS</string>
 </resources>

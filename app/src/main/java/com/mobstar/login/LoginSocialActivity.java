@@ -633,7 +633,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 	}
 
 	private void getUserAccountRequest(){
-		Utility.ShowProgressDialog(mContext, getString(R.string.please_wait));
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
 			@Override
 			public void onSuccess(UserAccountResponse object) {

@@ -27,17 +27,22 @@ import com.mobstar.api.responce.UserAccountResponse;
  */
 public class SelectCurrentRegionActivity extends Activity implements CheckableView.OnCheckedChangeListener, View.OnClickListener {
 
+    public static final String START_HOME_ACTIVITY = "start_home_activity";
+
     private CheckableView cbEurope, cbSouthAmerica, cbOceania, cbAsia, cbNorthAmerica, cbAfrica;
     private Button btnOk;
     private CheckableView checkedRegionView;
     private Toast mToast;
     private ProgressDialog progressDialog;
+    private boolean startHomeActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_current_region);
         findViews();
+        final Intent intent = getIntent();
+        startHomeActivity = intent.getBooleanExtra(START_HOME_ACTIVITY, true);
         setListeners();
         assignedContinents();
     }
@@ -112,8 +117,10 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
     }
 
     private void startHomeActivity(){
-        final Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+        if (startHomeActivity) {
+            final Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        }
         finish();
     }
 
@@ -150,7 +157,7 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
     private void showProgress(){
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.please_wait));
+        progressDialog.setMessage(getString(R.string.loading));
         progressDialog.show();
     }
 

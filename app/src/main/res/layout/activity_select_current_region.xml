@@ -15,7 +15,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageView3"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/all_continents"/>
 
         <com.mobstar.custom.CustomTextviewBold
             android:layout_width="match_parent"
@@ -52,6 +53,7 @@
                     android:layout_height="wrap_content"
                     custom:heightCheckableView="@dimen/checked_view_height"
                     custom:isChowChecked="false"
+                    custom:leftImage="@drawable/europe"
                     custom:checkedTitle="@string/europe"/>
 
                 <com.mobstar.custom.CheckableView
@@ -61,6 +63,7 @@
                     android:layout_marginBottom="15dp"
                     android:layout_marginTop="15dp"
                     custom:heightCheckableView="@dimen/checked_view_height"
+                    custom:leftImage="@drawable/south_america"
                     custom:checkedTitle="@string/south_america"/>
 
                 <com.mobstar.custom.CheckableView
@@ -68,6 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     custom:heightCheckableView="@dimen/checked_view_height"
+                    custom:leftImage="@drawable/oceania"
                     custom:checkedTitle="@string/oceania"/>
             </LinearLayout>
 
@@ -84,6 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     custom:heightCheckableView="@dimen/checked_view_height"
+                    custom:leftImage="@drawable/asia"
                     custom:checkedTitle="@string/asia"/>
 
                 <com.mobstar.custom.CheckableView
@@ -93,6 +98,7 @@
                     android:layout_marginBottom="15dp"
                     android:layout_marginTop="15dp"
                     custom:heightCheckableView="@dimen/checked_view_height"
+                    custom:leftImage="@drawable/north_america"
                     custom:checkedTitle="@string/north_america"/>
 
                 <com.mobstar.custom.CheckableView
@@ -100,6 +106,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     custom:heightCheckableView="@dimen/checked_view_height"
+                    custom:leftImage="@drawable/africa"
                     custom:checkedTitle="@string/africa"/>
             </LinearLayout>
         </LinearLayout>

@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-import api.responce.ContinentFilterResponse;
+import com.mobstar.api.responce.ContinentFilterResponse;
 
 public class HomeFragment extends Fragment implements OnClickListener {
 
@@ -300,7 +300,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
     private void showProgress(){
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.please_wait));
+        progressDialog.setMessage(getString(R.string.loading));
         progressDialog.show();
     }
 
