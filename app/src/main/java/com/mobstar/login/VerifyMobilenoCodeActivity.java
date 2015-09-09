@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import com.mobstar.R;
 import com.mobstar.home.HomeActivity;
+import com.mobstar.login.VerifyMobileNoActivity.VerifyMobileCall;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -18,6 +19,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -183,7 +185,7 @@ public class VerifyMobilenoCodeActivity extends Activity implements OnClickListe
 			}
 
 			if (isValid) {
-				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+				Utility.ShowProgressDialog(mContext, "Loading");
 				sErrorMessage = "";
 
 				if (Utility.isNetworkAvailable(mContext)) {
@@ -191,7 +193,7 @@ public class VerifyMobilenoCodeActivity extends Activity implements OnClickListe
 					new VerifyMobileCodeCall(code).start();
 
 				} else {
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			}

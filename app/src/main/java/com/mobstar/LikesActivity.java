@@ -80,14 +80,14 @@ public class LikesActivity extends Activity {
 		likeAdapter = new LikesAdapter();
 		listUser.setAdapter(likeAdapter);
 
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		if (Utility.isNetworkAvailable(mContext)) {
 			new LikeCall().start();
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 	}
@@ -115,7 +115,7 @@ public class LikesActivity extends Activity {
 //						
 //					}
 					if(response.equalsIgnoreCase("error")){
-						sErrorMessage=getString(R.string.no_entries_found);
+						sErrorMessage="No Entries Found";
 					}
 					else {
 						JSONArray jsonArrayStars = new JSONArray(response);

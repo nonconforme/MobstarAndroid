@@ -84,7 +84,7 @@ public class TalentConnectCommentActivity extends Activity {
 					currentPage=1;
 					new CommentsCall(UserID,currentPage).start();
 				} else {
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -103,7 +103,7 @@ public class TalentConnectCommentActivity extends Activity {
 		commentListAdapter = new CommentListAdapter();
 		listComment.setAdapter(commentListAdapter);
 
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		if (Utility.isNetworkAvailable(mContext)) {
 
@@ -111,7 +111,7 @@ public class TalentConnectCommentActivity extends Activity {
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -140,13 +140,13 @@ public class TalentConnectCommentActivity extends Activity {
 					}
 				}
 				if (!loading && !isWebCall && isNextPageAvail && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+					Utility.ShowProgressDialog(mContext, "Loading");
 					isWebCall = true;
 					currentPage++;
 					if (Utility.isNetworkAvailable(mContext)) {
 						new CommentsCall(UserID,currentPage).start();
 					} else {
-						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 					loading = true;

@@ -7,16 +7,16 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
 import com.mobstar.R;
-import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.utils.Utility;
 
 public class SelectMediaTypeActivity extends Activity implements OnClickListener {
 
 	Context mContext;
 
-	CustomTextviewBold btnBack, btnImage, btnAudioClip, btnMovieClip;
+	ImageView btnBack, btnImage, btnAudioClip, btnMovieClip;
 
 	Typeface typefaceBtn;
 
@@ -49,17 +49,17 @@ public class SelectMediaTypeActivity extends Activity implements OnClickListener
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 
-		btnBack = (CustomTextviewBold) findViewById(R.id.btnBack);
+		btnBack = (ImageView) findViewById(R.id.btnBack);
 
 		btnBack.setOnClickListener(this);
 
-		btnImage = (CustomTextviewBold) findViewById(R.id.btnImage);
+		btnImage = (ImageView) findViewById(R.id.btnImage);
 		btnImage.setOnClickListener(this);
 
-		btnAudioClip = (CustomTextviewBold) findViewById(R.id.btnAudioClip);
+		btnAudioClip = (ImageView) findViewById(R.id.btnAudioClip);
 		btnAudioClip.setOnClickListener(this);
 
-		btnMovieClip = (CustomTextviewBold) findViewById(R.id.btnMovieClip);
+		btnMovieClip = (ImageView) findViewById(R.id.btnMovieClip);
 		btnMovieClip.setOnClickListener(this);
 
 		if(subCat!=null && subCat.length()>0){

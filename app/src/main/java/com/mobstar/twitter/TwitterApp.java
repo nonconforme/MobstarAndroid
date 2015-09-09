@@ -14,14 +14,15 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
-
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Window;
 
-import com.mobstar.R;
+import com.mobstar.utils.Constant;
 
 public class TwitterApp {
 	private Twitter mTwitter;
@@ -131,7 +132,7 @@ public class TwitterApp {
 	}
 
 	public void authorize() {
-		mProgressDlg.setMessage(context.getString(R.string.initializing));
+		mProgressDlg.setMessage("Initializing ...");
 		mProgressDlg.show();
 
 		new Thread() {
@@ -152,7 +153,7 @@ public class TwitterApp {
 	}
 
 	public void processToken(String callbackUrl) {
-		mProgressDlg.setMessage(context.getString(R.string.finalizing));
+		mProgressDlg.setMessage("Finalizing ...");
 		mProgressDlg.show();
 
 		final String verifier = getVerifier(callbackUrl);
@@ -223,7 +224,7 @@ public class TwitterApp {
 			}
 
 			public void onError(String value) {
-				mListener.onError(context.getString(R.string.failed_opening_authorization_page));
+				mListener.onError("Failed opening authorization page");
 			}
 		};
 
@@ -237,9 +238,9 @@ public class TwitterApp {
 
 			if (msg.what == 1) {
 				if (msg.arg1 == 1)
-					mListener.onError(context.getString(R.string.error_request_token));
+					mListener.onError("Error getting request token");
 				else
-					mListener.onError(context.getString(R.string.error_access_token));
+					mListener.onError("Error getting access token");
 			} else {
 				if (msg.arg1 == 1)
 					showLoginDialog((String) msg.obj);

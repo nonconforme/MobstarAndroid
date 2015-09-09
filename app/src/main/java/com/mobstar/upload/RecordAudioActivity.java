@@ -9,6 +9,7 @@ import android.graphics.drawable.ClipDrawable;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 public class RecordAudioActivity extends Activity implements OnClickListener {

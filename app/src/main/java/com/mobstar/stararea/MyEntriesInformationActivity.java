@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.R;
-import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.info.report.InformationDetailActivity;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Utility;
@@ -18,7 +18,7 @@ public class MyEntriesInformationActivity extends Activity {
 
 	Context mContext;
 
-	CustomTextviewBold btnEditInformation, btnEntryInformation, btnDeleteEntry;
+	ImageView btnEditInformation, btnEntryInformation, btnDeleteEntry;
 
 	EntryPojo entryPojo;
 
@@ -50,7 +50,7 @@ public class MyEntriesInformationActivity extends Activity {
 		textDescription.setText(entryPojo.getDescription());
 		textTime.setText(entryPojo.getCreated());
 
-		btnEditInformation = (CustomTextviewBold) findViewById(R.id.btnEditInformation);
+		btnEditInformation = (ImageView) findViewById(R.id.btnEditInformation);
 		btnEditInformation.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -64,7 +64,7 @@ public class MyEntriesInformationActivity extends Activity {
 			}
 		});
 
-		btnEntryInformation = (CustomTextviewBold) findViewById(R.id.btnEntryInformation);
+		btnEntryInformation = (ImageView) findViewById(R.id.btnEntryInformation);
 		btnEntryInformation.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -79,7 +79,7 @@ public class MyEntriesInformationActivity extends Activity {
 			}
 		});
 
-		btnDeleteEntry = (CustomTextviewBold) findViewById(R.id.btnDeleteEntry);
+		btnDeleteEntry = (ImageView) findViewById(R.id.btnDeleteEntry);
 		btnDeleteEntry.setOnClickListener(new OnClickListener() {
 
 			@Override

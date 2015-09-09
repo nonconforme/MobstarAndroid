@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/splash_bg"
@@ -8,15 +9,13 @@
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_height="wrap_content" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -45,46 +44,39 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/login_social_text" />
 
-            <com.mobstar.custom.CustomTextview
+            <ImageView
                 android:id="@+id/btnLoginGoogle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:contentDescription="@string/app_name"
-                android:text="@string/login_with_google"
-                android:drawableRight="@drawable/icn_btn_add_to_gplus"
-                style="@style/BaseButton.Yellow.NoBold"
-                 />
+                android:src="@drawable/login_google" />
 
-            <com.mobstar.custom.CustomTextview
+            <ImageView
                 android:id="@+id/btnLoginFB"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/app_name"
-                android:text="@string/login_with_facebook"
-                android:drawableRight="@drawable/icn_fb"
-                style="@style/BaseButton.Yellow.NoBold"/>
+                android:src="@drawable/login_fb" />
 
-            <com.mobstar.custom.CustomTextviewBold
+            <ImageView
                 android:id="@+id/btnCountinueWOSignin"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/app_name"
-                android:text="@string/continue_without_signing_in"
-                android:visibility="gone"
-                style="@style/BaseButton.Gray"/>
+                android:src="@drawable/countinue_wo_signin"
+                android:visibility="gone" />
 
-            <com.mobstar.custom.CustomTextview
+            <ImageView
                 android:id="@+id/btnLoginTwitter"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/app_name"
-                android:text="@string/login_with_twitter"
-                android:visibility="gone"
-                style="@style/BaseButton.Yellow.NoBold"/>
+                android:src="@drawable/login_twt"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"

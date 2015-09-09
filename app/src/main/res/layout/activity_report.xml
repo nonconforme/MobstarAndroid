@@ -83,52 +83,36 @@
         android:textColor="@color/white_color"
         android:textSize="18sp" />
 
-    <com.mobstar.custom.CustomTextviewBold
+    <ImageView
         android:id="@+id/btnInAppropriateImage"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:text="@string/inappropriate_imagery"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/icn_btn_inappropriate_image"
-        style="@style/BaseButton.Gray"/>
+        android:src="@drawable/btn_inappropriate_image" />
 
-    <com.mobstar.custom.CustomTextviewBold
+    <ImageView
         android:id="@+id/btnInAppropriateLanguage"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:text="@string/inappropriate_language"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/icn_btn_inappropriate_language"
-        style="@style/BaseButton.Gray"/>
+        android:src="@drawable/btn_inappropriate_language" />
 
-    <com.mobstar.custom.CustomTextviewBold
+    <ImageView
         android:id="@+id/btnSpam"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:text="@string/spam"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/icn_btn_spam"
-        style="@style/BaseButton.Gray"/>
+        android:src="@drawable/btn_spam" />
 
-    <com.mobstar.custom.CustomTextviewBold
+    <ImageView
         android:id="@+id/btnOthers"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:text="@string/other"
-        android:drawableLeft="@drawable/icn_btn_others"
-        style="@style/BaseButton.Gray"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
+        android:src="@drawable/btn_others" />
 
 </LinearLayout>

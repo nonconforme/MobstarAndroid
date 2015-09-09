@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -23,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.info.report.InformationDetailActivity;
+import com.mobstar.settings.PersonDetailsActivity.UpdateCall;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -159,7 +162,7 @@ public class ChangePasswordActivity extends Activity implements OnClickListener 
 
 			if (editOldPassword.getText().toString().trim().length() == 0) {
 				editOldPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textOldPasswordHint.setText(getString(R.string.enter_old_password));
+				textOldPasswordHint.setText("Enter Old Password");
 				textOldPasswordHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -169,7 +172,7 @@ public class ChangePasswordActivity extends Activity implements OnClickListener 
 
 			if (editNewPassword.getText().toString().trim().length() == 0) {
 				editNewPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textNewPasswordHint.setText(getString(R.string.enter_new_password));
+				textNewPasswordHint.setText("Enter New Password");
 				textNewPasswordHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -179,12 +182,12 @@ public class ChangePasswordActivity extends Activity implements OnClickListener 
 
 			if (editConfirmPassword.getText().toString().trim().length() == 0) {
 				editConfirmPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textConfirmPasswordHint.setText(getString(R.string.enter_confirm_password));
+				textConfirmPasswordHint.setText("Enter Confirm Password");
 				textConfirmPasswordHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else if (!editConfirmPassword.getText().toString().trim().equals(editNewPassword.getText().toString().trim())) {
 				editConfirmPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textConfirmPasswordHint.setText(getString(R.string.password_not_match));
+				textConfirmPasswordHint.setText("Password not match");
 				textConfirmPasswordHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -193,12 +196,12 @@ public class ChangePasswordActivity extends Activity implements OnClickListener 
 			}
 
 			if (isValid) {
-				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+				Utility.ShowProgressDialog(mContext, "Loading");
 				if (Utility.isNetworkAvailable(mContext)) {
 					new UpdateCall(editNewPassword.getText().toString().trim()).start();
 				} else {
 
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			}

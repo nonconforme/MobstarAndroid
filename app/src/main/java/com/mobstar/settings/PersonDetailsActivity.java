@@ -17,6 +17,7 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.info.report.InformationDetailActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -165,7 +167,7 @@ public class PersonDetailsActivity extends Activity implements OnClickListener {
 			if (editFullName.getText().toString().trim().length() == 0) {
 
 				editFullName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textFullNameHint.setText(getString(R.string.enter_full_name));
+				textFullNameHint.setText("Enter FullName");
 				textFullNameHint.setVisibility(View.VISIBLE);
 
 				isValid = false;
@@ -176,12 +178,12 @@ public class PersonDetailsActivity extends Activity implements OnClickListener {
 
 			if (editEmail.getText().toString().trim().length() == 0) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText(getString(R.string.enter_email_address));
+				textEmailHint.setText("Enter Email Address");
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else if (!Utility.IsValidEmail(editEmail)) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText(getString(R.string.enter_valid_email_address));
+				textEmailHint.setText("Enter Valid Email Address");
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -191,7 +193,7 @@ public class PersonDetailsActivity extends Activity implements OnClickListener {
 
 			if (editDisplayName.getText().toString().trim().length() == 0) {
 				editDisplayName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textDisplayNameHint.setText(getString(R.string.enter_display_name));
+				textDisplayNameHint.setText("Enter Display Name");
 				textDisplayNameHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -200,12 +202,12 @@ public class PersonDetailsActivity extends Activity implements OnClickListener {
 			}
 
 			if (isValid) {
-				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+				Utility.ShowProgressDialog(mContext, "Loading");
 				if (Utility.isNetworkAvailable(mContext)) {
 					new UpdateCall(editFullName.getText().toString().trim(), editEmail.getText().toString().trim(), editDisplayName.getText().toString().trim()).start();
 				} else {
 
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			}

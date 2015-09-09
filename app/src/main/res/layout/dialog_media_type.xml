@@ -23,20 +23,18 @@
             android:textColor="@color/white_color"
             android:textSize="22sp" />
 
-        <com.mobstar.custom.CustomTextviewBold
+        <LinearLayout
             android:id="@+id/llMovieClip"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/default_big_btn_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="30dp"
-            android:text="@string/movie_clip"
-            android:orientation="horizontal"
-            android:drawableLeft="@drawable/icn_btn_enter_mabstar"
-            style="@style/BaseButton.Yellow">
+            android:background="@drawable/btn_movieclip"
+            android:orientation="horizontal" >
 
-        </com.mobstar.custom.CustomTextviewBold>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,15 +44,13 @@
             android:gravity="bottom"
             android:orientation="vertical" >
 
-            <com.mobstar.custom.CustomTextviewBold
+            <Button
                 android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/back"
-                android:gravity="center_vertical|center_horizontal"
-                android:drawableLeft="@drawable/icn_btn_back"
-                style="@style/BaseButton.Gray"/>
+                android:background="@drawable/btn_back"
+                android:gravity="center_vertical|center_horizontal" />
 
         </LinearLayout>
 

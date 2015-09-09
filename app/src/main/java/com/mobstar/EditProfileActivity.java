@@ -1,11 +1,17 @@
 package com.mobstar;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,7 +69,7 @@ public class EditProfileActivity extends Activity {
 	Context mContext;
 	TextView textEditProfile;
 
-//	String[] arrayChangePicture = { getString(R.string.take_from_camera), getString(R.string.choose_from_library)};
+	String[] arrayChangePicture = { "Take From camera", "Choose from Library" };
 	Uri tempUri;
 
 	ImageView imgProfilePic, imgCoverImage, imgTagLine,imgAddContent;
@@ -175,8 +181,7 @@ public class EditProfileActivity extends Activity {
 	void onProfilePic() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle(getString(R.string.change_picture)).setItems(new String[]{getString(R.string.take_from_camera), getString(R.string.choose_from_library)}
-				, new DialogInterface.OnClickListener() {
+		builder.setTitle("Change Picture").setItems(arrayChangePicture, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				if (which == 0) {
 					String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ENGLISH).format(new Date());
@@ -203,8 +208,8 @@ public class EditProfileActivity extends Activity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		CharSequence[] array = {getString(R.string.gallary),getString(R.string.camera)};
-		builder.setTitle(getString(R.string.select_file_from))
+		CharSequence[] array = {"Gallary","Camera"};
+		builder.setTitle("Select File From")
 		.setSingleChoiceItems(array,-1, new DialogInterface.OnClickListener() {
 
 			@Override
@@ -218,7 +223,7 @@ public class EditProfileActivity extends Activity {
 					//					intent.setType("video/*");
 					//					startActivityForResult(intent,VIDEO_PICKER_SELECT);
 					Intent intent=new Intent(mContext,AddContentTypeActivity.class);
-					intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
+					intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
 					intent.putExtra("FromProfile", true);
 					startActivity(intent);
 				}
@@ -227,7 +232,7 @@ public class EditProfileActivity extends Activity {
 		})
 
 
-		.setNegativeButton(getString(R.string.cancel_), new DialogInterface.OnClickListener() {
+		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.dismiss();
@@ -241,8 +246,8 @@ public class EditProfileActivity extends Activity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-		CharSequence[] array = {getString(R.string.image),getString(R.string.video)};
-		builder.setTitle(getString(R.string.select_file_type))
+		CharSequence[] array = {"Image","Video"};
+		builder.setTitle("Select File Type")
 		.setSingleChoiceItems(array,-1, new DialogInterface.OnClickListener() {
 
 			@Override
@@ -262,7 +267,7 @@ public class EditProfileActivity extends Activity {
 		})
 
 
-		.setNegativeButton(getString(R.string.cancel_), new DialogInterface.OnClickListener() {
+		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				dialog.dismiss();
@@ -320,7 +325,7 @@ public class EditProfileActivity extends Activity {
 							imgProfilePic.setImageBitmap(bitmap);
 							imgProfilePic.invalidate();
 
-							Utility.ShowProgressDialog(mContext, getString(R.string.uploading));
+							Utility.ShowProgressDialog(mContext, "Uploading...");
 
 							if (Utility.isNetworkAvailable(mContext)) {
 
@@ -329,14 +334,14 @@ public class EditProfileActivity extends Activity {
 								new UploadImage().execute(Constant.SERVER_URL + Constant.UPLOAD_PROFILE_IMAGE);
 							} else {
 
-								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 								Utility.HideDialog(mContext);
 							}
 						} else {
 							imgCoverImage.setImageBitmap(bitmap);
 							imgCoverImage.invalidate();
 
-							Utility.ShowProgressDialog(mContext, getString(R.string.uploading));
+							Utility.ShowProgressDialog(mContext, "Uploading...");
 
 							//							Log.d("mobstar","Sending url->"+Constant.SERVER_URL + Constant.UPLOAD_COVER_IMAGE);
 
@@ -344,14 +349,14 @@ public class EditProfileActivity extends Activity {
 								new UploadImage().execute(Constant.SERVER_URL + Constant.UPLOAD_COVER_IMAGE);
 							} else {
 
-								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 								Utility.HideDialog(mContext);
 							}
 						}
 					}
 
 				} catch (Exception e) {
-					Toast.makeText(EditProfileActivity.this, getString(R.string.error_retke_photo), Toast.LENGTH_SHORT).show();
+					Toast.makeText(EditProfileActivity.this, "Unknown Error, Please Retake Photo!", Toast.LENGTH_SHORT).show();
 				}
 
 			}	
@@ -365,7 +370,7 @@ public class EditProfileActivity extends Activity {
 					//					content://media/external/images/media/6112
 					if(selectedPath!=null){
 						Intent intent = new Intent(mContext, UploadFileActivity.class);
-						intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
+						intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
 						intent.putExtra("file1", selectedPath);
 						intent.putExtra("type", "image");
 						startActivity(intent);
@@ -388,7 +393,7 @@ public class EditProfileActivity extends Activity {
 						Intent intent = new Intent(mContext, UploadFileActivity.class);
 						intent.putExtra("file1", selectedPath);
 						intent.putExtra("type", "video");
-						intent.putExtra("categoryId", Constant.PROFILE_CATEGORYID);
+						intent.putExtra("categoryId",Constant.PROFILE_CATEGORYID);
 						startActivity(intent);
 						//					finish();
 						overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -462,7 +467,7 @@ public class EditProfileActivity extends Activity {
 		List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, 0);
 		int size = list.size();
 		if (size == 0) {
-			Toast.makeText(this, getString(R.string.cant_find_image_crop_application), Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Can not find image crop application", Toast.LENGTH_SHORT).show();
 		} else {
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);

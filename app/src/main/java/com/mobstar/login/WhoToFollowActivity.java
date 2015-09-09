@@ -1,5 +1,10 @@
 package com.mobstar.login;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,6 +13,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,22 +29,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobstar.ProfileActivity;
 import com.mobstar.R;
-import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.UserAccountResponse;
-import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.pojo.WhoToFollowPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class WhoToFollowActivity extends Activity implements OnClickListener{
 
@@ -61,12 +59,12 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 		gridListAdapter=new GridAdapter();
 		preferences = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 		InitControls();
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 		sErrorMessage = "";
 		if (Utility.isNetworkAvailable(mContext)) {
 			new WhoToFollowList().start();
 		} else {
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 		}
 		
 		Utility.SendDataToGA("WhoToFollow Screen", WhoToFollowActivity.this);
@@ -246,7 +244,10 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 			Utility.HideDialog(mContext);
 
 			if (msg.what == 1) {
-                getUserAccountRequest();
+				Intent intent = new Intent(mContext,HomeActivity.class);
+				intent.putExtra("isHomeInfo",true);
+				startActivity(intent);
+				finish();
 			} else {
 				OkayAlertDialog(sErrorMessage);
 			}
@@ -347,38 +348,16 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 			if (Utility.isNetworkAvailable(mContext)) {
 				new WhoToFollowAdd(star).start();
 			} else {
-				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			}
 		}
 		else if(btnSkip.equals(view)){
-            getUserAccountRequest();
+			Intent intent = new Intent(mContext,HomeActivity.class);
+			intent.putExtra("isHomeInfo",true);
+			startActivity(intent);
+			finish();
 		}
+
 	}
 
-    private void startHomeActivity() {
-        Intent intent = new Intent(mContext,HomeActivity.class);
-        intent.putExtra("isHomeInfo",true);
-        startActivity(intent);
-        finish();
-    }
-    private void getUserAccountRequest(){
-        RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
-            @Override
-            public void onSuccess(UserAccountResponse object) {
-                if (object.getUser().getUserContinentId() == 0) {
-                    startSelectCurrentRegionActivity();
-                } else startHomeActivity();
-            }
-
-            @Override
-            public void onFailure(String error) {
-
-            }
-        });
-    }
-    private void startSelectCurrentRegionActivity(){
-        final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
-        startActivity(intent);
-        finish();
-    }
 }

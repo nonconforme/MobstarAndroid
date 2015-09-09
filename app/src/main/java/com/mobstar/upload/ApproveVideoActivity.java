@@ -15,25 +15,21 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.mobstar.R;
-import com.mobstar.home.split.SplitActivity;
-import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 public class ApproveVideoActivity extends Activity {
-	public static final String APPROVE_SPLIT_VIDEO = "approve split video";
 
 	Context mContext;
 
@@ -58,10 +54,8 @@ public class ApproveVideoActivity extends Activity {
 	private int mVideoWidth;
 
 	Typeface typefaceBtn;
-	private EntryPojo entry;
-
+	
 	String categoryId,subCat;
-	private boolean isSplitVideo = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,16 +67,11 @@ public class ApproveVideoActivity extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			sVideoPath = extras.getString("video_path");
-
+			
 			if(extras.containsKey("categoryId")) {
 				categoryId=extras.getString("categoryId");
 				subCat=extras.getString("subCat");
 			}
-
-			if (extras.containsKey(APPROVE_SPLIT_VIDEO))
-				isSplitVideo = true;
-			if (extras.containsKey(Constant.ENTRY))
-			entry = (EntryPojo) extras.getSerializable(Constant.ENTRY);
 		}
 
 		calculateVideoSize();
@@ -124,14 +113,6 @@ public class ApproveVideoActivity extends Activity {
 		surfaceTextureListener = new CustomSurfaceTextureListener();
 
 		textureView = (TextureView) findViewById(R.id.textureView);
-		if (isSplitVideo){
-			final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.texture_view_height));
-			textureView.setLayoutParams(layoutParams);
-		}
-//		if (isSplitVideo){
-//			textureView.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
-//					, getResources().getDimensionPixelSize(R.dimen.texture_view_height)));
-//		}
 
 		textureView.setSurfaceTextureListener(surfaceTextureListener);
 		if (textureView.isAvailable()) {
@@ -204,7 +185,15 @@ public class ApproveVideoActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				onClickBtnRetake();
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(mContext, RecordVideoActivity.class);
+				intent.putExtra("categoryId",categoryId);
+				if(subCat!=null && subCat.length()>0){
+					intent.putExtra("subCat",subCat);
+				}
+				startActivity(intent);
+				finish();
+				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 			}
 		});
 
@@ -240,31 +229,6 @@ public class ApproveVideoActivity extends Activity {
 
 			}
 		});
-	}
-
-	private void onClickBtnRetake(){
-		removeFile(sVideoPath);
-		// TODO Auto-generated method stub
-		Intent intent;
-		if (isSplitVideo){
-			intent = new Intent(this, SplitActivity.class);
-			intent.putExtra(SplitActivity.ENTRY_SPLIT, entry);
-		}
-		else {
-			intent = new Intent(mContext, RecordVideoActivity.class);
-			intent.putExtra("categoryId", categoryId);
-			if (subCat != null && subCat.length() > 0) {
-				intent.putExtra("subCat", subCat);
-			}
-		}
-		startActivity(intent);
-		finish();
-		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-	}
-
-	private void removeFile(final String filePath){
-		final File file = new File(filePath);
-		file.delete();
 	}
 
 	private void calculateVideoSize() {

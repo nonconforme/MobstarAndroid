@@ -13,20 +13,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.R;
-import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.utils.Utility;
 
-public class SettingsFragment extends Fragment implements OnClickListener {
+public class SettingsFragment extends Fragment {
 
 	private Context mContext;
 	private TextView textSettings;
 	private SharedPreferences preferences;
 	private boolean isSocial;
-	private LinearLayout btnPersonDetails, btnChangePassword, btnLinkedAccounts, btnPrivacySettings, btnContinentSetting;
+	private ImageView btnPersonDetails, btnChangePassword, btnLinkedAccounts, btnPrivacySettings;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,10 +56,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 			}
 		});
 
-		btnContinentSetting = (LinearLayout) view.findViewById(R.id.btnLocationSetting);
-		btnContinentSetting.setOnClickListener(this);
-
-		btnPersonDetails = (LinearLayout) view.findViewById(R.id.btnPersonDetails);
+		btnPersonDetails = (ImageView) view.findViewById(R.id.btnPersonDetails);
 		btnPersonDetails.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -78,7 +73,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 			}
 		});
 
-		btnChangePassword = (LinearLayout) view.findViewById(R.id.btnChangePassword);
+		btnChangePassword = (ImageView) view.findViewById(R.id.btnChangePassword);
 		btnChangePassword.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -92,7 +87,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 			}
 		});
 
-		btnLinkedAccounts = (LinearLayout) view.findViewById(R.id.btnLinkedAccounts);
+		btnLinkedAccounts = (ImageView) view.findViewById(R.id.btnLinkedAccounts);
 		btnLinkedAccounts.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -105,7 +100,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 				alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
 
 				// set dialog message
-				alertDialogBuilder.setMessage(getString(R.string.coming_soon)).setCancelable(false).setNeutralButton("OK", null);
+				alertDialogBuilder.setMessage("Coming Soon!").setCancelable(false).setNeutralButton("OK", null);
 
 				// create alert dialog
 				AlertDialog alertDialog = alertDialogBuilder.create();
@@ -119,7 +114,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 			}
 		});
 
-		btnPrivacySettings = (LinearLayout) view.findViewById(R.id.btnPrivacySettings);
+		btnPrivacySettings = (ImageView) view.findViewById(R.id.btnPrivacySettings);
 		btnPrivacySettings.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -128,7 +123,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 //				Intent intent = new Intent(mContext, PrivacySettingsActivity.class);
 //				startActivity(intent);
 //				getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
+				
 				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://mobstar.com/privacy"));
 				startActivity(browserIntent);
 
@@ -137,18 +132,4 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 
 	}
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()){
-			case R.id.btnLocationSetting:
-				startLocationSettingActivity();
-				break;
-		}
-	}
-
-	private void startLocationSettingActivity(){
-		final Intent intent = new Intent(getActivity(), SelectCurrentRegionActivity.class);
-		intent.putExtra(SelectCurrentRegionActivity.START_HOME_ACTIVITY, false);
-		getActivity().startActivity(intent);
-	}
 }

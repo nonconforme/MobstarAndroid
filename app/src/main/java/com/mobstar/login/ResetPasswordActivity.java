@@ -89,12 +89,12 @@ public class ResetPasswordActivity extends Activity implements OnClickListener {
 
 			if (editEmail.getText().toString().trim().length() == 0) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText(getString(R.string.enter_email_address));
+				textEmailHint.setText("Enter Email Address");
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else if (!Utility.IsValidEmail(editEmail)) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText(getString(R.string.enter_valid_email_address));
+				textEmailHint.setText("Enter Valid Email Address");
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {

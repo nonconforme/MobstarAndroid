@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.mobstar.R;
-import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.utils.Utility;
 
 public class ApproveAudioActivity extends Activity {
@@ -37,11 +36,11 @@ public class ApproveAudioActivity extends Activity {
 
 	Handler handler = new Handler();
 
-	CustomTextviewBold btnBack;
+	ImageView btnBack;
 
 	LinearLayout layoutSelectFile, layoutApproveAudio;
 
-	CustomTextviewBold btnSelectFile;
+	ImageView btnSelectFile;
 
 	Typeface typefaceBtn;
 
@@ -73,7 +72,7 @@ public class ApproveAudioActivity extends Activity {
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 
-		btnSelectFile = (CustomTextviewBold) findViewById(R.id.btnSelectFile);
+		btnSelectFile = (ImageView) findViewById(R.id.btnSelectFile);
 		btnSelectFile.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -95,7 +94,7 @@ public class ApproveAudioActivity extends Activity {
 		progressMediaPlayer = (ProgressBar) findViewById(R.id.progressMediaPlayer);
 		progressMediaPlayer.setProgress(0);
 
-		btnBack = (CustomTextviewBold) findViewById(R.id.btnBack);
+		btnBack = (ImageView) findViewById(R.id.btnBack);
 		btnBack.setOnClickListener(new OnClickListener() {
 
 			@Override

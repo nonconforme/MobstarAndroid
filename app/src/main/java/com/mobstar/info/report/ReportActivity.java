@@ -3,18 +3,20 @@ package com.mobstar.info.report;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.R;
-import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
@@ -31,7 +33,7 @@ public class ReportActivity extends Activity implements OnClickListener {
 	TextView textUserName, textTime, textDescription;
 	ImageView imgUserPic;
 
-	CustomTextviewBold btnInAppropriateImage, btnInAppropriateLanguage, btnSpam, btnOthers;
+	ImageView btnInAppropriateImage, btnInAppropriateLanguage, btnSpam, btnOthers;
 	SharedPreferences preferences;
 
 	@Override
@@ -67,16 +69,16 @@ public class ReportActivity extends Activity implements OnClickListener {
 		textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
 		textTime.setText(entryPojo.getCreated());
 
-		btnInAppropriateImage = (CustomTextviewBold) findViewById(R.id.btnInAppropriateImage);
+		btnInAppropriateImage = (ImageView) findViewById(R.id.btnInAppropriateImage);
 		btnInAppropriateImage.setOnClickListener(this);
 
-		btnInAppropriateLanguage = (CustomTextviewBold) findViewById(R.id.btnInAppropriateLanguage);
+		btnInAppropriateLanguage = (ImageView) findViewById(R.id.btnInAppropriateLanguage);
 		btnInAppropriateLanguage.setOnClickListener(this);
 
-		btnSpam = (CustomTextviewBold) findViewById(R.id.btnSpam);
+		btnSpam = (ImageView) findViewById(R.id.btnSpam);
 		btnSpam.setOnClickListener(this);
 
-		btnOthers = (CustomTextviewBold) findViewById(R.id.btnOthers);
+		btnOthers = (ImageView) findViewById(R.id.btnOthers);
 		btnOthers.setOnClickListener(this);
 
 		imgUserPic = (ImageView) findViewById(R.id.imgUserPic);

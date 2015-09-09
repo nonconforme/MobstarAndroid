@@ -90,7 +90,7 @@
                 android:id="@+id/btnRetake"
                 android:layout_width="@dimen/signup_btn_width"
                 android:layout_height="@dimen/signup_btn_height"
-                android:background="@drawable/gray_btn"
+                android:background="@drawable/gray_btn_bg"
                 android:text="@string/retake"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/signup_btn_text" />
@@ -100,7 +100,7 @@
                 android:layout_width="@dimen/signup_btn_width"
                 android:layout_height="@dimen/signup_btn_height"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/yellow_btn"
+                android:background="@drawable/yellow_btn_bg"
                 android:text="@string/approve"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/signup_btn_text" />
