@@ -1,6 +1,4 @@
-package api.responce;
-
-import com.mobstar.api.responce.BaseResponse;
+package com.mobstar.api.responce;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -33,6 +33,7 @@ import com.mobstar.R;
 import com.mobstar.adapters.ContinentsAdapter;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.ContinentFilterResponse;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
@@ -47,7 +48,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-import api.responce.ContinentFilterResponse;
 
 public class HomeFragment extends Fragment implements OnClickListener {
 
