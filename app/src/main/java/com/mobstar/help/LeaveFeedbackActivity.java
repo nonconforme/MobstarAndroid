@@ -13,7 +13,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,8 +20,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mobstar.R;
-import com.mobstar.fanconnect.FanConnectVotesActivity;
-import com.mobstar.help.ReportAbuseActivity.SendReportCall;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -79,7 +76,7 @@ public class LeaveFeedbackActivity extends Activity implements OnClickListener {
 		if (btnCancel.equals(view)) {
 			onBackPressed();
 		} else if (btnLeaveFeedback.equals(view)) {
-			Utility.ShowProgressDialog(mContext, "Loading...");
+			Utility.ShowProgressDialog(mContext, getString(R.string.loading) + "...");
 
 			if (Utility.isNetworkAvailable(mContext)) {
 
@@ -87,7 +84,7 @@ public class LeaveFeedbackActivity extends Activity implements OnClickListener {
 
 			} else {
 
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 		}

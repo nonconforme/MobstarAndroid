@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,6 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.utils.Constant;
@@ -215,7 +218,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 			if (editFullName.getText().toString().trim().length() == 0) {
 
 				editFullName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textFullNameHint.setText("Enter FullName");
+				textFullNameHint.setText(getString(R.string.enter_full_name));
 				textFullNameHint.setVisibility(View.VISIBLE);
 
 				isValid = false;
@@ -225,12 +228,12 @@ public class SignUpActivity extends Activity implements OnClickListener {
 			}
 			if (editEmail.getText().toString().trim().length() == 0) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText("Enter Email Address");
+				textEmailHint.setText(getString(R.string.enter_email_address));
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else if (!Utility.IsValidEmail(editEmail)) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText("Enter Valid Email Address");
+				textEmailHint.setText(getString(R.string.enter_valid_email_address));
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -239,7 +242,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 			}
 			if (editDisplayName.getText().toString().trim().length() == 0) {
 				editDisplayName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textDisplayNameHint.setText("Enter Display Name");
+				textDisplayNameHint.setText(getString(R.string.enter_display_name));
 				textDisplayNameHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -249,7 +252,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 
 			if (editPassword.getText().toString().trim().length() == 0) {
 				editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textPasswordHint.setText("Enter Password");
+				textPasswordHint.setText(getString(R.string.enter_password));
 				textPasswordHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -259,12 +262,12 @@ public class SignUpActivity extends Activity implements OnClickListener {
 
 			if (editConfirmPassword.getText().toString().trim().length() == 0) {
 				editConfirmPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textConfirmPasswordHint.setText("Enter Confirm Password");
+				textConfirmPasswordHint.setText(getString(R.string.enter_confirm_password));
 				textConfirmPasswordHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else if (!editConfirmPassword.getText().toString().trim().equals(editPassword.getText().toString().trim())) {
 				editConfirmPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textConfirmPasswordHint.setText("Password not match");
+				textConfirmPasswordHint.setText(getString(R.string.password_not_match));
 				textConfirmPasswordHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -273,7 +276,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 			}
 
 			if (isValid) {
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 				if (Utility.isNetworkAvailable(mContext)) {
 
@@ -281,7 +284,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 
 				} else {
 
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			}
@@ -379,22 +382,15 @@ public class SignUpActivity extends Activity implements OnClickListener {
 				pref.edit().putBoolean("isLogin", true).commit();
 				pref.edit().putString("profile_image", ProfileImage).commit();
 				pref.edit().putString("cover_image", ProfileCover).commit();
-				
-//				Intent intent = new Intent(mContext, HomeActivity.class);
-//				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//				startActivity(intent);
-//				finish();
-				
-				
-				
-					Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
-					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					startActivity(intent);
-					finish();
-				
-				
+
+
+
+				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
+					startWelcomeActivity();
+				}else {
+					getUserAccountRequest();
+				}
+
 				
 //				Intent intent = new Intent(mContext, VerifyMobileNoActivity.class);
 //				startActivity(intent);
@@ -404,13 +400,13 @@ public class SignUpActivity extends Activity implements OnClickListener {
 
 				if (isAlreadyRegistered) {
 					editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-					textEmailHint.setText("Already registered");
+					textEmailHint.setText(getString(R.string.already_registered));
 					textEmailHint.setVisibility(View.VISIBLE);
 					isAlreadyRegistered = false;
 				}
 				if (isAlreadyTaken) {
 					editDisplayName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-					textDisplayNameHint.setText("Already taken");
+					textDisplayNameHint.setText(getString(R.string.already_taken));
 					textDisplayNameHint.setVisibility(View.VISIBLE);
 					isAlreadyTaken = false;
 				}
@@ -418,6 +414,45 @@ public class SignUpActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
+
+	private void startWelcomeActivity(){
+		Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		finish();
+	}
+
+
+	private void getUserAccountRequest(){
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				if (object.getUser().getUserContinentId() == 0){
+					startSelectCurrentRegionActivity();
+				}
+				else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startHomeActivity(){
+		Intent intent = new Intent(mContext, HomeActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(mContext, LoginSocialActivity.class);

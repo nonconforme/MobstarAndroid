@@ -62,7 +62,7 @@ public class ShareActivity extends Activity {
 	TextView textUserName, textTime, textDescription;
 	ImageView imgUserPic;
 
-	ImageView btnTweet, btnSendToFriend, btnAddToGPlus, btnFBPost;
+	TextView btnTweet, btnSendToFriend, btnAddToGPlus, btnFBPost;
 	File picFile;
 	Uri pngUri;
 	private ImageDownloader mDownloader;
@@ -106,7 +106,7 @@ public class ShareActivity extends Activity {
 			                    	 pngUri =saveImageToSD();
 			                    }
 			                    else {
-			                    	Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			                    	Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 								}
 			                  
 			                }
@@ -152,7 +152,7 @@ public class ShareActivity extends Activity {
 		//		ShareText += "\n" + "http://www.mobstar.com/android";
 
 		if(!isTalent){
-			Utility.ShowProgressDialog(mContext, "Generating Shorten Link");
+			Utility.ShowProgressDialog(mContext, getString(R.string.generating_shorten_link));
 
 			new Thread(new Runnable() {
 
@@ -205,7 +205,7 @@ public class ShareActivity extends Activity {
 		}
 
 
-		btnTweet = (ImageView) findViewById(R.id.btnTweet);
+		btnTweet = (TextView) findViewById(R.id.btnTweet);
 		btnTweet.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -213,7 +213,7 @@ public class ShareActivity extends Activity {
 				TwitterShareText=TwitterShareText+ShortURL;
 				if(isTalent && picFile!=null){
 					
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 					boolean authOnly = false;
 					ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly,TwitterShareText,picFile);
@@ -235,7 +235,7 @@ public class ShareActivity extends Activity {
 					mTweet.send();
 				}
 				else {
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 					boolean authOnly = false;
 					ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly, TwitterShareText,null);
@@ -261,7 +261,7 @@ public class ShareActivity extends Activity {
 			}
 		});
 
-		btnSendToFriend = (ImageView) findViewById(R.id.btnSendToFriend);
+		btnSendToFriend = (TextView) findViewById(R.id.btnSendToFriend);
 		btnSendToFriend.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -278,7 +278,7 @@ public class ShareActivity extends Activity {
 					try {
 						startActivity(Intent.createChooser(i, "Send mail..."));
 					} catch (android.content.ActivityNotFoundException ex) {
-						Toast.makeText(ShareActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(ShareActivity.this, getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
 					}
 				}
 				else {
@@ -289,7 +289,7 @@ public class ShareActivity extends Activity {
 					try {
 						startActivity(Intent.createChooser(i, "Send mail..."));
 					} catch (android.content.ActivityNotFoundException ex) {
-						Toast.makeText(ShareActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+						Toast.makeText(ShareActivity.this,  getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
 					}
 
 				}
@@ -297,7 +297,7 @@ public class ShareActivity extends Activity {
 			}
 		});
 
-		btnAddToGPlus = (ImageView) findViewById(R.id.btnAddToGPlus);
+		btnAddToGPlus = (TextView) findViewById(R.id.btnAddToGPlus);
 		btnAddToGPlus.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -323,13 +323,13 @@ public class ShareActivity extends Activity {
 			}
 		});
 
-		btnFBPost = (ImageView) findViewById(R.id.btnFBPost);
+		btnFBPost = (TextView) findViewById(R.id.btnFBPost);
 		btnFBPost.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Utility.ShowProgressDialog(mContext, "Uploading your post...");
+				Utility.ShowProgressDialog(mContext,  getString(R.string.uploading_your_post) + "...");
 
 				onClickLogin();
 			}
@@ -413,7 +413,8 @@ public class ShareActivity extends Activity {
 												new AlertDialog.Builder(mContext).setTitle(R.string.app_name).setMessage(error.getErrorMessage()).setPositiveButton("OK", null).show();
 											} else {
 
-												new AlertDialog.Builder(mContext).setTitle(R.string.app_name).setMessage("Post Successfully shared on your wall.").setPositiveButton("OK", null).show();
+												new AlertDialog.Builder(mContext).setTitle(R.string.app_name)
+														.setMessage(getString(R.string.post_successfully_shared_on_your_wall)).setPositiveButton("OK", null).show();
 											}
 
 										}

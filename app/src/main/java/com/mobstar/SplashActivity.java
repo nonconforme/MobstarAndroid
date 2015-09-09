@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.net.Uri;
@@ -19,11 +20,17 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.home.HomeInformationActivity;
 import com.mobstar.login.LoginSocialActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
+import com.mobstar.utils.OnNetworkChangeListener;
+import com.mobstar.utils.NetworkChangeReceiver;
 import com.mobstar.utils.Utility;
 
 import org.json.JSONObject;
@@ -33,7 +40,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends Activity implements OnNetworkChangeListener {
 
 	Timer timer;
 	Context mContext;
@@ -42,6 +49,10 @@ public class SplashActivity extends Activity {
 	String regid;
 	String deepLinkedId;
 	private String show_system_notification="",defaultNotificationTitle="",defaultNotificationImage="",description="";
+	private NetworkChangeReceiver mNetworkChangeReceiver;
+	private Toast mToast;
+	private boolean networkConnect = true;
+	private HomeInfoCall homeInfoCall;
 
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	SharedPreferences preferences;
@@ -51,11 +62,11 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-
+		registerNetworkConnectReceiver();
 		String android_id = Secure.getString(this.getContentResolver(),
 				Secure.ANDROID_ID);
 		String device_id=android_id;
-		Log.d("mobstar","device id"+device_id); 
+		Log.d("mobstar","device id"+device_id);
 
 		mContext = SplashActivity.this;
 
@@ -65,8 +76,8 @@ public class SplashActivity extends Activity {
 		}
 
 		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
-		
-		
+
+
 
 		//Added by khyati for deeplinking
 		Intent intent = getIntent();
@@ -74,7 +85,7 @@ public class SplashActivity extends Activity {
 			String action = intent.getAction();
 			Uri data = intent.getData();
 			if(data!=null) {
-				Log.d("mobstar","uri==>"+data.toString());	
+				Log.d("mobstar","uri==>"+data.toString());
 				deepLinkedId=data.getQueryParameter("id");
 				if(deepLinkedId!=null){
 					Log.d("mobstar","id==>"+deepLinkedId);
@@ -82,18 +93,16 @@ public class SplashActivity extends Activity {
 					//							pref.edit().putString("deepLinkedId",deepLinkedId).commit();
 
 				}
-				
+
 			}
 
 		}
-		
+
 		preferences = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 		if (preferences.getBoolean("isLogin", false)) {
 
 			if(deepLinkedId!=null) {
-				Intent intent1 = new Intent(mContext,HomeActivity.class);
-				intent1.putExtra("deepLinkedId",deepLinkedId);
-				startActivity(intent1);
+				getUserAccountRequest();
 			}
 			else {
 				//clear badge
@@ -101,15 +110,17 @@ public class SplashActivity extends Activity {
 				new BadgeRead().run();
 				sendAnalytics();
 				if (Utility.isNetworkAvailable(mContext)) {
-
-					new HomeInfoCall().start();
+					networkConnect = true;
+					if (homeInfoCall == null)
+						homeInfoCall = new HomeInfoCall();
+					homeInfoCall.start();
 
 				} else {
-
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					networkConnect = false;
+					showToastNotification(getString(R.string.no_internet_access));
 //					Utility.HideDialog(mContext);
 				}
-				
+
 			}
 
 		} else {
@@ -122,8 +133,8 @@ public class SplashActivity extends Activity {
 					Intent i = new Intent(mContext,LoginSocialActivity.class);
 					startActivity(i);
 					finish();
-					
-					
+
+
 
 					//added by khyati
 					/*Log.d("mobstar","isVerifyMobileCode"+pref.getBoolean("isVerifyMobileCode", false));
@@ -144,10 +155,10 @@ public class SplashActivity extends Activity {
 			};
 			timer.schedule(task, 3000);
 		}
-		
 
 
-		
+
+
 
 		Utility.SendDataToGA("Splash Screen", SplashActivity.this);
 
@@ -161,6 +172,72 @@ public class SplashActivity extends Activity {
 			}
 		}
 
+	}
+
+	private void getUserAccountRequest(){
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				if (object.getUser().getUserContinentId() == 0){
+					startSelectCurrentRegionActivity();
+				}
+				else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startHomeActivity(){
+		final Intent intent = new Intent(mContext, HomeActivity.class);
+		intent.putExtra("deepLinkedId", deepLinkedId);
+		startActivity(intent);
+	}
+
+	private void registerNetworkConnectReceiver(){
+		final IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(NetworkChangeReceiver.CONNECTIVITY_CHANGE);
+		intentFilter.addAction(NetworkChangeReceiver.WIFI_STATE_CHANGED);
+		mNetworkChangeReceiver = new NetworkChangeReceiver();
+		mNetworkChangeReceiver.setNetworkChangeListener(this);
+		registerReceiver(mNetworkChangeReceiver, intentFilter);
+	}
+
+	@Override
+	public void onInternetConnect() {
+		if (networkConnect)
+			return;
+		networkConnect = true;
+		if (homeInfoCall == null)
+			homeInfoCall = new HomeInfoCall();
+		homeInfoCall.start();
+	}
+
+	@Override
+	public void onInternetDisconnect() {
+		if (!networkConnect)
+			return;
+		networkConnect = false;
+		showToastNotification(getString(R.string.no_internet_access));
+	}
+
+	private void unregisteredNetworkConnectReceiver(){
+		unregisterReceiver(mNetworkChangeReceiver);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisteredNetworkConnectReceiver();
 	}
 
 	private void registerInBackground() {
@@ -188,8 +265,8 @@ public class SplashActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		// super.onBackPressed();
+		if (!networkConnect)
+			super.onBackPressed();
 	}
 
 	private boolean checkPlayServices() {
@@ -210,7 +287,7 @@ public class SplashActivity extends Activity {
 		@Override
 		public void run() {
 
-			String Query=Constant.SERVER_URL + Constant.HOME_INFO;
+			String Query= Constant.SERVER_URL + Constant.HOME_INFO;
 			String response = JSONParser.getRequest(Query,preferences.getString("token", null));
 
 			Log.v(Constant.TAG, "home info response " + response);
@@ -240,7 +317,7 @@ public class SplashActivity extends Activity {
 							handlerInfo.sendEmptyMessage(1);
 						}
 					}
-					
+
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -278,13 +355,13 @@ public class SplashActivity extends Activity {
 			}
 		}
 	};
-	
+
 	class BadgeRead extends Thread {
 
 		@Override
 		public void run() {
 
-			String Query=Constant.SERVER_URL + Constant.BADGE_READ;
+			String Query= Constant.SERVER_URL + Constant.BADGE_READ;
 			String response = JSONParser.postRequest(Query,null,null,preferences.getString("token", null));
 
 			Log.v(Constant.TAG, "home info response " + response);
@@ -293,10 +370,10 @@ public class SplashActivity extends Activity {
 
 				try {
 					if(response!=null){
-						
+
 							handlerBadge.sendEmptyMessage(1);
 					}
-					
+
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -319,17 +396,17 @@ public class SplashActivity extends Activity {
 		public void handleMessage(Message msg) {
 
 			if (msg.what == 1) {
-				
+
 			} else {
 			}
 		}
 	};
-	
+
 	private void sendAnalytics(){
 		String myVersion = android.os.Build.VERSION.RELEASE; // e.g. myVersion := "1.6"
-		
-		String packageToCheck = "com.mobstar";  
-		
+
+		String packageToCheck = "com.mobstar";
+
 		String versionName="";
 		int versionCode = 0;
 
@@ -345,9 +422,9 @@ public class SplashActivity extends Activity {
 		        Log.i("mobstar", name + ": " + pname + ": " + packageName + ": " + versionName + ": " + versionCode);
 		    }
 		}
-		
+
 		String deviceName=getDeviceName();
-		
+
 		if (Utility.isNetworkAvailable(mContext)) {
 			Log.d("log_tag","versionName"+versionName);
 			Log.d("log_tag","versionCode"+versionCode);
@@ -355,11 +432,11 @@ public class SplashActivity extends Activity {
 			new AddAnalytics(myVersion,versionCode,deviceName).start();
 
 		} else {
-			
+
 		}
-		
+
 	}
-	
+
 	public String getDeviceName() {
 		   String manufacturer = Build.MANUFACTURER;
 		   String model = Build.MODEL;
@@ -382,11 +459,11 @@ public class SplashActivity extends Activity {
 		        return Character.toUpperCase(first) + s.substring(1);
 		    }
 		}
-	
+
 	class AddAnalytics extends Thread {
-		
+
 		String osVersion,appVersion,deviceName;
-		
+
 		public AddAnalytics(String os,int appV,String deviceName){
 			this.osVersion=os;
 			this.appVersion=String.valueOf(appV);
@@ -395,7 +472,7 @@ public class SplashActivity extends Activity {
 
 		@Override
 		public void run() {
-			
+
 			String[] name = {"platform","osversion","appversion","devicename"};
 			String[] value = {"Android",osVersion,appVersion,deviceName};
 			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.ANALYTICS_READ, name, value,preferences.getString("token", null));
@@ -440,7 +517,7 @@ public class SplashActivity extends Activity {
 //			Utility.HideDialog(mContext);
 
 			if (msg.what == 1) {
-			
+
 			} else {
 			}
 		}
@@ -469,6 +546,14 @@ public class SplashActivity extends Activity {
 			}
 		});
 
+	}
+
+	private void showToastNotification(String _message){
+		if (mToast == null){
+			mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+		}
+		mToast.setText(_message);
+		mToast.show();
 	}
 
 }

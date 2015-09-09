@@ -10,22 +10,28 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.utils.AppRater;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-public class HomeInformationActivity extends Activity{
+public class HomeInformationActivity extends Activity implements View.OnClickListener {
 	
 	private Context mContext;
 	private TextView textTitle,textDes;
 	private ImageView imgInfo;
+	private ImageButton btnClose;
 	private String sErrorMessage;
 	private String title="",des="",img="";
 	private SharedPreferences preferences;
@@ -52,6 +58,7 @@ public class HomeInformationActivity extends Activity{
 		
 		AppRater.app_launched(mContext);
 		initControlls();
+		setListeners();
 //		new HomeInfoCall().start();
 	}
 
@@ -59,18 +66,31 @@ public class HomeInformationActivity extends Activity{
 		textTitle=(TextView)findViewById(R.id.textTitle);
 		textDes=(TextView)findViewById(R.id.textDes);
 		imgInfo=(ImageView)findViewById(R.id.imgInfo);
-		
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
 		textTitle.setText(title);
 		textDes.setText(des);
 		Picasso.with(mContext).load(img).into(imgInfo);
 	}
-	
+
+	private void setListeners(){
+		btnClose.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnClose:
+				getUserAccountRequest();
+				break;
+		}
+	}
+
 	class HomeInfoCall extends Thread {
 
 		@Override
 		public void run() {
 
-			String Query=Constant.SERVER_URL + Constant.HOME_INFO;
+			String Query= Constant.SERVER_URL + Constant.HOME_INFO;
 			String response = JSONParser.getRequest(Query,preferences.getString("token", null));
 
 //			Log.v(Constant.TAG, "home info response " + response);
@@ -145,10 +165,38 @@ public class HomeInformationActivity extends Activity{
 	};
 	
 	public void onBackPressed() {
+		getUserAccountRequest();
+	};
+
+
+	private void getUserAccountRequest(){
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				if (object.getUser().getUserContinentId() == 0){
+					startSelectCurrentRegionActivity();
+				}
+				else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startHomeActivity(){
 		Intent intent = new Intent(mContext,HomeActivity.class);
 		startActivity(intent);
 		finish();
-	};
+	}
 	
 
 }

@@ -29,6 +29,20 @@
             android:layout_gravity="center_vertical"
             android:contentDescription="@string/app_name"
             android:src="@drawable/sub_head_devider" />
+        <ImageView
+            android:id="@+id/btn_category_home"
+            android:background="@drawable/selector_continent_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_gravity="center"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/sub_head_devider" />
 
         <com.mobstar.custom.CustomTextviewBold
             android:id="@+id/textLatestPopular"

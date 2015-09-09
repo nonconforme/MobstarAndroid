@@ -13,7 +13,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -60,7 +60,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 		if (Utility.isNetworkAvailable(mContext)) {
 			new CategoryCall().start();
 		} else {
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -120,7 +120,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 		}
 
 		class ViewHolder {
-			ImageView btnAll;
+			CustomTextviewBold btnAll;
 			TextView textCategoryName;
 			ImageView imageIcon;
 			LinearLayout llCategory;
@@ -137,7 +137,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 
 				viewHolder = new ViewHolder();
 
-				viewHolder.btnAll=(ImageView)convertView.findViewById(R.id.btnAll);
+				viewHolder.btnAll=(CustomTextviewBold)convertView.findViewById(R.id.btnAll);
 				viewHolder.textCategoryName = (TextView) convertView.findViewById(R.id.textCategoryName);
 				viewHolder.imageIcon=(ImageView)convertView.findViewById(R.id.image_icon);
 				viewHolder.llCategory=(LinearLayout)convertView.findViewById(R.id.llCategory);
@@ -166,10 +166,10 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 			//set background
 			if(categoryObj.getCategoryActive()){
 				if(categoryObj.getID().equalsIgnoreCase("8")){
-					viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.red_cat));
+					viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.oval_red_button_background));
 				}
 				else {
-					viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.btn_category));
+					viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.oval_yellow_button_background));
 					viewHolder.textCategoryName.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 					viewHolder.textCategoryName.setCompoundDrawablePadding(0);
 				}
@@ -249,7 +249,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 					sErrorMessage = "";
 
 					if (response.trim().equals("[]")) {
-						sErrorMessage = "No Entries Found";
+						sErrorMessage = getString(R.string.no_entries_found);
 					}
 
 					JSONObject jsonObject = new JSONObject(response);

@@ -16,7 +16,9 @@ public class Constant {
 
 	public static String API_KEY = "fjwiofrnxhr892305hje93nf834m63lr93l5u3ntrhj4k";
 
-	public static String SERVER_URL = "http://api.mobstar.com/";
+//	public static String SERVER_URL = "http://api.mobstar.com/";
+//	public static String SERVER_URL = "http://192.168.88.250:1080/";
+	public static String SERVER_URL = "http://134.249.164.53:1080/";
 //	public static String SERVER_URL = "http://192.168.1.32/project/mobstarapi/public/index.php/";
 	
 	public static String SIGNUP = "user/";
@@ -124,7 +126,7 @@ public class Constant {
 	public static String GET_MESSAGE_THREAD="message/";
 	
 	public static String REPLAY_MESSAGE_THREAD="message/reply";
-	
+
 	public static String DELETE_THREAD="message/deleteThread";
 
 	public static String DELETE_MESSAGE="message/deleteMessage";
@@ -142,5 +144,18 @@ public class Constant {
 	public static String BADGE_READ="message/badgeread";
 	
 	public static String LOGOUT="user/logout";
-	
+
+	public static final String USER_CONTINENT = "settings/userContinent/";
+
+	public static final String USER_ACCOUNT = "settings/account/";
+
+    public static final String USER_CONTINENT_FILTERS = "settings/continentFilter";
+
+
+//	app constant
+	public static final String IMAGE              = "image";
+	public static final String POSITION_VARIANT   = "position_variant";
+	public static final int VIDEO_SIZE            = 308; // px
+	public static final String MOBSTAR_PREF       = "mobstar_pref";
+
 }

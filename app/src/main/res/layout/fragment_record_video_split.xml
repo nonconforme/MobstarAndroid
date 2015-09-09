@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        android:background="@color/black_color">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/combination_layout"-->
+            <!--android:background="@color/black_color"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="300dp"-->
+            <!--android:orientation="horizontal">-->
+
+            <!--<FrameLayout-->
+                <!--android:id="@+id/camera_preview"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_weight="1">-->
+
+            <!--</FrameLayout>-->
+            <!--<FrameLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/video_preview"-->
+                <!--android:layout_weight="1">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/imageFrame"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:contentDescription="@string/app_name"-->
+                    <!--android:adjustViewBounds="true"-->
+                    <!--android:scaleType="fitXY"-->
+                    <!--android:visibility="visible" />-->
+                <!--<TextureView-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:id="@+id/textureView"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_height="wrap_content" />-->
+            <!--</FrameLayout>-->
+
+        <!--</LinearLayout>-->
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/verticalLeft"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/verticalRight"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:gravity="center"
+        >
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_marginTop="@dimen/margin_record_button_split_video"
+            android:id="@+id/textRecordSecond"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:singleLine="false"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color"
+            android:textSize="30sp"
+            android:gravity="center"
+            />
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/layoutCameraOption"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/cameraViewContainer">-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/btnFlash"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:contentDescription="@string/app_name"-->
+                <!--android:src="@drawable/flash_off" />-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/btnChangeCamera"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginLeft="100dp"-->
+                <!--android:contentDescription="@string/app_name"-->
+                <!--android:src="@drawable/front_cam" />-->
+        <!--</LinearLayout>-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:contentDescription="@string/app_name"-->
+            <!--android:src="@drawable/sqaure_frame" />-->
+
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/btnRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_record_button_split_video"
+            android:layout_gravity="center_horizontal|bottom"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/btn_record" />
+    </FrameLayout>
+
+
+</FrameLayout>

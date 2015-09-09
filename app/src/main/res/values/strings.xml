@@ -17,13 +17,8 @@
     <string name="reset">RESET</string>
     <string name="temp_uname">lukeymo</string>
     <string name="temp_name">Luke Mowatt</string>
-    <string name="my_account">MY ACCOUNT</string>
     <string name="messages">MESSAGES</string>
-    <string name="entries">ENTRIES FEED</string>
-    <string name="stars">STARS</string>
     <string name="mentors">MENTORS</string>
-    <string name="winners">WINNERS</string>
-    <string name="goodies">GOODIES</string>
     <string name="blog">BLOG</string>
     <string name="help">HELP</string>
     <string name="settings">SETTINGS</string>
@@ -35,9 +30,6 @@
     <string name="temp_comments">15</string>
     <string name="deny">DENY</string>
     <string name="allow">ALLOW</string>
-    <string name="unknown_person">Unknown</string>
-    <string name="play_services_error">Google Play services is not available.  This application will close.</string>
-    <string name="close">Close</string>
     <string name="share_this">SHARE THIS...</string>
     <string name="reason_for_report">REASON FOR REPORTING...</string>
     <string name="entry_information">ENTRY INFORMATION</string>
@@ -69,24 +61,25 @@
     <string name="notifications">NOTIFICATIONS</string>
     <string name="temp_notification_text">mattf has commented on your entry "entrytitle"</string>
     <string name="my_entries">MY ENTRIES</string>
-    <string name="delete_entry">DELETE ENTRY?</string>
+    <string name="delete_entry_question">DELETE ENTRY?</string>
     <string name="meet_the_mentors">MEET THE MENTORS</string>
     <string name="bono">Bono</string>
     <string name="bono_description">Bono is the frontman of the Irish rock brand U2.He\'s also known for participating in global charity efforts.</string>
     <string name="personal_details">PERSONAL DETAILS</string>
+    <string name="personal_details_">PERSONAL\nDETAILS</string>
     <string name="save">SAVE</string>
     <string name="cancel">CANCEL</string>
     <string name="my_stars">MY STARS</string>
     <string name="my_feedback">MY FEEDBACK</string>
-    <string name="all_winners">ALL WINNERS</string>
     <string name="date">DATE</string>
-    <string name="music_winner">Music Winner</string>
     <string name="faqs">FAQS</string>
     <string name="faq_string">This is frequently ask question that is currently open?</string>
     <string name="old_password">OLD PASSWORD</string>
     <string name="new_password">NEW PASSWORD</string>
     <string name="change_password">CHANGE PASSWORD</string>
+    <string name="change_password_">CHANGE\nPASSWORD</string>
     <string name="linked_accounts">LINKED ACCOUNTS</string>
+    <string name="linked_accounts_">LINKED\nACCOUNTS</string>
     <string name="facebook">FACEBOOK</string>
     <string name="temp_fb_email">lukeymo@hotmail.com</string>
     <string name="twitter">TWITTER</string>
@@ -95,11 +88,11 @@
     <string name="temp_google_name">lukeymo@gmail.com</string>
     <string name="pinterest">PINTEREST</string>
     <string name="connect_your_account">CONNECT YOUR ACCOUNT</string>
-    <string name="title_activity_privacy_policy">PrivacyPolicyActivity</string>
     <string name="app_settings">APP SETTINGS</string>
     <string name="push_notifications">PUSH NOTIFICATIONS</string>
     <string name="off">OFF</string>
     <string name="privacy_policy">PRIVACY POLICY</string>
+    <string name="privacy_policy_">PRIVACY\nPOLICY</string>
     <string name="privacy_policy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Y</string>
     <string name="report_abuse">REPORT ABUSE</string>
     <string name="send_report">SEND\nREPORT</string>
@@ -123,7 +116,6 @@
     <string name="add_content">ADD\nCONTENT</string>
     <string name="edit_tagline">EDIT TAGLINE</string>
     <string name="edit_bio">EDIT BIO</string>
-    <string name="pick_account">Pick Account</string>
     <string name="unrecoverable_error">Unrecoverable Play Services error</string>
     <string name="logout">LOGOUT</string>
     <string name="talent_connect">TALENT CONNECT</string>
@@ -136,7 +128,6 @@
     <string name="mobstar_points">MOBSTAR POINTS</string>
     <string name="available">AVAILABLE</string>
     <string name="use_points">USE POINTS</string>
-    <string name="fans">FANS</string>
     <string name="followers">FOLLOWERS</string>
     <string name="feedback">FEEDBACK</string>
     <string name="votes">MY VOTES</string>
@@ -156,7 +147,6 @@
     <string name="ptr_release_to_refresh">Release to refresh</string>
     <string name="ptr_refreshing">Refreshing…</string>
     <string name="ptr_last_updated">Updated: %1$s</string>
-    <string name="talent_pool">TALENT POOL</string>
     <string name="you_havent_added_any_comment_yet">YOU HAVEN\'T\nADDED ANY\nCOMMENT YET</string>
     <string name="you_havent_added_any_talent_yet">YOU HAVEN\'T\nADDED ANY\nTALENT YET</string>
     <string name="you_have_no_feedback">YOU HAVE\nNO FEEDBACK</string>
@@ -175,15 +165,12 @@
     <string name="who_to_follow">WHO TO FOLLOW</string>
     <string name="skip">SKIP</string>
     <string name="follow">FOLLOW</string>
-    <string name="mobit">MOBITS</string>
-    <string name="liked_mobit">Liked MOBIT</string>
     <string name="bio">BIO</string>
     <string name="update">UPDATES</string>
     <string name="profile">PROFILE</string>
     <string name="ok">OK</string>
     <string name="likes">Likes</string>
     <string name="you_have_no_likes_yet">YOU HAVE\nNO LIKES YET</string>
-    <string name="rank">Rank</string>
     <string name="male">MALE</string>
     <string name="female">FEMALE</string>
     <string name="curve">CURVE</string>
@@ -201,13 +188,157 @@
 	<string name="you_have_no_blog_yet">YOU HAVE\nNO BLOGS YET</string>
 	<string name="to">TO:</string>
 	<string name="start_msg">START\nMESSAGE</string>
-	<string name="message">MESSAGE</string>
 	<string name="enter_msg">ENTER MESSAGE</string>
 	<string name="new_msg">NEW MESSAGE</string>
 	<string name="group_member">GROUP MEMBER</string>
 	<!-- <string name="admob_adUnitId">ca-app-pub-2850209089334804/2249032175</string> -->
 	<string name="admob_adUnitId">ca-app-pub-3673264464511081/6592488851</string>
 	  <string name="you_havent_any_messages_yet">YOU HAVEN\'T\n ANY\nMESSAGES YET</string>
-	
+    <string name="split">SPLIT</string>
 
+
+    <string name="loading">Loading</string>
+    <string name="no_internet_access">No, Internet Access!</string>
+    <string name="following_error_occured_please_try_again">Following Error occured, please try again.</string>
+    <string name="bad_response">Bad response:</string>
+    <string name="server_auth_error">Server auth error, please try again.</string>
+    <string name="server_returned_following_error_code">Server returned the following error code:</string>
+    <string name="onerror_unrecoverable_error">Unrecoverable error</string>
+    <string name="you_dont_have_any_voters_yet">You don\'t have any voters yet.</string>
+    <string name="send_error">Send error:</string>
+    <string name="deleted_messages_on_server">Deleted messages on server:</string>
+    <string name="mobstar_notification">Mobstar Notification</string>
+    <string name="coming_soon">Coming Soon!</string>
+    <string name="there_are_no_entries_yet">THERE ARE\nNO ENTRIES\nYET</string>
+    <string name="generating_shorten_link">Generating Shorten Link</string>
+    <string name="there_are_no_email_clients_installed">There are no email clients installed.</string>
+    <string name="uploading_your_post">Uploading your post</string>
+    <string name="post_successfully_shared_on_your_wall">Post Successfully shared on your wall.</string>
+    <string name="group">GROUP</string>
+    <string name="replay_to_group">Replay to Group</string>
+    <string name="replay_to">Replay to</string>
+    <string name="selected">Selected</string>
+    <string name="no_entries_found">No Entries Found</string>
+    <string name="enter_email_address">Enter Email Address</string>
+    <string name="enter_valid_email_address">Enter Valid Email Address</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="error_while_login_with_facebook">Error while login with Facebook!</string>
+    <string name="you_must_pick_an_account">You must pick an account</string>
+    <string name="unknown_error_click_button">Unknown error, click the button again</string>
+    <string name="retrying">Retrying.</string>
+    <string name="user_rejected_authorization">User rejected authorization.</string>
+    <string name="enter_full_name">Enter FullName</string>
+    <string name="enter_display_name">Enter Display Name</string>
+    <string name="enter_confirm_password">Enter Confirm Password</string>
+    <string name="password_not_match">Password not match</string>
+    <string name="already_registered">Already registered</string>
+    <string name="already_taken">Already taken</string>
+    <string name="enter_old_password">Enter Old Password</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="uploading">Uploading...</string>
+    <string name="yes_votes">YES VOTES</string>
+    <string name="no_votes">NO VOTES</string>
+    <string name="login_successful">Login Successful</string>
+    <string name="login_failed">Login Failed</string>
+    <string name="posted_successflly">Posted Successfully</string>
+    <string name="posting_failed">Posting Failed</string>
+    <string name="posting_failed_duplicate">Posting Failed because of duplicate message...</string>
+    <string name="initializing">Initializing ...</string>
+    <string name="finalizing">Finalizing ...</string>
+    <string name="failed_opening_authorization_page">Failed opening authorization page</string>
+    <string name="twitter_">Twitter</string>
+    <string name="error_request_token">Error getting request token</string>
+    <string name="error_access_token">Error getting access token</string>
+    <string name="request_cancelled">Request Cancelled</string>
+    <string name="error_retke_photo">Unknown Error, Please Retake Photo!</string>
+    <string name="thanks_for_using_app_rate">Thanks for using our app. If you like it so far, please rate us by clicking below. Thanks for your support!</string>
+    <string name="rate">Rate</string>
+    <string name="rate_now">Rate Now</string>
+    <string name="later">Later</string>
+    <string name="no_thanks">No, Thanks</string>
+    <string name="take_from_camera">Take From camera</string>
+    <string name="choose_from_library">Choose from Library</string>
+    <string name="change_picture">Change Picture</string>
+    <string name="select_file_from">Select File From</string>
+    <string name="gallary">Gallary</string>
+    <string name="camera">Camera</string>
+    <string name="cancel_">Cancel</string>
+    <string name="image">Image</string>
+    <string name="video">Video</string>
+    <string name="select_file_type">Select File Type</string>
+    <string name="cant_find_image_crop_application">Can not find image crop application</string>
+    <string name="popular">POPULAR</string>
+    <string name="nothinh_found_for">NOTHING FOUND FOR</string>
+
+    <string name="next">NEXT</string>
+    <string name="you">YOU</string>
+    <string name="message_coming_soom">COMING SOON</string>
+    <string name="crop_title">Crop video</string>
+    <string name="rotation_title">Initialization video</string>
+    <string name="join_title">Associate video</string>
+    <!-- strings in imageButton-->
+
+    <string name="select_file">SELECT FILE</string>
+    <string name="report_this_entry">REPORT THIS ENTRY</string>
+    <string name="login_with_google">LOGIN WITH GOOGLE+</string>
+    <string name="login_with_facebook">LOGIN WITH FACEBOOK</string>
+    <string name="capture_now">CAPTURE NOW</string>
+    <string name="upload_from_phone">UPLOAD FROM PHONE</string>
+    <string name="inappropriate_imagery">INAPPROPRIATE IMAGERY</string>
+    <string name="inappropriate_language">INAPPROPRIATE LANGUAGE</string>
+    <string name="spam">SPAM</string>
+    <string name="other">OTHER</string>
+    <string name="audio_clip">AUDIO CLIP</string>
+    <string name="upload_to_profile">UPLOAD TO PROFILE</string>
+
+    <string name="send_to_friend">SEND TO A FRIEND</string>
+    <string name="post_to_facebook">POST TO FACEBOOK</string>
+    <string name="add_to_google">ADD TO GOOGLE+</string>
+    <string name="tweet_about_this">TWEET ABOUT THIS</string>
+
+    <string name="most_popular">MOST POPULAR</string>
+
+
+    <string name="take_image">IMAGE</string>
+    <string name="edit_information">EDIT INFORMATION</string>
+    <string name="delete_entry">DELETE ENTRY</string>
+    <string name="continue_without_signing_in">CONTINUE WITHOUT SIGNING IN</string>
+    <string name="login_with_twitter">LOGIN WITH <b>TWITTER</b></string>
+    <string name="edit">EDIT</string>
+    <string name="unlike">Unlike</string>
+
+
+    // how to vote activity
+    <string name="not_a_fan">Not a fan?</string>
+    <string name="like_it">Like it?</string>
+    <string name="swipe_left">Swipe <b>LEFT</b></string>
+    <string name="to_vote_no">To vote <b>NO</b></string>
+    <string name="swipe_right">Swipe <b>RIGHT</b></string>
+    <string name="to_vote_yes">To vote <b>YES</b></string>
+
+    <!--list of continents -->
+    <string name="europe">EUROPE</string>
+    <string name="south_america">SOUTH AMERICA</string>
+    <string name="oceania">OCEANIA</string>
+    <string name="asia">ASIA</string>
+    <string name="north_america">NORTH AMERICA</string>
+    <string name="africa">AFRICA</string>
+
+    <!-- current location activity-->
+    <string name="where_are_you">WHERE ARE YOU?</string>
+    <string name="select_current_region_activity_description">To help us all our users the\ncontent they are most interested in,\nplease choose your home location\n from the regions below:</string>
+    <string name="change_current_region_message">You can change you region anytime in\napp setting</string>
+    
+    <!--<string-array name="continents_name">-->
+        <!--<item>All world</item>-->
+        <!--<item>Asia</item>-->
+        <!--<item>Africa</item>-->
+        <!--<item>Europe</item>-->
+        <!--<item>North America</item>-->
+        <!--<item>Oceania</item>-->
+        <!--<item>South America</item>-->
+    <!--</string-array>-->
+
+    <string name="no_select_current_region_message">Please, choose a continent</string>
+    <string name="location_settings">LOCATION\nSETTINGS</string>
 </resources>

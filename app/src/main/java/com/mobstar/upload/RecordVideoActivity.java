@@ -1,8 +1,5 @@
 package com.mobstar.upload;
 
-import java.io.IOException;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +12,6 @@ import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -29,8 +25,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.R;
-import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
+
+import java.io.IOException;
+import java.util.List;
 
 public class RecordVideoActivity extends Activity {
 
@@ -324,13 +322,16 @@ public class RecordVideoActivity extends Activity {
 			mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
 			mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
-			Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
+
 
 			// // Step 3: Set a CamcorderProfile (requires API Level 8 or
 			// higher)
 			CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
-			profile.videoFrameWidth = optimalVideoSize.width;
-			profile.videoFrameHeight = optimalVideoSize.height;
+			if (videosizes != null) {
+				Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
+				profile.videoFrameWidth = optimalVideoSize.width;
+				profile.videoFrameHeight = optimalVideoSize.height;
+			}
 			mMediaRecorder.setProfile(profile);
 
 			// Log.v(Constant.TAG, "optimalVideoSize width " +

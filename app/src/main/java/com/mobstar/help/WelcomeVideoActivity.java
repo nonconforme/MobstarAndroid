@@ -21,7 +21,6 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
@@ -38,7 +37,6 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.R;
-import com.mobstar.home.HomeActivity;
 import com.mobstar.login.WhoToFollowActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -46,30 +44,23 @@ import com.mobstar.utils.Utility;
 
 public class WelcomeVideoActivity extends Activity implements OnClickListener {
 
+	public static final String WELCOME_IS_CHECKED = "welcome_is_checked";
+
 	private String sErrorMessage;
-	Context mContext;
-	SharedPreferences preferences;
-
-	Button btnTakeTour, btnEnterMobstar;
-
-	Typeface typefaceBtn;
-
-	CheckBox cbPrivacyPolicy;
-
-	String videoURL = "";
-
-	ImageView imageFrame;
-	TextureView textureView;
-
-	ProgressBar progressbar;
-	MediaPlayer mediaPlayer;
-
-	Handler handler = new Handler();
-
-	CustomSurfaceTextureListener surfaceTextureListener;
-
-	ImageView btnPausePlay;
-	ProgressBar progressMediaPlayer;
+	private Context mContext;
+	private SharedPreferences preferences;
+	private Button btnTakeTour, btnEnterMobstar;
+	private Typeface typefaceBtn;
+	private CheckBox cbPrivacyPolicy, cbDonTShowAgain;
+	private String videoURL = "";
+	private ImageView imageFrame;
+	private TextureView textureView;
+	private ProgressBar progressbar;
+	private MediaPlayer mediaPlayer;
+	private Handler handler = new Handler();
+	private CustomSurfaceTextureListener surfaceTextureListener;
+	private ImageView btnPausePlay;
+	private ProgressBar progressMediaPlayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +96,7 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 			}
 		});
 		progressMediaPlayer = (ProgressBar) findViewById(R.id.progressMediaPlayer);
+		cbDonTShowAgain = (CheckBox) findViewById(R.id.cbDontShow);
 		progressMediaPlayer.setProgress(0);
 		btnPausePlay = (ImageView) findViewById(R.id.btnPausePlay);
 		btnPausePlay.setSelected(true);
@@ -144,25 +136,9 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 		cbPrivacyPolicy = (CheckBox) findViewById(R.id.cbPrivacyPolicy);
 		cbPrivacyPolicy.setTypeface(typefaceBtn);
 
-		cbPrivacyPolicy.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		cbPrivacyPolicy.setChecked(false);
 
-			@Override
-			public void onCheckedChanged(CompoundButton arg0, boolean checked) {
-				// TODO Auto-generated method stub
-				if (checked) {
-					preferences.edit().putBoolean("welcome_is_checked", true).commit();
-				} else {
-					preferences.edit().putBoolean("welcome_is_checked", false).commit();
-				}
-			}
-		});
-		if (preferences.getBoolean("welcome_is_checked", false)) {
-			cbPrivacyPolicy.setChecked(true);
-		} else {
-			cbPrivacyPolicy.setChecked(false);
-		}
-
-		String cbText=cbPrivacyPolicy.getText().toString();
+		String cbText = cbPrivacyPolicy.getText().toString();
 		String text= cbText.substring(0,cbText.indexOf("\n")+1);
 //		Log.d("text", text);
 		Spannable word = new SpannableString(text); 
@@ -208,7 +184,7 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 
 		} else {
 
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 
 		}
 	}
@@ -520,23 +496,18 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		if (!cbPrivacyPolicy.isChecked())
+			return;
 		// TODO Auto-generated method stub
+		Intent intent = new Intent();
 		if (v.equals(btnTakeTour)) {
-			if(cbPrivacyPolicy.isChecked()){
-				preferences.edit().putBoolean("welcome_is_checked", true).commit();
-				Intent intent = new Intent(mContext, TakeTourActivity.class);
-				startActivity(intent);
-				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-				onBackPressed();	
-			}
-
+			intent = new Intent(mContext, TakeTourActivity.class);
 		} else if (v.equals(btnEnterMobstar)) {
-			if(cbPrivacyPolicy.isChecked()){
-				Intent intent = new Intent(mContext, WhoToFollowActivity.class);
-				startActivity(intent);
-				finish();	
-			}
-
+			intent = new Intent(mContext, WhoToFollowActivity.class);
 		}
+		preferences.edit().putBoolean(WELCOME_IS_CHECKED, !cbDonTShowAgain.isChecked()).apply();
+		startActivity(intent);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		finish();
 	}
 }

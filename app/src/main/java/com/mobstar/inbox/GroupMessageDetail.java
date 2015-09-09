@@ -1,7 +1,6 @@
 package com.mobstar.inbox;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
@@ -17,16 +16,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -37,12 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
-import com.mobstar.inbox.MessageDetail.MessageRead;
 import com.mobstar.pojo.MessageThreadPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
-import com.squareup.picasso.Picasso;
 
 public class GroupMessageDetail extends Activity implements OnClickListener{
 
@@ -93,12 +85,12 @@ public class GroupMessageDetail extends Activity implements OnClickListener{
 		messageAdapter=new MessagesAdapter();
 		listUser.setAdapter(messageAdapter);
 		if(threadId!=null && threadId.length()>0){
-			Utility.ShowProgressDialog(mContext, "Loading");
+			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 			if (Utility.isNetworkAvailable(mContext)) {
 				new GetMessageThreadCall().start();
 
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 
@@ -122,14 +114,14 @@ public class GroupMessageDetail extends Activity implements OnClickListener{
 		textNoData=(TextView)findViewById(R.id.textNoData);
 		textNoData.setVisibility(View.INVISIBLE);
 		textFans=(TextView)findViewById(R.id.textFans);
-		textFans.setText("GROUP");
+		textFans.setText(getString(R.string.group));
 		textFans.setOnClickListener(this);
 
 		editMessage=(EditText)findViewById(R.id.editMessage);
 		typeface = Typeface.createFromAsset(mContext.getAssets(), "GOTHAM-LIGHT.TTF");
 		editMessage = (EditText) findViewById(R.id.editMessage);
 		editMessage.setTypeface(typeface);
-		editMessage.setHint("Replay to Group");
+		editMessage.setHint(getString(R.string.replay_to_group));
 
 		btnSend=(ImageView)findViewById(R.id.btnSend);
 		btnSend.setOnClickListener(this);
@@ -156,14 +148,14 @@ public class GroupMessageDetail extends Activity implements OnClickListener{
 
 				sErrorMessage = "";
 
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 				if (Utility.isNetworkAvailable(mContext)) {
 					isRefresh=true;
 					new SendMessageCall(threadId,StringEscapeUtils.escapeJava(editMessage.getText().toString().trim())).start();
 
 				} else {
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 				editMessage.setText("");
@@ -293,7 +285,7 @@ public class GroupMessageDetail extends Activity implements OnClickListener{
 					sErrorMessage = "";
 
 					if(response.equalsIgnoreCase("error")){
-						sErrorMessage="No Entries Found";
+						sErrorMessage=getString(R.string.no_entries_found);
 					}
 
 					if (sErrorMessage != null && !sErrorMessage.equals("")) {
@@ -330,13 +322,13 @@ public class GroupMessageDetail extends Activity implements OnClickListener{
 				
 			
 			
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 				if (Utility.isNetworkAvailable(mContext)) {
 					new GetMessageThreadCall().start();
 
 				} else {
 
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			} else {

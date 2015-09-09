@@ -6,8 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,14 +13,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView.MultiChoiceModeListener;
@@ -44,7 +40,6 @@ import com.mobstar.R;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.custom.PullToRefreshListView.OnRefreshListener;
 import com.mobstar.home.ShareActivity;
-import com.mobstar.pojo.EntryPojo;
 import com.mobstar.pojo.StarPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -105,7 +100,7 @@ public class TalentPoolActivity extends Activity {
 					currentPage=1;
 					new MyStarCall(UserID,currentPage).start();
 				} else {
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -119,7 +114,7 @@ public class TalentPoolActivity extends Activity {
 
 		} else {
 
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -167,13 +162,13 @@ public class TalentPoolActivity extends Activity {
 					}
 				}
 				if (!loading && !isWebCall && isNextPageAvail && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 					isWebCall = true;
 					currentPage++;
 					if (Utility.isNetworkAvailable(mContext)) {
 						new MyStarCall(UserID,currentPage).start();
 					} else {
-						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 					loading = true;
@@ -236,7 +231,7 @@ public class TalentPoolActivity extends Activity {
 				// TODO Auto-generated method stub
 				final int checkedCount = listUser.getCheckedItemCount();
 				// Set the CAB title according to total checked items
-				arg0.setTitle(checkedCount + " Selected");
+				arg0.setTitle(checkedCount + " " + getString(R.string.selected));
 
 				if (arrSelectionStarID.contains(arrStarPojos.get(position).getStarID() + "")) {
 					arrSelectionStarID.remove(arrStarPojos.get(position).getStarID() + "");
@@ -258,7 +253,7 @@ public class TalentPoolActivity extends Activity {
 			}
 		});
 
-		Utility.ShowProgressDialog(mContext, "Loading");
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 
 
@@ -266,7 +261,7 @@ public class TalentPoolActivity extends Activity {
 
 	void DeleteStar() {
 
-		Utility.ShowProgressDialog(mContext, "Loading");
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 		if (Utility.isNetworkAvailable(mContext)) {
 
@@ -274,7 +269,7 @@ public class TalentPoolActivity extends Activity {
 
 		} else {
 
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -469,7 +464,7 @@ public class TalentPoolActivity extends Activity {
 					//					alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
 					//
 					//					// set dialog message
-					//					alertDialogBuilder.setMessage("Coming Soon!").setCancelable(false).setNeutralButton("OK", null);
+					//					alertDialogBuilder.setMessage(getString(R.string.coming_soon)).setCancelable(false).setNeutralButton("OK", null);
 					//
 					//					// create alert dialog
 					//					AlertDialog alertDialog = alertDialogBuilder.create();

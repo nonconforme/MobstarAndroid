@@ -302,20 +302,35 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity android:name=".home.split.SplitActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme">
+        </activity>
+
+        <activity android:name=".geo_filtering.SelectCurrentRegionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+
         <!-- Instabug Configuration -->
 
-        <activity
-            android:name="com.instabug.wrapper.impl.v10.InstabugAnnotationActivity"
-            android:theme="@style/AppThemeActionbar"
-            android:windowSoftInputMode="adjustPan" />
+        <!--<activity-->
+            <!--android:name="com.instabug.wrapper.impl.v14.InstabugAnnotationActivity"-->
+            <!--android:theme="@style/AppThemeActionbar"-->
+            <!--android:windowSoftInputMode="adjustPan" />-->
 
-        <service android:name="com.instabug.library.network.UploadCacheService" />
+        <!--<service android:name="com.instabug.library.network.UploadCacheService" />-->
 
-        <receiver android:name="com.instabug.library.network.InstabugNetworkReceiver" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name="com.instabug.library.network.InstabugNetworkReceiver" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
 
         <meta-data
             android:name="com.instabug.DevelopmentAppToken"
@@ -368,10 +383,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme" >
         </activity>
-        <activity
-            android:name=".login.YouTubeData"
-            android:screenOrientation="portrait" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".login.YouTubeData"-->
+            <!--android:screenOrientation="portrait" >-->
+        <!--</activity>-->
         <activity
             android:name=".home.HomeInformationActivity"
             android:screenOrientation="portrait"
@@ -408,9 +423,15 @@
             android:theme="@style/DialogTheme" >
         </activity>
 
+        <activity
+            android:name=".home.HowToVoteActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme" >
+        </activity>
+
         <service android:name=".service.NotificationService" />
 
-        <activity android:name="eu.janmuller.android.simplecropimage.CropImage" />
+        <!--<activity android:name="eu.janmuller.android.simplecropimage.CropImage" />-->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />

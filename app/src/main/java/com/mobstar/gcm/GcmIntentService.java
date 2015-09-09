@@ -42,9 +42,9 @@ public class GcmIntentService extends IntentService {
 		if (!extras.isEmpty()) {
 
 			if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-				sendNotification("Send error: ");
+				sendNotification(getString(R.string.send_error) + " ");
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-				sendNotification("Deleted messages on server: ");
+				sendNotification(getString(R.string.deleted_messages_on_server) + " ");
 				// If it's a regular GCM message, do some work.
 			} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 
@@ -104,7 +104,8 @@ public class GcmIntentService extends IntentService {
 
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, HomeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher).setContentTitle("Mobstar Notification")
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+				.setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.mobstar_notification))
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
 		mBuilder.setAutoCancel(true);
 		mBuilder.setContentIntent(contentIntent);
@@ -133,7 +134,8 @@ public class GcmIntentService extends IntentService {
 			i.putExtra("FromNotification",true);
 			contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
 		}
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher).setContentTitle("Mobstar Notification")
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+				.setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.mobstar_notification))
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
 		mBuilder.setAutoCancel(true);
 		mBuilder.setContentIntent(contentIntent);
@@ -151,7 +153,8 @@ public class GcmIntentService extends IntentService {
 		Intent i=new Intent(this,ProfileActivity.class);
 		i.putExtra("EntryId",entryId);
 		contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.ic_launcher).setContentTitle("Mobstar Notification")
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+				.setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.mobstar_notification))
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
 		mBuilder.setAutoCancel(true);
 		mBuilder.setContentIntent(contentIntent);

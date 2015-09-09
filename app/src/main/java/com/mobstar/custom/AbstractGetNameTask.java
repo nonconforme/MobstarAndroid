@@ -24,11 +24,11 @@ import java.net.URL;
 
 import org.json.JSONException;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.mobstar.R;
 import com.mobstar.login.LoginSocialActivity;
 import com.mobstar.utils.Constant;
 
@@ -54,9 +54,9 @@ public abstract class AbstractGetNameTask extends AsyncTask<Void, Void, Void> {
 		try {
 			fetchNameFromProfileServer();
 		} catch (IOException ex) {
-			onError("Following Error occured, please try again. " + ex.getMessage(), ex);
+			onError(mActivity.getString(R.string.following_error_occured_please_try_again) + " " + ex.getMessage(), ex);
 		} catch (JSONException e) {
-			onError("Bad response: " + e.getMessage(), e);
+			onError(mActivity.getString(R.string.bad_response) + " " + e.getMessage(), e);
 		}
 		return null;
 	}
@@ -104,11 +104,11 @@ public abstract class AbstractGetNameTask extends AsyncTask<Void, Void, Void> {
 			return;
 		} else if (sc == 401) {
 			GoogleAuthUtil.invalidateToken(mActivity, token);
-			onError("Server auth error, please try again.", null);
+			onError(mActivity.getString(R.string.server_auth_error), null);
 			Log.i(Constant.TAG, "Server auth error: " + readResponse(con.getErrorStream()));
 			return;
 		} else {
-			onError("Server returned the following error code: " + sc, null);
+			onError(mActivity.getString(R.string.server_returned_following_error_code) + " " + sc, null);
 			return;
 		}
 	}

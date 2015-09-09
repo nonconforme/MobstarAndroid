@@ -6,11 +6,10 @@ import twitter4j.User;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.StrictMode;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.mobstar.R;
 import com.mobstar.twitter.TwitterApp.TwDialogListener;
-import com.mobstar.utils.Constant;
 
 public class ImageTwitter {
 	private TwitterApp mTwitter;
@@ -63,10 +62,10 @@ public class ImageTwitter {
 		case TWITTER_LOGIN:
 			switch (success) {
 			case SUCCESS:
-				Toast.makeText(activity, "Login Successful", Toast.LENGTH_LONG).show();
+				Toast.makeText(activity, activity.getString(R.string.login_successful), Toast.LENGTH_LONG).show();
 				break;
 			case FAILED:
-				Toast.makeText(activity, "Login Failed", Toast.LENGTH_LONG).show();
+				Toast.makeText(activity, activity.getString(R.string.login_failed), Toast.LENGTH_LONG).show();
 			default:
 				break;
 			}
@@ -74,13 +73,13 @@ public class ImageTwitter {
 		case TWITTER_POST:
 			switch (success) {
 			case SUCCESS:
-				Toast.makeText(activity, "Posted Successfully", Toast.LENGTH_LONG).show();
+				Toast.makeText(activity, activity.getString(R.string.posted_successflly), Toast.LENGTH_LONG).show();
 				break;
 			case FAILED:
-				Toast.makeText(activity, "Posting Failed", Toast.LENGTH_LONG).show();
+				Toast.makeText(activity, activity.getString(R.string.posting_failed), Toast.LENGTH_LONG).show();
 				break;
 			case DUPLICATE:
-				Toast.makeText(activity, "Posting Failed because of duplicate message...", Toast.LENGTH_LONG).show();
+				Toast.makeText(activity, activity.getString(R.string.posting_failed_duplicate), Toast.LENGTH_LONG).show();
 			default:
 				break;
 			}

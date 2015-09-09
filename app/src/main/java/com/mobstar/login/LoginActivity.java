@@ -2,7 +2,6 @@ package com.mobstar.login;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,11 +29,9 @@ import android.widget.Toast;
 
 import com.mobstar.R;
 import com.mobstar.help.WelcomeVideoActivity;
-import com.mobstar.home.HomeActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
-import com.squareup.picasso.Picasso;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
@@ -153,12 +150,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			if (editEmail.getText().toString().trim().length() == 0) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText("Enter Email Address");
+				textEmailHint.setText(getString(R.string.enter_email_address));
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else if (!Utility.IsValidEmail(editEmail)) {
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText("Enter Valid Email Address");
+				textEmailHint.setText(getString(R.string.enter_valid_email_address));
 				textEmailHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -168,7 +165,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			if (editPassword.getText().toString().trim().length() == 0) {
 				editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textPasswordHint.setText("Enter Password");
+				textPasswordHint.setText(getString(R.string.enter_password));
 				textPasswordHint.setVisibility(View.VISIBLE);
 				isValid = false;
 			} else {
@@ -177,7 +174,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 
 			if (isValid) {
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 				sErrorMessage = "";
 				if (Utility.isNetworkAvailable(mContext)) {
 //					String s=Utility.getRegistrationId(mContext);
@@ -186,7 +183,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 				} else {
 
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			}
@@ -348,7 +345,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 //				startActivity(intent);
 //				finish();
 				
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 				sErrorMessage = "";
 				if (Utility.isNetworkAvailable(mContext)) {
 //					String s=Utility.getRegistrationId(mContext);
@@ -357,7 +354,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 				} else {
 
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 
@@ -511,7 +508,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				
 				sendAnalytics();
 				
-				if (!pref.getBoolean("welcome_is_checked", false)) {
+				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
 					Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
 					startActivity(intent);
 					finish();

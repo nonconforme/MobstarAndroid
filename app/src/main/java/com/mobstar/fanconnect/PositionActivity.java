@@ -1,8 +1,6 @@
 package com.mobstar.fanconnect;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,7 +9,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff.Mode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -36,7 +33,6 @@ import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.custom.PullToRefreshListView.OnRefreshListener;
-import com.mobstar.pojo.StarPojo;
 import com.mobstar.pojo.TopTalentPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -115,7 +111,7 @@ public class PositionActivity extends Activity {
 					}
 					new TopTalentCall(currentPage).start();
 				} else {
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -148,7 +144,7 @@ public class PositionActivity extends Activity {
 
 				//				Log.d("mobstar","Check... "+"!loading"+loading+"!isWebCall"+isWebCall+"isNextPageAvail"+isNextPageAvail+" "+(totalItemCount - visibleItemCount)+"<="+(firstVisibleItem + visibleThreshold));
 				if (!loading && !isWebCall && isNextPageAvail && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 					isWebCall = true;
 					userPage=userPage+1;
 					if(!isRefresh){
@@ -159,7 +155,7 @@ public class PositionActivity extends Activity {
 					if (Utility.isNetworkAvailable(mContext)) {
 						new TopTalentCall(userPage).start();
 					} else {
-						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 					loading = true;
@@ -193,7 +189,7 @@ public class PositionActivity extends Activity {
 		
 		listUser.setAdapter(topTalentAdapter);
 
-		Utility.ShowProgressDialog(mContext, "Loading");
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 		if (Utility.isNetworkAvailable(mContext)) {
 			isPageToScroll=true;
@@ -201,7 +197,7 @@ public class PositionActivity extends Activity {
 
 		} else {
 
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 

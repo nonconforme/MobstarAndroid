@@ -1,6 +1,5 @@
 package com.mobstar.info.report;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -11,14 +10,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.stararea.DeleteEntryActivity;
@@ -31,7 +29,7 @@ public class InformationReportActivity extends Activity {
 
 	private Context mContext;
 
-	private ImageView btnReportThis, btnEntryInformation,btnDeleteEntry;
+	private CustomTextviewBold btnReportThis, btnEntryInformation,btnDeleteEntry;
 
 	private EntryPojo entryPojo;
 	private ImageView imgUserPic;
@@ -69,7 +67,7 @@ public class InformationReportActivity extends Activity {
 		textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
 		textTime.setText(entryPojo.getCreated());
 
-		btnReportThis = (ImageView) findViewById(R.id.btnReportThis);
+		btnReportThis = (CustomTextviewBold) findViewById(R.id.btnReportThis);
 		btnReportThis.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -85,7 +83,7 @@ public class InformationReportActivity extends Activity {
 			}
 		});
 
-		btnEntryInformation = (ImageView) findViewById(R.id.btnEntryInformation);
+		btnEntryInformation = (CustomTextviewBold) findViewById(R.id.btnEntryInformation);
 		btnEntryInformation.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -100,7 +98,7 @@ public class InformationReportActivity extends Activity {
 			}
 		});
 		
-		btnDeleteEntry=(ImageView)findViewById(R.id.btnDeleteEntry);
+		btnDeleteEntry=(CustomTextviewBold)findViewById(R.id.btnDeleteEntry);
 		if(entryPojo.getUserID().equalsIgnoreCase(UserID)){
 			btnDeleteEntry.setVisibility(View.VISIBLE);
 			btnDeleteEntry.setOnClickListener(new OnClickListener() {
@@ -120,7 +118,7 @@ public class InformationReportActivity extends Activity {
 //
 //					} else {
 //
-//						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+//						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 //						Utility.HideDialog(mContext);
 //					}
 					

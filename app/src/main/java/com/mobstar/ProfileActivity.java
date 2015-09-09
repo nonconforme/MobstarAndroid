@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -49,6 +48,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
@@ -125,9 +125,10 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 	private String UserID,EntryId, UserName = "", UserPic = "", IsMyStar = "", IAmStar= "", UserDisplayName = "", UserCoverImage = "", UserTagline = "",UserBio="", UserFan="";
 
-	ImageView btnEdit;
+	CustomTextviewBold btnEdit;
 
-	ImageView imgUserPic, imgCoverPage, imgFollow, imgMsg;
+	ImageView imgUserPic, imgCoverPage, imgMsg;
+	private TextView imgFollow;
 
 	boolean isVideoSurfaceReady = false;
 	boolean isMoveDone = false;
@@ -362,7 +363,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				}
 				if(imgFollow!=null){
 					IsMyStar="1";
-					imgFollow.setImageResource(R.drawable.btn_following);
+					imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+					imgFollow.setText(getString(R.string.following));
 				}
 
 			} else if (intent.getAction().equalsIgnoreCase("star_removed")) {
@@ -391,7 +393,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				if (arrEntryPojos.size() == 0) {
 					//					textNoData.setVisibility(View.VISIBLE);
-					//					textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+					//					textNoData.setText(getString(R.string.there_are_no_entries_yet));
 					isDataNull=true;
 				}
 				else {
@@ -467,9 +469,9 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 		textFollowers = (CustomTextview)header.findViewById(R.id.textFollowers);
 		imgUserPic = (ImageView)header.findViewById(R.id.imgUserPic);
 		imgCoverPage = (ImageView)header.findViewById(R.id.imgCoverPage);
-		imgFollow=(ImageView)header.findViewById(R.id.imgFollow);
+		imgFollow=(TextView)header.findViewById(R.id.imgFollow);
 		imgMsg=(ImageView)header.findViewById(R.id.imgMsg);
-		btnEdit = (ImageView)header.findViewById(R.id.btnEdit);
+		btnEdit = (CustomTextviewBold)header.findViewById(R.id.btnEdit);
 
 		listEntry.addHeaderView(header);
 		listEntry.setEmptyView(findViewById(R.id.textNoData));
@@ -486,12 +488,14 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			imgMsg.setVisibility(View.GONE);
 		} else if (IsMyStar!=null && !IsMyStar.equalsIgnoreCase("0")) {
 			btnEdit.setVisibility(View.GONE);
-			imgFollow.setImageResource(R.drawable.btn_following);
+			imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+			imgFollow.setText(getString(R.string.following));
 			imgFollow.setVisibility(View.VISIBLE);
 			imgMsg.setVisibility(View.VISIBLE);
 		} else {
 			btnEdit.setVisibility(View.GONE);
-			imgFollow.setImageResource(R.drawable.btn_follow_yellow);
+			imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+			imgFollow.setText(getString(R.string.follow));
 			imgFollow.setVisibility(View.VISIBLE);
 			imgMsg.setVisibility(View.VISIBLE);
 		}
@@ -594,7 +598,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				if (!IsMyStar.equalsIgnoreCase("0")) {
 
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 					if (Utility.isNetworkAvailable(mContext)) {
 
@@ -602,11 +606,11 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					} else {
 
-						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 				} else {
-					Utility.ShowProgressDialog(mContext, "Loading");
+					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 					if (Utility.isNetworkAvailable(mContext)) {
 
@@ -629,7 +633,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					} else {
 
-						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 
@@ -653,7 +657,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 		});
 
 
-		if (UserCoverImage.equals("")) {
+		if (UserCoverImage == null || UserCoverImage.equals("")) {
 			Log.d("mobstar","cover img is null");
 			imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
 		} else {
@@ -669,12 +673,12 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		if(isNotfiedUser && EntryId!=null){
 
-			Utility.ShowProgressDialog(mContext,"Loading");
+			Utility.ShowProgressDialog(mContext,getString(R.string.loading));
 			if (Utility.isNetworkAvailable(mContext)) {
 				Log.d("mobstar","api call... isNotifyUser");
 				new GetEntryCall(EntryId).start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 		}
@@ -952,7 +956,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 		}
 
 		if(mContext!=null){
-			Utility.ShowProgressDialog(mContext, "Loading");
+			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 			if (Utility.isNetworkAvailable(mContext)) {
 				Log.d("mobstar","api call.. get data");
@@ -960,14 +964,14 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 			} else {
 
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 		}
 
 		//		if (arrEntryPojos.size() == 0) {
 		////			textNoData.setVisibility(View.VISIBLE);
-		////			textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+		////			textNoData.setText(getString(R.string.there_are_no_entries_yet));
 		//			isDataNull=true;
 		//			arrEntryPojos.add(null);
 		//		}
@@ -1055,7 +1059,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				// Inflate the layout with image
 				convertView = inflater.inflate(R.layout.layout_profile_nodata, parent, false);
 				viewHolderNodata.textNoData=(TextView)convertView.findViewById(R.id.textNoData);
-				viewHolderNodata.textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+				viewHolderNodata.textNoData.setText(getString(R.string.there_are_no_entries_yet));
 
 				convertView.setTag(viewHolderNodata);
 
@@ -1124,8 +1128,10 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				if (type == 0) {
 					// Inflate the layout with image
 					convertView = inflater.inflate(R.layout.row_item_mobit, parent, false);
-					viewHolder.btnLike=(ImageView)convertView.findViewById(R.id.btnLike);
+					viewHolder.btnLike=(LinearLayout)convertView.findViewById(R.id.btnLike);
 					viewHolder.textLikeCount=(TextView)convertView.findViewById(R.id.textLikeCount);
+					viewHolder.tvLikeText = (TextView) convertView.findViewById(R.id.tvLikeText);
+					viewHolder.ivLike = (ImageView) convertView.findViewById(R.id.ivLike);
 				}
 				else {
 					convertView = inflater.inflate(R.layout.row_item_entry, parent, false);
@@ -1144,17 +1150,16 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				viewHolder.imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
 				viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
 				viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
-				viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
+				viewHolder.btnShare = (FrameLayout) convertView.findViewById(R.id.btnShare);
 
-				viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
+				viewHolder.btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
 
 				viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
-				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
 				viewHolder.textCommentCount = (TextView) convertView.findViewById(R.id.textCommentCount);
 				viewHolder.imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
 				viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
 				viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
-				viewHolder.btnFollow = (ImageView) convertView.findViewById(R.id.btnFollow);
+				viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
 				convertView.setTag(viewHolder);
 
 			} else {
@@ -1196,7 +1201,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onClick(View v) {
-						if (arrEntryPojos.get(position).getIAmStar().equalsIgnoreCase("1")) {
+						if (arrEntryPojos.get(position).getIAmStar() !=null && arrEntryPojos.get(position).getIAmStar().equalsIgnoreCase("1")) {
 							//following
 							Intent intent=new Intent(mContext,MessageActivity.class);
 							intent.putExtra("recipent",arrEntryPojos.get(position).getUserID());
@@ -1223,10 +1228,14 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				});
 
 				if(arrEntryPojos.get(position).getIsVotedByYou().equalsIgnoreCase("0")){
-					viewHolder.btnLike.setImageResource(R.drawable.btn_like);
+					viewHolder.tvLikeText.setVisibility(View.GONE);
+					viewHolder.ivLike.setImageResource(R.drawable.icn_like);
 				}
 				else {
-					viewHolder.btnLike.setImageResource(R.drawable.btn_unlike);
+					viewHolder.tvLikeText.setVisibility(View.VISIBLE);
+					viewHolder.ivLike.setImageResource(R.drawable.icn_btn_unlike);
+
+//					viewHolder.btnLike.setImageResource(R.drawable.btn_unlike);
 				}
 
 				viewHolder.btnLike.setOnClickListener(new OnClickListener() {
@@ -1280,9 +1289,11 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				//					}
 				//				}
 				if (!IsMyStar.equalsIgnoreCase("0")) {
-					viewHolder.btnFollow.setImageResource(R.drawable.btn_following);
+					viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+					viewHolder.btnFollow.setText(getString(R.string.following));
 				} else {
-					viewHolder.btnFollow.setImageResource(R.drawable.btn_follow);
+					viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.selector_oval_button));
+					viewHolder.btnFollow.setText(getString(R.string.follow));
 				}
 			}
 
@@ -1294,7 +1305,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 					//					if (arrEntryPojos.get(position).getIsMyStar() != null) {
 					if (!IsMyStar.equalsIgnoreCase("0")) {
 						//unfollow
-						Utility.ShowProgressDialog(mContext, "Loading");
+						Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 						if (Utility.isNetworkAvailable(mContext)) {
 
@@ -1302,13 +1313,13 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 						} else {
 
-							Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							Utility.HideDialog(mContext);
 						}
 
 					} else {
 						//follow
-						Utility.ShowProgressDialog(mContext, "Loading");
+						Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 						if (Utility.isNetworkAvailable(mContext)) {
 
@@ -1330,7 +1341,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 							timer.schedule(task, 1000);
 
 						} else {
-							Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							Utility.HideDialog(mContext);
 						}
 
@@ -1346,16 +1357,16 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Intent intent = new Intent(mContext, ProfileActivity.class);
-					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
-					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
-					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
-					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
-					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
-					intent.putExtra("IsMyStar", IsMyStar);
-					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
-					startActivity(intent);
-					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//					Intent intent = new Intent(mContext, ProfileActivity.class);
+//					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
+//					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
+//					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
+//					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
+//					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
+//					intent.putExtra("IsMyStar", IsMyStar);
+//					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
+//					startActivity(intent);
+//					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 				}
 			});
 
@@ -1450,7 +1461,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				}
 			});
 
-			viewHolder.layoutComment.setOnClickListener(new OnClickListener() {
+			viewHolder.textCommentCount.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -1596,7 +1607,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 										});
 									}
 									else {
-										Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+										Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 									}
 
 
@@ -1786,7 +1797,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 							}
 							else {
-								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 							}
 							// Log.v(Constant.TAG, "Download video " +
 							// arrEntryPojos.get(position).getVideoLink());
@@ -2241,7 +2252,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 									addedviewImgId=arrEntryPojos.get(position).getID();
 									new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 								} else {
-									Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+									Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 									Utility.HideDialog(mContext);
 								}
 							}
@@ -2280,12 +2291,11 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;
-			ImageView btnShare;
-			ImageView btnFollow;
-			ImageView btnInfo;
-			ImageView btnLike;
+			FrameLayout btnShare;
+			TextView btnFollow;
+			FrameLayout btnInfo;
+			LinearLayout btnLike;
 			ImageView ivAudioIcon;
-			FrameLayout layoutComment;
 			ImageView imgUserPic;
 			TextView textCommentCount;
 			ImageView imgPlaceHolder;
@@ -2293,6 +2303,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			FrameLayout layoutStatastics;
 			TextView textStatasticCount;
 			ImageView imgMsg,ivIndicator;
+			TextView tvLikeText;
+			ImageView ivLike;
 		}
 
 		class ViewHolderProfile {
@@ -2477,7 +2489,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			if (Utility.isNetworkAvailable(mContext)) {
 				new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				//				Utility.HideDialog(mContext);
 			}
 
@@ -2560,7 +2572,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 										if (Utility.isNetworkAvailable(mContext)) {
 											new UpdateViewCountCall(arrEntryPojos.get(indexCurrentPlayAudio).getID()).start();
 										} else {
-											Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+											Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 											Utility.HideDialog(mContext);
 										}
 										mediaPlayer.seekTo(0);
@@ -2620,7 +2632,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			if (Utility.isNetworkAvailable(mContext)) {
 				new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 			} else {
-				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 				//				Utility.HideDialog(mContext);
 			}
 
@@ -2671,7 +2683,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 											Log.d("mobstar","update view on completion...");
 											new UpdateViewCountCall(arrEntryPojos.get(indexCurrentPlayAudio).getID()).start();
 										} else {
-											Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+											Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 											Utility.HideDialog(mContext);
 										}
 										mediaPlayer.seekTo(0);
@@ -2852,7 +2864,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 									IAmStar=jsonObjUser.getString("iAmStar");
 								}
 
-								if(UserCoverImage == ""){
+								if(UserCoverImage == null || UserCoverImage == ""){
 									UserCoverImage = jsonObjUser.getString("profileCover");
 								}
 
@@ -3045,7 +3057,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 						.error(R.drawable.profile_pic_new).transform(new RoundedTransformation(Utility.dpToPx(mContext, 126), 0)).into(imgUserPic);
 					}
 
-					if (UserCoverImage.equals("")) {
+					if (UserCoverImage == null || UserCoverImage.equals("")) {
 						imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
 					} else {
 						imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
@@ -3054,10 +3066,12 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 					}
 
 					if(IsMyStar!=null && !IsMyStar.equalsIgnoreCase("0")){
-						imgFollow.setImageResource(R.drawable.btn_following);
+						imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+						imgFollow.setText(getString(R.string.following));
 					}
 					else {
-						imgFollow.setImageResource(R.drawable.btn_follow_yellow);
+						imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+						imgFollow.setText(getString(R.string.follow));
 					}
 
 					if(IAmStar!=null && IAmStar.length()>0 && IAmStar.equalsIgnoreCase("1")){
@@ -3076,7 +3090,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				if (arrEntryPojos.size() == 0) {
 					isDataNull=true;
 					//					textNoData.setVisibility(View.VISIBLE);
-					//					textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+					//					textNoData.setText(getString(R.string.there_are_no_entries_yet));
 				}
 				else {
 					isDataNull=false;
@@ -3293,7 +3307,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				if (arrEntryPojos.size() == 0) {
 					isDataNull=true;
 					//					textNoData.setVisibility(View.VISIBLE);
-					//					textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+					//					textNoData.setText(getString(R.string.there_are_no_entries_yet));
 				}
 				else {
 					isDataNull=false;
@@ -3326,7 +3340,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 						.error(R.drawable.profile_pic_new).transform(new RoundedTransformation(Utility.dpToPx(mContext, 126), 0)).into(imgUserPic);
 					}
 
-					if (UserCoverImage.equals("")) {
+					if (UserCoverImage == null || UserCoverImage.equals("")) {
 						imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
 					} else {
 						imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
@@ -3784,7 +3798,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 	//
 	//		if (arrEntryPojos.size() == 0) {
 	////			textNoData.setVisibility(View.VISIBLE);
-	////			textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
+	////			textNoData.setText(getString(R.string.there_are_no_entries_yet));
 	//			isDataNull=true;
 	//			arrEntryPojos.add(null);
 	//		}
@@ -3909,11 +3923,12 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 
 				Intent searchIntent = new Intent("search_star_removed");
-				searchIntent.putExtra("UserID",UserID);
+				searchIntent.putExtra("UserID", UserID);
 				LocalBroadcastManager.getInstance(mContext).sendBroadcast(searchIntent);
 
 				IsMyStar="0";
-				imgFollow.setImageResource(R.drawable.btn_follow_yellow);
+				imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
+				imgFollow.setText(getString(R.string.follow));
 				imgFollow.setVisibility(View.VISIBLE);
 
 
@@ -4013,7 +4028,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 							}
 							else {
 
-								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 								Utility.HideDialog(mContext);
 							}
 						}

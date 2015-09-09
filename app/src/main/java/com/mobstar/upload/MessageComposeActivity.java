@@ -2,13 +2,11 @@ package com.mobstar.upload;
 
 import java.util.ArrayList;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.mobstar.R;
 import com.mobstar.pojo.StarPojo;
-import com.mobstar.upload.MessageActivity.postMessageCall;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -30,7 +28,6 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -104,7 +101,7 @@ public class MessageComposeActivity extends Activity implements OnClickListener,
 			new UsersFanCall().start();
 		} else {
 
-			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -132,6 +129,8 @@ public class MessageComposeActivity extends Activity implements OnClickListener,
 			onBackPressed();
 		}
 		else if (btnFinish.equals(v)) {
+			if (recipent == null)
+				return;
 			boolean isValid=false;
 			if (recipent.length() == 0) {
 				isValid = false;

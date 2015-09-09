@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -84,7 +83,7 @@ public class EditTaglineActivity extends Activity implements OnClickListener {
 			}
 
 			if (isValid) {
-				Utility.ShowProgressDialog(mContext, "Loading");
+				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 				if (Utility.isNetworkAvailable(mContext)) {
 					String myBio=editBio.getText().toString().trim();
 					String myTagline=editTagline.getText().toString().trim();
@@ -113,7 +112,7 @@ public class EditTaglineActivity extends Activity implements OnClickListener {
 					timer.schedule(task, 1000);
 				} else {
 
-					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 			}

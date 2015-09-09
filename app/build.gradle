@@ -25,7 +25,7 @@ android {
 }
 
 dependencies {
-    compile project(':simple-crop-image-lib')
+    compile 'com.edmodo:cropper:1.0.1'
     compile files('libs/android-async-http-1.4.6.jar')
     compile files('libs/bitlyj-2.0.0.jar')
     compile files('libs/commons-lang3-3.3.2.jar')
@@ -42,4 +42,6 @@ dependencies {
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'com.facebook.android:facebook-android-sdk:3.23.1'
+    //    compile 'com.instabug.library:instabugsupport:1+'
+    compile project(':ffmpeg4android_lib')
 }
