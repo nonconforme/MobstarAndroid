@@ -1,10 +1,5 @@
 package com.mobstar.login;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -29,12 +24,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.pojo.WhoToFollowPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class WhoToFollowActivity extends Activity implements OnClickListener{
 
@@ -242,10 +246,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 			Utility.HideDialog(mContext);
 
 			if (msg.what == 1) {
-				Intent intent = new Intent(mContext,HomeActivity.class);
-				intent.putExtra("isHomeInfo",true);
-				startActivity(intent);
-				finish();
+                getUserAccountRequest();
 			} else {
 				OkayAlertDialog(sErrorMessage);
 			}
@@ -350,12 +351,34 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 			}
 		}
 		else if(btnSkip.equals(view)){
-			Intent intent = new Intent(mContext,HomeActivity.class);
-			intent.putExtra("isHomeInfo",true);
-			startActivity(intent);
-			finish();
+            getUserAccountRequest();
 		}
-
 	}
 
+    private void startHomeActivity() {
+        Intent intent = new Intent(mContext,HomeActivity.class);
+        intent.putExtra("isHomeInfo",true);
+        startActivity(intent);
+        finish();
+    }
+    private void getUserAccountRequest(){
+        RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+            @Override
+            public void onSuccess(UserAccountResponse object) {
+                if (object.getUser().getUserContinentId() == 0) {
+                    startSelectCurrentRegionActivity();
+                } else startHomeActivity();
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
+    }
+    private void startSelectCurrentRegionActivity(){
+        final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
