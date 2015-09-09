@@ -1,90 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/comment_bg"
-    android:orientation="vertical" >
-
-    <FrameLayout
+    android:orientation="vertical">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/header_height"
-        android:background="@color/splash_bg" >
-
-        <com.mobstar.custom.CustomTextviewBold
-            android:id="@+id/textSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:drawableLeft="@drawable/ic_back"
-            android:drawablePadding="10dp"
-            android:gravity="center_vertical"
-            android:text="@string/settings"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/header_text_size" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
+        android:layout_height="wrap_content"
+        android:background="@color/comment_bg">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/header_height"
+                android:background="@color/splash_bg" >
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:id="@+id/textSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:drawableLeft="@drawable/ic_back"
+                    android:drawablePadding="10dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/settings"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/header_text_size" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center" >
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical" >
 
-                <ImageView
-                    android:id="@+id/btnPersonDetails"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/btn_personal_detail" />
-
-                <ImageView
-                    android:id="@+id/btnLinkedAccounts"
-                    android:layout_width="0dp"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center" >
+                    <LinearLayout
+                        android:id="@+id/btnPersonDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/btn_personal_detail" />
+                        <com.mobstar.custom.CustomTextviewBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white_color"
+                            android:textSize="20sp"
+                            android:text="@string/personal_details_"
+                            android:gravity="center" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/btnLinkedAccounts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/btn_linked_profile" />
+                        <com.mobstar.custom.CustomTextviewBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white_color"
+                            android:textSize="20sp"
+                            android:text="@string/linked_accounts_"
+                            android:gravity="center" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/btn_linked_profile" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:gravity="center" >
-
-                <ImageView
-                    android:id="@+id/btnChangePassword"
-                    android:layout_width="0dp"
+                    android:layout_marginTop="50dp"
+                    android:gravity="center" >
+                    <LinearLayout
+                        android:id="@+id/btnLocationSetting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/btn_location_settings" />
+                        <com.mobstar.custom.CustomTextviewBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white_color"
+                            android:textSize="20sp"
+                            android:text="@string/location_settings"
+                            android:gravity="center" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/btnPrivacySettings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/btn_privacy_settings" />
+                        <com.mobstar.custom.CustomTextviewBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white_color"
+                            android:textSize="20sp"
+                            android:text="@string/privacy_policy_"
+                            android:gravity="center" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/btn_change_password" />
+                    android:layout_marginTop="50dp"
+                    android:layout_marginBottom="@dimen/scale_20"
+                    android:orientation="horizontal"
+                    >
+                    <LinearLayout
+                        android:id="@+id/btnChangePassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/btn_change_password" />
+                        <com.mobstar.custom.CustomTextviewBold
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white_color"
+                            android:textSize="20sp"
+                            android:text="@string/change_password_"
+                            android:gravity="center" />
+                    </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/btnPrivacySettings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/btn_privacy_settings" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </FrameLayout>
-
+    </ScrollView>
 </LinearLayout>

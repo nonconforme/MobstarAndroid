@@ -64,4 +64,6 @@
 	<dimen name="default_btn_height">60dp</dimen>
 
     <dimen name="margin_record_button_split_video">12dp</dimen>
+
+	<dimen name="checked_view_height">50dp</dimen>
 </resources>

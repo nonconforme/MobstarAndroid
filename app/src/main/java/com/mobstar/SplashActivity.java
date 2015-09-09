@@ -20,6 +20,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.home.HomeInformationActivity;
 import com.mobstar.login.LoginSocialActivity;
@@ -98,9 +102,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 		if (preferences.getBoolean("isLogin", false)) {
 
 			if(deepLinkedId!=null) {
-				Intent intent1 = new Intent(mContext,HomeActivity.class);
-				intent1.putExtra("deepLinkedId",deepLinkedId);
-				startActivity(intent1);
+				getUserAccountRequest();
 			}
 			else {
 				//clear badge
@@ -170,6 +172,35 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 			}
 		}
 
+	}
+
+	private void getUserAccountRequest(){
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				if (object.getUser().getUserContinentId() == 0){
+					startSelectCurrentRegionActivity();
+				}
+				else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startHomeActivity(){
+		final Intent intent = new Intent(mContext, HomeActivity.class);
+		intent.putExtra("deepLinkedId", deepLinkedId);
+		startActivity(intent);
 	}
 
 	private void registerNetworkConnectReceiver(){

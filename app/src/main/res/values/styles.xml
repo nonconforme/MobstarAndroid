@@ -109,6 +109,19 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="RadioButtonYellow">
+        <item name="android:textColor">@color/white_color</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:background">@drawable/selector_oval_yellow_check_box</item>
+    </style>
+
     <style name="WhiteTextView">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">22sp</item>

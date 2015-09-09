@@ -1,13 +1,11 @@
 package com.mobstar.upload;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 
 import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;

@@ -1,13 +1,9 @@
 package com.mobstar.home;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -33,6 +30,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.adapters.ContinentsAdapter;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.ContinentFilterResponse;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
@@ -40,9 +41,19 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-public class HomeFragment extends Fragment {
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-	private Context mContext;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+
+
+
+public class HomeFragment extends Fragment implements OnClickListener {
+
+    private static final String LOG_TAG = HomeFragment.class.getName();
+    private Context mContext;
 
 	SharedPreferences preferences;
 
@@ -60,9 +71,13 @@ public class HomeFragment extends Fragment {
 	private ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
 	private CategoryAdapter categoryAdapter;
 	private Dialog categoryDialog;
-	
+    private ImageView vCategoryButton;
+    private int[] choosenContinents = {1,3,4};
+    private ProgressDialog progressDialog;
+    private ArrayList<Integer> listChoosen;
 
-	@Override
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle extras = getArguments();
@@ -73,6 +88,8 @@ public class HomeFragment extends Fragment {
 			}
 
 		}
+
+
 	}
 
 	@Override
@@ -145,6 +162,9 @@ public class HomeFragment extends Fragment {
 			}
 		});
 
+        vCategoryButton = (ImageView) view.findViewById(R.id.btn_category_home);
+        vCategoryButton.setOnClickListener(this);
+
 
 		if (!isDataLoaded) {
 			GetData("latest");
@@ -159,6 +179,7 @@ public class HomeFragment extends Fragment {
 
 	void GetData(String sLatestPopular) {
 		if (Utility.isNetworkAvailable(mContext)) {
+            getContinentsFilters();
 			new CategoryCall().start();
 		} else {
 			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
@@ -187,8 +208,33 @@ public class HomeFragment extends Fragment {
 		isDataLoaded = true;
 	}
 
+    private void getContinentsFilters() {
+        RestClient.getInstance(mContext).getRequest(Constant.USER_CONTINENT_FILTERS, null, new ConnectCallback<ContinentFilterResponse>() {
+            @Override
+            public void onSuccess(ContinentFilterResponse filterResponse) {
+                Log.d(LOG_TAG, "ContinentFilterResponse=" + filterResponse.getChoosenContinents().size());
+                if (!filterResponse.hasError()) {
+                    listChoosen = filterResponse.getChoosenContinents();
+                } else {
+                    Log.d(LOG_TAG, "getContinentsFilters.onFailure.error=" + filterResponse.getError());
+                    listChoosen = new ArrayList<Integer>();
+//                    okayAlertDialog(filterResponse.getError());
+                }
+            }
 
-	private void replaceFragment(Fragment mFragment, String fragmentName) {
+            @Override
+            public void onFailure(String error) {
+                Log.d(LOG_TAG, "getContinentsFilters.onFailure=" + error);
+
+//                okayAlertDialog(error);
+
+            }
+        });
+
+    }
+
+
+    private void replaceFragment(Fragment mFragment, String fragmentName) {
 
 		mFragmentTransaction = mFragmentManager.beginTransaction();
 		mFragmentTransaction.replace(R.id.childFragmentContent, mFragment, fragmentName);
@@ -205,39 +251,39 @@ public class HomeFragment extends Fragment {
 		btnLatest = (CustomTextviewBold) dialog.findViewById(R.id.btnLatest);
 		btnLatest.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (getActivity() != null) {
-					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							GetData("latest");
-							textLatestPopular.setText(getString(R.string.latest));
-							isLatest = true;
-						}
-					});
-				}
-				dialog.dismiss();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            GetData("latest");
+                            textLatestPopular.setText(getString(R.string.latest));
+                            isLatest = true;
+                        }
+                    });
+                }
+                dialog.dismiss();
+            }
+        });
 		btnPopular = (CustomTextviewBold) dialog.findViewById(R.id.btnPopular);
 		btnPopular.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (getActivity() != null) {
-					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							GetData("popular");
-							isLatest = false;
-							textLatestPopular.setText(getString(R.string.popular));
-						}
-					});
-				}
-				dialog.dismiss();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            GetData("popular");
+                            isLatest = false;
+                            textLatestPopular.setText(getString(R.string.popular));
+                        }
+                    });
+                }
+                dialog.dismiss();
+            }
+        });
 		dialog.show();
 	}
 
@@ -252,8 +298,88 @@ public class HomeFragment extends Fragment {
 
 		categoryDialog.show();
 	}
+    private void showProgress(){
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.loading));
+        progressDialog.show();
+    }
 
-	public class CategoryAdapter extends BaseAdapter {
+    private void hideProgress(){
+        if (progressDialog != null)
+            progressDialog.hide();
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.d(LOG_TAG, "onClick");
+        switch (v.getId()) {
+            case R.id.btn_category_home:
+                //mock
+//                for (int i=0;i<choosenContinents.length;i++){
+//                    listChoosen.add(choosenContinents[i]);
+//                }
+                ListView vListConinents;
+
+                final Dialog continentDialog = new Dialog(getActivity(), R.style.DialogTheme);
+                continentDialog.setContentView(R.layout.dialog_continets);
+                vListConinents = (ListView) continentDialog.findViewById(R.id.listContinents);
+                ((ImageButton) continentDialog.findViewById(R.id.btn_close_continents_filters)).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (listChoosen.size() == 6)
+                            listChoosen.clear();
+                        final HashMap<String, String> params = new HashMap<>();
+                        JSONArray jsonArray = new JSONArray(listChoosen);
+                        Log.d(LOG_TAG, "listChoosen.jsonArray=" + jsonArray.toString());
+                        params.put("continentFilter", jsonArray.toString());
+                        showProgress();
+                        RestClient.getInstance(mContext).postRequest(Constant.USER_CONTINENT_FILTERS, params, new ConnectCallback<ContinentFilterResponse>() {
+
+                            @Override
+                            public void onSuccess(ContinentFilterResponse filterResponse) {
+                                Log.d(LOG_TAG, "ContinentFilterResponse=" + filterResponse.getChoosenContinents().size());
+                                hideProgress();
+                                if (filterResponse.hasError()){
+                                    Log.d(LOG_TAG, "continentDialog.onSuccess.error=" + filterResponse.getError());
+//                                    okayAlertDialog(object.getError());
+                                } else {
+                                    continentDialog.dismiss();
+                                    onBeginVideoFragment();
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(String error) {
+                                Log.d(LOG_TAG, "continentDialog.onFailure.error=" + error);
+                                hideProgress();
+//                                okayAlertDialog(error);
+//                                showToastNotification(error);
+                            }
+                        });
+
+                    }
+                });
+
+
+                vListConinents.setAdapter(new ContinentsAdapter(continentDialog, listChoosen));
+
+                continentDialog.show();
+                break;
+        }
+    }
+
+    private void onBeginVideoFragment() {
+        VideoListFragment videoListFragment = new VideoListFragment();
+        Bundle extras = new Bundle();
+        extras.putBoolean("isEntryAPI", true);
+        extras.putString("LatestORPopular", "latest");
+        videoListFragment.setArguments(extras);
+        replaceFragment(videoListFragment, "VideoListFragment");
+    }
+
+    public class CategoryAdapter extends BaseAdapter {
 
 		private LayoutInflater inflater = null;
 
@@ -341,12 +467,7 @@ public class HomeFragment extends Fragment {
 					if(categoryDialog!=null) {
 						categoryDialog.dismiss();
 					}
-					VideoListFragment videoListFragment = new VideoListFragment();
-					Bundle extras = new Bundle();
-					extras.putBoolean("isEntryAPI", true);
-					extras.putString("LatestORPopular","latest");
-					videoListFragment.setArguments(extras);
-					replaceFragment(videoListFragment, "VideoListFragment");
+					onBeginVideoFragment();
 				}
 			});
 
@@ -464,13 +585,13 @@ public class HomeFragment extends Fragment {
 				categoryAdapter.notifyDataSetChanged();
 
 			} else {
-				OkayAlertDialog(sErrorMessage);
+				okayAlertDialog(sErrorMessage);
 
 			}
 		}
 	};
 
-	void OkayAlertDialog(final String msg) {
+	void okayAlertDialog(final String msg) {
 
 		if (getActivity() != null && !getActivity().isFinishing()) {
 			getActivity().runOnUiThread(new Runnable() {

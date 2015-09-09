@@ -30,10 +30,14 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
 import com.mobstar.custom.AbstractGetNameTask;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.GetNameInForeground;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.twitter.ImageTwitter;
@@ -612,7 +616,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
 					startWelcomeActivity();
 				}else {
-					startHomeActivity();
+					getUserAccountRequest();
 				}
 				
 			} else {
@@ -628,6 +632,31 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 		startActivity(intent);
 		finish();
 	}
+
+	private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(mContext);
+				if (object.getUser().getUserContinentId() == 0) {
+					startSelectCurrentRegionActivity();
+				} else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(mContext);
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
 
 	private void startHomeActivity(){
 		Intent intent = new Intent(mContext, HomeActivity.class);

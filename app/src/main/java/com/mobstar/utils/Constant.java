@@ -147,6 +147,12 @@ public class Constant {
 	
 	public static String LOGOUT="user/logout";
 
+	public static final String USER_CONTINENT = "settings/userContinent/";
+
+	public static final String USER_ACCOUNT = "settings/account/";
+
+    public static final String USER_CONTINENT_FILTERS = "settings/continentFilter";
+
 
 //	app constant
 	public static final String IMAGE              = "image";
