@@ -31,8 +31,8 @@ public class ContinentsAdapter extends BaseAdapter implements CheckableView.OnCh
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //        continents = context.getResources().getStringArray(R.array.continents_name);
         continents = new String[]{"All world"
-                ,context.getResources().getString(R.string.asia)
                 ,context.getResources().getString(R.string.africa)
+                ,context.getResources().getString(R.string.asia)
                 ,context.getResources().getString(R.string.europe)
                 ,context.getResources().getString(R.string.north_america)
                 ,context.getResources().getString(R.string.oceania)
