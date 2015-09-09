@@ -1,14 +1,27 @@
 package com.mobstar.geo_filtering;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.loopj.android.http.RequestParams;
 import com.mobstar.R;
 import com.mobstar.custom.CheckableView;
 import com.mobstar.pojo.ContinentsPojo;
+import com.mobstar.utils.Constant;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import api.ConnectCallback;
+import api.RestClient;
+import api.responce.BaseResponse;
+import api.responce.ContinentResponse;
 
 /**
  * Created by lipcha on 08.09.15.
@@ -19,6 +32,7 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
     private Button btnOk;
     private CheckableView checkedRegionView;
     private Toast mToast;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +80,35 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
             onClickOk();
                 break;
         }
+
     }
 
     private void onClickOk(){
         final ContinentsPojo.Continents selectedContinents = getSelectedContinents();
         if (selectedContinents == null) {
-            showToastNotification("no selected continent");
+            showToastNotification(getString(R.string.no_select_current_region_message));
             return;
         }
-        showToastNotification("selected: " + selectedContinents.toString());
+        postCurrentRegionRequest(selectedContinents);
+    }
+
+    private void postCurrentRegionRequest(ContinentsPojo.Continents continents){
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("userContinent", Integer.toString(continents.ordinal()));
+        showProgress();
+        RestClient.getInstance(this).postRequest(Constant.USER_CONTINENT, params, new ConnectCallback<ContinentResponse>() {
+
+            @Override
+            public void onSuccess(ContinentResponse object) {
+                hideProgress();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                hideProgress();
+                showToastNotification(error);
+            }
+        });
     }
 
     private ContinentsPojo.Continents getSelectedContinents(){
@@ -105,5 +139,17 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
         mToast.setText(_message);
         mToast.show();
 
+    }
+
+    private void showProgress(){
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.please_wait));
+        progressDialog.show();
+    }
+
+    private void hideProgress(){
+        if (progressDialog != null)
+            progressDialog.hide();
     }
 }
