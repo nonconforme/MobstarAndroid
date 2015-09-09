@@ -1,9 +1,9 @@
-package api.model;
+package com.mobstar.api.model;
+
+import com.mobstar.api.responce.BaseResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import api.responce.BaseResponse;
 
 /**
  * Created by lipcha on 09.09.15.
