@@ -6,27 +6,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -36,6 +27,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.renderscript.Type.CubemapFace;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -347,42 +340,42 @@ public class UploadFileActivity extends Activity {
 
 					if (editTitle.getText().toString().trim().length() == 0) {
 						editTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-						textTitleHint.setText(getString(R.string.enter_title));
+						textTitleHint.setText("Enter Title");
 						textTitleHint.setVisibility(View.VISIBLE);
 
 					}
 					else if(isModelType){
 						if (posAge==0) {
 							editAge.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-							textAgeHint.setText(getString(R.string.select_age));
+							textAgeHint.setText("Select Age");
 							textAgeHint.setVisibility(View.VISIBLE);
 
 						}
 						else if (posHeight==0) {
 							editHeight.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-							textHeightHint.setText(getString(R.string.select_height));
+							textHeightHint.setText("Select Height");
 							textHeightHint.setVisibility(View.VISIBLE);
 						}
 						else {
-							Utility.ShowProgressDialog(mContext, getString(R.string.uploading));
+							Utility.ShowProgressDialog(mContext, "Uploading...");
 
 							if (Utility.isNetworkAvailable(mContext)) {
 								new UploadImage().execute(Constant.SERVER_URL + Constant.ENTRY);
 							} else {
-								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 								Utility.HideDialog(mContext);
 							}
 						}
 					}
 					else {
 
-						Utility.ShowProgressDialog(mContext, getString(R.string.uploading));
+						Utility.ShowProgressDialog(mContext, "Uploading...");
 
 						if (Utility.isNetworkAvailable(mContext)) {
 							new UploadImage().execute(Constant.SERVER_URL + Constant.ENTRY);
 						} else {
 
-							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 							Utility.HideDialog(mContext);
 						}
 					}
@@ -413,7 +406,7 @@ public class UploadFileActivity extends Activity {
 				httpPost.addHeader("X-API-KEY", Constant.API_KEY);
 
 				httpPost.addHeader("X-API-TOKEN", preferences.getString("token", null));
-				Charset chars = Charset.forName("UTF-8");
+
 				MultipartEntity multipartContent = new MultipartEntity();
 
 				String sMimeType = "";
@@ -443,12 +436,14 @@ public class UploadFileActivity extends Activity {
 				Log.d("mobstar","sending post request=> type"+sType+"category="+categoryId+" subCategory= "+subCat +" age="+editAge.getText().toString()+" height="+editHeight.getText().toString()+" language"+"english"+" name"+preferences.getString("username", null)+" description="+editTitle.getText().toString());
 				}
 				multipartContent.addPart("language", new StringBody("english"));
-				multipartContent.addPart("name", new StringBody(preferences.getString("username", null), chars));
+				multipartContent.addPart("name", new StringBody(preferences.getString("username", null)));
+				
 				//remove quote from string
 				String strTitle=editTitle.getText().toString().trim();
 				String ContentTitle=strTitle.replace("\"","");
 				Log.d("mobstar","new title is=>"+ContentTitle);
 				multipartContent.addPart("description", new StringBody(StringEscapeUtils.escapeJava(ContentTitle)));
+
 				//if category is 3 model type need to pass following param
 				
 				

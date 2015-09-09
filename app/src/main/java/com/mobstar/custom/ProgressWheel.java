@@ -172,7 +172,6 @@ public class ProgressWheel extends CompoundButton {
 	 */
 	public void setProgress(int progress) {
 		if (progress > mMax || progress < 0) {
-			//todo must create string value???
 			throw new IllegalArgumentException(String.format("Progress (%d) must be between %d and %d", progress, 0, mMax));
 		}
 		mProgress = progress;

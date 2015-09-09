@@ -29,6 +29,7 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutCompat.LayoutParams;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -44,7 +45,6 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -195,7 +195,7 @@ public class UpdatesFragment extends Fragment{
 				entryListAdapter.notifyDataSetChanged();
 				if (arrEntryPojos.size() == 0) {
 					textNoData.setVisibility(View.VISIBLE);
-					textNoData.setText(getString(R.string.there_are_no_entries_yet));
+					textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
 				}
 				else {
 					textNoData.setVisibility(View.GONE);
@@ -276,7 +276,7 @@ public class UpdatesFragment extends Fragment{
 //					Log.d("mobstar","Call from pull to refresh");
 					new EntryCall(UserID,currentPage).start();
 				} else {
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -290,7 +290,7 @@ public class UpdatesFragment extends Fragment{
 		} else {
 			if (arrEntryPojos.size() == 0) {
 				textNoData.setVisibility(View.VISIBLE);
-				textNoData.setText(getString(R.string.there_are_no_entries_yet));
+				textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
 			}
 			else {
 				textNoData.setVisibility(View.GONE);
@@ -320,7 +320,7 @@ public class UpdatesFragment extends Fragment{
 				//						Log.d("mobstar","Load from scroll");
 				//						new EntryCall(UserID,currentPage).start();
 				//					} else {
-				//						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+				//						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 				//						Utility.HideDialog(mContext);
 				//					}
 				//					loading = true;
@@ -447,7 +447,7 @@ public class UpdatesFragment extends Fragment{
 			}
 		}
 
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		if (Utility.isNetworkAvailable(mContext)) {
 			isWebCall = true;
@@ -457,12 +457,12 @@ public class UpdatesFragment extends Fragment{
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 		if (arrEntryPojos.size() == 0) {
 			textNoData.setVisibility(View.VISIBLE);
-			textNoData.setText(getString(R.string.there_are_no_entries_yet));
+			textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
 		}
 		else {
 			textNoData.setVisibility(View.GONE);
@@ -525,16 +525,14 @@ public class UpdatesFragment extends Fragment{
 				if (type == 0) {
 					// Inflate the layout with image
 					convertView = inflater.inflate(R.layout.row_item_mobit, parent, false);
-					viewHolder.btnLike=(LinearLayout)convertView.findViewById(R.id.btnLike);
+					viewHolder.btnLike=(ImageView)convertView.findViewById(R.id.btnLike);
 					viewHolder.textLikeCount=(TextView)convertView.findViewById(R.id.textLikeCount);
-					viewHolder.tvLikeText = (TextView) convertView.findViewById(R.id.tvLikeText);
-					viewHolder.ivLike = (ImageView) convertView.findViewById(R.id.ivLike);
 				}
 				else {
 					convertView = inflater.inflate(R.layout.row_item_entry, parent, false);
 					viewHolder.layoutStatastics = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
 					viewHolder.textStatasticCount = (TextView) convertView.findViewById(R.id.textStatasticCount);
-					viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
+					viewHolder.btnFollow = (ImageView) convertView.findViewById(R.id.btnFollow);
 					viewHolder.imgMsg= (ImageView) convertView.findViewById(R.id.imgMsg);
 					
 				}
@@ -548,9 +546,9 @@ public class UpdatesFragment extends Fragment{
 				viewHolder.imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
 				viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
 				viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
-				viewHolder.btnShare = (FrameLayout) convertView.findViewById(R.id.btnShare);
+				viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
 
-				viewHolder.btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
+				viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
 
 				viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
 				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
@@ -583,11 +581,9 @@ public class UpdatesFragment extends Fragment{
 					viewHolder.btnFollow.setVisibility(View.VISIBLE);
 					if (arrEntryPojos.get(position).getIsMyStar() != null) {
 						if (arrEntryPojos.get(position).getIsMyStar().equalsIgnoreCase("1")) {
-							viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
-							viewHolder.btnFollow.setText(getString(R.string.following));
+							viewHolder.btnFollow.setImageResource(R.drawable.btn_following);
 						} else {
-							viewHolder.btnFollow.setBackground(getResources().getDrawable(R.drawable.selector_oval_button));
-							viewHolder.btnFollow.setText(getString(R.string.follow));
+							viewHolder.btnFollow.setImageResource(R.drawable.btn_follow);
 						}
 					}
 				}
@@ -620,7 +616,7 @@ public class UpdatesFragment extends Fragment{
 						if (arrEntryPojos.get(pos).getIsMyStar().equalsIgnoreCase("1")) {
 
 						} else {
-							Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+							Utility.ShowProgressDialog(mContext, "Loading");
 
 							if (Utility.isNetworkAvailable(mContext)) {
 
@@ -643,7 +639,7 @@ public class UpdatesFragment extends Fragment{
 
 							} else {
 
-								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+								Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 								Utility.HideDialog(mContext);
 							}
 
@@ -670,14 +666,10 @@ public class UpdatesFragment extends Fragment{
 				viewHolder.textLikeCount.setText(arrEntryPojos.get(position).getUpVotesCount());
 
 				if(arrEntryPojos.get(position).getIsVotedByYou().equalsIgnoreCase("0")){
-					viewHolder.tvLikeText.setVisibility(View.GONE);
-					viewHolder.ivLike.setImageResource(R.drawable.icn_like);
-//					viewHolder.btnLike.setBackground((getActivity().getResources().getDrawable(R.drawable.btn_like)));
+					viewHolder.btnLike.setBackground((getActivity().getResources().getDrawable(R.drawable.btn_like)));
 				}
 				else {
-					viewHolder.tvLikeText.setVisibility(View.VISIBLE);
-					viewHolder.ivLike.setImageResource(R.drawable.icn_btn_unlike);
-//					viewHolder.btnLike.setBackground((getActivity().getResources().getDrawable(R.drawable.btn_unlike)));
+					viewHolder.btnLike.setBackground((getActivity().getResources().getDrawable(R.drawable.btn_unlike)));
 				}
 
 				viewHolder.btnLike.setOnClickListener(new OnClickListener() {
@@ -1510,7 +1502,7 @@ public class UpdatesFragment extends Fragment{
 									addedviewImgId=arrEntryPojos.get(position).getID();
 									new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 								} else {
-									Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+									Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 									Utility.HideDialog(mContext);
 								}
 							}
@@ -1549,11 +1541,10 @@ public class UpdatesFragment extends Fragment{
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;
-			FrameLayout btnShare;
-			TextView btnFollow;
-			FrameLayout btnInfo;
-			LinearLayout btnLike;
-			TextView tvLikeText;
+			ImageView btnShare;
+			ImageView btnFollow;
+			ImageView btnInfo;
+			ImageView btnLike;
 			ImageView ivAudioIcon;
 			FrameLayout layoutComment;
 			ImageView imgUserPic;
@@ -1562,7 +1553,7 @@ public class UpdatesFragment extends Fragment{
 			FrameLayout flPlaceHolder;
 			FrameLayout layoutStatastics;
 			TextView textStatasticCount;
-			ImageView imgMsg,ivIndicator, ivLike;
+			ImageView imgMsg,ivIndicator;
 		}
 
 
@@ -1595,7 +1586,7 @@ public class UpdatesFragment extends Fragment{
 			if (Utility.isNetworkAvailable(mContext)) {
 				new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 			} else {
-				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 
@@ -1675,7 +1666,7 @@ public class UpdatesFragment extends Fragment{
 										if (Utility.isNetworkAvailable(mContext)) {
 											new UpdateViewCountCall(arrEntryPojos.get(indexCurrentPlayAudio).getID()).start();
 										} else {
-											Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+											Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 											Utility.HideDialog(mContext);
 										}
 										mediaPlayer.seekTo(0);
@@ -1717,7 +1708,7 @@ public class UpdatesFragment extends Fragment{
 			if (Utility.isNetworkAvailable(mContext)) {
 				new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
 			} else {
-				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 
@@ -1766,7 +1757,7 @@ public class UpdatesFragment extends Fragment{
 										if (Utility.isNetworkAvailable(mContext)) {
 											new UpdateViewCountCall(arrEntryPojos.get(indexCurrentPlayAudio).getID()).start();
 										} else {
-											Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+											Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 											Utility.HideDialog(mContext);
 										}
 										mediaPlayer.seekTo(0);
@@ -2043,7 +2034,7 @@ public class UpdatesFragment extends Fragment{
 				entryListAdapter.notifyDataSetChanged();
 				if (arrEntryPojos.size() == 0) {
 					textNoData.setVisibility(View.VISIBLE);
-					textNoData.setText(getString(R.string.there_are_no_entries_yet));
+					textNoData.setText("THERE ARE\nNO ENTRIES\nYET");
 				}
 			} else {
 				OkayAlertDialog(sErrorMessage);

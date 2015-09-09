@@ -1,7 +1,9 @@
 package com.mobstar.fanconnect;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -120,7 +122,7 @@ public class FanConnectHomeFragment extends Fragment implements OnClickListener 
 		llFeedback = (LinearLayout) view.findViewById(R.id.llFeedback);
 		llFeedback.setOnClickListener(this);
 
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		if (Utility.isNetworkAvailable(mContext)) {
 
@@ -128,7 +130,7 @@ public class FanConnectHomeFragment extends Fragment implements OnClickListener 
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 

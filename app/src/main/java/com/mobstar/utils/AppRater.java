@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
-import com.mobstar.R;
-
 public class AppRater {
 	//Change for your needs!
     private final static String APP_TITLE = "MobStar";     
@@ -50,12 +48,12 @@ public class AppRater {
     	        Dialog dialog = new Dialog(mContext);
     	 
     	        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-    	        String message = mContext.getString(R.string.thanks_for_using_app_rate);
+    	        String message = "Thanks for using our app. If you like it so far, please rate us by clicking below. Thanks for your support!";
     	        builder.setMessage(message)
-    	                .setTitle(mContext.getString(R.string.rate) + " " + APP_TITLE)
+    	                .setTitle("Rate " + APP_TITLE)
     	                .setIcon(mContext.getApplicationInfo().icon)
     	                .setCancelable(false)
-    	                .setPositiveButton(mContext.getString(R.string.rate_now),
+    	                .setPositiveButton("Rate Now",
     	                        new DialogInterface.OnClickListener() {
     	 
     	                            @Override
@@ -70,7 +68,7 @@ public class AppRater {
     	                                dialog.dismiss();
     	                            }
     	                        })
-    	                .setNeutralButton(mContext.getString(R.string.later),
+    	                .setNeutralButton("Later",        
     	                        new DialogInterface.OnClickListener() {
     	 
     	                            @Override
@@ -85,7 +83,7 @@ public class AppRater {
     	 
     	                            }
     	                        })
-    	                .setNegativeButton(mContext.getString(R.string.no_thanks),
+    	                .setNegativeButton("No, Thanks",
     	                        new DialogInterface.OnClickListener() {
     	 
     	                            @Override

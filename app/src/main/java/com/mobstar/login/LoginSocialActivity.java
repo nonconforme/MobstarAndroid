@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -36,14 +37,9 @@ import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.mobstar.R;
-import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.SplashActivity;
 import com.mobstar.custom.AbstractGetNameTask;
-import com.mobstar.custom.CustomTextview;
-import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.GetNameInForeground;
-import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.twitter.ImageTwitter;
@@ -56,9 +52,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 
 	Context mContext;
 
-	ImageView btnGetStarted, btnSignIn;
-	private CustomTextview btnLoginFB,  btnLoginTwitter, btnLoginGoogle;
-	private CustomTextviewBold btnCountinueWOSignin;
+	ImageView btnGetStarted, btnSignIn, btnLoginFB, btnLoginTwitter, btnLoginGoogle, btnCountinueWOSignin;
 
 	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 	private static final List<String> READ_PERMISSIONS = Arrays.asList("email","public_profile");
@@ -112,16 +106,16 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 		btnSignIn = (ImageView) findViewById(R.id.btnSignIn);
 		btnSignIn.setOnClickListener(this);
 
-		btnLoginFB = (CustomTextview) findViewById(R.id.btnLoginFB);
+		btnLoginFB = (ImageView) findViewById(R.id.btnLoginFB);
 		btnLoginFB.setOnClickListener(this);
 
-		btnLoginTwitter = (CustomTextview) findViewById(R.id.btnLoginTwitter);
+		btnLoginTwitter = (ImageView) findViewById(R.id.btnLoginTwitter);
 		btnLoginTwitter.setOnClickListener(this);
 
-		btnLoginGoogle = (CustomTextview) findViewById(R.id.btnLoginGoogle);
+		btnLoginGoogle = (ImageView) findViewById(R.id.btnLoginGoogle);
 		btnLoginGoogle.setOnClickListener(this);
 		
-		btnCountinueWOSignin= (CustomTextviewBold) findViewById(R.id.btnCountinueWOSignin);
+		btnCountinueWOSignin=(ImageView) findViewById(R.id.btnCountinueWOSignin);
 		btnCountinueWOSignin.setOnClickListener(this);
 
 	}
@@ -150,7 +144,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+					Utility.ShowProgressDialog(mContext, "Loading");
 					onFBLogin();
 					dialog.dismiss();
 				}
@@ -168,7 +162,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 
 		} else if (btnLoginTwitter.equals(view)) {
 
-			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+			Utility.ShowProgressDialog(mContext, "Loading");
 
 			boolean authOnly = true;
 			mTweet = new ImageTwitter(LoginSocialActivity.this, authOnly, null,null);
@@ -189,7 +183,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 							pref.edit().putBoolean("isSocialLogin",true).commit();
 							new TwitterLoginCall(mTweet.mUser.getId() + "", mTweet.mUser.getScreenName(), mTweet.mUser.getName(), mTweet.mUser.getScreenName()).start();
 						} else {
-							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 							Utility.HideDialog(mContext);
 						}
 					} else {
@@ -200,7 +194,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			});
 			mTweet.send();
 		} else if (btnLoginGoogle.equals(view)) {
-			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+			Utility.ShowProgressDialog(mContext, "Loading");
 			getUsername();
 		}else if(btnCountinueWOSignin.equals(view)) {           //khyati
 			
@@ -237,7 +231,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			if (Utility.isNetworkAvailable(mContext)) {
 				getTask(LoginSocialActivity.this, mEmail, SCOPE).execute();
 			} else {
-				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 				Utility.HideDialog(mContext);
 			}
 		}
@@ -300,7 +294,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 									} catch (Exception e) {
 										// TODO: handle exception
 										e.printStackTrace();
-										Toast.makeText(mContext, getString(R.string.error_while_login_with_facebook), Toast.LENGTH_SHORT).show();
+										Toast.makeText(mContext, "Error while login with Facebook!", Toast.LENGTH_SHORT).show();
 										Utility.HideDialog(mContext);
 									}
 
@@ -309,7 +303,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 						}).executeAsync();
 					} else {
 
-						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 
@@ -611,57 +605,22 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 				pref.edit().putString("bio", UserBio).commit();
 				pref.edit().putBoolean("isLogin", true).commit();
 
+//				Intent intent = new Intent(mContext, HomeActivity.class);
+//				startActivity(intent);
+//				finish();
 				
-				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
-					startWelcomeActivity();
-				}else {
-					getUserAccountRequest();
-				}
+				
+				Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivity(intent);
+				finish();
 				
 			} else {
 				OkayAlertDialog(sErrorMessage);
 			}
 		}
 	};
-
-	private void startWelcomeActivity(){
-		Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
-		finish();
-	}
-
-	private void getUserAccountRequest(){
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
-			@Override
-			public void onSuccess(UserAccountResponse object) {
-				Utility.HideDialog(mContext);
-				if (object.getUser().getUserContinentId() == 0) {
-					startSelectCurrentRegionActivity();
-				} else startHomeActivity();
-			}
-
-			@Override
-			public void onFailure(String error) {
-				Utility.HideDialog(mContext);
-			}
-		});
-	}
-
-	private void startSelectCurrentRegionActivity(){
-		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
-		startActivity(intent);
-		finish();
-	}
-
-
-	private void startHomeActivity(){
-		Intent intent = new Intent(mContext, HomeActivity.class);
-		startActivity(intent);
-		finish();
-	}
 
 	void OkayAlertDialog(final String msg) {
 
@@ -705,7 +664,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 				mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 				getUsername();
 			} else if (resultCode == RESULT_CANCELED) {
-				Toast.makeText(this, getString(R.string.you_must_pick_an_account), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "You must pick an account", Toast.LENGTH_SHORT).show();
 			}
 		} else if ((requestCode == REQUEST_CODE_RECOVER_FROM_AUTH_ERROR || requestCode == REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR) && resultCode == RESULT_OK) {
 			handleAuthorizeResult(resultCode, data);
@@ -716,19 +675,19 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 
 	private void handleAuthorizeResult(int resultCode, Intent data) {
 		if (data == null) {
-			showToast(getString(R.string.unknown_error_click_button));
+			showToast("Unknown error, click the button again");
 			return;
 		}
 		if (resultCode == RESULT_OK) {
-			showToast(getString(R.string.retrying));
+			showToast("Retrying.");
 			getTask(this, mEmail, SCOPE).execute();
 			return;
 		}
 		if (resultCode == RESULT_CANCELED) {
-			showToast(getString(R.string.user_rejected_authorization));
+			showToast("User rejected authorization.");
 			return;
 		}
-		showToast(getString(R.string.unknown_error_click_button));
+		showToast("Unknown error, click the button again");
 	}
 
 	private AbstractGetNameTask getTask(LoginSocialActivity activity, String email, String scope) {

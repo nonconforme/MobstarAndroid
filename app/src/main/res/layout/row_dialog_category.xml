@@ -8,23 +8,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:gravity="center_horizontal" >
 
-        <com.mobstar.custom.CustomTextviewBold
+        <ImageView
             android:id="@+id/btnAll"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/category_button_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:paddingLeft="20dp"
-            android:gravity="center_vertical"
-            android:drawablePadding="20dp"
-            android:textSize="22sp"
-            android:text="@string/all"
             android:contentDescription="@string/app_name"
-            android:drawableLeft="@drawable/icn_btn_all"
-            android:background="@drawable/oval_white_button_background"
+            android:src="@drawable/btn_all"
             android:visibility="visible" />
 
     </LinearLayout>
@@ -32,11 +24,11 @@
     <LinearLayout
         android:id="@+id/llCategory"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/category_button_height"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/oval_yellow_button_background" >
+        android:background="@drawable/btn_category" >
 
         <ImageView
             android:id="@+id/image_icon"

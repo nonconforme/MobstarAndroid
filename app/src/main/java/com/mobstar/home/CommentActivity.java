@@ -13,6 +13,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,7 +107,7 @@ public class CommentActivity extends Activity {
 
 					sErrorMessage = "";
 
-					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+					Utility.ShowProgressDialog(mContext, "Loading");
 
 					if (Utility.isNetworkAvailable(mContext)) {
 
@@ -116,7 +117,7 @@ public class CommentActivity extends Activity {
 
 					} else {
 
-						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 				}
@@ -178,7 +179,7 @@ public class CommentActivity extends Activity {
 				// TODO Auto-generated method stub
 				final int checkedCount = listComment.getCheckedItemCount();
 				// Set the CAB title according to total checked items
-				arg0.setTitle(checkedCount + " " + getString(R.string.selected));
+				arg0.setTitle(checkedCount + " Selected");
 
 				if (arrSelectionCommentedID.contains(arrCommentpPojos.get(position).getCommentID() + "")) {
 					arrSelectionCommentedID.remove(arrCommentpPojos.get(position).getCommentID() + "");
@@ -191,7 +192,7 @@ public class CommentActivity extends Activity {
 		commentListAdapter = new CommentListAdapter();
 		listComment.setAdapter(commentListAdapter);
 
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		if (Utility.isNetworkAvailable(mContext)) {
 
@@ -199,7 +200,7 @@ public class CommentActivity extends Activity {
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -207,7 +208,7 @@ public class CommentActivity extends Activity {
 
 	void DeleteComment() {
 		sErrorMessage = "";
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		if (Utility.isNetworkAvailable(mContext)) {
 
@@ -215,7 +216,7 @@ public class CommentActivity extends Activity {
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -590,7 +591,7 @@ public class CommentActivity extends Activity {
 
 				} else {
 
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 					Utility.HideDialog(mContext);
 				}
 

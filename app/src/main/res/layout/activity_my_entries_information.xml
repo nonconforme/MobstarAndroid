@@ -71,40 +71,28 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.mobstar.custom.CustomTextviewBold
+    <ImageView
         android:id="@+id/btnEntryInformation"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:text="@string/entry_information"
-        android:drawableLeft="@drawable/icn_btn_entry_info"
-        style="@style/BaseButton.Gray"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
+        android:src="@drawable/btn_entry_info" />
 
-    <com.mobstar.custom.CustomTextviewBold
+    <ImageView
         android:id="@+id/btnEditInformation"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:text="@string/edit_information"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/icn_edit_info"
-        style="@style/BaseButton.Gray"/>
+        android:src="@drawable/btn_edit_info" />
 
-    <com.mobstar.custom.CustomTextviewBold
+    <ImageView
         android:id="@+id/btnDeleteEntry"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/app_name"
-        android:text="@string/delete_entry"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/icn_btn_delete_entry"
-        style="@style/BaseButton.Gray"/>
+        android:src="@drawable/btn_delete_entry" />
 
 </LinearLayout>

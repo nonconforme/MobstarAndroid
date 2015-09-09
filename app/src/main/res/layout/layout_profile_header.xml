@@ -38,7 +38,7 @@
                  android:layout_marginRight="@dimen/scale_5"
                  android:src="@drawable/msg_btn" />
 
-             <TextView
+             <ImageView
                  android:id="@+id/imgFollow"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
@@ -46,14 +46,9 @@
                  android:layout_marginRight="10dp"
                  android:layout_toLeftOf="@id/imgMsg"
                  android:contentDescription="@string/app_name"
-                 android:background="@drawable/yellow_btn"
-                 android:paddingTop="3dp"
-                 android:paddingBottom="3dp"
-                 android:paddingRight="10dp"
-                 android:paddingLeft="10dp"
-                 android:text="@string/follow" />
+                 android:src="@drawable/btn_follow_yellow" />
 
-             <com.mobstar.custom.CustomTextviewBold
+             <ImageView
                  android:id="@+id/btnEdit"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
@@ -61,12 +56,7 @@
                  android:layout_centerVertical="true"
                  android:layout_marginRight="10dp"
                  android:contentDescription="@string/app_name"
-                 android:paddingTop="3dp"
-                 android:paddingBottom="3dp"
-                 android:paddingRight="10dp"
-                 android:paddingLeft="10dp"
-                 android:background="@drawable/yellow_btn"
-                 android:text="@string/edit"
+                 android:src="@drawable/btn_edit"
                  android:visibility="gone" />
 
         </RelativeLayout>

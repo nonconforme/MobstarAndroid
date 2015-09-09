@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,12 +23,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,7 +42,9 @@ import com.mobstar.login.LoginSocialActivity;
 import com.mobstar.service.NotificationService;
 import com.mobstar.settings.SettingsFragment;
 import com.mobstar.talentconnect.TalentConnectHomeFragment;
+import com.mobstar.upload.SelectCategoryActivity;
 import com.mobstar.upload.SelectUploadTypeActivity;
+import com.mobstar.utils.AppRater;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -119,12 +118,8 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 		mActionBar.setDisplayShowHomeEnabled(false);
 		mActionBar.setDisplayShowTitleEnabled(false);
 		mActionBar.setDisplayUseLogoEnabled(false);
-		final View customView = LayoutInflater.from(this).inflate(R.layout.layout_actionbar, null);
-		mActionBar.setCustomView(customView, new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		mActionBar.setCustomView(R.layout.layout_actionbar);
 		mActionBar.setDisplayShowCustomEnabled(true);
-		Toolbar parent =(Toolbar) customView.getParent();
-		parent.setContentInsetsAbsolute(0, 0);
-
 
 		mFragmentManager = getSupportFragmentManager();
 
@@ -166,17 +161,6 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 		LocalBroadcastManager.getInstance(mContext).registerReceiver(mReceiver, new IntentFilter("notification_count_changed"));
 
 		registerReceiver(mReceiver, new IntentFilter("notification_count_update_from_service"));
-		startHowToVoteActivity();
-	}
-
-	private void startHowToVoteActivity(){
-		final SharedPreferences preferences = getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
-		final boolean isShowingHowToVote = preferences.getBoolean(HowToVoteActivity.HOW_TO_VOTE, true);
-		if (isShowingHowToVote){
-			final Intent intent = new Intent(this, HowToVoteActivity.class);
-			startActivity(intent);
-			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-		}
 	}
 
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -496,7 +480,7 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 			alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
 
 			// set dialog message
-			alertDialogBuilder.setMessage(getString(R.string.coming_soon)).setCancelable(false).setNeutralButton("OK", null);
+			alertDialogBuilder.setMessage("Coming Soon!").setCancelable(false).setNeutralButton("OK", null);
 
 			// create alert dialog
 			AlertDialog alertDialog = alertDialogBuilder.create();
@@ -528,7 +512,7 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 			//			alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
 			//
 			//			// set dialog message
-			//			alertDialogBuilder.setMessage(getString(R.string.coming_soon)).setCancelable(false).setNeutralButton("OK", null);
+			//			alertDialogBuilder.setMessage("Coming Soon!").setCancelable(false).setNeutralButton("OK", null);
 			//
 			//			// create alert dialog
 			//			AlertDialog alertDialog = alertDialogBuilder.create();
@@ -703,7 +687,7 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 
 			//			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.GET_NOTIFICATION_COUNT, preferences.getString("token", null));
 
-			String response=JSONParser.postRequest(Constant.SERVER_URL+ Constant.MESSAGE_COUNT,null,null,preferences.getString("token", null));
+			String response=JSONParser.postRequest(Constant.SERVER_URL+Constant.MESSAGE_COUNT,null,null,preferences.getString("token", null));
 			Log.v(Constant.TAG, "GET_INBOX_COUNT response " + response);
 
 			if (response != null) {
@@ -757,7 +741,7 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 			String[] name = {"deviceToken","device"};
 			String[] value = {deviceId,"google"};
 			
-			String response=JSONParser.postRequest(Constant.SERVER_URL+ Constant.LOGOUT,name,value,preferences.getString("token", null));
+			String response=JSONParser.postRequest(Constant.SERVER_URL+Constant.LOGOUT,name,value,preferences.getString("token", null));
 			Log.v(Constant.TAG, "LOGOUT response " + response);
 
 			if (response != null) {

@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
@@ -17,6 +18,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
@@ -34,6 +39,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.R;
+import com.mobstar.help.TakeTourActivity;
+import com.mobstar.login.WhoToFollowActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -213,7 +220,7 @@ public class GuidelinesActivity extends Activity implements OnClickListener{
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 
 		}
 	}

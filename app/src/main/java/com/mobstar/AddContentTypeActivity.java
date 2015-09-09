@@ -14,18 +14,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.upload.RecordVideoActivity;
 import com.mobstar.upload.SelectProfileContentType;
 import com.mobstar.upload.TakePictureActivity;
 import com.mobstar.upload.UploadFileActivity;
+import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 public class AddContentTypeActivity extends Activity implements OnClickListener{
 
 	Context mContext;
 
-	CustomTextviewBold btnBack, btnImage, btnMovieClip;
+	ImageView btnBack, btnImage, btnMovieClip;
 
 	Typeface typefaceBtn;
 
@@ -64,15 +64,15 @@ public class AddContentTypeActivity extends Activity implements OnClickListener{
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 
-		btnBack = (CustomTextviewBold) findViewById(R.id.btnBack);
+		btnBack = (ImageView) findViewById(R.id.btnBack);
 
 		btnBack.setOnClickListener(this);
 
-		btnImage = (CustomTextviewBold) findViewById(R.id.btnImage);
+		btnImage = (ImageView) findViewById(R.id.btnImage);
 		btnImage.setOnClickListener(this);
 
 
-		btnMovieClip = (CustomTextviewBold) findViewById(R.id.btnMovieClip);
+		btnMovieClip = (ImageView) findViewById(R.id.btnMovieClip);
 		btnMovieClip.setOnClickListener(this);
 	}
 

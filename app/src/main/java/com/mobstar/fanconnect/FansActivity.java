@@ -102,12 +102,12 @@ public class FansActivity extends Activity {
 					currentPage=1;
 					new UsersFanCall(currentPage).start();
 				} else {
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
 
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		Utility.SendDataToGA("FanConnect Fans Screen", FansActivity.this);
 
@@ -120,7 +120,7 @@ public class FansActivity extends Activity {
 			//			}
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -167,13 +167,13 @@ public class FansActivity extends Activity {
 					}
 				}
 				if (!loading && !isWebCall && isNextPageAvail && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+					Utility.ShowProgressDialog(mContext, "Loading");
 					isWebCall = true;
 					currentPage++;
 					if (Utility.isNetworkAvailable(mContext)) {
 						new UsersFanCall(currentPage).start();
 					} else {
-						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 					loading = true;
@@ -221,7 +221,7 @@ public class FansActivity extends Activity {
 
 					sErrorMessage = "";
 
-					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+					Utility.ShowProgressDialog(mContext, "Loading");
 
 					if (Utility.isNetworkAvailable(mContext)) {
 
@@ -229,7 +229,7 @@ public class FansActivity extends Activity {
 
 					} else {
 
-						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 						Utility.HideDialog(mContext);
 					}
 				}

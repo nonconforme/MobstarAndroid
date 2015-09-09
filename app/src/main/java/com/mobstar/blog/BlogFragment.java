@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.home.ShareActivity;
 import com.mobstar.pojo.BlogPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -84,12 +85,12 @@ public class BlogFragment extends Fragment {
 		listBlog = (ListView) view.findViewById(R.id.listBlog);
 		blogAdapter=new BlogAdapter();
 		listBlog.setAdapter(blogAdapter);
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		if (Utility.isNetworkAvailable(mContext)) {
 			new BlogCall().start();
 		} else {
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 		

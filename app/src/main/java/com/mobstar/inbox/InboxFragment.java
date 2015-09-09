@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.mobstar.R;
 import com.mobstar.pojo.MessagePojo;
 import com.mobstar.pojo.ParticipantsPojo;
+import com.mobstar.upload.MessageActivity;
 import com.mobstar.upload.MessageComposeActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -190,7 +191,7 @@ public class InboxFragment extends Fragment {
 				// TODO Auto-generated method stub
 				final int checkedCount = listUser.getCheckedItemCount();
 				// Set the CAB title according to total checked items
-				arg0.setTitle(checkedCount + " " + getString(R.string.selected));
+				arg0.setTitle(checkedCount + " Selected");
 				if(arrSelectionThreadID.contains(arrMessage.get(position).getThreadId()+"")){
 					arrSelectionThreadID.remove(arrMessage.get(position).getThreadId() + "");
 				} else if(arrMessage.get(position).getUserId().equalsIgnoreCase(UserID)){
@@ -203,13 +204,13 @@ public class InboxFragment extends Fragment {
 		msgAdapter = new MessageAdapter();
 		listUser.setAdapter(msgAdapter);
 
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		if (Utility.isNetworkAvailable(mContext)) {
 			new MessageCall().start();
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -242,7 +243,7 @@ public class InboxFragment extends Fragment {
 
 	void DeleteThread() {
 		sErrorMessage = "";
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(mContext, "Loading");
 
 		if (Utility.isNetworkAvailable(mContext)) {
 
@@ -251,7 +252,7 @@ public class InboxFragment extends Fragment {
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 			Utility.HideDialog(mContext);
 		}
 
@@ -664,13 +665,13 @@ public class InboxFragment extends Fragment {
 				if(data!=null && data.getExtras().containsKey("isRefresh")){
 					boolean isRefresh=data.getBooleanExtra("isRefresh",false);
 					if(isRefresh){
-						Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+						Utility.ShowProgressDialog(mContext, "Loading");
 
 						if (Utility.isNetworkAvailable(mContext)) {
 							new MessageCall().start();
 						} else {
 
-							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+							Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
 							Utility.HideDialog(mContext);
 						}
 					}

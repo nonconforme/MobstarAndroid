@@ -9,13 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.R;
-import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.home.VideoListFragment;
 import com.mobstar.utils.Utility;
 
@@ -84,10 +84,10 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 		}
 
 		if (isYesVotes) {
-			textMyVotes.setText(getString(R.string.yes_votes));
+			textMyVotes.setText("YES VOTES");
 			imgMyVotes.setImageResource(R.drawable.ic_my_votes_yes);
 		} else {
-			textMyVotes.setText(getString(R.string.no_votes));
+			textMyVotes.setText("NO VOTES");
 			imgMyVotes.setImageResource(R.drawable.ic_my_votes_no);
 		}
 	}
@@ -113,12 +113,12 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 
 	void MyVoteDialog() {
 
-		CustomTextviewBold btnYesVotes, btnNotVotes;
+		ImageView btnYesVotes, btnNotVotes;
 
 		final Dialog dialog = new Dialog(mContext, R.style.DialogTheme);
 		dialog.setContentView(R.layout.dialog_my_votes);
 		dialog.setCancelable(true);
-		btnYesVotes = (CustomTextviewBold) dialog.findViewById(R.id.btnYesVotes);
+		btnYesVotes = (ImageView) dialog.findViewById(R.id.btnYesVotes);
 		btnYesVotes.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -126,7 +126,7 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 				runOnUiThread(new Runnable() {
 					public void run() {
 						GetData("up");
-						textMyVotes.setText(getString(R.string.yes_votes));
+						textMyVotes.setText("YES VOTES");
 						imgMyVotes.setImageResource(R.drawable.ic_my_votes_yes);
 						isYesVotes = true;
 					}
@@ -135,7 +135,7 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 				dialog.dismiss();
 			}
 		});
-		btnNotVotes = (CustomTextviewBold) dialog.findViewById(R.id.btnNotVotes);
+		btnNotVotes = (ImageView) dialog.findViewById(R.id.btnNotVotes);
 		btnNotVotes.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -145,7 +145,7 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 					public void run() {
 						GetData("down");
 						isYesVotes = false;
-						textMyVotes.setText(getString(R.string.no_votes));
+						textMyVotes.setText("NO VOTES");
 						imgMyVotes.setImageResource(R.drawable.ic_my_votes_no);
 					}
 				});
