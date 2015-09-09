@@ -686,6 +686,32 @@ public class Utility {
 		System.out.println(what);
 	}
 
+
+	public static String GetStringTime(long seconds){
+
+		String TimeInString = "";
+
+		if (seconds <= 0) {
+			TimeInString = "just now";
+		} else if (seconds < 60) {
+			TimeInString = seconds + " s ago";
+		} else if (seconds < 3600) {
+			TimeInString = seconds / 60 + " m ago";
+		} else if (seconds < 86400) {
+			TimeInString = seconds / 3600 + " h ago";
+		} else if (seconds < 604800) {
+			TimeInString = seconds / 86400 + " day ago";
+		} else if (seconds < 2592000) {
+			TimeInString = seconds / 604800 + " week ago";
+		} else if (seconds < 31104000) {
+			TimeInString = seconds / 2592000 + " month ago";
+		} else if (seconds >= 31104000) {
+			TimeInString = seconds / 31104000 + " year ago";
+		}
+
+		return TimeInString;
+	}
+
 	public static Bitmap getBitmapFromURL(String src) {
 		try {
 			URL url = new URL(src);
