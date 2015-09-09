@@ -22,7 +22,8 @@ import com.mobstar.utils.Utility;
 
 public class GcmIntentService extends IntentService {
 
-	public static int NOTIFICATION_ID = 1;
+    private static final String LOG_TAG = GcmIntentService.class.getName();
+    public static int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
 
@@ -54,10 +55,12 @@ public class GcmIntentService extends IntentService {
 
 				if(extras.containsKey("Type")){
 					String badgeCount="";
-					if(extras.getString("badge").toString()!=null){
-						badgeCount=extras.getString("badge");
-					}
-					
+                    badgeCount=extras.getString("badge","");
+
+                    Log.d(LOG_TAG, "Type=" + extras.getString("Type"));
+                    Log.d(LOG_TAG, "extras=" + extras.toString());
+                    Log.d(LOG_TAG, "badge=" + badgeCount);
+
 					if(extras.getString("Type").toString().equalsIgnoreCase("Message")){
 						String messageGroup=extras.getString("messageGroup");
 						String threadId=extras.getString("entry_id");
@@ -75,14 +78,33 @@ public class GcmIntentService extends IntentService {
 							sendNotification(message,entryId);
 						}
 					}
+                    else if(extras.getString("Type").toString().equalsIgnoreCase("splitScreen")){
+                        if (extras.containsKey("usedEntryName")&&extras.containsKey("creatorName")&&extras.containsKey("createdEntryId")) {
+                            String entryName = Utility.unescape_perl_string(extras.getString("usedEntryName"));
+                            String userName = extras.getString("creatorName");
+                            String entryId = extras.getString("createdEntryId");
+                            String message = getResources().getString(R.string.notif_split_screen_1) + " "
+                                    + entryName + " "
+                                    + getResources().getString(R.string.notif_split_screen_2)
+                                    + " "
+                                    + userName
+                                    + getResources().getString(R.string.notif_split_screen_3);
+                            Log.d(LOG_TAG, "splitScreen message=" + message);
+                            Log.d(LOG_TAG, "splitScreen entryId=" + entryId);
+                            sendNotification(message, entryId);
+                        }
+                    }
 					else{
 						if(extras.getString("message").toString()!=null) {
+                            Log.d(LOG_TAG,"message="+extras.getString("message"));
 							sendNotification(extras.getString("message").toString());
 						}
 					}
-					
-					Utility.setBadgeSamsung(getApplicationContext(), Integer.parseInt(badgeCount));
-					Utility.setBadgeSony(getApplicationContext(), Integer.parseInt(badgeCount));
+
+                    if (!badgeCount.isEmpty()) {
+                        Utility.setBadgeSamsung(getApplicationContext(), Integer.parseInt(badgeCount));
+                        Utility.setBadgeSony(getApplicationContext(), Integer.parseInt(badgeCount));
+                    }
 				}
 
 				Log.v(Constant.TAG, "Received: " + extras.toString());

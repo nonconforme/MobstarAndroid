@@ -40,6 +40,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
@@ -104,7 +106,7 @@ public class VideoListFragment extends Fragment {
 	EntryActionHelper entryActionHelper = new EntryActionHelper();
 
 	boolean isVideoSurfaceReady = false;
-	boolean isMoveDone = false;
+//	boolean isMoveDone = false;
 
 	boolean isSearchAPI = false;
 	String SearchTerm = "";
@@ -599,6 +601,9 @@ public class VideoListFragment extends Fragment {
 
 							}
 
+							if (jsonObjEntry.has("splitVideoId"))
+								entryPojo.setSplitVideoId(jsonObjEntry.getString("splitVideoId"));
+
 							entryPojo.setID(jsonObjEntry.getString("id"));
 
 							if(jsonObjEntry.has("subcategory")){
@@ -926,15 +931,17 @@ public class VideoListFragment extends Fragment {
 	}
 
 
-	public class EntryListAdapter extends BaseAdapter {
-        private static final int MAX_THREAD_POOL = 3;
-        private final String LOG_TAG = EntryListAdapter.class.getName();
+	public class EntryListAdapter extends BaseSwipeAdapter {
+		private static final int MAX_THREAD_POOL = 3;
+		private final String LOG_TAG = EntryListAdapter.class.getName();
 
         private final ThreadPoolExecutor executor;
         private final LinkedList<Future> queue;
         private final LinkedList<DownLoadThread> queueTask;
         private final Activity mActivity;
         private LayoutInflater inflater = null;
+
+		private boolean onVoitingSwipeItem = false;
 
 		public EntryListAdapter(Activity activity) {
 			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -946,39 +953,138 @@ public class VideoListFragment extends Fragment {
 
 		}
 
-		public int getCount() {
-			return arrEntryPojos.size();
+		@Override
+		public int getSwipeLayoutResourceId(int i) {
+			return R.id.swipe;
 		}
 
-		public Object getItem(int position) {
-			return position;
-		}
 
-		public long getItemId(int position) {
-			return position;
-		}
 
-		public View getView(final int position, View convertView, ViewGroup parent) {
-//            Log.d(LOG_TAG,"getView.position="+position);
+		@Override
+		public void fillValues(final int position, View convertView) {
+
 			final int pos=position;
-
-			final ViewHolder viewHolder;
+			ViewHolder mViewHolder;
 			if (convertView == null) {
 
 				convertView = inflater.inflate(R.layout.row_item_entry, null);
 
-				viewHolder = new ViewHolder();
-                findViews(viewHolder, convertView);
+				mViewHolder = new ViewHolder();
+				findViews(mViewHolder, convertView);
 
 
-				convertView.setTag(viewHolder);
+				convertView.setTag(mViewHolder);
 
 			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
+				mViewHolder = (ViewHolder) convertView.getTag();
 			}
+			if (mViewHolder == null) {
+				mViewHolder = new ViewHolder();
+				findViews(mViewHolder, convertView);
+			}
+			final ViewHolder viewHolder = mViewHolder;
 
-            setupViews(viewHolder, position);
-			setEnableSplitButton(viewHolder, position, false);
+			viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, convertView.findViewById(R.id.rigthView));
+			viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.leftView));
+			viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+				@Override
+				public void onStartOpen(SwipeLayout swipeLayout) {
+					Log.d("SwipeListener", "onStartOpen");
+				}
+
+				@Override
+				public void onOpen(SwipeLayout swipeLayout) {
+					Log.d("SwipeListener", "onOpen");
+					if (!onVoitingSwipeItem)
+						return;
+					onVoitingSwipeItem = false;
+					switch (swipeLayout.getDragEdge()) {
+						case Left:
+
+							if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
+								String[] name = {"entry", "type"};
+								String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "down"};
+								entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
+//								Utility.DisLikeDialog(getActivity());
+								Log.d("tagLog", "dislike");
+								arrEntryPojos.remove(mFirstVisibleItem);
+								entryListAdapter.closeAllItems();
+								entryListAdapter.notifyDataSetChanged();
+								mFirstVisibleItem = 0;
+								if (mediaPlayer != null) {
+									if (mediaPlayer.isPlaying())
+										mediaPlayer.pause();
+
+//										Log.d("mobstar","on imgframe1 going to reset");
+									mediaPlayer.reset();
+								}
+								indexCurrentPlayAudio = -1;
+
+
+								if (arrEntryPojos.size() == 0) {
+									textNoData.setVisibility(View.VISIBLE);
+									textNoData.setText(getString(R.string.there_are_no_entries_yet));
+								}
+							}
+							break;
+						case Right:
+							if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
+								String[] name = {"entry", "type"};
+								String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "up"};
+								entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
+//								Utility.LikeDialog(getActivity());
+								Log.d("tagLog", "like");
+								arrEntryPojos.remove(mFirstVisibleItem);
+								entryListAdapter.closeAllItems();
+								entryListAdapter.notifyDataSetChanged();
+
+								mFirstVisibleItem = 0;
+								if (mediaPlayer != null) {
+									if (mediaPlayer.isPlaying())
+										mediaPlayer.pause();
+
+//										Log.d("mobstar","on imgframe2 going to reset");
+									mediaPlayer.reset();
+								}
+								indexCurrentPlayAudio = -1;
+
+
+								if (arrEntryPojos.size() == 0) {
+									textNoData.setVisibility(View.VISIBLE);
+									textNoData.setText(getString(R.string.there_are_no_entries_yet));
+								}
+							}
+
+							break;
+					}
+				}
+
+				@Override
+				public void onStartClose(SwipeLayout swipeLayout) {
+					Log.d("SwipeListener", "onStartClose");
+				}
+
+				@Override
+				public void onClose(SwipeLayout swipeLayout) {
+					Log.d("SwipeListener", "onClose");
+				}
+
+				@Override
+				public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
+					Log.d("SwipeListener", "onUpdate");
+					onVoitingSwipeItem = true;
+				}
+
+				@Override
+				public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
+					Log.d("SwipeListener", "onHandRelease");
+				}
+			});
+			setupViews(viewHolder, position);
+			if (arrEntryPojos.get(pos).getType().equals("video")) {
+				setEnableSplitButton(viewHolder, position, true);
+			}
+			else setEnableSplitButton(viewHolder, position, false);
 
 
 			viewHolder.btnFollow.setOnClickListener(new OnClickListener() {
@@ -1073,7 +1179,7 @@ public class VideoListFragment extends Fragment {
 				viewHolder.imgUserPic.setImageResource(R.drawable.ic_pic_small);
 
 				Picasso.with(mContext).load(arrEntryPojos.get(position).getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop()
-				.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(viewHolder.imgUserPic);
+						.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(viewHolder.imgUserPic);
 
 				// Ion.with(mContext).load(arrEntryPojos.get(position).getProfileImage()).withBitmap().placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small)
 				// .resize(Utility.dpToPx(mContext, 45),
@@ -1210,17 +1316,15 @@ public class VideoListFragment extends Fragment {
 				viewHolder.imgPlaceHolder.setImageResource(R.drawable.image_placeholder);
 				viewHolder.imageFrame.setVisibility(View.GONE);
 
-//				change width 332 to 360
-//				Picasso.with(mContext).load(arrEntryPojos.get(position).getImageLink()).resize(Utility.dpToPx(mContext, 332), Utility.dpToPx(mContext, 360)).centerCrop()
 				Picasso.with(mContext).load(arrEntryPojos.get(position).getImageLink())
-				.placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(viewHolder.imageFrame, new Callback() {
+						.placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(viewHolder.imageFrame, new Callback() {
 
 					@Override
 					public void onSuccess() {
 						// TODO Auto-generated method stub
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
-						notifyDataSetChanged();
+//						notifyDataSetChanged();
 					}
 
 					@Override
@@ -1230,27 +1334,6 @@ public class VideoListFragment extends Fragment {
 					}
 				});
 
-				//
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getImageLink()).withBitmap().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder)
-				// .resize(Utility.dpToPx(mContext, 332),
-				// Utility.dpToPx(mContext,
-				// 360)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				// if (exception == null) {
-				// viewHolder.progressbar.setVisibility(View.GONE);
-				// viewHolder.imageFrame.setImageBitmap(bitmap);
-				// viewHolder.imageFrame.setVisibility(View.VISIBLE);
-				// notifyDataSetChanged();
-				// } else {
-				// // Log.v(Constant.TAG, "Exception " +
-				// // exception.toString());
-				// }
-				// }
-				// });
 
 			} else if (arrEntryPojos.get(position).getType().equals("audio")) {
 
@@ -1266,21 +1349,21 @@ public class VideoListFragment extends Fragment {
 
 //				Picasso.with(mContext).load(arrEntryPojos.get(position).getImageLink()).resize(Utility.dpToPx(mContext, 332), Utility.dpToPx(mContext, 360)).centerCrop()
 				Picasso.with(mContext).load(arrEntryPojos.get(position).getImageLink())
-				.into(viewHolder.imageFrame, new Callback() {
+						.into(viewHolder.imageFrame, new Callback() {
 
-					@Override
-					public void onSuccess() {
-						// TODO Auto-generated method stub
-						viewHolder.progressbar.setVisibility(View.GONE);
-						viewHolder.imageFrame.setVisibility(View.VISIBLE);
+							@Override
+							public void onSuccess() {
+								// TODO Auto-generated method stub
+								viewHolder.progressbar.setVisibility(View.GONE);
+								viewHolder.imageFrame.setVisibility(View.VISIBLE);
 
-						if (!listDownloadingFile.contains(sFileName)) {
+								if (!listDownloadingFile.contains(sFileName)) {
 
-							//							File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
+									//							File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
 
-							try {
-								File file = new File(FILEPATH + sFileName);
-								if (file!=null && !file.exists()) {
+									try {
+										File file = new File(FILEPATH + sFileName);
+										if (file != null && !file.exists()) {
 
 									listDownloadingFile.add(sFileName);
 
@@ -1331,53 +1414,6 @@ public class VideoListFragment extends Fragment {
 					}
 				});
 
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getImageLink()).withBitmap().placeholder(R.drawable.audio_placeholder).error(R.drawable.audio_placeholder)
-				// .resize(Utility.dpToPx(mContext, 332),
-				// Utility.dpToPx(mContext,
-				// 360)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				//
-				// viewHolder.imageFrame.setImageBitmap(bitmap);
-				// viewHolder.imageFrame.setVisibility(View.VISIBLE);
-				//
-				// if (!listDownloadingFile.contains(sFileName)) {
-				//
-				// File file = new
-				// File(Environment.getExternalStorageDirectory() + "/.mobstar/"
-				// + sFileName);
-				//
-				// if (!file.exists()) {
-				//
-				// listDownloadingFile.add(sFileName);
-				//
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getAudioLink()).write(file).setCallback(new
-				// FutureCallback<File>() {
-				// @Override
-				// public void onCompleted(Exception e, File file) {
-				// if (e == null) {
-				// viewHolder.progressbar.setVisibility(View.GONE);
-				//
-				// // Log.v(Constant.TAG,
-				// // "getName " +
-				// // file.getName());
-				// listDownloadingFile.remove(file.getName());
-				// notifyDataSetChanged();
-				// }
-				//
-				// }
-				// });
-				// } else {
-				// viewHolder.progressbar.setVisibility(View.GONE);
-				// }
-				// } else {
-				// viewHolder.progressbar.setVisibility(View.VISIBLE);
-				// }
-				// }
-				// });
 
 			} else if (arrEntryPojos.get(position).getType().equals("video")) {
 
@@ -1385,7 +1421,6 @@ public class VideoListFragment extends Fragment {
 				viewHolder.ivAudioIcon.setVisibility(View.GONE);
 				viewHolder.progressbar.setVisibility(View.VISIBLE);
 
-				setEnableSplitButton(viewHolder, position, false);
 				//				viewHolder.progressWheel.setVisibility(View.VISIBLE);
 
 				viewHolder.imgPlaceHolder.setVisibility(View.VISIBLE);
@@ -1393,15 +1428,14 @@ public class VideoListFragment extends Fragment {
 				viewHolder.imageFrame.setVisibility(View.GONE);
 
 				Picasso.with(mContext).load(arrEntryPojos.get(position).getVideoThumb())
-				.placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(viewHolder.imageFrame, new Callback() {
+						.placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(viewHolder.imageFrame, new Callback() {
 
 					@Override
 					public void onSuccess() {
 						// TODO Auto-generated method stub
-						setEnableSplitButton(viewHolder, position, true);
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
-						notifyDataSetChanged();
+//						notifyDataSetChanged();
 					}
 
 					@Override
@@ -1411,30 +1445,6 @@ public class VideoListFragment extends Fragment {
 					}
 				});
 
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getVideoThumb()).withBitmap().placeholder(R.drawable.video_placeholder).error(R.drawable.video_placeholder)
-				// .resize(Utility.dpToPx(mContext, 332),
-				// Utility.dpToPx(mContext,
-				// 360)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				// if (exception == null) {
-				//
-				// viewHolder.progressbar.setVisibility(View.GONE);
-				// viewHolder.imageFrame.setVisibility(View.VISIBLE);
-				// viewHolder.imageFrame.setImageBitmap(bitmap);
-				//
-				// // Log.v(Constant.TAG,
-				// // "Video thumbnail is loaded " + position);
-				//
-				// } else {
-				// // Log.v(Constant.TAG, "Exception " +
-				// // exception.toString());
-				// }
-				// }
-				// });
 
 				// ***************temp comment by khyati
 
@@ -1484,7 +1494,6 @@ public class VideoListFragment extends Fragment {
 							}
 
 						} else {
-							setEnableSplitButton(viewHolder, position, true);
 							viewHolder.progressbar.setVisibility(View.GONE);
 							viewHolder.textureView.setVisibility(View.GONE);
 						}
@@ -1494,337 +1503,142 @@ public class VideoListFragment extends Fragment {
 				}
 
 				else {
-					setEnableSplitButton(viewHolder, position, false);
 					viewHolder.progressbar.setVisibility(View.VISIBLE);
 				}
 
 			}
 
-			viewHolder.imageFrame.setOnTouchListener(new OnTouchListener() {
-
+			viewHolder.imageFrame.setOnClickListener(new OnClickListener() {
 				@Override
-				public boolean onTouch(View view, MotionEvent event) {
-					// TODO Auto-generated method stub
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
+				public void onClick(View v) {
+					if (arrEntryPojos.get(pos).getType().equals("audio") && !listDownloadingFile.contains(sFileName)) {
+						//will not fire other feed click // khyati
+						Log.d("mobstar","pos is"+indexCurrentPlayAudio +"--"+pos);
+						if(indexCurrentPlayAudio == pos){
+							if (mediaPlayer != null) {
+								if (mediaPlayer.isPlaying()) {
+									Log.d("mobstar","audio pause");
+									mediaPlayer.pause();
 
-						touchX = event.getX();
-						touchY = event.getY();
-
-						isMoveDone = false;
-
-						break;
-
-					case MotionEvent.ACTION_UP:
-
-						final float yDistance = Math.abs(touchY - event.getY());
-
-						if (yDistance < Utility.dpToPx(mContext, 5)) {
-							if (arrEntryPojos.get(pos).getType().equals("audio") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								//will not fire other feed click // khyati
-								Log.d("mobstar","pos is"+indexCurrentPlayAudio +"--"+pos);
-								if(indexCurrentPlayAudio == pos){
-									if (mediaPlayer != null) {
-										if (mediaPlayer.isPlaying()) {
-											Log.d("mobstar","audio pause");
-											mediaPlayer.pause();
-
-											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-											viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-											indexCurrentPauseVideo = pos;
-										} else {
-											Log.d("mobstar","go for play1");
-											PlayAudio(pos);
-											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
-											viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
-											indexCurrentPauseVideo = -1;
-										}
-									} else {
-										Log.d("mobstar","go for play2");
-										PlayAudio(pos);
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
-										viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
-										indexCurrentPauseVideo = -1;
-
-									}
+									viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+									viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
+									indexCurrentPauseVideo = pos;
+								} else {
+									Log.d("mobstar","go for play1");
+									PlayAudio(pos);
+									viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
+									viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
+									indexCurrentPauseVideo = -1;
 								}
-
-							} else if (arrEntryPojos.get(pos).getType().equals("video") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								//will not fire other feed click // khyati
-								Log.d("mobstar","position is===>"+pos);
-								if(indexCurrentPlayAudio == pos || indexCurrentPauseVideo == pos){
-									if (mediaPlayer != null) {
-										if (mediaPlayer.isPlaying()) {
-											mediaPlayer.pause();
-											indexCurrentPauseVideo = pos;
-											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-											viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-										} else {
-											// isVideoSurfaceReady = false;
-											// Log.v(Constant.TAG,
-											// "imageFrame ACTION_UP1");
-											indexCurrentPauseVideo = -1;
-											isVideoSurfaceReady = true;
-											notifyDataSetChanged();
-										}
-									} else {
-
-										// isVideoSurfaceReady = false;
-										// Log.v(Constant.TAG,
-										// "imageFrame ACTION_UP2");
-										indexCurrentPlayAudio = -1;
-										indexCurrentPauseVideo = -1;
-
-										isVideoSurfaceReady = true;
-										notifyDataSetChanged();
-									}
-								}
+							} else {
+								Log.d("mobstar","go for play2");
+								PlayAudio(pos);
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
+								viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
+								indexCurrentPauseVideo = -1;
 
 							}
 						}
 
-						break;
-
-					case MotionEvent.ACTION_MOVE:
-
-						if (isVoteAPI) {
-							break;
-						}
-
-						final float yDistance1 = Math.abs(touchY - event.getY());
-
-						if (yDistance1 < Utility.dpToPx(mContext, 50) && !isMoveDone) {
-
-							if (touchX > event.getX() + Utility.dpToPx(mContext, 100)) {
-
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									String[] name = { "entry", "type" };
-									String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "down" };
-									entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-									Utility.DisLikeDialog(getActivity());
-
-
-									arrEntryPojos.remove(mFirstVisibleItem);
-									mFirstVisibleItem = 0;
-									if (mediaPlayer != null) {
-										if(mediaPlayer.isPlaying())
-											mediaPlayer.pause();
-
-//										Log.d("mobstar","on imgframe1 going to reset");
-										mediaPlayer.reset();
-									}
-									indexCurrentPlayAudio = -1;
-									entryListAdapter.notifyDataSetChanged();
-
-									if (arrEntryPojos.size() == 0) {
-										textNoData.setVisibility(View.VISIBLE);
-										textNoData.setText(getString(R.string.there_are_no_entries_yet));
-									}
+					} else if (arrEntryPojos.get(pos).getType().equals("video") && !listDownloadingFile.contains(sFileName)) {
+						//will not fire other feed click // khyati
+						Log.d("mobstar","position is===>"+pos);
+						if(indexCurrentPlayAudio == pos || indexCurrentPauseVideo == pos){
+							if (mediaPlayer != null) {
+								if (mediaPlayer.isPlaying()) {
+									mediaPlayer.pause();
+									indexCurrentPauseVideo = pos;
+									viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+									viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
+								} else {
+									// isVideoSurfaceReady = false;
+									// Log.v(Constant.TAG,
+									// "imageFrame ACTION_UP1");
+									indexCurrentPauseVideo = -1;
+									isVideoSurfaceReady = true;
+									notifyDataSetChanged();
 								}
+							} else {
 
-							} else if (touchX < event.getX() - Utility.dpToPx(mContext, 100)) {
+								// isVideoSurfaceReady = false;
+								// Log.v(Constant.TAG,
+								// "imageFrame ACTION_UP2");
+								indexCurrentPlayAudio = -1;
+								indexCurrentPauseVideo = -1;
 
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									String[] name = { "entry", "type" };
-									String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "up" };
-									entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-									Utility.LikeDialog(getActivity());
-
-									arrEntryPojos.remove(mFirstVisibleItem);
-									mFirstVisibleItem = 0;
-									if (mediaPlayer != null) {
-										if(mediaPlayer.isPlaying())
-											mediaPlayer.pause();
-
-//										Log.d("mobstar","on imgframe2 going to reset");
-										mediaPlayer.reset();
-									}
-									indexCurrentPlayAudio = -1;
-
-									entryListAdapter.notifyDataSetChanged();
-
-									if (arrEntryPojos.size() == 0) {
-										textNoData.setVisibility(View.VISIBLE);
-										textNoData.setText(getString(R.string.there_are_no_entries_yet));
-									}
-								}
+								isVideoSurfaceReady = true;
+								notifyDataSetChanged();
 							}
 						}
 
-						break;
-					default:
-						break;
 					}
-					return true;
 				}
 			});
 
-			viewHolder.textureView.setOnTouchListener(new OnTouchListener() {
-
+			viewHolder.textureView.setOnClickListener(new OnClickListener() {
 				@Override
-				public boolean onTouch(View view, MotionEvent event) {
-					// TODO Auto-generated method stub
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
+				public void onClick(View v) {
+					if (arrEntryPojos.get(pos).getType().equals("video") && !listDownloadingFile.contains(sFileName)) {
+						if (mediaPlayer != null) {
+							if (mediaPlayer.isPlaying()) {
+								mediaPlayer.pause();
 
-						touchX = event.getX();
-						touchY = event.getY();
+								indexCurrentPauseVideo = pos;
 
-						isMoveDone = false;
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+								viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
 
-						break;
+							} else {
 
-					case MotionEvent.ACTION_UP:
+								indexCurrentPauseVideo = -1;
 
-						final float yDistance = Math.abs(touchY - event.getY());
-
-						if (yDistance < Utility.dpToPx(mContext, 5)) {
-							if (arrEntryPojos.get(pos).getType().equals("video") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								if (mediaPlayer != null) {
-									if (mediaPlayer.isPlaying()) {
-										mediaPlayer.pause();
-
-										indexCurrentPauseVideo = pos;
-
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-										viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-
-									} else {
-
-										indexCurrentPauseVideo = -1;
-
-										isVideoSurfaceReady = true;
-										entryListAdapter.notifyDataSetChanged();
+								isVideoSurfaceReady = true;
+								entryListAdapter.notifyDataSetChanged();
 
 //										 Log.v(Constant.TAG,
 //										 "textureView ACTION_UP1");
-									}
-								} else {
-									indexCurrentPlayAudio = -1;
-									indexCurrentPauseVideo = -1;
-									isVideoSurfaceReady = true;
-									entryListAdapter.notifyDataSetChanged();
+							}
+						} else {
+							indexCurrentPlayAudio = -1;
+							indexCurrentPauseVideo = -1;
+							isVideoSurfaceReady = true;
+							entryListAdapter.notifyDataSetChanged();
 
 //									 Log.v(Constant.TAG,
 //									 "textureView ACTION_UP2");
 
-								}
-							}
-							else if (arrEntryPojos.get(pos).getType().equals("audio") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								if (mediaPlayer != null) {
-									if (mediaPlayer.isPlaying()) {
-										mediaPlayer.pause();
-
-										indexCurrentPauseVideo = pos;
-										Log.d("mobstar","audio pause 2");
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-										viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-
-									} else {
-										Log.d("mobstar","go for play3");
-										PlayAudio(pos);
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
-										viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
-										indexCurrentPauseVideo = -1;
-//										 Log.v(Constant.TAG,
-//										 "textureView ACTION_UP1");
-									}
-								} else {
-									indexCurrentPlayAudio = -1;
-									indexCurrentPauseVideo = -1;
-									isVideoSurfaceReady = true;
-									entryListAdapter.notifyDataSetChanged();
-
-//									 Log.v(Constant.TAG,
-//									 "textureView ACTION_UP2");
-
-								}
-							}
-
-
 						}
-
-						break;
-
-					case MotionEvent.ACTION_MOVE:
-
-						if (isVoteAPI) {
-							break;
-						}
-
-						final float yDistance1 = Math.abs(touchY - event.getY());
-
-						if (yDistance1 < Utility.dpToPx(mContext, 50) && !isMoveDone) {
-
-							if (touchX > event.getX() + Utility.dpToPx(mContext, 100)) {
-
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									String[] name = { "entry", "type" };
-									String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "down" };
-									entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-									Utility.DisLikeDialog(getActivity());
-
-									arrEntryPojos.remove(mFirstVisibleItem);
-									mFirstVisibleItem = 0;
-									if (mediaPlayer != null) {
-										if(mediaPlayer.isPlaying())
-											mediaPlayer.pause();
-
-//										Log.d("mobstar","on texureview1 going to reset");
-										mediaPlayer.reset();
-									}
-									indexCurrentPlayAudio = -1;
-
-									entryListAdapter.notifyDataSetChanged();
-
-									if (arrEntryPojos.size() == 0) {
-										textNoData.setVisibility(View.VISIBLE);
-										textNoData.setText(getString(R.string.there_are_no_entries_yet));
-									}
-								}
-
-							} else if (touchX < event.getX() - Utility.dpToPx(mContext, 100)) {
-
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									String[] name = { "entry", "type" };
-									String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "up" };
-									entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-									Utility.LikeDialog(getActivity());
-
-									arrEntryPojos.remove(mFirstVisibleItem);
-									mFirstVisibleItem = 0;
-									if (mediaPlayer != null) {
-										if(mediaPlayer.isPlaying())
-											mediaPlayer.pause();
-
-//										Log.d("mobstar","on texureview2 going to reset");
-										mediaPlayer.reset();
-									}
-									indexCurrentPlayAudio = -1;
-
-									entryListAdapter.notifyDataSetChanged();
-
-									if (arrEntryPojos.size() == 0) {
-										textNoData.setVisibility(View.VISIBLE);
-										textNoData.setText(getString(R.string.there_are_no_entries_yet));
-									}
-								}
-							}
-						}
-
-						break;
-					default:
-						break;
 					}
-					return true;
+					else if (arrEntryPojos.get(pos).getType().equals("audio") && !listDownloadingFile.contains(sFileName)) {
+						if (mediaPlayer != null) {
+							if (mediaPlayer.isPlaying()) {
+								mediaPlayer.pause();
+
+								indexCurrentPauseVideo = pos;
+								Log.d("mobstar","audio pause 2");
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+								viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
+
+							} else {
+								Log.d("mobstar","go for play3");
+								PlayAudio(pos);
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
+								viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
+								indexCurrentPauseVideo = -1;
+//										 Log.v(Constant.TAG,
+//										 "textureView ACTION_UP1");
+							}
+						} else {
+							indexCurrentPlayAudio = -1;
+							indexCurrentPauseVideo = -1;
+							isVideoSurfaceReady = true;
+							entryListAdapter.notifyDataSetChanged();
+
+//									 Log.v(Constant.TAG,
+//									 "textureView ACTION_UP2");
+
+						}
+					}
 				}
 			});
 
@@ -1871,7 +1685,6 @@ public class VideoListFragment extends Fragment {
 							viewHolder.textureView.setVisibility(View.VISIBLE);
 
 							if (mediaPlayer != null && mediaPlayer.isPlaying() && indexCurrentPlayAudio == position) {
-								setEnableSplitButton(viewHolder, position, true);
 								viewHolder.flPlaceHolder.setVisibility(View.GONE);
 								viewHolder.progressbar.setVisibility(View.GONE);
 								// viewHolder.textBgGray.setVisibility(View.GONE);
@@ -1879,12 +1692,10 @@ public class VideoListFragment extends Fragment {
 								// Log.v(Constant.TAG,
 								// "isVideoSurfaceReady Play Video " +
 								// position);
-								setEnableSplitButton(viewHolder, position, true);
 								viewHolder.flPlaceHolder.setVisibility(View.GONE);
 								viewHolder.progressbar.setVisibility(View.GONE);
 								// viewHolder.textBgGray.setVisibility(View.GONE);
 							} else {
-								setEnableSplitButton(viewHolder, position, false);
 								viewHolder.flPlaceHolder.setVisibility(View.VISIBLE);
 								viewHolder.progressbar.setVisibility(View.VISIBLE);
 								// viewHolder.textBgGray.setVisibility(View.VISIBLE);
@@ -1951,7 +1762,6 @@ public class VideoListFragment extends Fragment {
 				}
 			}
 
-			return convertView;
 		}
 
         private class DownLoadThread extends Thread {
@@ -2017,8 +1827,24 @@ public class VideoListFragment extends Fragment {
             Log.d(LOG_TAG, "executor getTaskCount=" + executor.getTaskCount());
         }
 
+		public int getCount() {
+			return arrEntryPojos.size();
+		}
+
+		public Object getItem(int position) {
+			return position;
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+
+		public View generateView(final int position, ViewGroup viewGroupF) {
+			return inflater.inflate(R.layout.row_item_entry, null);
+		}
+
         private void findViews(ViewHolder viewHolder, View convertView){
-            viewHolder.textVideoSplit = (TextView) convertView.findViewById(R.id.splitVideo);
+            viewHolder.buttonVideoSplit = (TextView) convertView.findViewById(R.id.splitVideoButton);
             viewHolder.textUserName = (TextView) convertView.findViewById(R.id.textUserName);
             viewHolder.textTime = (TextView) convertView.findViewById(R.id.textTime);
             viewHolder.textViews = (TextView) convertView.findViewById(R.id.textViews);
@@ -2038,6 +1864,7 @@ public class VideoListFragment extends Fragment {
             viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
             viewHolder.imgMsg=(ImageView) convertView.findViewById(R.id.imgMsg);
             viewHolder.ivIndicator=(ImageView) convertView.findViewById(R.id.ivIndicator);
+			viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
 
         }
 
@@ -2072,21 +1899,16 @@ public class VideoListFragment extends Fragment {
 
 		private void setEnableSplitButton(final ViewHolder viewHolder, final int position, boolean enable){
 			try {
-				if (!enable) {
-					viewHolder.textVideoSplit.setEnabled(false);
-					viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
+				if (!enable || arrEntryPojos.get(position).getSplitVideoId() != null) {
+					viewHolder.buttonVideoSplit.setEnabled(false);
+					viewHolder.buttonVideoSplit.setTextColor(getResources().getColor(R.color.comment_color_state_disable));
 				} else {
-					viewHolder.textVideoSplit.setEnabled(true);
-					viewHolder.textVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
-					viewHolder.textVideoSplit.setOnClickListener(new OnClickListener() {
+					viewHolder.buttonVideoSplit.setEnabled(true);
+					viewHolder.buttonVideoSplit.setTextColor(getResources().getColor(R.color.comment_color));
+					viewHolder.buttonVideoSplit.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							if (arrEntryPojos.get(position).getVideoLink() == null)
-								return;
-							Intent intent = new Intent(getActivity(), SplitActivity.class);
-							intent.putExtra(SplitActivity.ENTRY_SPLIT, arrEntryPojos.get(position));
-							getActivity().startActivity(intent);
-							getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+							startSplitActivity(position);
 						}
 					});
 				}
@@ -2096,8 +1918,17 @@ public class VideoListFragment extends Fragment {
 			}
 		}
 
+		private void startSplitActivity(final int position){
+			if (arrEntryPojos.get(position).getVideoLink() == null)
+				return;
+			Intent intent = new Intent(getActivity(), SplitActivity.class);
+			intent.putExtra(SplitActivity.ENTRY_SPLIT, arrEntryPojos.get(position));
+			getActivity().startActivity(intent);
+			getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		}
+
 		class ViewHolder {
-			TextView textUserName, textDescription, textTime,textViews, textVideoSplit;
+			TextView textUserName, textDescription, textTime,textViews, buttonVideoSplit;
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;
@@ -2113,6 +1944,7 @@ public class VideoListFragment extends Fragment {
 			FrameLayout layoutStatastics;
 			TextView textStatasticCount;
 			ImageView imgMsg,ivIndicator;
+			SwipeLayout swipeLayout;
 		}
 
 	}
@@ -2142,7 +1974,7 @@ public class VideoListFragment extends Fragment {
 
 			// Log.v(Constant.TAG, "Current video is not playing");
 			//khyati do webcall for view
-			
+
 			if (Utility.isNetworkAvailable(mContext)) {
 				Log.d("Mobstar","updateViewCall first time view....");
 				new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
@@ -2161,7 +1993,7 @@ public class VideoListFragment extends Fragment {
 						if (mediaPlayer != null) {
 							if(mediaPlayer.isPlaying())
 								mediaPlayer.pause();
-							
+
 //							Log.d("mobstar","on play video reset");
 							mediaPlayer.reset();
 						}
@@ -2225,7 +2057,7 @@ public class VideoListFragment extends Fragment {
 							//Added by khyati
 							
 							mediaPlayer.setLooping(false);
-							
+
 							mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 
 								@Override
@@ -2248,7 +2080,7 @@ public class VideoListFragment extends Fragment {
 
 								}
 							});
-							
+
 							mediaPlayer.setOnErrorListener(new OnErrorListener() {
 								@Override
 								public boolean onError(MediaPlayer mp, int what, int extra) {

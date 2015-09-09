@@ -24,7 +24,7 @@ public class PositionVariantsAdapter extends BaseAdapter {
     private void setupTestItems(){
         videoGroupVariants = new ArrayList<>();
         videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_RIGHT, true));
-        videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_LEFT, true));
+        videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_LEFT, false));
         videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_RIGHT_TOP, false));
         videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_FULLSCREEN, false));
         videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_TOP, false));

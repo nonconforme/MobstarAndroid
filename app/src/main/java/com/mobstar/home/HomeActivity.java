@@ -1,9 +1,5 @@
 package com.mobstar.home;
 
-import java.io.File;
-
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -50,6 +46,10 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
+
+import java.io.File;
 
 public class HomeActivity extends ActionBarActivity implements OnClickListener, DrawerListener {
 

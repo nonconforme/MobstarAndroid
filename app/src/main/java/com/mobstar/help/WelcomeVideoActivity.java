@@ -1,10 +1,5 @@
 package com.mobstar.help;
 
-import java.io.File;
-
-import org.apache.http.Header;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,8 +23,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -41,6 +34,11 @@ import com.mobstar.login.WhoToFollowActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
+
+import java.io.File;
 
 public class WelcomeVideoActivity extends Activity implements OnClickListener {
 
