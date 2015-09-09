@@ -10,7 +10,8 @@
     <com.mobstar.custom.CheckableView
         android:id="@+id/item_continent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/category_button_height"
+        custom:heightCheckableView="@dimen/category_button_height"
         custom:checkedTitle="@string/africa"
         custom:isChowChecked="true"
         custom:leftImage="@drawable/ic_back"/>

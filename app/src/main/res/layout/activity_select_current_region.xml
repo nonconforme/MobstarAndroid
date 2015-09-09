@@ -50,6 +50,7 @@
                     android:id="@+id/cbEurope"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    custom:heightCheckableView="@dimen/checked_view_height"
                     custom:isChowChecked="false"
                     custom:checkedTitle="@string/europe"/>
 
@@ -59,12 +60,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_marginTop="15dp"
+                    custom:heightCheckableView="@dimen/checked_view_height"
                     custom:checkedTitle="@string/south_america"/>
 
                 <com.mobstar.custom.CheckableView
                     android:id="@+id/cbOceania"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    custom:heightCheckableView="@dimen/checked_view_height"
                     custom:checkedTitle="@string/oceania"/>
             </LinearLayout>
 
@@ -80,6 +83,7 @@
                     android:id="@+id/cbAsia"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    custom:heightCheckableView="@dimen/checked_view_height"
                     custom:checkedTitle="@string/asia"/>
 
                 <com.mobstar.custom.CheckableView
@@ -88,12 +92,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:layout_marginTop="15dp"
+                    custom:heightCheckableView="@dimen/checked_view_height"
                     custom:checkedTitle="@string/north_america"/>
 
                 <com.mobstar.custom.CheckableView
                     android:id="@+id/cbAfrica"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    custom:heightCheckableView="@dimen/checked_view_height"
                     custom:checkedTitle="@string/africa"/>
             </LinearLayout>
         </LinearLayout>

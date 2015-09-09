@@ -28,6 +28,7 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
     private Drawable leftImage;
     private boolean isVisibleChecked;
     private OnCheckedChangeListener onCheckedChangeListener;
+    private float height;
 
     public CheckableView(Context context) {
         super(context);
@@ -78,7 +79,7 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
         final View inflatedView = inflater.inflate(R.layout.view_checkable, null);
         findViews(inflatedView);
         inflatedView.setOnClickListener(this);
-        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (getResources().getDimension(R.dimen.checked_view_height)));
+        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) height);
         addView(inflatedView, layoutParams);
         setupView();
         refreshView();
@@ -89,6 +90,7 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
         title = array.getString(R.styleable.CheckableView_checkedTitle);
         isVisibleChecked = array.getBoolean(R.styleable.CheckableView_isChowChecked, false);
         leftImage = array.getDrawable(R.styleable.CheckableView_leftImage);
+        height = array.getDimension(R.styleable.CheckableView_heightCheckableView, (getResources().getDimension(R.dimen.checked_view_height)));
     }
 
     private void findViews(final View inflatedView){

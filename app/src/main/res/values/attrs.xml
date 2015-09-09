@@ -56,6 +56,7 @@
         <attr name="isChowChecked" format="boolean" />
         <attr name="checkedTitle" format="string"/>
         <attr name="leftImage" format="reference"/>
+        <attr name="heightCheckableView" format="dimension"/>
     </declare-styleable>
     
    

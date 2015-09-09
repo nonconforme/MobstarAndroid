@@ -325,15 +325,15 @@
     <string name="select_current_region_activity_description">To help us all our users the\ncontent they are most interested in,\nplease choose your home location\n from the regions below:</string>
     <string name="change_current_region_message">You can change you region anytime in\napp setting</string>
     
-    <string-array name="continents_name">
-        <item>All world</item>
-        <item>Asia</item>
-        <item>Africa</item>
-        <item>North America</item>
-        <item>South America</item>
-        <item>Oceania</item>
-        <item>Europe</item>
-    </string-array>
+    <!--<string-array name="continents_name">-->
+        <!--<item>All world</item>-->
+        <!--<item>Asia</item>-->
+        <!--<item>Africa</item>-->
+        <!--<item>Europe</item>-->
+        <!--<item>North America</item>-->
+        <!--<item>Oceania</item>-->
+        <!--<item>South America</item>-->
+    <!--</string-array>-->
 
     <string name="no_select_current_region_message">Please, choose a continent</string>
     <string name="please_wait">Please wait…</string>

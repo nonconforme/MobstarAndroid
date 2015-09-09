@@ -14,7 +14,7 @@ public class ContinentsPojo {
 
     public ContinentsPojo(String[] all, int position) {
         this.code = position;
-        this.name = all[code+1];
+        this.name = all[code];
         switch (code){
             case 0:
                 this.continent = Continents.ALL_WORLD;

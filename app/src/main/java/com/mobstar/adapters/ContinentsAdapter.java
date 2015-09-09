@@ -13,24 +13,34 @@ import com.mobstar.custom.CheckableView;
 import com.mobstar.pojo.ContinentsPojo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Alexandr on 08.09.2015.
  */
 public class ContinentsAdapter extends BaseAdapter implements CheckableView.OnCheckedChangeListener {
     public final static String LOG_TAG = ContinentsAdapter.class.getName();
-    private final Dialog dialog;
     private final LayoutInflater inflater;
     private final ArrayList<Integer> choosenContinents;
     private final Context context;
     private final String[] continents;
 
     public ContinentsAdapter(Dialog dialog, ArrayList<Integer> choosenContinents) {
-        this.dialog = dialog;
         this.context = dialog.getContext();
         this.choosenContinents = choosenContinents;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        continents = context.getResources().getStringArray(R.array.continents_name);
+//        continents = context.getResources().getStringArray(R.array.continents_name);
+        continents = new String[]{"All world"
+                ,context.getResources().getString(R.string.asia)
+                ,context.getResources().getString(R.string.africa)
+                ,context.getResources().getString(R.string.europe)
+                ,context.getResources().getString(R.string.north_america)
+                ,context.getResources().getString(R.string.oceania)
+                ,context.getResources().getString(R.string.south_america)
+        };
+        if (choosenContinents.size() == 0) {
+            Collections.addAll(choosenContinents, new Integer[]{1, 2, 3, 4, 5, 6});
+        }
     }
     @Override
     public int getCount() {
@@ -69,19 +79,20 @@ public class ContinentsAdapter extends BaseAdapter implements CheckableView.OnCh
     }
 
     private void setData(final ViewHolder viewHolder, final int position) {
-        ContinentsPojo continentsPojo = new ContinentsPojo(continents,position);
+        final int code = position+1;
+        ContinentsPojo continentsPojo = new ContinentsPojo(continents,code);
         viewHolder.checkableView.setTitle(continentsPojo.getName());
-        viewHolder.checkableView.setOnlyCheck(choosenContinents.contains(position));
+        viewHolder.checkableView.setOnlyCheck(choosenContinents.contains(code));
         viewHolder.checkableView.setLeftImageDrawable(context.getResources().getDrawable(continentsPojo.getImageResurse()));
         viewHolder.checkableView.setOnCheckedChangeListener(new CheckableView.OnCheckedChangeListener() {
             @Override
             public void onCheckedChange(CheckableView _view, boolean _checked) {
-                if (choosenContinents.contains(position)){
-                    choosenContinents.remove((Integer)position);
+                if (choosenContinents.contains(code)){
+                    choosenContinents.remove((Integer)code);
                 } else {
-                    choosenContinents.add(position);
+                    choosenContinents.add(code);
                 }
-                Log.d(LOG_TAG,"position="+position);
+                Log.d(LOG_TAG,"position="+code);
                 Log.d(LOG_TAG,"choosenContinents.size()="+choosenContinents.size());
             }
         });
