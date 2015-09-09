@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.facebook.LoggingBehavior;
@@ -52,7 +53,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 
 	Context mContext;
 
-	ImageView btnGetStarted, btnSignIn;
+	LinearLayout btnGetStarted, btnSignIn;
 	private CustomTextview btnLoginFB,  btnLoginTwitter, btnLoginGoogle;
 	private CustomTextviewBold btnCountinueWOSignin;
 
@@ -102,10 +103,10 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 
 	void initControls() {
 
-		btnGetStarted = (ImageView) findViewById(R.id.btnGetStarted);
+		btnGetStarted = (LinearLayout) findViewById(R.id.btnGetStarted);
 		btnGetStarted.setOnClickListener(this);
 
-		btnSignIn = (ImageView) findViewById(R.id.btnSignIn);
+		btnSignIn = (LinearLayout) findViewById(R.id.btnSignIn);
 		btnSignIn.setOnClickListener(this);
 
 		btnLoginFB = (CustomTextview) findViewById(R.id.btnLoginFB);
