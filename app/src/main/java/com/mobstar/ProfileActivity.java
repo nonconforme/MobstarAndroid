@@ -2680,7 +2680,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 
 						if (arrEntryPojos != null && arrEntryPojos.size() > 0) {
-							mFirstVisibleItem = arrEntryPojos.size();
+							mFirstVisibleItem = arrEntryPojos.size() - 1;
 							arrEntryPojos.addAll(arrEntryPojosParent);
 
 						} else {
@@ -2975,7 +2975,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 
 						if (arrEntryPojos != null && arrEntryPojos.size() > 0) {
-							mFirstVisibleItem = arrEntryPojos.size();
+							mFirstVisibleItem = arrEntryPojos.size() - 1;
 							arrEntryPojos.addAll(arrEntryPojosParent);
 
 						} else {
@@ -3787,8 +3787,10 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 							mFirstVisibleItem--;
 						}
 						//						if (view.getChildAt(0).getTop() < -((height / 2)))
-						if (view.getChildAt(0).getTop() < -((height / 2))+dpToPx(30)){
-							mFirstVisibleItem++;
+						if (view.getChildAt(0).getTop() < - ((height / 2)) + dpToPx(30)){
+							if (mFirstVisibleItem  < arrEntryPojos.size() - 2 )
+								mFirstVisibleItem++;
+
 						}
 					}
 

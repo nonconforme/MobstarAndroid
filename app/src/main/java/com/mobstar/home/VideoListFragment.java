@@ -1479,7 +1479,6 @@ public class VideoListFragment extends Fragment {
                                         mActivity.runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                setEnableSplitButton(viewHolder, position, true);
                                                 viewHolder.progressbar.setVisibility(View.GONE);
                                                 viewHolder.textureView.setVisibility(View.GONE);
                                                 notifyDataSetChanged();
