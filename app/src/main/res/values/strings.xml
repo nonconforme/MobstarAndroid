@@ -355,5 +355,15 @@
     <string name="to_vote_no">To vote <b>NO</b></string>
     <string name="swipe_right">Swipe <b>RIGHT</b></string>
     <string name="to_vote_yes">To vote <b>YES</b></string>
+    
+    <string name="get_started">GET STARTED</string>
+    <string name="create_account">CREATE ACCOUNT</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="existing_account">EXISTING ACCOUNT</string>
+    <string name="new_user">NEW USER?</string>
+    <string name="cant_login">CANT\' LOGIN</string>
+    <string name="reset_password">RESET PASSWORD</string>
+
+
 
 </resources>

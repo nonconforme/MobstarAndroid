@@ -19,6 +19,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	EditText editEmail, editPassword;
 	TextView textEmailHint, textPasswordHint;
 
-	ImageView btnNewUser, btnResetPassword;
+	LinearLayout btnNewUser, btnResetPassword;
 	String sUserID = "", sToken = "", sUserFullName = "", sUserName = "", sUserDisplayName = "";
 	String ProfileImage = "", ProfileCover = "", UserTagLine = "",UserBio;
 	String sErrorMessage = "";
@@ -65,10 +66,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 
-		btnNewUser = (ImageView) findViewById(R.id.btnNewUser);
+		btnNewUser = (LinearLayout) findViewById(R.id.btnNewUser);
 		btnNewUser.setOnClickListener(this);
 
-		btnResetPassword = (ImageView) findViewById(R.id.btnResetPassword);
+		btnResetPassword = (LinearLayout) findViewById(R.id.btnResetPassword);
 		btnResetPassword.setOnClickListener(this);
 
 		btnBack = (Button) findViewById(R.id.btnBack);

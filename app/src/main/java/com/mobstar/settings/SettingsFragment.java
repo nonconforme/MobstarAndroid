@@ -123,7 +123,7 @@ public class SettingsFragment extends Fragment {
 //				Intent intent = new Intent(mContext, PrivacySettingsActivity.class);
 //				startActivity(intent);
 //				getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-				
+
 				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://mobstar.com/privacy"));
 				startActivity(browserIntent);
 

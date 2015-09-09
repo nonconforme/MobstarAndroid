@@ -88,33 +88,73 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/login_social_margin_bottom"
                 android:gravity="center_horizontal" >
-
-                <ImageView
+                <LinearLayout
                     android:id="@+id/btnGetStarted"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:layout_gravity="center"
-                    android:layout_marginRight="20dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/login_get_started" />
+                    android:gravity="center_vertical">
+                    <com.mobstar.custom.CustomTextviewBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/get_started"
+                        android:textColor="@color/white_color" />
+                    <com.mobstar.custom.CustomTextview
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white_color"
+                        android:text="@string/create_account"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/btnGetStarted"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginRight="20dp"-->
+                    <!--android:contentDescription="@string/app_name"-->
+                    <!--android:src="@drawable/login_get_started" />-->
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/login_small_vert_devider" />
+                    android:src="@drawable/login_small_vert_devider"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp" />
 
-                <ImageView
+                <!--<ImageView-->
+                    <!--android:id="@+id/btnSignIn"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginLeft="20dp"-->
+                    <!--android:contentDescription="@string/app_name"-->
+                    <!--android:src="@drawable/login_sign_in" />-->
+                <LinearLayout
                     android:id="@+id/btnSignIn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/login_sign_in" />
+                    android:gravity="center_vertical">
+                    <com.mobstar.custom.CustomTextviewBold
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sign_in"
+                        android:textColor="@color/white_color"/>
+                    <com.mobstar.custom.CustomTextview
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white_color"
+                        android:text="@string/existing_account"
+                        android:textSize="10sp"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
