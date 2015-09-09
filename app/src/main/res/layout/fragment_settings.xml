@@ -61,7 +61,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/white_color"
                             android:textSize="20sp"
-                            android:text="@string/personal_details"
+                            android:text="@string/personal_details_"
                             android:gravity="center" />
                     </LinearLayout>
                     <LinearLayout
@@ -83,7 +83,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/white_color"
                             android:textSize="20sp"
-                            android:text="@string/linked_accounts"
+                            android:text="@string/linked_accounts_"
                             android:gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
@@ -132,7 +132,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/white_color"
                             android:textSize="20sp"
-                            android:text="@string/privacy_policy"
+                            android:text="@string/privacy_policy_"
                             android:gravity="center" />
                     </LinearLayout>
                 </LinearLayout>
@@ -140,6 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="50dp"
+                    android:layout_marginBottom="@dimen/scale_20"
                     android:orientation="horizontal"
                     >
                     <LinearLayout
@@ -161,7 +162,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/white_color"
                             android:textSize="20sp"
-                            android:text="@string/change_password"
+                            android:text="@string/change_password_"
                             android:gravity="center" />
                     </LinearLayout>
 
