@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.adapters.ContinentsAdapter;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
@@ -62,6 +64,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private CategoryAdapter categoryAdapter;
 	private Dialog categoryDialog;
     private ImageView vCategoryButton;
+    private int[] choosenContinents = {1,3,4};
 
 
     @Override
@@ -75,6 +78,8 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			}
 
 		}
+
+
 	}
 
 	@Override
@@ -260,17 +265,36 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Log.d(LOG_TAG,"onClick");
-        switch (v.getId()){
+        Log.d(LOG_TAG, "onClick");
+        switch (v.getId()) {
             case R.id.btn_category_home:
-                ListView listCategory;
+                ListView vListConinents;
 
-                Dialog continentDialog = new Dialog(getActivity(), R.style.DialogTheme);
+                final Dialog continentDialog = new Dialog(getActivity(), R.style.DialogTheme);
                 continentDialog.setContentView(R.layout.dialog_continets);
-                listCategory = (ListView) categoryDialog.findViewById(R.id.listContinents);
-                listCategory.setAdapter(categoryAdapter);
+                vListConinents = (ListView) continentDialog.findViewById(R.id.listContinents);
+                ((ImageButton) continentDialog.findViewById(R.id.btn_close_continents_filters)).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO send list choosen;
+                        continentDialog.dismiss();
+                        VideoListFragment videoListFragment = new VideoListFragment();
+                        Bundle extras = new Bundle();
+                        extras.putBoolean("isEntryAPI", true);
+                        extras.putString("LatestORPopular","latest");
+                        videoListFragment.setArguments(extras);
+                        replaceFragment(videoListFragment, "VideoListFragment");
+                    }
+                });
+                //mock
+                ArrayList<Integer> listChoosen = new ArrayList<>();
+                for (int i=0;i<choosenContinents.length;i++){
+                    listChoosen.add(choosenContinents[i]);
+                }
 
-                categoryDialog.show();
+                vListConinents.setAdapter(new ContinentsAdapter(continentDialog, listChoosen));
+
+                continentDialog.show();
                 break;
         }
     }

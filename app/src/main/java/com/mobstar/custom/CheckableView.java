@@ -129,6 +129,11 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
 
     }
 
+    public void setOnlyCheck(boolean checked){
+        mChecked = checked;
+        refreshView();
+    }
+
     @Override
     public boolean isChecked() {
         return mChecked;
