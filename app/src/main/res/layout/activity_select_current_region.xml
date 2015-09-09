@@ -50,7 +50,7 @@
                     android:id="@+id/cbEurope"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    custom:isChowChecked="true"
+                    custom:isChowChecked="false"
                     custom:checkedTitle="@string/europe"/>
 
                 <com.mobstar.custom.CheckableView
@@ -94,8 +94,7 @@
                     android:id="@+id/cbAfrica"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    custom:checkedTitle="@string/africa"
-                    custom:leftImage="@drawable/ic_back"/>
+                    custom:checkedTitle="@string/africa"/>
             </LinearLayout>
         </LinearLayout>
 
