@@ -22,15 +22,18 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -41,8 +44,8 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.loopj.android.http.SyncHttpClient;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.custom.PullToRefreshListView;
@@ -65,8 +68,13 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class VideoListFragment extends Fragment {
 
@@ -304,7 +312,7 @@ public class VideoListFragment extends Fragment {
 		textNoData = (TextView) view.findViewById(R.id.textNoData);
 		textNoData.setVisibility(View.GONE);
 
-		entryListAdapter = new EntryListAdapter();
+		entryListAdapter = new EntryListAdapter(getActivity());
 		listEntry = (PullToRefreshListView) view.findViewById(R.id.listEntries);
 		
 		adView = (AdView) view.findViewById(R.id.adView);
@@ -924,13 +932,24 @@ public class VideoListFragment extends Fragment {
 
 
 	public class EntryListAdapter extends BaseSwipeAdapter {
+		private static final int MAX_THREAD_POOL = 3;
+		private final String LOG_TAG = EntryListAdapter.class.getName();
 
-		private LayoutInflater inflater = null;
+        private final ThreadPoolExecutor executor;
+        private final LinkedList<Future> queue;
+        private final LinkedList<DownLoadThread> queueTask;
+        private final Activity mActivity;
+        private LayoutInflater inflater = null;
 
 		private boolean onVoitingSwipeItem = false;
 
-		public EntryListAdapter() {
+		public EntryListAdapter(Activity activity) {
 			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mActivity = activity;
+            executor = new ThreadPoolExecutor(MAX_THREAD_POOL,MAX_THREAD_POOL
+                    ,60L, TimeUnit.SECONDS,new ArrayBlockingQueue<Runnable>(10));
+            queue = new LinkedList<Future>();
+            queueTask = new LinkedList<DownLoadThread>();
 
 		}
 
@@ -1346,58 +1365,54 @@ public class VideoListFragment extends Fragment {
 										File file = new File(FILEPATH + sFileName);
 										if (file != null && !file.exists()) {
 
-											listDownloadingFile.add(sFileName);
-											if (Utility.isNetworkAvailable(mContext)) {
-												AsyncHttpClient client = new AsyncHttpClient();
-												final int DEFAULT_TIMEOUT = 60 * 1000;
-												client.setTimeout(DEFAULT_TIMEOUT);
+									listDownloadingFile.add(sFileName);
 
-												client.get(arrEntryPojos.get(pos).getAudioLink(), new FileAsyncHttpResponseHandler(file) {
+                                    Log.d(LOG_TAG, "sFileName=" + sFileName);
+//                            Log.d(LOG_TAG, "arrEntryPojos.get(position).getVideoLink()="+arrEntryPojos.get(position).getVideoLink());
+                                    Log.d(LOG_TAG,"what to dowmload="+arrEntryPojos.get(position).getDescription());
 
-													@Override
-													public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
-//												Log.d("mobstar","Download fail=>"+arrEntryPojos.get(position).getAudioLink());
-													}
+                                    if (Utility.isNetworkAvailable(mContext)) {
+                                        downloadFile(sFileName, listDownloadingFile, arrEntryPojos.get(position).getAudioLink(), new FileAsyncHttpResponseHandler(file) {
 
-													@Override
-													public void onSuccess(int arg0, Header[] arg1, File file) {
-														// TODO Auto-generated
-														// method
-														// stub
-														// Log.v(Constant.TAG,
-														// "onSuccess Audio File  downloaded");
+                                            @Override
+                                            public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
+                                                Log.d(LOG_TAG,"Download fail audio=>"+arrEntryPojos.get(position).getVideoLink());
+                                            }
 
-														listDownloadingFile.remove(file.getName());
-//														notifyDataSetChanged();
-													}
-
-
-												});
-											} else {
-												Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-											}
-
-
-
-										} else {
-											viewHolder.progressbar.setVisibility(View.GONE);
-										}
-									} catch (Exception e) {
-										e.printStackTrace();
+                                            @Override
+                                            public void onSuccess(int arg0, Header[] arg1, File file) {
+                                                Log.d(LOG_TAG, "download audio file=" + file.getName());
+                                                listDownloadingFile.remove(file.getName());
+                                                mActivity.runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        notifyDataSetChanged();
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+									else {
+										Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 									}
-
 								} else {
-									viewHolder.progressbar.setVisibility(View.VISIBLE);
+									viewHolder.progressbar.setVisibility(View.GONE);
 								}
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
 
-							@Override
-							public void onError() {
-								// TODO Auto-generated method stub
+						} else {
+							viewHolder.progressbar.setVisibility(View.VISIBLE);
+						}
+					}
 
-							}
-						});
+					@Override
+					public void onError() {
+						// TODO Auto-generated method stub
 
+					}
+				});
 
 
 			} else if (arrEntryPojos.get(position).getType().equals("video")) {
@@ -1438,41 +1453,41 @@ public class VideoListFragment extends Fragment {
 					//					File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
 
 					try {
-						File file = new File(FILEPATH + sFileName);
+						final File file = new File(FILEPATH + sFileName);
 
 						if (file!=null && !file.exists()) {
 							listDownloadingFile.add(sFileName);
 
+                            Log.d(LOG_TAG, "sFileName=" + sFileName);
+//                            Log.d(LOG_TAG, "arrEntryPojos.get(position).getVideoLink()="+arrEntryPojos.get(position).getVideoLink());
+                            Log.d(LOG_TAG,"what to dowmload="+arrEntryPojos.get(position).getDescription());
+
 							if (Utility.isNetworkAvailable(mContext)) {
-								AsyncHttpClient client = new AsyncHttpClient();
-								final int DEFAULT_TIMEOUT = 60 * 1000;
+                                downloadFile(sFileName,listDownloadingFile,arrEntryPojos.get(position).getVideoLink(), new FileAsyncHttpResponseHandler(file) {
 
-								client.setTimeout(DEFAULT_TIMEOUT);
-								client.get(arrEntryPojos.get(position).getVideoLink(), new FileAsyncHttpResponseHandler(file) {
+                                    @Override
+                                    public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
+										Log.d(LOG_TAG,"Download fail video=>"+arrEntryPojos.get(position).getVideoLink());
 
-									@Override
-									public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
-//										Log.d("mobstar","Download fail video=>"+arrEntryPojos.get(position).getVideoLink());
+                                    }
 
-									}
-
-									@Override
-									public void onSuccess(int arg0, Header[] arg1, File file) {
-										// TODO Auto-generated method stub
-										// Log.v(Constant.TAG,
-										// "onSuccess Video File  downloaded");
-										viewHolder.progressbar.setVisibility(View.GONE);
-										viewHolder.textureView.setVisibility(View.GONE);
-
-										listDownloadingFile.remove(file.getName());
-
-//										notifyDataSetChanged();
-
-									}
-
-
-
-								});
+                                    @Override
+                                    public void onSuccess(int arg0, Header[] arg1, File file) {
+                                        Log.d(LOG_TAG,"download video file="+file.getName());
+//                                        Log.d(LOG_TAG,"index of file="+listDownloadingFile.indexOf(file.getName()));
+//                                        Log.d(LOG_TAG,"listDownloadingFile.size="+listDownloadingFile.size());
+                                        mActivity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                setEnableSplitButton(viewHolder, position, true);
+                                                viewHolder.progressbar.setVisibility(View.GONE);
+                                                viewHolder.textureView.setVisibility(View.GONE);
+                                                notifyDataSetChanged();
+                                            }
+                                        });
+                                        listDownloadingFile.remove(file.getName());
+                                    }
+                                });
 							}
 							else {
 								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
@@ -1748,6 +1763,69 @@ public class VideoListFragment extends Fragment {
 			}
 
 		}
+
+        private class DownLoadThread extends Thread {
+            private final String link;
+            private final FileAsyncHttpResponseHandler fileAsyncHttpResponseHandler;
+            private final SyncHttpClient client;
+            public final String fileName;
+
+            DownLoadThread (final String fileName,final String link, final FileAsyncHttpResponseHandler fileAsyncHttpResponseHandler) {
+                this.link = link;
+                this.fileName = fileName;
+                this.fileAsyncHttpResponseHandler = fileAsyncHttpResponseHandler;
+                client = new SyncHttpClient();
+            }
+            @Override
+            public void run() {
+                super.run();
+                final int DEFAULT_TIMEOUT = 60 * 1000;
+
+                client.setTimeout(DEFAULT_TIMEOUT);
+                client.setConnectTimeout(DEFAULT_TIMEOUT);
+                client.setResponseTimeout(DEFAULT_TIMEOUT);
+                client.get(link, fileAsyncHttpResponseHandler);
+            }
+
+            public void cancelThread() {
+                Log.d(LOG_TAG,"cancelThread");
+                client.cancelAllRequests(true);
+            }
+        }
+
+        private void downloadFile(final String fileName,final ArrayList<String> listDownloadingFile, String link, final FileAsyncHttpResponseHandler fileAsyncHttpResponseHandler) {
+            DownLoadThread task = new DownLoadThread(fileName,link,fileAsyncHttpResponseHandler);
+            queueTask.add(task);
+            Future threadFuture= executor.submit(task);
+            queue.add(threadFuture);
+            Log.d(LOG_TAG, "add task=" + task.hashCode());
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (listDownloadingFile.remove(fileName)) {
+                        notifyDataSetChanged();
+                        Log.d(LOG_TAG, "extrenal delet=" + fileName);
+                    }
+                }
+            },20000);
+            if (queue.size()>MAX_THREAD_POOL) {
+                DownLoadThread runnable = queueTask.getFirst();
+                Future future = queue.getFirst();
+                Log.d(LOG_TAG, "del task=" + runnable.hashCode());
+                Log.d(LOG_TAG, "del file=" + runnable.fileName);
+
+                listDownloadingFile.remove(runnable.fileName);
+                Log.d(LOG_TAG, "listDownloadingFile.size=" + listDownloadingFile.size());
+
+                runnable.cancelThread();
+                future.cancel(true);
+
+                queue.remove(future);
+                Log.d(LOG_TAG, "queue.size=" + queue.size());
+                queueTask.remove(runnable);
+            }
+            Log.d(LOG_TAG, "executor getTaskCount=" + executor.getTaskCount());
+        }
 
 		public int getCount() {
 			return arrEntryPojos.size();
