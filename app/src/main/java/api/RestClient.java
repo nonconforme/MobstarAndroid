@@ -45,10 +45,11 @@ public class RestClient {
         return instance;
     }
 
-    public void getRequest(final String url, RequestParams params, final ConnectCallback callback){
+    public void getRequest(final String url, HashMap<String, String> params, final ConnectCallback callback){
+        final RequestParams requestParams = new RequestParams(params);
         final String absoluteUrl = Constant.SERVER_URL + url;
-        Log.d("http get request: ", absoluteUrl + "?" + params.toString());
-        httpClient.get(absoluteUrl, params, new AsyncHttpResponseHandler() {
+        Log.d("http get request: ", absoluteUrl + "?" + requestParams.toString());
+        httpClient.get(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 try {

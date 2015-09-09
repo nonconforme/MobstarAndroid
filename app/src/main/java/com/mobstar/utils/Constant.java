@@ -147,6 +147,8 @@ public class Constant {
 
 	public static final String USER_CONTINENT = "settings/userContinent/";
 
+	public static final String USER_ACCOUNT = "settings/account/";
+
 
 //	app constant
 	public static final String IMAGE              = "image";

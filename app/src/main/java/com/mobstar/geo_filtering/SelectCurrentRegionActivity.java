@@ -22,6 +22,7 @@ import api.ConnectCallback;
 import api.RestClient;
 import api.responce.BaseResponse;
 import api.responce.ContinentResponse;
+import api.responce.UserAccountResponse;
 
 /**
  * Created by lipcha on 08.09.15.
@@ -77,10 +78,25 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnOk:
-            onClickOk();
+//            onClickOk();
+                getAcoount();
                 break;
         }
 
+    }
+
+    private void getAcoount(){
+        RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+            @Override
+            public void onSuccess(UserAccountResponse object) {
+                Log.d("tag", object.toString());
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
     }
 
     private void onClickOk(){
