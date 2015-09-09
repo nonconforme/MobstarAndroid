@@ -1,9 +1,9 @@
-package api;
+package com.mobstar.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import api.responce.BaseResponse;
+import com.mobstar.api.responce.BaseResponse;
 
 /**
  * Created by lipcha on 08.09.15.

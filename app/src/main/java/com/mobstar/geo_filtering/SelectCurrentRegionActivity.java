@@ -2,27 +2,25 @@ package com.mobstar.geo_filtering;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.loopj.android.http.RequestParams;
 import com.mobstar.R;
 import com.mobstar.custom.CheckableView;
+import com.mobstar.home.HomeActivity;
 import com.mobstar.pojo.ContinentsPojo;
 import com.mobstar.utils.Constant;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
 
-import api.ConnectCallback;
-import api.RestClient;
-import api.responce.BaseResponse;
-import api.responce.ContinentResponse;
-import api.responce.UserAccountResponse;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.ContinentResponse;
+import com.mobstar.api.responce.UserAccountResponse;
 
 /**
  * Created by lipcha on 08.09.15.
@@ -78,25 +76,10 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnOk:
-//            onClickOk();
-                getAcoount();
+            onClickOk();
                 break;
         }
 
-    }
-
-    private void getAcoount(){
-        RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
-            @Override
-            public void onSuccess(UserAccountResponse object) {
-                Log.d("tag", object.toString());
-            }
-
-            @Override
-            public void onFailure(String error) {
-
-            }
-        });
     }
 
     private void onClickOk(){
@@ -117,6 +100,7 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
             @Override
             public void onSuccess(ContinentResponse object) {
                 hideProgress();
+                startHomeActivity();
             }
 
             @Override
@@ -125,6 +109,12 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
                 showToastNotification(error);
             }
         });
+    }
+
+    private void startHomeActivity(){
+        final Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private ContinentsPojo.Continents getSelectedContinents(){

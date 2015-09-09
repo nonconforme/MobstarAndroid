@@ -1,4 +1,4 @@
-package api.responce;
+package com.mobstar.api.responce;
 
 import com.mobstar.pojo.ContinentsPojo;
 

@@ -1,4 +1,4 @@
-package api;
+package com.mobstar.api;
 
 import android.app.Activity;
 import android.content.Context;
@@ -83,7 +83,6 @@ public class RestClient {
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 try {
                     final JSONObject jsonObject = new JSONObject(new String(bytes, "US-ASCII"));
-                    Log.d("tag", "json = " + jsonObject);
                     if (callback != null) {
                         callback.parse(jsonObject);
                     }
