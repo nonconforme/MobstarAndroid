@@ -22,27 +22,27 @@ public class ContinentsPojo {
                 break;
             case 1:
                 this.continent = Continents.AFRICA;
-                this.imageResurse = R.drawable.ic_back;
+                this.imageResurse = R.drawable.africa;
                 break;
             case 2:
                 this.continent = Continents.ASIA;
-                this.imageResurse = R.drawable.ic_back;
+                this.imageResurse = R.drawable.asia;
                 break;
             case 3:
                 this.continent = Continents.EUROPE;
-                this.imageResurse = R.drawable.ic_back;
+                this.imageResurse = R.drawable.europe;
                 break;
             case 4:
                 this.continent = Continents.NORTH_AMERICA;
-                this.imageResurse = R.drawable.ic_back;
+                this.imageResurse = R.drawable.north_america;
                 break;
             case 5:
                 this.continent = Continents.OCEANIA;
-                this.imageResurse = R.drawable.ic_back;
+                this.imageResurse = R.drawable.oceania;
                 break;
             case 6:
                 this.continent = Continents.SOUTH_AMERICA;
-                this.imageResurse = R.drawable.ic_back;
+                this.imageResurse = R.drawable.south_america;
                 break;
         }
     }
