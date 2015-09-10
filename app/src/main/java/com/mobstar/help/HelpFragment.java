@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.R;
@@ -20,7 +21,7 @@ public class HelpFragment extends Fragment {
 	Context mContext;
 
 	TextView textHelp;
-	ImageView btnFAQS, btnAppTour, btnRequestAbuse, btnLeaveFeedback;
+	private LinearLayout btnFAQS, btnAppTour, btnRequestAbuse, btnLeaveFeedback;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class HelpFragment extends Fragment {
 			}
 		});
 
-		btnFAQS = (ImageView) view.findViewById(R.id.btnFAQS);
+		btnFAQS = (LinearLayout) view.findViewById(R.id.btnFAQS);
 		btnFAQS.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -59,7 +60,7 @@ public class HelpFragment extends Fragment {
 			}
 		});
 
-		btnAppTour = (ImageView) view.findViewById(R.id.btnAppTour);
+		btnAppTour = (LinearLayout) view.findViewById(R.id.btnAppTour);
 		btnAppTour.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -70,7 +71,7 @@ public class HelpFragment extends Fragment {
 			}
 		});
 
-		btnRequestAbuse = (ImageView) view.findViewById(R.id.btnRequestAbuse);
+		btnRequestAbuse = (LinearLayout) view.findViewById(R.id.btnRequestAbuse);
 		btnRequestAbuse.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -81,7 +82,7 @@ public class HelpFragment extends Fragment {
 			}
 		});
 
-		btnLeaveFeedback = (ImageView) view.findViewById(R.id.btnLeaveFeedback);
+		btnLeaveFeedback = (LinearLayout) view.findViewById(R.id.btnLeaveFeedback);
 		btnLeaveFeedback.setOnClickListener(new OnClickListener() {
 
 			@Override
