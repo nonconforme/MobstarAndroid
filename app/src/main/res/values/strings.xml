@@ -90,7 +90,7 @@
     <string name="connect_your_account">CONNECT YOUR ACCOUNT</string>
     <string name="app_settings">APP SETTINGS</string>
     <string name="push_notifications">PUSH NOTIFICATIONS</string>
-    <string name="off">OFF</string>
+
     <string name="privacy_policy">PRIVACY POLICY</string>
     <string name="privacy_policy_">PRIVACY\nPOLICY</string>
     <string name="privacy_policy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Y</string>
@@ -356,4 +356,27 @@
 
     <string name="no_select_current_region_message">Please, choose a continent</string>
     <string name="location_settings">LOCATION\nSETTINGS</string>
+
+    <string name="you_are_now_following_this_user">UOU ARE NOW\nFOLLOWING THIS USER</string>
+    <string name="im_a_talent">I\'M A TALENT</string>
+    <string name="this_is_main_menu">THIS IS MAIN MENU</string>
+    <string name="this_is_where_you_find_your_notification">THIS IS WHERE YOU FIND YOUR NOTIFICATIONS</string>
+    <string name="tap_here_to_add_an_entry_to_mobstar">TAP HERE TO ADD AN ENTRY TO MOBSTAR</string>
+    <string name="search_for_anything_on_mobstar">SEARCH FOR ANYTHING ON MOBSTAR</string>
+    <string name="swipe_left_to_dislike">SWIPE LEFT TO DISLIKE</string>
+    <string name="swipe_right_tp_vote_yes">SWIPE RIGHT TO VOTE YES!</string>
+    <string name="view_stats">VIEW STATS</string>
+    <string name="share">SHARE</string>
+    <string name="entry_info">ENTRY INFO</string>
+    <string name="mobstar_would_like_to_access_your_facebook_account"><b>MOBSTAR</b> WOULD\nLIKE ACCESS YOUR\n<b>FACEBOOK</b> ACCOUNT</string>
+    <string name="app_tour">APP TOUR</string>
+    <string name="thank_you_for_giving_us_your_feedback">THANK YOU FOR GIVING US YOUR FEEDBACK</string>
+    <string name="your_details_have_been_changed">YOUR DETAILS\nHAVE BEEN CHANGED</string>
+    <string name="reported">REPORTED</string>
+    <string name="you_complaint_will_be_reviewed_and_dealt_with_promptly">YOUR COMPLAINT WILL\nBE REVIEWED AND\nDEALT WITH PROMPTLY</string>
+    <string name="your_tagline_yas_been_updated">YOUR TAGLINE HAS\nBEEN UPDATES</string>
+    <string name="this_entry_will_be_reviewed">THIS ENTRY WILL BE REVIEWED</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+
 </resources>

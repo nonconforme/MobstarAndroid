@@ -11,8 +11,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="50dp"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/pop_personal_detail" />
+        android:src="@drawable/icn_pop_personal_detail" />
+
+    <com.mobstar.custom.CustomTextview
+        android:layout_marginTop="@dimen/scale_20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/white_color"
+        android:text="@string/your_details_have_been_changed"/>
 
    
 </LinearLayout>

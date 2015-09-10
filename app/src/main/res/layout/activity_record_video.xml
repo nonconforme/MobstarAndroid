@@ -33,13 +33,29 @@
             android:layout_height="wrap_content"
             android:gravity="center" >
 
-            <ImageView
+            <LinearLayout
                 android:id="@+id/btnFlash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+            <ImageView
+                android:id="@+id/ivFlash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/flash_off" />
+                android:src="@drawable/icn_flash" />
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/tvFlash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white_color"
+                android:text="@string/off"
+                android:textSize="15sp"
+                />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/btnChangeCamera"

@@ -12,7 +12,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/pop_add_star" />
+        android:src="@drawable/icn_pop_add_star" />
+
+    <com.mobstar.custom.CustomTextview
+        android:layout_marginTop="@dimen/scale_20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/white_color"
+        android:text="@string/you_are_now_following_this_user"/>
 
    
 </LinearLayout>

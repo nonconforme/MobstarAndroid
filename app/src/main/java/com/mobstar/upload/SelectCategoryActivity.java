@@ -176,7 +176,9 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 			}
 			else {
 				viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.coming_soon_bg));
-				viewHolder.textCategoryName.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.coming_soon,0);
+//				viewHolder.textCategoryName.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.coming_soon,0);
+				viewHolder.textCategoryName.setText(getString(R.string.coming_soon));
+
 				viewHolder.textCategoryName.setCompoundDrawablePadding(5);
 			}
 
