@@ -32,6 +32,8 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
@@ -52,7 +54,10 @@ public class TakePictureActivity extends Activity {
 	private Camera mCamera;
 	private CameraPreview mPreview;
 
-	ImageView btnCapture, btnFlash, btnChangeCamera;
+	private TextView tvFlash;
+	private LinearLayout btnFlash;
+
+	ImageView btnCapture, ivFlash, btnChangeCamera;
 
 	boolean isFlashOn = false;
 	int currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
@@ -139,7 +144,9 @@ public class TakePictureActivity extends Activity {
 				}
 			});
 
-			btnFlash = (ImageView) findViewById(R.id.btnFlash);
+			tvFlash = (TextView) findViewById(R.id.tvFlash);
+			btnFlash = (LinearLayout) findViewById(R.id.btnFlash);
+			ivFlash = (ImageView) findViewById(R.id.ivFlash);
 			btnFlash.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -151,11 +158,11 @@ public class TakePictureActivity extends Activity {
 					} else {
 						if (isFlashOn) {
 							isFlashOn = false;
-							btnFlash.setImageResource(R.drawable.flash_off);
+							tvFlash.setText(getString(R.string.off));
 
 						} else {
 							isFlashOn = true;
-							btnFlash.setImageResource(R.drawable.flash_on);
+							tvFlash.setText(getString(R.string.on));
 						}
 
 						mPreview.OnOffFlash(isFlashOn);

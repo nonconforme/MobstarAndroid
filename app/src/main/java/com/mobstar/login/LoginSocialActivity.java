@@ -647,6 +647,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			@Override
 			public void onFailure(String error) {
 				Utility.HideDialog(mContext);
+				startHomeActivity();
 			}
 		});
 	}

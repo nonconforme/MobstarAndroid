@@ -6,12 +6,7 @@
     android:background="@color/background_transparent"
     android:gravity="center"
     android:orientation="vertical" >
+    <include layout="@layout/voting_no"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/action_no" />
 
 </LinearLayout>

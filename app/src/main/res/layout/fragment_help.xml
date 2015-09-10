@@ -38,51 +38,120 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center" >
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1">
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/btnFAQS"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:layout_weight="1"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/btn_faqs" />
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="30dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/icn_btn_faqs" />
 
-                <ImageView
+                    <com.mobstar.custom.CustomTextviewBold
+                        android:layout_marginTop="@dimen/scale_20"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:textColor="@color/white_color"
+                        android:text="@string/faqs"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/btnAppTour"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:layout_weight="1"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/btn_app_tour" />
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="30dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/icn_btn_app_tour" />
+
+                    <com.mobstar.custom.CustomTextviewBold
+                        android:layout_marginTop="@dimen/scale_20"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:textColor="@color/white_color"
+                        android:text="@string/app_tour"/>
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="50dp"
-                android:gravity="center" >
+                android:gravity="center"
+                android:layout_weight="1">
 
-                <ImageView
+                <LinearLayout
                     android:id="@+id/btnRequestAbuse"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:layout_weight="1"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/btn_report_abuse" />
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="30dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/icn_btn_report_abuse" />
 
-                <ImageView
+                    <com.mobstar.custom.CustomTextviewBold
+                        android:layout_marginTop="@dimen/scale_20"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:textColor="@color/white_color"
+                        android:text="@string/report_abuse"/>
+
+                </LinearLayout>
+                <LinearLayout
                     android:id="@+id/btnLeaveFeedback"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
                     android:layout_weight="1"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/btn_feedback" />
+                    android:gravity="center">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="30dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/icn_btn_feedback" />
+
+                    <com.mobstar.custom.CustomTextviewBold
+                        android:layout_marginTop="@dimen/scale_20"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:textColor="@color/white_color"
+                        android:text="@string/leave_feedback"/>
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>

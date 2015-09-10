@@ -356,15 +356,17 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 	}
 
     private void startHomeActivity() {
-        Intent intent = new Intent(mContext,HomeActivity.class);
+        Intent intent = new Intent(mContext, HomeActivity.class);
         intent.putExtra("isHomeInfo",true);
         startActivity(intent);
         finish();
     }
     private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
         RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
             @Override
             public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(WhoToFollowActivity.this);
                 if (object.getUser().getUserContinentId() == 0) {
                     startSelectCurrentRegionActivity();
                 } else startHomeActivity();
@@ -372,7 +374,8 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 
             @Override
             public void onFailure(String error) {
-
+				Utility.HideDialog(WhoToFollowActivity.this);
+				startHomeActivity();
             }
         });
     }

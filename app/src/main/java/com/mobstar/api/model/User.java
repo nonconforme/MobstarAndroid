@@ -21,18 +21,40 @@ public class User implements BaseResponse {
     }
 
     @Override
-    public void configure(JSONObject jsonObject) throws JSONException {
+    public void configure(JSONObject jsonObject) {
         if (jsonObject.has("id"))
-            id = jsonObject.getInt("id");
-        if (jsonObject.has("twitter"))
-            twitter = jsonObject.getBoolean("twitter");
+            try {
+                id = jsonObject.getInt("id");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        if (jsonObject.has("twitter")) {
+            try {
+                twitter = jsonObject.getBoolean("twitter");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
         if (jsonObject.has("userContinent"))
-            userContinentId = jsonObject.getInt("userContinent");
+            try {
+                userContinentId = jsonObject.getInt("userContinent");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         if (jsonObject.has("google")) {
             google = new Google();
-            google.configure(jsonObject.getJSONObject("google"));
+            try {
+                google.configure(jsonObject.getJSONObject("google"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         if (jsonObject.has("facebook"))
-            facebook = jsonObject.getBoolean("facebook");
+            try {
+                facebook = jsonObject.getBoolean("facebook");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
     }
 }
