@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.mobstar.R;
 import com.mobstar.utils.Constant;
+import com.mobstar.utils.Utility;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -26,6 +29,8 @@ public class RestClient {
     private static RestClient instance;
     private AsyncHttpClient httpClient;
     private SharedPreferences preferences;
+    private Context context;
+    private Toast toast;
 
     private RestClient(){
 
@@ -37,6 +42,7 @@ public class RestClient {
         }
         if (instance.preferences == null)
             instance.preferences = _context.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
+        instance.context = _context;
         instance.httpClient = new AsyncHttpClient();
         instance.httpClient.setTimeout(Constant.TIMEOUTCONNECTION);
         instance.httpClient.addHeader("Content-Type", "application/json");
@@ -46,6 +52,11 @@ public class RestClient {
     }
 
     public void getRequest(final String url, HashMap<String, String> params, final ConnectCallback callback){
+        if (!Utility.isNetworkAvailable(context)) {
+            showToastNotification(context.getString(R.string.no_internet_access));
+            callback.onFailure("");
+            return;
+        }
         final RequestParams requestParams = new RequestParams(params);
         final String absoluteUrl = Constant.SERVER_URL + url;
         Log.d("http get request: ", absoluteUrl + "?" + requestParams.toString());
@@ -66,6 +77,7 @@ public class RestClient {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                showToastNotification(throwable.getMessage());
                 if (callback != null)
                     callback.onFailure(throwable.toString());
             }
@@ -73,7 +85,11 @@ public class RestClient {
     }
 
     public void postRequest(final String url, HashMap<String, String> params, final ConnectCallback callback){
-
+        if (!Utility.isNetworkAvailable(context)) {
+            showToastNotification(context.getString(R.string.no_internet_access));
+            callback.onFailure("");
+            return;
+        }
         final String absoluteUrl = Constant.SERVER_URL + url;
         final RequestParams requestParams = new RequestParams(params);
         Log.d("http post request: ", absoluteUrl + "?" + requestParams.toString());
@@ -95,9 +111,19 @@ public class RestClient {
 
             @Override
             public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                showToastNotification(throwable.getMessage());
                 if (callback != null)
                     callback.onFailure(throwable.toString());
             }
         });
+    }
+
+    private void showToastNotification(final String message){
+        if (toast == null && context != null)
+            toast = Toast.makeText(context, "", Toast.LENGTH_SHORT);
+        if (toast != null) {
+            toast.setText(message);
+            toast.show();
+        }
     }
 }
