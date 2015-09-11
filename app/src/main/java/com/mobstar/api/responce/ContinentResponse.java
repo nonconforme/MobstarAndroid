@@ -8,19 +8,22 @@ import org.json.JSONObject;
 /**
  * Created by lipcha on 09.09.15.
  */
-public class ContinentResponse implements BaseResponse {
+public class ContinentResponse extends BaseResponse {
+
+    public static final String KEY_CONTINENT = "userContinent";
 
     private int continentCode;
-    private String error;
+//    private String error;
 
     @Override
     public void configure(JSONObject jsonObject) throws JSONException {
-        if (jsonObject.has("userContinent"))
-            continentCode = jsonObject.getInt("userContinent");
-        if(jsonObject.has("error"))
-            error = jsonObject.getString("error");
-        if(jsonObject.has("errors"))
-            error = jsonObject.getString("errors");
+        super.configure(jsonObject);
+        if (jsonObject.has(KEY_CONTINENT))
+            continentCode = jsonObject.getInt(KEY_CONTINENT);
+//        if(jsonObject.has("error"))
+//            error = jsonObject.getString("error");
+//        if(jsonObject.has("errors"))
+//            error = jsonObject.getString("errors");
     }
 
     public int getContinentCode(){

@@ -153,6 +153,8 @@ public class Constant {
 
     public static final String USER_CONTINENT_FILTERS = "settings/continentFilter";
 
+    public static final String USER_CATEGORIES_FILTERS = "settings/categoryFilter";
+
 
 //	app constant
 	public static final String IMAGE              = "image";

@@ -12,13 +12,14 @@ import android.view.ViewGroup;
 import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.mobstar.R;
 
 /**
  * Created by lipcha on 08.09.15.
  */
-public class CheckableView extends FrameLayout implements View.OnClickListener, Checkable {
+public class CheckableView extends FrameLayout implements Checkable {
 
     private boolean mChecked;
     private ImageView ivLeftImage, ivRightImage;
@@ -29,6 +30,16 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
     private boolean isVisibleChecked;
     private OnCheckedChangeListener onCheckedChangeListener;
     private float height;
+    private boolean isVisibleShadow;
+    private Drawable mainBackground;
+    private RelativeLayout vMainLayout;
+    private OnClickListener customOnClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            toggle();
+        }
+    };
+    private View inflatedView;
 
     public CheckableView(Context context) {
         super(context);
@@ -57,6 +68,10 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
             tvTitle.setText(title);
     }
 
+    public CustomTextviewBold getTvTitle() {
+        return tvTitle;
+    }
+
     public void setLeftImageDrawable(final Drawable _drawable){
         if (_drawable == null)
             return;
@@ -76,12 +91,13 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
         getAttributeData(attributeSet);
 
         final LayoutInflater inflater = LayoutInflater.from(getContext());
-        final View inflatedView = inflater.inflate(R.layout.view_checkable, null);
+        inflatedView = inflater.inflate(R.layout.view_checkable, null);
         findViews(inflatedView);
-        inflatedView.setOnClickListener(this);
+        inflatedView.setOnClickListener(customOnClickListener);
         final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) height);
-        addView(inflatedView, layoutParams);
         setupView();
+        addView(inflatedView, layoutParams);
+
         refreshView();
     }
 
@@ -89,6 +105,7 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
         final TypedArray array = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.CheckableView, 0, 0);
         title = array.getString(R.styleable.CheckableView_checkedTitle);
         isVisibleChecked = array.getBoolean(R.styleable.CheckableView_isChowChecked, false);
+        isVisibleShadow = array.getBoolean(R.styleable.CheckableView_isShowShadow, true);
         leftImage = array.getDrawable(R.styleable.CheckableView_leftImage);
         height = array.getDimension(R.styleable.CheckableView_heightCheckableView, (getResources().getDimension(R.dimen.checked_view_height)));
     }
@@ -98,26 +115,34 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
         ivRightImage = (ImageView) inflatedView.findViewById(R.id.ivRightImage);
         tvTitle = (CustomTextviewBold) inflatedView.findViewById(R.id.tvTitle);
         flCheckedFrame = (FrameLayout) inflatedView.findViewById(R.id.flChecked);
+        vMainLayout = (RelativeLayout) inflatedView.findViewById(R.id.layoutMain);
     }
 
     private void setupView(){
+        setupMainBackground();
         if (leftImage != null)
             ivLeftImage.setImageDrawable(leftImage);
         if (isVisibleChecked)
             ivRightImage.setVisibility(VISIBLE);
         else ivRightImage.setVisibility(GONE);
+        if (!isVisibleShadow)
+            flCheckedFrame.setVisibility(GONE);
         if (title != null)
              tvTitle.setText(title);
     }
 
-    public void setOnCheckedChangeListener(final OnCheckedChangeListener _onCheckedChangeListener){
-        onCheckedChangeListener = _onCheckedChangeListener;
+//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void setupMainBackground() {
+        if (mainBackground!=null)
+        if (Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1 < android.os.Build.VERSION.SDK_INT){
+            vMainLayout.setBackground(mainBackground);
+        } else {
+            vMainLayout.setBackgroundDrawable(mainBackground);
+        }
     }
 
-
-    @Override
-    public void onClick(View v) {
-        toggle();
+    public void setOnCheckedChangeListener(final OnCheckedChangeListener _onCheckedChangeListener){
+        onCheckedChangeListener = _onCheckedChangeListener;
     }
 
     @Override
@@ -157,7 +182,35 @@ public class CheckableView extends FrameLayout implements View.OnClickListener, 
         else flCheckedFrame.setVisibility(GONE);
     }
 
+    public void setMainBackground(Drawable mainBackground){
+        this.mainBackground = mainBackground;
+        setupMainBackground();
+    }
+
     public interface OnCheckedChangeListener{
         void onCheckedChange(final CheckableView _view, boolean _checked);
+    }
+
+    public ImageView getIvLeftImage() {
+        return ivLeftImage;
+    }
+
+    public boolean isVisibleShadow() {
+        return isVisibleShadow;
+    }
+
+    public void setIsVisibleShadow(boolean isVisibleShadow) {
+        this.isVisibleShadow = isVisibleShadow;
+        if (!isVisibleShadow)
+            flCheckedFrame.setVisibility(GONE);
+    }
+
+    public OnClickListener getCustomOnClickListener() {
+        return customOnClickListener;
+    }
+
+    public void setCustomOnClickListener(OnClickListener customOnClickListener) {
+        this.customOnClickListener = customOnClickListener;
+        inflatedView.setOnClickListener(customOnClickListener);
     }
 }
