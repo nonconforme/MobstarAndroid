@@ -25,14 +25,13 @@
             android:textSize="@dimen/header_text_size" />
     </FrameLayout>
 
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical" >
 
@@ -58,7 +57,7 @@
                         android:src="@drawable/icn_btn_faqs" />
 
                     <com.mobstar.custom.CustomTextviewBold
-                        android:layout_marginTop="@dimen/scale_20"
+                        android:layout_marginTop="@dimen/scale_15"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -84,7 +83,7 @@
                         android:src="@drawable/icn_btn_app_tour" />
 
                     <com.mobstar.custom.CustomTextviewBold
-                        android:layout_marginTop="@dimen/scale_20"
+                        android:layout_marginTop="@dimen/scale_15"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -98,9 +97,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:id="@+id/btnRequestAbuse"
@@ -118,7 +118,7 @@
                         android:src="@drawable/icn_btn_report_abuse" />
 
                     <com.mobstar.custom.CustomTextviewBold
-                        android:layout_marginTop="@dimen/scale_20"
+                        android:layout_marginTop="@dimen/scale_15"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -143,7 +143,7 @@
                         android:src="@drawable/icn_btn_feedback" />
 
                     <com.mobstar.custom.CustomTextviewBold
-                        android:layout_marginTop="@dimen/scale_20"
+                        android:layout_marginTop="@dimen/scale_15"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -154,6 +154,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </FrameLayout>
+    </ScrollView>
 
 </LinearLayout>
