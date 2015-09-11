@@ -36,8 +36,9 @@ public class RecordVideoActivity extends Activity {
 
 	private Camera mCamera;
 	private CameraPreview mPreview;
-
-	ImageView btnRecord, btnFlash, btnChangeCamera;
+	private TextView tvFlash;
+	private LinearLayout btnFlash;
+	ImageView btnRecord, ivFlash, btnChangeCamera;
 
 	boolean isFlashOn = false;
 	int currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -181,8 +182,9 @@ public class RecordVideoActivity extends Activity {
 					}
 				}
 			});
-
-			btnFlash = (ImageView) findViewById(R.id.btnFlash);
+			tvFlash = (TextView) findViewById(R.id.tvFlash);
+			btnFlash = (LinearLayout) findViewById(R.id.btnFlash);
+			ivFlash = (ImageView) findViewById(R.id.ivFlash);
 			btnFlash.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -194,11 +196,11 @@ public class RecordVideoActivity extends Activity {
 					} else {
 						if (isFlashOn) {
 							isFlashOn = false;
-							btnFlash.setImageResource(R.drawable.flash_off);
+							tvFlash.setText(getString(R.string.off));
 
 						} else {
 							isFlashOn = true;
-							btnFlash.setImageResource(R.drawable.flash_on);
+							tvFlash.setText(getString(R.string.on));
 						}
 
 						mPreview.OnOffFlash(isFlashOn);

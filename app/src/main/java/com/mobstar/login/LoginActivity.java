@@ -502,6 +502,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				pref.edit().putString("bio", UserBio).commit();
 				pref.edit().putBoolean("isLogin", true).commit();
 				pref.edit().putBoolean("isVerifyMobileCode",true).commit();
+				pref.edit().putBoolean("isSocialLogin",false).commit();
 
 //				Intent intent = new Intent(mContext, HomeActivity.class);
 //				startActivity(intent);

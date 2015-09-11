@@ -175,9 +175,11 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 	}
 
 	private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(SplashActivity.this, getString(R.string.loading));
 		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
 			@Override
 			public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(SplashActivity.this);
 				if (object.getUser().getUserContinentId() == 0){
 					startSelectCurrentRegionActivity();
 				}
@@ -186,7 +188,8 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 
 			@Override
 			public void onFailure(String error) {
-
+				Utility.HideDialog(SplashActivity.this);
+				startHomeActivity();
 			}
 		});
 	}

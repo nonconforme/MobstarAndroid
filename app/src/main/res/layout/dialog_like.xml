@@ -7,11 +7,6 @@
     android:gravity="center"
     android:orientation="vertical" >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/action_yes" />
+    <include layout="@layout/voting_yes"/>
 
 </LinearLayout>

@@ -425,9 +425,11 @@ public class SignUpActivity extends Activity implements OnClickListener {
 
 
 	private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
 		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
 			@Override
 			public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(SignUpActivity.this);
 				if (object.getUser().getUserContinentId() == 0){
 					startSelectCurrentRegionActivity();
 				}
@@ -436,7 +438,8 @@ public class SignUpActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void onFailure(String error) {
-
+				Utility.HideDialog(SignUpActivity.this);
+				startHomeActivity();
 			}
 		});
 	}

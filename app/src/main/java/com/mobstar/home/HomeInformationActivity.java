@@ -170,9 +170,11 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 
 
 	private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
 		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
 			@Override
 			public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(HomeInformationActivity.this);
 				if (object.getUser().getUserContinentId() == 0){
 					startSelectCurrentRegionActivity();
 				}
@@ -181,7 +183,8 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 
 			@Override
 			public void onFailure(String error) {
-
+				Utility.HideDialog(HomeInformationActivity.this);
+				startHomeActivity();
 			}
 		});
 	}
@@ -193,7 +196,7 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 	}
 
 	private void startHomeActivity(){
-		Intent intent = new Intent(mContext,HomeActivity.class);
+		Intent intent = new Intent(mContext, HomeActivity.class);
 		startActivity(intent);
 		finish();
 	}

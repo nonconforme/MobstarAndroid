@@ -79,17 +79,23 @@
         </LinearLayout>
     </FrameLayout>
 
+    <ScrollView
+        android:layout_weight="1"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center" >
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:padding="10dp">
 
             <LinearLayout
                 android:id="@+id/llTalentPool"
@@ -164,9 +170,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center" >
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:padding="10dp">
 
             <LinearLayout
                 android:id="@+id/llComments"
@@ -204,5 +211,7 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
