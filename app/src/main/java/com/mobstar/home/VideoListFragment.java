@@ -984,8 +984,8 @@ public class VideoListFragment extends Fragment {
 			}
 			final ViewHolder viewHolder = mViewHolder;
 
-			viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, convertView.findViewById(R.id.rigthView));
-			viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.leftView));
+//			viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, convertView.findViewById(R.id.rigthView));
+//			viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.leftView));
 			viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
 				@Override
 				public void onStartOpen(SwipeLayout swipeLayout) {

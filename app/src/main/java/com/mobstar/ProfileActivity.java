@@ -979,8 +979,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			if (!arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || !arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
 
 
-				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, convertView.findViewById(R.id.rigthView));
-				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.leftView));
+//				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, convertView.findViewById(R.id.rigthView));
+//				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.leftView));
 				viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
 					@Override
 					public void onStartOpen(SwipeLayout swipeLayout) {

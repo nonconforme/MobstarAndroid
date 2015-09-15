@@ -1,5 +1,6 @@
 package com.mobstar.pojo;
 
+import com.mobstar.api.responce.BaseResponse;
 import com.mobstar.utils.TimeUtility;
 
 import java.io.Serializable;
@@ -13,7 +14,11 @@ import android.util.Log;
 
 import com.mobstar.utils.Utility;
 
-public class EntryPojo implements Serializable {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class EntryPojo implements Serializable, BaseResponse {
 
 	/**
 	 * 
@@ -344,5 +349,105 @@ public class EntryPojo implements Serializable {
 
 	public void setSplitVideoId(String splitVideoId) {
 		this.splitVideoId = splitVideoId;
+	}
+
+	@Override
+	public void configure(JSONObject jsonObject) throws JSONException {
+
+		if (jsonObject.has("user")) {
+			JSONObject jsonObjUser = jsonObject.getJSONObject("user");
+			setUserID(jsonObjUser.getString("id"));
+			setUserName(jsonObjUser.getString("userName"));
+			setUserDisplayName(jsonObjUser.getString("displayName"));
+			setProfileImage(jsonObjUser.getString("profileImage"));
+			setProfileCover(jsonObjUser.getString("profileCover"));
+			setTagline(jsonObjUser.getString("tagLine"));
+			if (jsonObjUser.has("isMyStar")) {
+				setIsMyStar(jsonObjUser.getString("isMyStar"));
+			}
+			if(jsonObjUser.has("iAmStar")){
+				setIAmStar(jsonObjUser.getString("iAmStar"));
+			}
+
+		}
+
+		if (jsonObject.has("splitVideoId"))
+			setSplitVideoId(jsonObject.getString("splitVideoId"));
+
+		setID(jsonObject.getString("id"));
+
+		if(jsonObject.has("subcategory")){
+			setSubCategry(jsonObject.getString("subcategory"));
+		}
+
+		if(jsonObject.has("age")){
+			setAge(jsonObject.getString("age"));
+		}
+
+		if(jsonObject.has("height")){
+			setHeight(jsonObject.getString("height"));
+		}
+		setCategory(jsonObject.getString("category"));
+		setType(jsonObject.getString("type"));
+		setName(jsonObject.getString("name"));
+		setDescription(jsonObject.getString("description"));
+		setCreated(jsonObject.getString("created"));
+		setModified(jsonObject.getString("modified"));
+		setUpVotesCount(jsonObject.getString("upVotes"));
+		setDownvotesCount(jsonObject.getString("downVotes"));
+		setRank(jsonObject.getString("rank"));
+		setLanguage(jsonObject.getString("language"));
+		setDeleted(jsonObject.getString("deleted"));
+		setTotalComments(jsonObject.getString("totalComments"));
+
+		if(jsonObject.has("totalviews")){
+			setTotalViews(jsonObject.getString("totalviews"));
+		}
+
+
+		if (jsonObject.has("videoThumb")) {
+			setVideoThumb(jsonObject.getString("videoThumb"));
+		}
+
+		JSONArray jsonArrayTags = jsonObject.getJSONArray("tags");
+
+		for (int j = 0; j < jsonArrayTags.length(); j++) {
+			addTags(jsonArrayTags.getString(j));
+		}
+
+		if (!jsonObject.has("entryFiles")) {
+			// Log.v(Constant.TAG,
+			// "entryFiles not exist in ID " +
+			// entryPojo.getID());
+		} else {
+			JSONArray jsonArrayFiles = jsonObject.getJSONArray("entryFiles");
+			for (int j = 0; j < jsonArrayFiles.length(); j++) {
+				JSONObject jsonObjFile = jsonArrayFiles.getJSONObject(j);
+
+				if (getType().equalsIgnoreCase("image")) {
+					setImageLink(jsonObjFile.getString("filePath"));
+					setFiletype(jsonObjFile.getString("fileType"));
+
+					// Log.v(Constant.TAG,
+					// "Image "+jsonObjFile.getString("filePath"));
+				} else if (getType().equalsIgnoreCase("audio")) {
+					if (j == 0) {
+
+						setAudioLink(jsonObjFile.getString("filePath"));
+						setFiletype(jsonObjFile.getString("fileType"));
+					} else if (j == 1) {
+
+						setImageLink(jsonObjFile.getString("filePath"));
+						setFiletype(jsonObjFile.getString("fileType"));
+					}
+				} else if (getType().equalsIgnoreCase("video")) {
+					setVideoLink(jsonObjFile.getString("filePath"));
+					setFiletype(jsonObjFile.getString("fileType"));
+				}
+			}
+
+			// arrEntryPojos.add(entryPojo);
+//			arrEntryPojosParent.add(entryPojo);
+		}
 	}
 }

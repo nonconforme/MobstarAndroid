@@ -8,8 +8,10 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.mobstar.R;
+import com.mobstar.api.responce.OnFileDownloadCallback;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
@@ -17,6 +19,7 @@ import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
@@ -116,6 +119,34 @@ public class RestClient {
                     callback.onFailure(throwable.toString());
             }
         });
+    }
+
+    public void getFileRequest(final String url, final String filePath, final OnFileDownloadCallback onFileDownloadCallback){
+        httpClient.removeHeader("Content-Type");
+        final File file = new File(filePath);
+        FileAsyncHttpResponseHandler asyncHttpResponseHandler = new FileAsyncHttpResponseHandler(file) {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, File file) {
+                if (onFileDownloadCallback != null)
+                    onFileDownloadCallback.onDownload(file);
+                Log.d("http_get_file", "download file: " + file.getAbsolutePath());
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                file.delete();
+                if (onFileDownloadCallback != null)
+                    onFileDownloadCallback.onFailure(throwable.getMessage());
+                Log.d("http_get_file", "error download file: " + file.getAbsolutePath() + throwable.getMessage());
+            }
+        };
+        asyncHttpResponseHandler.setTag(url);
+        httpClient.get(url, asyncHttpResponseHandler);
+    }
+
+    public void cancelRequest(final String url){
+        httpClient.cancelRequestsByTAG(url, false);
     }
 
     private void showToastNotification(final String message){

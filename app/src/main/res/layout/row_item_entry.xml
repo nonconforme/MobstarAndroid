@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<com.mobstar.custom.swipe_card_view.SwipeCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
+    android:id="@+id/swipe_card_view"
     android:layout_gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    card_view:cardElevation="4dp"
-    card_view:cardCornerRadius="4dp">
+    android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardElevation="4dp"
+        card_view:cardCornerRadius="4dp">
 
-<com.daimajia.swipe.SwipeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/swipe">
+<!--<com.daimajia.swipe.SwipeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/swipe">-->
 
     <!-- xmlns:app="http://schemas.android.com/apk/lib/com.mobstar.utils" -->
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rigthView">
-        <include layout="@layout/voting_yes"/>
-    </FrameLayout>
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/rigthView">-->
+        <!--<include layout="@layout/voting_yes"/>-->
+    <!--</FrameLayout>-->
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/leftView">
-         <include layout="@layout/voting_no"/>
-    </FrameLayout>
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/leftView">-->
+         <!--<include layout="@layout/voting_no"/>-->
+    <!--</FrameLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -390,5 +396,6 @@
         </LinearLayout>
     </LinearLayout>
 
-</com.daimajia.swipe.SwipeLayout>
+<!--</com.daimajia.swipe.SwipeLayout>-->
     </android.support.v7.widget.CardView>
+</com.mobstar.custom.swipe_card_view.SwipeCardView>
