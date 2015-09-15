@@ -18,11 +18,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.utils.Constant;
@@ -507,7 +507,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 //				Intent intent = new Intent(mContext, HomeActivity.class);
 //				startActivity(intent);
 //				finish();
-				
+                AdWordsManager.getInstance().sendSingupEvent();
 				sendAnalytics();
 				
 				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {

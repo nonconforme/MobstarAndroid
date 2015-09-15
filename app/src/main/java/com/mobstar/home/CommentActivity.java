@@ -1,11 +1,5 @@
 package com.mobstar.home;
 
-import java.util.ArrayList;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -29,12 +23,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.pojo.CommentPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class CommentActivity extends Activity {
 
@@ -555,6 +556,7 @@ public class CommentActivity extends Activity {
 					if (sErrorMessage != null && !sErrorMessage.equals("")) {
 						handlerPostComment.sendEmptyMessage(0);
 					} else {
+                        AdWordsManager.getInstance().sendEngagementEvent();
 						handlerPostComment.sendEmptyMessage(1);
 					}
 
