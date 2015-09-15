@@ -46,8 +46,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     @Override
     public void onRemoveEntry(int position) {
         arrEntryes.remove(position);
-//        notifyDataSetChanged();
-
         notifyItemRemoved(position);
     }
 }

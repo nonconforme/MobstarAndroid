@@ -182,8 +182,8 @@ public class SwipeCardView extends FrameLayout {
             int pointerIndex;
             float x;
             float y;
-            switch(event.getActionMasked()) {
-                case 0:
+            switch(event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
                     this.mTopView.getHitRect(this.childRect);
                     pointerIndex = event.getActionIndex();
                     x = event.getX(pointerIndex);
@@ -201,8 +201,8 @@ public class SwipeCardView extends FrameLayout {
                     this.mTopView.setPivotX(points[0]);
                     this.mTopView.setPivotY(points[1]);
                     break;
-                case 1:
-                case 3:
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
                     if(!this.mDragging) {
                         return true;
                     }
@@ -213,7 +213,7 @@ public class SwipeCardView extends FrameLayout {
                     animator.setInterpolator(new AccelerateInterpolator());
                     animator.start();
                     break;
-                case 2:
+                case MotionEvent.ACTION_MOVE:
                     pointerIndex = event.findPointerIndex(this.mActivePointerId);
                     x = event.getX(pointerIndex);
                     y = event.getY(pointerIndex);
@@ -232,11 +232,11 @@ public class SwipeCardView extends FrameLayout {
                     this.mTopView.setRotation(40.0F * this.mTopView.getTranslationX() / ((float)this.getWidth() / 2.0F));
                     this.mLastTouchX = x;
                     this.mLastTouchY = y;
-                case 4:
-                case 5:
+                case MotionEvent.ACTION_OUTSIDE:
+                case MotionEvent.ACTION_POINTER_DOWN:
                 default:
                     break;
-                case 6:
+                case MotionEvent.ACTION_POINTER_UP:
                     pointerIndex = event.getActionIndex();
                     int pointerId = event.getPointerId(pointerIndex);
                     if(pointerId == this.mActivePointerId) {
