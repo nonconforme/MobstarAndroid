@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
+import com.mobstar.api.DownloadFileManager;
 import com.mobstar.pojo.EntryPojo;
 
 import java.util.ArrayList;
@@ -23,6 +24,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     public RecyclerViewAdapter(ArrayList<EntryPojo> arrEntryes, final BaseActivity activity) {
         this.arrEntryes = arrEntryes;
         baseActivity = activity;
+    }
+
+    public void setArrEntryes(final ArrayList<EntryPojo> _arrEntryes){
+        arrEntryes = _arrEntryes;
     }
 
     @Override

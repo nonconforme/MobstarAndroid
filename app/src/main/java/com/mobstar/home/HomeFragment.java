@@ -196,7 +196,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //			extras.putString("deepLinkedId",deepLinkedId);
 //			extras.putString("LatestORPopular", sLatestPopular);
 //			videoListFragment.setArguments(extras);
-			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, deepLinkedId, sLatestPopular, null);
+			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, deepLinkedId, sLatestPopular, null, false);
 			replaceFragment(videoListFragment, "VideoListFragment");
 		}
 		else {
@@ -205,7 +205,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //			extras.putBoolean("isEntryAPI", true);
 //			extras.putString("LatestORPopular", sLatestPopular);
 //			videoListFragment.setArguments(extras);
-			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, null, sLatestPopular, null);
+			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, sLatestPopular, null, true);
 			replaceFragment(videoListFragment, "VideoListFragment");	
 		}
 		isDataLoaded = true;
@@ -379,7 +379,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //        extras.putBoolean("isEntryAPI", true);
 //        extras.putString("LatestORPopular", "latest");
 //        videoListFragment.setArguments(extras);
-		HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, null, "latest", null);
+		HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, null, "latest", null, true);
         replaceFragment(videoListFragment, "VideoListFragment");
     }
 
@@ -489,7 +489,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //						extras.putString("categoryId",categoryObj.getID());
 //						extras.putString("LatestORPopular","latest");
 //						videoListFragment.setArguments(extras);
-						HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, null, "latest", categoryObj.getID());
+						HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, null, "latest", categoryObj.getID(), true);
 						replaceFragment(videoListFragment, "VideoListFragment");
 					}
 				}

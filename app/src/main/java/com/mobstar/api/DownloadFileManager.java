@@ -20,14 +20,15 @@ public class DownloadFileManager {
     private Context mContext;
     private DownloadCallback downloadCallback;
 
-    public DownloadFileManager(final Context _context){
+    public DownloadFileManager(final Context _context, DownloadCallback _downloadCallback){
         mContext = _context;
+        downloadCallback  =_downloadCallback;
         listDownloadingFile = new HashMap<>();
         PATH = Environment.getExternalStorageDirectory().getPath()
                 + "/Android/data/" + mContext.getPackageName() +"/";
     }
 
-    public void downloadFile(final String _fileUrl, final int position, final DownloadCallback downloadCallback){
+    public void downloadFile(final String _fileUrl, final int position){
         if (listDownloadingFile.containsKey(_fileUrl))
             return;
         final String filePath = PATH + Utility.GetFileNameFromURl(_fileUrl);
@@ -48,18 +49,18 @@ public class DownloadFileManager {
             @Override
             public void onFailure(String errorMessage) {
                 if (downloadCallback != null)
-                    downloadCallback.onFailled();
+                    downloadCallback.onFailed();
             }
         });
     }
 
-    public void cancelFile(final String _url){
-        listDownloadingFile.remove(_url);
-        RestClient.getInstance(mContext).cancelRequest(_url);
+    public void cancelFile(final String _tag){
+        listDownloadingFile.remove(_tag);
+        RestClient.getInstance(mContext).cancelRequest(_tag);
     }
 
     public interface DownloadCallback{
         void onDownload(final String filePath, final int position);
-        void onFailled();
+        void onFailed();
     }
 }

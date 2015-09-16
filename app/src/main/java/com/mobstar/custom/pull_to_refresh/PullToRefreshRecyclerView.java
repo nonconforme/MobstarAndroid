@@ -45,7 +45,7 @@ public class PullToRefreshRecyclerView extends PullToRefreshBase<RecyclerView> {
     protected boolean isReadyForPullStart() {
         if (mRefreshableView.getChildCount() <= 0)
             return true;
-        int firstVisiblePosition = mRefreshableView.getChildPosition(mRefreshableView.getChildAt(0));
+        int firstVisiblePosition = mRefreshableView.getChildAdapterPosition(mRefreshableView.getChildAt(0));
         if (firstVisiblePosition == 0)
             return mRefreshableView.getChildAt(0).getTop() == mRefreshableView.getPaddingTop();
         else
@@ -55,12 +55,12 @@ public class PullToRefreshRecyclerView extends PullToRefreshBase<RecyclerView> {
 
     @Override
     protected boolean isReadyForPullEnd() {
-        if (mRefreshableView.getAdapter() == null)
-            return false;
-        int lastVisiblePosition = mRefreshableView.getChildPosition(mRefreshableView.getChildAt(mRefreshableView.getChildCount() - 1));
-        if (lastVisiblePosition >= mRefreshableView.getAdapter().getItemCount() - 1) {
-            return mRefreshableView.getChildAt(mRefreshableView.getChildCount() - 1).getBottom() <= mRefreshableView.getBottom();
-        }
+//        if (mRefreshableView.getAdapter() == null)
+//            return false;
+//        int lastVisiblePosition = mRefreshableView.getChildPosition(mRefreshableView.getChildAt(mRefreshableView.getChildCount() - 1));
+//        if (lastVisiblePosition >= mRefreshableView.getAdapter().getItemCount() - 1) {
+//            return mRefreshableView.getChildAt(mRefreshableView.getChildCount() - 1).getBottom() <= mRefreshableView.getBottom();
+//        }
         return false;
     }
 }
