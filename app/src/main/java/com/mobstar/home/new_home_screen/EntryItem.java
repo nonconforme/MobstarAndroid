@@ -486,4 +486,12 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     public interface OnRemoveEntryListener{
         void onRemoveEntry(int position);
     }
+
+    public EntryPojo getEntryPojo() {
+        return entryPojo;
+    }
+
+    public TextureView getTextureView() {
+        return textureView;
+    }
 }

@@ -18,7 +18,8 @@ public class LandingAnimator extends BaseItemAnimator {
         setRemoveDuration(500);
     }
 
-    @Override protected void animateRemoveImpl(final RecyclerView.ViewHolder holder) {
+    @Override
+    protected void animateRemoveImpl(final RecyclerView.ViewHolder holder) {
         ViewCompat.animate(holder.itemView)
                 .alpha(0)
                 .scaleX(1.5f)
@@ -29,13 +30,15 @@ public class LandingAnimator extends BaseItemAnimator {
                 .start();
     }
 
-    @Override protected void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
+    @Override
+    protected void preAnimateAddImpl(RecyclerView.ViewHolder holder) {
         ViewCompat.setAlpha(holder.itemView, 0);
         ViewCompat.setScaleX(holder.itemView, 1.5f);
         ViewCompat.setScaleY(holder.itemView, 1.5f);
     }
 
-    @Override protected void animateAddImpl(final RecyclerView.ViewHolder holder) {
+    @Override
+    protected void animateAddImpl(final RecyclerView.ViewHolder holder) {
         ViewCompat.animate(holder.itemView)
                 .alpha(1)
                 .scaleX(1)
