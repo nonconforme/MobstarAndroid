@@ -62,6 +62,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         findView(itemView);
     }
 
+    public int getPos(){
+        return position;
+    }
+
 
     private void findView(final View convertView){
         buttonVideoSplit = (TextView) convertView.findViewById(R.id.splitVideoButton);

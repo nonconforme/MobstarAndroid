@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.mobstar.api.responce.EntriesResponse;
 import com.mobstar.custom.pull_to_refresh.PullToRefreshBase;
 import com.mobstar.custom.pull_to_refresh.PullToRefreshRecyclerView;
 import com.mobstar.custom.recycler_view_animation.LandingAnimator;
+import com.mobstar.player.PlayerManager;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -129,6 +131,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
                 if (pageNo == 0) {
                     arrEntryPojos = new ArrayList<EntryPojo>();
                     entryAdapter.setArrEntryes(arrEntryPojos);
+                    downloadFirstFile();
                 }
                 arrEntryPojos.addAll(object.getArrEntry());
                 refreshEntryList();
@@ -141,6 +144,19 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
                 pullToRefreshRecyclerView.onRefreshComplete();
             }
         });
+    }
+
+    private void downloadFirstFile(){
+        if (arrEntryPojos.size() == 0)
+            return;
+        switch (arrEntryPojos.get(0).getType()) {
+            case "audio":
+                downloadFileManager.downloadFile(arrEntryPojos.get(0).getAudioLink(), 0);
+                break;
+            case "video":
+                downloadFileManager.downloadFile(arrEntryPojos.get(0).getVideoLink(), 0);
+                break;
+        }
     }
 
     private void refreshEntryList(){
@@ -173,8 +189,14 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     @Override
     public void onDownload(String filePath, int position) {
-        if (EndlessRecyclerOnScrollListener.getTopVisiblePosition(recyclerView, (LinearLayoutManager) recyclerView.getLayoutManager()) == position){
-
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        if (EndlessRecyclerOnScrollListener.getTopVisiblePosition(recyclerView, linearLayoutManager) == position){
+            final EntryItem entryItem = entryAdapter.getEntryAtPosition(position);
+            if (entryItem != null) {
+                PlayerManager.getInstance().init(getActivity(), entryItem, filePath);
+                boolean sdsvs = PlayerManager.getInstance().tryToPlayNew();
+                Log.d("tag","" +  sdsvs);
+            }
         }
     }
 

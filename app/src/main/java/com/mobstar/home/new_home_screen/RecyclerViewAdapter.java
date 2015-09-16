@@ -11,6 +11,7 @@ import com.mobstar.api.DownloadFileManager;
 import com.mobstar.pojo.EntryPojo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by lipcha on 14.09.15.
@@ -20,10 +21,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     private ArrayList<EntryPojo> arrEntryes;
     private LayoutInflater layoutInflater;
     private BaseActivity baseActivity;
+    private ArrayList<EntryItem> itemsList;
 
     public RecyclerViewAdapter(ArrayList<EntryPojo> arrEntryes, final BaseActivity activity) {
         this.arrEntryes = arrEntryes;
         baseActivity = activity;
+        itemsList = new ArrayList<>();
     }
 
     public void setArrEntryes(final ArrayList<EntryPojo> _arrEntryes){
@@ -35,7 +38,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
         if (layoutInflater == null)
             layoutInflater = LayoutInflater.from(viewGroup.getContext());
         final View inflatedView = layoutInflater.inflate(R.layout.row_item_entry, viewGroup, false);
-        return new EntryItem(inflatedView);
+        final EntryItem entryItem = new EntryItem(inflatedView);
+        itemsList.add(entryItem);
+        return entryItem;
     }
 
     @Override
@@ -52,5 +57,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     public void onRemoveEntry(int position) {
         arrEntryes.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public EntryItem getEntryAtPosition(int position){
+        for (int i = 0; i < itemsList.size(); i ++){
+            if (itemsList.get(i).getPos() == position)
+                return itemsList.get(i);
+        }
+        return null;
     }
 }
