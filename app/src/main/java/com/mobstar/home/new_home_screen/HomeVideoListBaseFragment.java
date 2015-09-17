@@ -196,8 +196,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
             final EntryItem entryItem = entryAdapter.getEntryAtPosition(position);
             if (entryItem != null) {
                 PlayerManager.getInstance().init(getActivity(), entryItem, filePath);
-                boolean sdsvs = PlayerManager.getInstance().tryToPlayNew();
-                Log.d("tag","" +  sdsvs);
+                PlayerManager.getInstance().tryToPlayNew();
             }
         }
     }
