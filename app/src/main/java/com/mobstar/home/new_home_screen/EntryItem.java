@@ -526,4 +526,45 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     public TextureView getTextureView() {
         return textureView;
     }
+
+    public void playVideoState() {
+        flPlaceHolder.setVisibility(View.GONE);
+        ivAudioIcon.setVisibility(View.GONE);
+        progressbar.setVisibility(View.GONE);
+        textureView.setVisibility(View.VISIBLE);
+    }
+
+
+    public void playAudioState() {
+        flPlaceHolder.setVisibility(View.VISIBLE);
+        imgPlaceHolder.setVisibility(View.GONE);
+        ivAudioIcon.setVisibility(View.GONE);
+        progressbar.setVisibility(View.GONE);
+        textureView.setVisibility(View.GONE);
+        imageFrame.setVisibility(View.VISIBLE);
+    }
+    public void pauseVideoState() {
+        flPlaceHolder.setVisibility(View.GONE);
+        ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+        ivAudioIcon.setVisibility(View.VISIBLE);
+        progressbar.setVisibility(View.GONE);
+        textureView.setVisibility(View.VISIBLE);
+    }
+    public void pauseAudioState() {
+        flPlaceHolder.setVisibility(View.VISIBLE);
+        imgPlaceHolder.setVisibility(View.GONE);
+        ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+        ivAudioIcon.setVisibility(View.VISIBLE);
+        progressbar.setVisibility(View.GONE);
+        textureView.setVisibility(View.GONE);
+        imageFrame.setVisibility(View.VISIBLE);
+    }
+
+//    public FrameLayout getFlPlaceHolder() {
+//        return flPlaceHolder;
+//    }
+//
+//    public ImageView getIvAudioIcon() {
+//        return ivAudioIcon;
+//    }
 }

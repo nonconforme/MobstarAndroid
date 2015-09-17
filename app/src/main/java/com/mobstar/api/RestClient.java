@@ -139,6 +139,7 @@ public class RestClient {
                 if (onFileDownloadCallback != null)
                     onFileDownloadCallback.onFailure(throwable.getMessage());
                 Log.d("http_get_file", "error download file: " + file.getAbsolutePath() + throwable.getMessage());
+                Log.d("http_get_file", "error download file: url=" + url);
             }
         };
         asyncHttpResponseHandler.setTag(url);
