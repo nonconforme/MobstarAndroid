@@ -26,14 +26,14 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
     private boolean isVideoFile;
     private Surface mWorkingSurface;
 
-    public static PlayerManager getInstance(){
-        if (instance==null){
+    public static PlayerManager getInstance() {
+        if (instance == null) {
             instance = new PlayerManager();
         }
         return instance;
     }
 
-    public void init(Context context, EntryItem entryItem, String fileName){
+    public void init(Context context, EntryItem entryItem, String fileName) {
         this.mContext = context;
         this.mEntryItem = entryItem;
         isVideoFile = (mEntryItem.getEntryPojo().getType().equals("video"));
@@ -45,9 +45,9 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
 
     }
 
-    public boolean tryToPlayNew(){
-        Log.d(LOG_TAG,"mEntryItem.pos"+mEntryItem.getPos());
-        Log.d(LOG_TAG,"mEntryItem.pos"+mEntryItem.getEntryPojo().getDescription());
+    public boolean tryToPlayNew() {
+        Log.d(LOG_TAG, "mEntryItem.pos" + mEntryItem.getPos());
+        Log.d(LOG_TAG, "mEntryItem.pos" + mEntryItem.getEntryPojo().getDescription());
 //        Log.d(LOG_TAG,"mEntryItem.pos"+mEntryItem.getPos());
 
         releaseMP();
@@ -60,7 +60,7 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
                 mediaPlayer.setDataSource(mFilePath);
 
                 if (isVideoFile) {
-                    Log.v(LOG_TAG, "getTextureView().isAvailable()="+mEntryItem.getTextureView().isAvailable());
+                    Log.v(LOG_TAG, "getTextureView().isAvailable()=" + mEntryItem.getTextureView().isAvailable());
                     if (mEntryItem.getTextureView().isAvailable()) {
                         mWorkingSurface = new Surface(mEntryItem.getTextureView().getSurfaceTexture());
                         mediaPlayer.setSurface(mWorkingSurface);
@@ -111,7 +111,7 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
                 mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                     @Override
                     public boolean onError(MediaPlayer mp, int what, int extra) {
-                        Log.v(LOG_TAG,"setOnErrorListener.onError");
+                        Log.v(LOG_TAG, "setOnErrorListener.onError");
                         if (mediaPlayer != null) {
                             if (mediaPlayer.isPlaying())
                                 mediaPlayer.pause();
@@ -135,7 +135,7 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
 
     public boolean tryToPause() {
         Log.v(LOG_TAG, "tryToPause");
-        if (mediaPlayer !=null){
+        if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
                 if (isVideoFile) mEntryItem.pauseVideoState();
@@ -149,32 +149,35 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
         }
         return false;
     }
+
     private boolean tryToStop() {
-        Log.v(LOG_TAG,"tryToStop");
-        if (mediaPlayer !=null){
+        Log.v(LOG_TAG, "tryToStop");
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             return true;
         }
         return false;
     }
+
     private boolean tryToReset() {
-        Log.v(LOG_TAG,"tryToReset");
-        if (mediaPlayer !=null){
+        Log.v(LOG_TAG, "tryToReset");
+        if (mediaPlayer != null) {
             mediaPlayer.reset();
             return true;
         }
         return false;
     }
+
     public boolean finalizePlayer() {
-        Log.v(LOG_TAG,"finalizePlayer");
-        if (mediaPlayer !=null){
+        Log.v(LOG_TAG, "finalizePlayer");
+        if (mediaPlayer != null) {
             try {
-            mediaPlayer.reset();
-            mediaPlayer.release();
-            mediaPlayer = null;
-            return true;
+                mediaPlayer.reset();
+                mediaPlayer.release();
+                mediaPlayer = null;
+                return true;
             } catch (Exception e) {
-                Log.v(LOG_TAG,"finalizePlayer.error="+e.toString());
+                Log.v(LOG_TAG, "finalizePlayer.error=" + e.toString());
                 e.printStackTrace();
                 return false;
             }
@@ -195,7 +198,7 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        Log.d(LOG_TAG,"onSurfaceTextureAvailable");
+        Log.d(LOG_TAG, "onSurfaceTextureAvailable");
         tryToPlayNew();
 //        mWorkingSurface = new Surface(surface);
 //        mediaPlayer.setSurface(mWorkingSurface);

@@ -20,6 +20,7 @@ import com.mobstar.home.ShareActivity;
 import com.mobstar.home.StatisticsActivity;
 import com.mobstar.home.split.SplitActivity;
 import com.mobstar.info.report.InformationReportActivity;
+import com.mobstar.player.PlayerManager;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.upload.MessageActivity;
 import com.mobstar.utils.Constant;
@@ -55,6 +56,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private EntryPojo entryPojo;
     private SharedPreferences preferences;
     private OnRemoveEntryListener onRemoveEntryListener;
+    private FrameLayout containerPlayer;
 
 
     public EntryItem(View itemView) {
@@ -89,6 +91,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imgMsg=(ImageView) convertView.findViewById(R.id.imgMsg);
         ivIndicator=(ImageView) convertView.findViewById(R.id.ivIndicator);
         swipeCardView = (SwipeCardView) convertView.findViewById(R.id.swipe_card_view);
+        containerPlayer = (FrameLayout) convertView.findViewById(R.id.conteiner_player);
     }
 
     public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnRemoveEntryListener _onRemoveEntryListener){
@@ -154,6 +157,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         btnInfo.setOnClickListener(this);
         textCommentCount.setOnClickListener(this);
         swipeCardView.setOnSwipeDismissListener(this);
+        containerPlayer.setOnClickListener(this);
 
     }
 
@@ -184,6 +188,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 break;
             case R.id.textCommentCount:
                 startCommentActivity();
+                break;
+            case R.id.conteiner_player:
+                PlayerManager.getInstance().tryToPause();
                 break;
         }
     }

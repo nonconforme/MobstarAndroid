@@ -42,6 +42,7 @@
         android:orientation="vertical" >
 
         <FrameLayout
+            android:id="@+id/conteiner_player"
             android:layout_width="match_parent"
             android:layout_height="@dimen/texture_view_height" >
 

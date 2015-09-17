@@ -273,4 +273,10 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
             }
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        PlayerManager.getInstance().finalizePlayer();
+    }
 }
