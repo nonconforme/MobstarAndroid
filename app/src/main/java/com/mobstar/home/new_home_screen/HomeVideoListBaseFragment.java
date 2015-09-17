@@ -181,6 +181,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onLoadNewFile(int currentPosition, int oldPosition) {
+                Log.d("playermanager","onLoadNewFile.pos="+currentPosition);
+                PlayerManager.getInstance().tryToPause();
                 cancelDownloadFile(oldPosition);
                 downloadFile(currentPosition);
             }

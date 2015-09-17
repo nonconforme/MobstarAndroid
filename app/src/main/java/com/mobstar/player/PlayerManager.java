@@ -1,20 +1,21 @@
 package com.mobstar.player;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Surface;
+import android.view.TextureView;
 
 import com.mobstar.home.new_home_screen.EntryItem;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by Alexandr on 16.09.2015.
  */
-public class PlayerManager {
+public class PlayerManager implements TextureView.SurfaceTextureListener {
     private static final String LOG_TAG = PlayerManager.class.getName();
     private MediaPlayer mediaPlayer;
     private Context mContext;
@@ -23,6 +24,7 @@ public class PlayerManager {
     private String mFilePath;
     private boolean isMediaPlayerError = false;
     private boolean isVideoFile;
+    private Surface mWorkingSurface;
 
     public static PlayerManager getInstance(){
         if (instance==null){
@@ -39,12 +41,17 @@ public class PlayerManager {
     }
 
     private void sendRequstAddCount() {
-        Log.d(LOG_TAG,"sendRequstAddCount");
+//        Log.d(LOG_TAG, "sendRequstAddCount");
 
     }
 
     public boolean tryToPlayNew(){
+        Log.d(LOG_TAG,"mEntryItem.pos"+mEntryItem.getPos());
+        Log.d(LOG_TAG,"mEntryItem.pos"+mEntryItem.getEntryPojo().getDescription());
+//        Log.d(LOG_TAG,"mEntryItem.pos"+mEntryItem.getPos());
+
         releaseMP();
+        mWorkingSurface = null;
         mediaPlayer = new MediaPlayer();
         File file = new File(mFilePath);
         boolean result = false;
@@ -53,8 +60,11 @@ public class PlayerManager {
                 mediaPlayer.setDataSource(mFilePath);
 
                 if (isVideoFile) {
-                    Surface surface = new Surface(mEntryItem.getTextureView().getSurfaceTexture());
-                    mediaPlayer.setSurface(surface);
+                    Log.v(LOG_TAG, "getTextureView().isAvailable()="+mEntryItem.getTextureView().isAvailable());
+                    if (mEntryItem.getTextureView().isAvailable()) {
+                        mWorkingSurface = new Surface(mEntryItem.getTextureView().getSurfaceTexture());
+                        mediaPlayer.setSurface(mWorkingSurface);
+                    } else mEntryItem.getTextureView().setSurfaceTextureListener(this);
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 }
 
@@ -63,8 +73,21 @@ public class PlayerManager {
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mediaPlayer) {
-                        mediaPlayer.start();
-                         Log.v(LOG_TAG,"setOnPreparedListener.onPrepared");
+                        Log.v(LOG_TAG, "setOnPreparedListener.onPrepared");
+
+
+                        if (isVideoFile) {
+                            if (mWorkingSurface != null) {
+                                Log.v(LOG_TAG, "setOnPreparedListener.onPrepared.startVIDEO");
+                                mEntryItem.playVideoState();
+                                mediaPlayer.start();
+                            }
+                        } else {
+                            Log.v(LOG_TAG, "setOnPreparedListener.onPrepared.startAUDIO");
+                            mEntryItem.playAudioState();
+                            mediaPlayer.start();
+                        }
+
                     }
                 });
                 //														mediaPlayer.setLooping(true);
@@ -74,7 +97,7 @@ public class PlayerManager {
 
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
-                        Log.v(LOG_TAG,"setOnCompletionListener.onCompletion");
+//                        Log.v(LOG_TAG,"setOnCompletionListener.onCompletion");
                         if (!isMediaPlayerError) {
                             sendRequstAddCount();
                             mediaPlayer.seekTo(0);
@@ -102,7 +125,7 @@ public class PlayerManager {
 
                 mediaPlayer.prepareAsync();
                 result = true;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 result = false;
             }
@@ -113,7 +136,15 @@ public class PlayerManager {
     public boolean tryToPause() {
         Log.v(LOG_TAG, "tryToPause");
         if (mediaPlayer !=null){
-            mediaPlayer.pause();
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+                if (isVideoFile) mEntryItem.pauseVideoState();
+                else mEntryItem.pauseAudioState();
+            } else {
+                if (isVideoFile) mEntryItem.playVideoState();
+                else mEntryItem.playAudioState();
+                mediaPlayer.start();
+            }
             return true;
         }
         return false;
@@ -162,4 +193,33 @@ public class PlayerManager {
         }
     }
 
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        Log.d(LOG_TAG,"onSurfaceTextureAvailable");
+        tryToPlayNew();
+//        mWorkingSurface = new Surface(surface);
+//        mediaPlayer.setSurface(mWorkingSurface);
+//        if (mediaPlayer != null)
+//        if (!mediaPlayer.isPlaying()){
+//            mEntryItem.playVideoState();
+//            mediaPlayer.start();
+//        }
+
+
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        return false;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+    }
 }
