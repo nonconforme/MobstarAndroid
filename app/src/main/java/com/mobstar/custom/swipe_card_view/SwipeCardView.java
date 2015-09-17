@@ -236,7 +236,7 @@ public class SwipeCardView extends FrameLayout {
                     if(!this.mDragging) {
                         return true;
                     }
-
+                    getParent().requestDisallowInterceptTouchEvent(true);
                     this.mTopView.setTranslationX(this.mTopView.getTranslationX() + dx);
                     this.mTopView.setTranslationY(this.mTopView.getTranslationY() + dy);
                     this.mTopView.setRotation(40.0F * this.mTopView.getTranslationX() / ((float) this.getWidth() / 2.0F));
