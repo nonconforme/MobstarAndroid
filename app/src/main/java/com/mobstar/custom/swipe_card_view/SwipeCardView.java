@@ -42,6 +42,10 @@ public class SwipeCardView extends FrameLayout {
     private boolean mDragging;
     private OnSwipeDismissListener onSwipeDismissListener;
 
+
+    private View swipeLeftViewIndicator;
+    private View swipeRightViewIndicator;
+
     public SwipeCardView(Context context) {
         super(context);
         this.setOrientation(Orientations.Orientation.Disordered);
@@ -66,6 +70,7 @@ public class SwipeCardView extends FrameLayout {
         this.mFlingSlop = viewConfiguration.getScaledMinimumFlingVelocity();
         this.mTouchSlop = viewConfiguration.getScaledTouchSlop();
         this.mGestureDetector = new GestureDetector(this.getContext(), new GestureListener());
+
     }
 
     private void initFromXml(AttributeSet attr) {
@@ -212,6 +217,11 @@ public class SwipeCardView extends FrameLayout {
                     ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(this.mTopView, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("translationX", new float[]{0.0F}), PropertyValuesHolder.ofFloat("translationY", new float[]{0.0F}), PropertyValuesHolder.ofFloat("rotation", new float[]{0.0F}), PropertyValuesHolder.ofFloat("pivotX", new float[]{(float) this.mTopView.getWidth() / 2.0F}), PropertyValuesHolder.ofFloat("pivotY", new float[]{(float) this.mTopView.getHeight() / 2.0F})}).setDuration(250L);
                     animator.setInterpolator(new AccelerateInterpolator());
                     animator.start();
+
+                    if (swipeRightViewIndicator != null)
+                        swipeRightViewIndicator.setVisibility(GONE);
+                    if (swipeLeftViewIndicator != null)
+                        swipeLeftViewIndicator.setVisibility(GONE);
                     break;
                 case MotionEvent.ACTION_MOVE:
                     pointerIndex = event.findPointerIndex(this.mActivePointerId);
@@ -229,9 +239,13 @@ public class SwipeCardView extends FrameLayout {
 
                     this.mTopView.setTranslationX(this.mTopView.getTranslationX() + dx);
                     this.mTopView.setTranslationY(this.mTopView.getTranslationY() + dy);
-                    this.mTopView.setRotation(40.0F * this.mTopView.getTranslationX() / ((float)this.getWidth() / 2.0F));
+                    this.mTopView.setRotation(40.0F * this.mTopView.getTranslationX() / ((float) this.getWidth() / 2.0F));
                     this.mLastTouchX = x;
                     this.mLastTouchY = y;
+                    final float targetX = mTopView.getX();
+                    Log.d("tag", "x = " + targetX);
+                    setVoting(targetX);
+
                 case MotionEvent.ACTION_OUTSIDE:
                 case MotionEvent.ACTION_POINTER_DOWN:
                 default:
@@ -248,6 +262,28 @@ public class SwipeCardView extends FrameLayout {
             }
 
             return true;
+        }
+    }
+
+    private void setVoting(float targetX){
+        float alpha = 1;
+        if (targetX < 80) {
+            alpha = Math.abs(0.01f * targetX);
+        }
+        if (targetX > 0.0F){
+            if (swipeRightViewIndicator != null) {
+                swipeRightViewIndicator.setVisibility(VISIBLE);
+                swipeRightViewIndicator.setAlpha(alpha);
+            }
+            if (swipeLeftViewIndicator != null)
+                swipeLeftViewIndicator.setVisibility(GONE);
+        }else {
+            if (swipeLeftViewIndicator != null) {
+                swipeLeftViewIndicator.setVisibility(VISIBLE);
+                swipeLeftViewIndicator.setAlpha(alpha);
+            }
+            if (swipeRightViewIndicator != null)
+                swipeRightViewIndicator.setVisibility(GONE);
         }
     }
 
@@ -293,6 +329,14 @@ public class SwipeCardView extends FrameLayout {
     }
     public void setGravity(int gravity) {
         this.mGravity = gravity;
+    }
+
+    public void setSwipeLeftViewIndicator(View swipeLeftViewIndicator) {
+        this.swipeLeftViewIndicator = swipeLeftViewIndicator;
+    }
+
+    public void setSwipeRightViewIndicator(View swipeRightViewIndicator) {
+        this.swipeRightViewIndicator = swipeRightViewIndicator;
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {

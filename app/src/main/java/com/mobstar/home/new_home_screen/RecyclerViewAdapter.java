@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
-import com.mobstar.api.DownloadFileManager;
 import com.mobstar.pojo.EntryPojo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by lipcha on 14.09.15.

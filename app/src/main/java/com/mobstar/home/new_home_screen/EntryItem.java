@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.mobstar.BaseActivity;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
+import com.mobstar.api.RestClient;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
@@ -26,6 +27,8 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 /**
  * Created by lipcha on 14.09.15.
@@ -48,6 +51,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private TextView textStatasticCount;
     private ImageView imgMsg,ivIndicator;
     private SwipeCardView swipeCardView;
+
+    private View votingYes;
+    private View votingNo;
 
     private int position;
 
@@ -89,6 +95,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imgMsg=(ImageView) convertView.findViewById(R.id.imgMsg);
         ivIndicator=(ImageView) convertView.findViewById(R.id.ivIndicator);
         swipeCardView = (SwipeCardView) convertView.findViewById(R.id.swipe_card_view);
+        votingNo = convertView.findViewById(R.id.voting_no);
+        votingYes = convertView.findViewById(R.id.voting_yes);
     }
 
     public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnRemoveEntryListener _onRemoveEntryListener){
@@ -103,6 +111,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void setupViews(){
+
+        swipeCardView.setSwipeLeftViewIndicator(votingNo);
+        swipeCardView.setSwipeRightViewIndicator(votingYes);
+
         textCommentCount.setText(entryPojo.getTotalComments());
         textUserName.setText(entryPojo.getUserDisplayName());
         textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
@@ -477,14 +489,30 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onSwipeLeft() {
+        dislikeRequest();
         if (onRemoveEntryListener != null)
             onRemoveEntryListener.onRemoveEntry(position);
     }
 
     @Override
     public void onSwipeRight() {
+        likeRequest();
         if (onRemoveEntryListener != null)
             onRemoveEntryListener.onRemoveEntry(position);
+    }
+
+    private void likeRequest(){
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("entry", entryPojo.getID());
+        params.put("type", "up");
+        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
+    }
+
+    private void dislikeRequest(){
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("entry", entryPojo.getID());
+        params.put("type", "down");
+        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
     }
 
     public interface OnRemoveEntryListener{

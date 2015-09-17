@@ -25,7 +25,7 @@ public class PlayerManager {
     private boolean isVideoFile;
 
     public static PlayerManager getInstance(){
-        if (instance==null){
+        if (instance == null){
             instance = new PlayerManager();
         }
         return instance;
@@ -118,6 +118,7 @@ public class PlayerManager {
         }
         return false;
     }
+
     private boolean tryToStop() {
         Log.v(LOG_TAG,"tryToStop");
         if (mediaPlayer !=null){
@@ -126,6 +127,7 @@ public class PlayerManager {
         }
         return false;
     }
+
     private boolean tryToReset() {
         Log.v(LOG_TAG,"tryToReset");
         if (mediaPlayer !=null){
@@ -134,6 +136,7 @@ public class PlayerManager {
         }
         return false;
     }
+
     public boolean finalizePlayer() {
         Log.v(LOG_TAG,"finalizePlayer");
         if (mediaPlayer !=null){
