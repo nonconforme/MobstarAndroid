@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -36,6 +37,7 @@ import java.util.HashMap;
  */
 public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickListener, SwipeCardView.OnSwipeDismissListener {
 
+    private static final String LOG_TAG = EntryItem.class.getName();
     private TextView textUserName, textDescription, textTime,textViews, buttonVideoSplit;
     private ImageView imageFrame;
     private ProgressBar progressbar;
@@ -202,7 +204,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 startCommentActivity();
                 break;
             case R.id.conteiner_player:
-                PlayerManager.getInstance().tryToPause();
+                PlayerManager.getInstance().tryToPause(position);
                 break;
         }
     }
@@ -242,6 +244,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void setImageContentType(){
+        Log.d(LOG_TAG, "setImageContentType"+position);
         Picasso.with(baseActivity).load(R.drawable.indicator_image).into(ivIndicator);
         // Log.v(Constant.TAG, "image position " + position);
 
@@ -256,20 +259,22 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
             @Override
             public void onSuccess() {
-                // TODO Auto-generated method stub
+                Log.d(LOG_TAG, "setImageContentType.onSuccess"+position);
                 progressbar.setVisibility(View.GONE);
                 imageFrame.setVisibility(View.VISIBLE);
+                flPlaceHolder.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onError() {
-                // TODO Auto-generated method stub
+                Log.d(LOG_TAG, "setImageContentType.onError");
 
             }
         });
     }
 
     private void setAudioContentType(){
+        Log.d(LOG_TAG, "setAudioContentType="+position);
         Picasso.with(baseActivity).load(R.drawable.indicator_audio).into(ivIndicator);
 
         ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
@@ -279,8 +284,20 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imgPlaceHolder.setImageResource(R.drawable.audio_placeholder);
         imageFrame.setVisibility(View.GONE);
 
-//        Picasso.with(mContext).load(arrEntryPojos.get(position).getImageLink())
-//                .into(viewHolder.imageFrame, new Callback() {
+        Picasso.with(baseActivity).load(entryPojo.getImageLink())
+                .into(imageFrame, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progressbar.setVisibility(View.GONE);
+                        imageFrame.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.d(LOG_TAG, "setAudioContentType.onError");
+
+                    }
+                });
 //
 //                    @Override
 //                    public void onSuccess() {
@@ -364,7 +381,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void setVideoContentType(){
+        Log.d(LOG_TAG, "setVideoContentType"+position);
         Picasso.with(baseActivity).load(R.drawable.indicator_video).into(ivIndicator);
+        flPlaceHolder.setVisibility(View.VISIBLE);
         ivAudioIcon.setVisibility(View.GONE);
         progressbar.setVisibility(View.VISIBLE);
         imgPlaceHolder.setVisibility(View.VISIBLE);
@@ -375,13 +394,14 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 .placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(imageFrame, new Callback() {
             @Override
             public void onSuccess() {
+                Log.d(LOG_TAG,"setVideoContentType.onSuccess");
                 progressbar.setVisibility(View.GONE);
                 imageFrame.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onError() {
-
+                Log.d(LOG_TAG,"setVideoContentType.onError");
             }
         });
     }
@@ -496,14 +516,14 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onSwipeLeft() {
-        dislikeRequest();
+//        dislikeRequest();
         if (onRemoveEntryListener != null)
             onRemoveEntryListener.onRemoveEntry(position);
     }
 
     @Override
     public void onSwipeRight() {
-        likeRequest();
+//        likeRequest();
         if (onRemoveEntryListener != null)
             onRemoveEntryListener.onRemoveEntry(position);
     }
@@ -538,7 +558,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         flPlaceHolder.setVisibility(View.GONE);
         ivAudioIcon.setVisibility(View.GONE);
         progressbar.setVisibility(View.GONE);
-        textureView.setVisibility(View.VISIBLE);
+//        textureView.setVisibility(View.VISIBLE);
     }
 
 
@@ -547,7 +567,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imgPlaceHolder.setVisibility(View.GONE);
         ivAudioIcon.setVisibility(View.GONE);
         progressbar.setVisibility(View.GONE);
-        textureView.setVisibility(View.GONE);
+//        textureView.setVisibility(View.GONE);
         imageFrame.setVisibility(View.VISIBLE);
     }
     public void pauseVideoState() {
@@ -555,7 +575,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
         ivAudioIcon.setVisibility(View.VISIBLE);
         progressbar.setVisibility(View.GONE);
-        textureView.setVisibility(View.VISIBLE);
+//        textureView.setVisibility(View.VISIBLE);
     }
     public void pauseAudioState() {
         flPlaceHolder.setVisibility(View.VISIBLE);
@@ -563,9 +583,17 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
         ivAudioIcon.setVisibility(View.VISIBLE);
         progressbar.setVisibility(View.GONE);
-        textureView.setVisibility(View.GONE);
+//        textureView.setVisibility(View.GONE);
         imageFrame.setVisibility(View.VISIBLE);
     }
+
+    public void showProgressBar(){
+        progressbar.setVisibility(View.VISIBLE);
+    }
+    public void hideProgressBar(){
+        progressbar.setVisibility(View.GONE);
+    }
+
 
 //    public FrameLayout getFlPlaceHolder() {
 //        return flPlaceHolder;

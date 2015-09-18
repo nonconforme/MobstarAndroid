@@ -25,6 +25,7 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
     private boolean isMediaPlayerError = false;
     private boolean isVideoFile;
     private Surface mWorkingSurface;
+    private int oldPosition;
 
     public static PlayerManager getInstance() {
         if (instance == null) {
@@ -46,8 +47,8 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     public boolean tryToPlayNew() {
-        Log.d(LOG_TAG, "mEntryItem.pos" + mEntryItem.getPos());
-        Log.d(LOG_TAG, "mEntryItem.pos" + mEntryItem.getEntryPojo().getDescription());
+        Log.d(LOG_TAG, "mEntryItem.pos=" + mEntryItem.getPos());
+        Log.d(LOG_TAG, "mEntryItem.pgetDescription=" + mEntryItem.getEntryPojo().getDescription());
 //        Log.d(LOG_TAG,"mEntryItem.pos"+mEntryItem.getPos());
 
         releaseMP();
@@ -60,11 +61,14 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
                 mediaPlayer.setDataSource(mFilePath);
 
                 if (isVideoFile) {
+                    mEntryItem.getTextureView().setSurfaceTextureListener(this);
                     Log.v(LOG_TAG, "getTextureView().isAvailable()=" + mEntryItem.getTextureView().isAvailable());
                     if (mEntryItem.getTextureView().isAvailable()) {
                         mWorkingSurface = new Surface(mEntryItem.getTextureView().getSurfaceTexture());
                         mediaPlayer.setSurface(mWorkingSurface);
-                    } else mEntryItem.getTextureView().setSurfaceTextureListener(this);
+                    } else {
+                        oldPosition = mEntryItem.getPos();
+                    }
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 }
 
@@ -79,15 +83,18 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
                         if (isVideoFile) {
                             if (mWorkingSurface != null) {
                                 Log.v(LOG_TAG, "setOnPreparedListener.onPrepared.startVIDEO");
-                                mEntryItem.playVideoState();
                                 mediaPlayer.start();
+                                mEntryItem.playVideoState();
+                            } else {
+                                tryToPause(mEntryItem.getPos());
+                                return;
                             }
                         } else {
                             Log.v(LOG_TAG, "setOnPreparedListener.onPrepared.startAUDIO");
                             mEntryItem.playAudioState();
                             mediaPlayer.start();
                         }
-
+                        mEntryItem.hideProgressBar();
                     }
                 });
                 //														mediaPlayer.setLooping(true);
@@ -112,13 +119,7 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
                     @Override
                     public boolean onError(MediaPlayer mp, int what, int extra) {
                         Log.v(LOG_TAG, "setOnErrorListener.onError");
-                        if (mediaPlayer != null) {
-                            if (mediaPlayer.isPlaying())
-                                mediaPlayer.pause();
-                            isMediaPlayerError = true;
-                            mediaPlayer.reset();
-
-                        }
+                        tryToPlayNew();
                         return false;
                     }
                 });
@@ -133,23 +134,30 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
         return result;
     }
 
-    public boolean tryToPause() {
+    public boolean tryToPause(int position) {
+        if (position != mEntryItem.getPos()) {
+            return false;
+        }
         Log.v(LOG_TAG, "tryToPause");
+        return tryToPauseAll();
+    }
+
+    public boolean tryToPauseAll() {
+        Log.v(LOG_TAG, "tryToPauseAll");
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.pause();
                 if (isVideoFile) mEntryItem.pauseVideoState();
                 else mEntryItem.pauseAudioState();
             } else {
+                mediaPlayer.start();
                 if (isVideoFile) mEntryItem.playVideoState();
                 else mEntryItem.playAudioState();
-                mediaPlayer.start();
             }
             return true;
         }
         return false;
     }
-
     private boolean tryToStop() {
         Log.v(LOG_TAG, "tryToStop");
         if (mediaPlayer != null) {
@@ -198,31 +206,34 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        Log.d(LOG_TAG, "onSurfaceTextureAvailable");
-        tryToPlayNew();
-//        mWorkingSurface = new Surface(surface);
-//        mediaPlayer.setSurface(mWorkingSurface);
-//        if (mediaPlayer != null)
-//        if (!mediaPlayer.isPlaying()){
-//            mEntryItem.playVideoState();
-//            mediaPlayer.start();
-//        }
+        Log.d(LOG_TAG, "onSurfaceTextureAvailable.old=" + oldPosition + " actual=" + mEntryItem.getPos());
+        if (oldPosition == mEntryItem.getPos()) {
+            if (mediaPlayer != null) {
+                mWorkingSurface = new Surface(surface);
+                mediaPlayer.setSurface(mWorkingSurface);
+                mediaPlayer.start();
+                mEntryItem.playVideoState();
+            }
+        }
 
 
     }
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
+        Log.d(LOG_TAG, "onSurfaceTextureSizeChanged");
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        Log.d(LOG_TAG, "onSurfaceTextureDestroyed");
         return false;
     }
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+//        Log.d(LOG_TAG, "onSurfaceTextureUpdated");
+
 
     }
 }

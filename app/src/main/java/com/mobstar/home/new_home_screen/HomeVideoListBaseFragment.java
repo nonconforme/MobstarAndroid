@@ -160,7 +160,9 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     private void refreshEntryList(){
+        PlayerManager.getInstance().tryToPauseAll();
         entryAdapter.notifyDataSetChanged();
+        PlayerManager.getInstance().tryToPauseAll();
     }
 
     private void createEntryList(){
@@ -181,8 +183,11 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onLoadNewFile(int currentPosition, int oldPosition) {
-                Log.d("playermanager","onLoadNewFile.pos="+currentPosition);
-                PlayerManager.getInstance().tryToPause();
+                Log.d("entryitem", "onLoadNewFile.pos=" + currentPosition);
+//                entryAdapter.getEntryAtPosition(oldPosition).hideProgressBar();
+                if (!entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType().equals("image"))
+                    entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
+                PlayerManager.getInstance().finalizePlayer();
                 cancelDownloadFile(oldPosition);
                 downloadFile(currentPosition);
             }
