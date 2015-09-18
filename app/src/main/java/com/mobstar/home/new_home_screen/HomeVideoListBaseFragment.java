@@ -202,8 +202,9 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         public void onLoadNewFile(int currentPosition, int oldPosition) {
             Log.d("entryitem", "onLoadNewFile.pos=" + currentPosition);
 //                entryAdapter.getEntryAtPosition(oldPosition).hideProgressBar();
-            if (!entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType().equals("image"))
-                entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
+            if (entryAdapter.getEntryAtPosition(currentPosition) != null)
+                if (!entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType().equals("image"))
+                    entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
             PlayerManager.getInstance().standardizePrevious();
             PlayerManager.getInstance().finalizePlayer();
             cancelDownloadFile(oldPosition);
