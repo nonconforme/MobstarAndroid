@@ -41,6 +41,8 @@ public class DownloadFileManager {
         RestClient.getInstance(mContext).getFileRequest(_fileUrl, filePath, new OnFileDownloadCallback() {
             @Override
             public void onDownload(File file) {
+                if (listDownloadingFile.get(file.getAbsolutePath()) == null)
+                    return;
                 int position = listDownloadingFile.get(file.getAbsolutePath());
                 if (downloadCallback != null)
                     downloadCallback.onDownload(file.getAbsolutePath(), position);
@@ -58,7 +60,6 @@ public class DownloadFileManager {
 
     public void cancelFile(final String _fileUrl){
         final String filePath = PATH + Utility.GetFileNameFromURl(_fileUrl);
-        listDownloadingFile.remove(filePath);
         RestClient.getInstance(mContext).cancelRequest(filePath);
     }
 

@@ -28,6 +28,8 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by lipcha on 14.09.15.
@@ -149,14 +151,22 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     private void downloadFirstFile() {
         if (entryAdapter.getItemCount() == 0)
             return;
-        switch (entryAdapter.getEntry(0).getType()) {
-            case "audio":
-                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getAudioLink(), 0);
-                break;
-            case "video":
-                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getVideoLink(), 0);
-                break;
-        }
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                switch (entryAdapter.getEntry(0).getType()) {
+                    case "audio":
+                        downloadFileManager.downloadFile(entryAdapter.getEntry(0).getAudioLink(), 0);
+                        break;
+                    case "video":
+                        downloadFileManager.downloadFile(entryAdapter.getEntry(0).getVideoLink(), 0);
+                        break;
+                }
+            }
+        };
+        timer.schedule(task, 500);
     }
 
     private void refreshEntryList() {
@@ -192,9 +202,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         public void onLoadNewFile(int currentPosition, int oldPosition) {
             Log.d("entryitem", "onLoadNewFile.pos=" + currentPosition);
 //                entryAdapter.getEntryAtPosition(oldPosition).hideProgressBar();
-            if (!entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType().equals("image")) {
+            if (!entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType().equals("image"))
                 entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
-            }
             PlayerManager.getInstance().standardizePrevious();
             PlayerManager.getInstance().finalizePlayer();
             cancelDownloadFile(oldPosition);
@@ -228,6 +237,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     private void cancelDownloadFile(int cancelPosition) {
+        if (cancelPosition == -1)
+            return;
         switch (entryAdapter.getEntry(cancelPosition).getType()) {
             case "audio":
                 downloadFileManager.cancelFile(entryAdapter.getEntry(cancelPosition).getAudioLink());

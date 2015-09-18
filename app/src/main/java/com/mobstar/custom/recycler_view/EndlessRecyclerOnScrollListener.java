@@ -13,7 +13,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private int previousTotal = 0;
     private boolean loading = true;
-    private int currentTopItem = 0;
+    private int currentTopItem = -1;
     private int oldTopItem = 0;
     private int currentPage = 0;
 
