@@ -20,7 +20,9 @@ import com.mobstar.api.RestClient;
 import com.mobstar.api.responce.EntriesResponse;
 import com.mobstar.custom.pull_to_refresh.PullToRefreshBase;
 import com.mobstar.custom.pull_to_refresh.PullToRefreshRecyclerView;
-import com.mobstar.custom.recycler_view_animation.LandingAnimator;
+import com.mobstar.custom.recycler_view.EndlessRecyclerOnScrollListener;
+import com.mobstar.custom.recycler_view.OnEndAnimationListener;
+import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.player.PlayerManager;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
@@ -32,7 +34,7 @@ import java.util.HashMap;
 /**
  * Created by lipcha on 14.09.15.
  */
-public class HomeVideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>,DownloadFileManager.DownloadCallback {
+public class HomeVideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>,DownloadFileManager.DownloadCallback, OnEndAnimationListener {
 
     public static final String IS_ENTRY_ID_API = "isEntryIdAPI";
     public static final String DEEP_LINKED_ID = "deepLinkedId";
@@ -43,7 +45,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     private boolean isSearchAPI, isMobitAPI, isVoteAPI, isEntryIdAPI, isEntryAPI;
     private String SearchTerm, deeplinkEntryId, LatestORPopular, CategoryId, VoteType;
     private SharedPreferences preferences;
-    private ArrayList<EntryPojo> arrEntryPojos = new ArrayList<>();
+//    private ArrayList<EntryPojo> arrEntryPojos = new ArrayList<>();
 
 
     private RecyclerViewAdapter entryAdapter;
@@ -80,7 +82,6 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     private void findViews(final View inflatedView){
-//        recyclerView = (RecyclerView) inflatedView.findViewById(R.id.recyclerView);
         pullToRefreshRecyclerView = (PullToRefreshRecyclerView) inflatedView.findViewById(R.id.pullToRefreshRecyclerView);
     }
 
@@ -129,11 +130,13 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
             @Override
             public void onSuccess(EntriesResponse object) {
                 if (pageNo == 0) {
-                    arrEntryPojos = new ArrayList<EntryPojo>();
-                    entryAdapter.setArrEntryes(arrEntryPojos);
+                    entryAdapter.setArrEntryes(object.getArrEntry());
+                    endlessRecyclerOnScrollListener.reset();
                     downloadFirstFile();
                 }
-                arrEntryPojos.addAll(object.getArrEntry());
+                else {
+                    entryAdapter.addArrEntries(object.getArrEntry());
+                }
                 refreshEntryList();
                 Utility.HideDialog(getActivity());
                 pullToRefreshRecyclerView.onRefreshComplete();
@@ -142,19 +145,20 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
             @Override
             public void onFailure(String error) {
                 pullToRefreshRecyclerView.onRefreshComplete();
+                Utility.HideDialog(getActivity());
             }
         });
     }
 
     private void downloadFirstFile(){
-        if (arrEntryPojos.size() == 0)
+        if (entryAdapter.getItemCount() == 0)
             return;
-        switch (arrEntryPojos.get(0).getType()) {
+        switch (entryAdapter.getEntry(0).getType()) {
             case "audio":
-                downloadFileManager.downloadFile(arrEntryPojos.get(0).getAudioLink(), 0);
+                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getAudioLink(), 0);
                 break;
             case "video":
-                downloadFileManager.downloadFile(arrEntryPojos.get(0).getVideoLink(), 0);
+                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getVideoLink(), 0);
                 break;
         }
     }
@@ -170,34 +174,52 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         recyclerView = pullToRefreshRecyclerView.getRefreshableView();
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setItemAnimator(new LandingAnimator());
-        entryAdapter = new RecyclerViewAdapter(arrEntryPojos, (BaseActivity) getActivity());
+        recyclerView.setItemAnimator(new RemoveAnimation(this));
+        entryAdapter = new RecyclerViewAdapter((BaseActivity) getActivity());
         recyclerView.setAdapter(entryAdapter);
         downloadFileManager = new DownloadFileManager(getActivity(), this);
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
-            @Override
-            public void onLoadMore(int currentPage) {
-                Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
-                getEntryRequest(currentPage);
-            }
+        endlessRecyclerOnScrollListener.setLinearLayoutManager((LinearLayoutManager) recyclerView.getLayoutManager());
+        recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
 
-            @Override
-            public void onLoadNewFile(int currentPosition, int oldPosition) {
-                Log.d("entryitem", "onLoadNewFile.pos=" + currentPosition);
+           
+    }
+
+    private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener() {
+        @Override
+        public void onLoadMore(int currentPage) {
+            Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
+            getEntryRequest(currentPage);
+        }
+
+        @Override
+        public void onLoadNewFile(int currentPosition, int oldPosition) {
+            Log.d("entryitem", "onLoadNewFile.pos=" + currentPosition);
 //                entryAdapter.getEntryAtPosition(oldPosition).hideProgressBar();
-                if (!entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType().equals("image"))
-                    entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
-                PlayerManager.getInstance().finalizePlayer();
-                cancelDownloadFile(oldPosition);
-                downloadFile(currentPosition);
-            }
-        });
+            if (!entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType().equals("image"))
+                entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
+            PlayerManager.getInstance().finalizePlayer();
+            cancelDownloadFile(oldPosition);
+            downloadFile(currentPosition);
+        }
+    };
+
+    @Override
+    public void onRemoveItemAnimationEnd() {
+        refreshEntryList();
+    }
+
+    private void refreshEntryList(){
+        entryAdapter.notifyDataSetChanged();
+        endlessRecyclerOnScrollListener.onScrollStateChanged(recyclerView, RecyclerView.SCROLL_STATE_IDLE);
     }
 
     @Override
     public void onDownload(String filePath, int position) {
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        if (EndlessRecyclerOnScrollListener.getTopVisiblePosition(recyclerView, linearLayoutManager) == position){
+        final int topVisiblePosition = EndlessRecyclerOnScrollListener.getTopVisiblePosition(recyclerView, linearLayoutManager);
+        if (topVisiblePosition == -1)
+            return;
+        if (topVisiblePosition == position){
             final EntryItem entryItem = entryAdapter.getEntryAtPosition(position);
             if (entryItem != null) {
                 PlayerManager.getInstance().init(getActivity(), entryItem, filePath);
@@ -212,24 +234,24 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     private void cancelDownloadFile(int cancelPosition){
-        switch (arrEntryPojos.get(cancelPosition).getType()) {
+        switch (entryAdapter.getEntry(cancelPosition).getType()) {
             case "audio":
-                downloadFileManager.cancelFile(arrEntryPojos.get(cancelPosition).getAudioLink());
+                downloadFileManager.cancelFile(entryAdapter.getEntry(cancelPosition).getAudioLink());
                 break;
             case "video":
-                downloadFileManager.cancelFile(arrEntryPojos.get(cancelPosition).getVideoLink());
+                downloadFileManager.cancelFile(entryAdapter.getEntry(cancelPosition).getVideoLink());
                 break;
         }
     }
 
     private void downloadFile(int currentPosition){
 
-        switch (arrEntryPojos.get(currentPosition).getType()) {
+        switch (entryAdapter.getEntry(currentPosition).getType()) {
             case "audio":
-                downloadFileManager.downloadFile(arrEntryPojos.get(currentPosition).getAudioLink(), currentPosition);
+                downloadFileManager.downloadFile(entryAdapter.getEntry(currentPosition).getAudioLink(), currentPosition);
                 break;
             case "video":
-                downloadFileManager.downloadFile(arrEntryPojos.get(currentPosition).getVideoLink(), currentPosition);
+                downloadFileManager.downloadFile(entryAdapter.getEntry(currentPosition).getVideoLink(), currentPosition);
                 break;
         }
     }

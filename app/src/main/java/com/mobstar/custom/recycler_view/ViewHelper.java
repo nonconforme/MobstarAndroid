@@ -1,4 +1,4 @@
-package com.mobstar.custom.recycler_view_animation;
+package com.mobstar.custom.recycler_view;
 
 import android.support.v4.view.ViewCompat;
 import android.view.View;

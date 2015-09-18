@@ -146,6 +146,39 @@ public class RestClient {
         httpClient.get(url, asyncHttpResponseHandler);
     }
 
+    public void deleteRequest(final String url, HashMap<String, String> params, final ConnectCallback callback){
+        if (!Utility.isNetworkAvailable(context)) {
+            showToastNotification(context.getString(R.string.no_internet_access));
+            callback.onFailure("");
+            return;
+        }
+        final RequestParams requestParams = new RequestParams(params);
+        final String absoluteUrl = Constant.SERVER_URL + url;
+        Log.d("http get request: ", absoluteUrl + "?" + requestParams.toString());
+        httpClient.delete(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                try {
+                    final JSONObject jsonObject = new JSONObject(new String(bytes, "US-ASCII"));
+                    if (callback != null) {
+                        callback.parse(jsonObject);
+                    }
+                } catch (UnsupportedEncodingException | JSONException e) {
+                    e.printStackTrace();
+                    if (callback != null)
+                        callback.onFailure(e.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                showToastNotification(throwable.getMessage());
+                if (callback != null)
+                    callback.onFailure(throwable.toString());
+            }
+        });
+    }
+
     public void cancelRequest(final String url){
         httpClient.cancelRequestsByTAG(url, false);
     }

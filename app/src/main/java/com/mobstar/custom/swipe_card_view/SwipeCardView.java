@@ -90,9 +90,26 @@ public class SwipeCardView extends FrameLayout {
         onSwipeDismissListener = _onSwipeDismissListener;
     }
 
-    private void clearStack() {
+    public void clearStack() {
         this.removeAllViewsInLayout();
         this.mTopView = null;
+    }
+
+    public View getTopView() {
+        return mTopView;
+    }
+
+    public void resetTopView(){
+        if (mTopView == null)
+            return;
+        mTopView.setX(0f);
+        mTopView.setY(0f);
+        mTopView.setRotation(0f);
+        mTopView.setAlpha(1.0f);
+        if (swipeLeftViewIndicator != null)
+            swipeLeftViewIndicator.setVisibility(GONE);
+        if (swipeRightViewIndicator != null)
+            swipeRightViewIndicator.setVisibility(GONE);
     }
 
     public void setOrientation(Orientations.Orientation orientation) {
@@ -243,7 +260,6 @@ public class SwipeCardView extends FrameLayout {
                     this.mLastTouchX = x;
                     this.mLastTouchY = y;
                     final float targetX = mTopView.getX();
-                    Log.d("tag", "x = " + targetX);
                     setVoting(targetX);
 
                 case MotionEvent.ACTION_OUTSIDE:
@@ -344,7 +360,6 @@ public class SwipeCardView extends FrameLayout {
         }
 
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            Log.d("Fling", "Fling with " + velocityX + ", " + velocityY);
             final View topCard = mTopView;
             float dx = e2.getX() - e1.getX();
             if(Math.abs(dx) > (float)mTouchSlop && Math.abs(velocityX) > Math.abs(velocityY) && Math.abs(velocityX) > (float)(mFlingSlop * 3)) {
@@ -361,17 +376,18 @@ public class SwipeCardView extends FrameLayout {
 
                 duration = Math.min(500L, duration);
                 mTopView = getChildAt(getChildCount() - 2);
-                if(onSwipeDismissListener != null) {
-                    if(targetX > 0.0F) {
-                        onSwipeDismissListener.onSwipeRight();
-                    } else {
-                        onSwipeDismissListener.onSwipeLeft();
-                    }
-                }
+
+                final float finalTargetX = targetX;
                 topCard.animate().setDuration(duration).alpha(0.75F).setInterpolator(new LinearInterpolator()).x(targetX).y(targetY).rotation(Math.copySign(45.0F, velocityX)).setListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Animator animation) {
                         removeViewInLayout(topCard);
-
+                        if(onSwipeDismissListener != null) {
+                            if(finalTargetX > 0.0F) {
+                                onSwipeDismissListener.onSwipeRight();
+                            } else {
+                                onSwipeDismissListener.onSwipeLeft();
+                            }
+                        }
 
                     }
 

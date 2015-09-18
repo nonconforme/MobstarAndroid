@@ -1,8 +1,10 @@
 package com.mobstar.home.new_home_screen;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.TextureView;
@@ -11,11 +13,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.mobstar.BaseActivity;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.StarResponse;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
@@ -29,8 +32,9 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by lipcha on 14.09.15.
@@ -54,6 +58,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private TextView textStatasticCount;
     private ImageView imgMsg,ivIndicator;
     private SwipeCardView swipeCardView;
+    private CardView cardView;
 
     private View votingYes;
     private View votingNo;
@@ -75,7 +80,6 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     public int getPos(){
         return position;
     }
-
 
     private void findView(final View convertView){
         buttonVideoSplit = (TextView) convertView.findViewById(R.id.splitVideoButton);
@@ -101,6 +105,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         swipeCardView = (SwipeCardView) convertView.findViewById(R.id.swipe_card_view);
         votingNo = convertView.findViewById(R.id.voting_no);
         votingYes = convertView.findViewById(R.id.voting_yes);
+        cardView = (CardView) convertView.findViewById(R.id.cardView);
         containerPlayer = (FrameLayout) convertView.findViewById(R.id.conteiner_player);
     }
 
@@ -108,6 +113,13 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         entryPojo = _entryPojo;
         baseActivity = _activity;
         position = _position;
+
+        if (swipeCardView.getTopView() == null){
+            swipeCardView.clearStack();
+            swipeCardView.addView(cardView);
+            swipeCardView.resetTopView();
+        }
+
         onRemoveEntryListener = _onRemoveEntryListener;
         setupViews();
         setListeners();
@@ -259,7 +271,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
             @Override
             public void onSuccess() {
-                Log.d(LOG_TAG, "setImageContentType.onSuccess"+position);
+                Log.d(LOG_TAG, "setImageContentType.onSuccess" + position);
                 progressbar.setVisibility(View.GONE);
                 imageFrame.setVisibility(View.VISIBLE);
                 flPlaceHolder.setVisibility(View.VISIBLE);
@@ -298,86 +310,6 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
                     }
                 });
-//
-//                    @Override
-//                    public void onSuccess() {
-//                        // TODO Auto-generated method stub
-//                        viewHolder.progressbar.setVisibility(View.GONE);
-//                        viewHolder.imageFrame.setVisibility(View.VISIBLE);
-//
-//                        if (!listDownloadingFile.contains(sFileName)) {
-//
-//                            //							File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
-//
-//                            try {
-//                                File file = new File(FILEPATH + sFileName);
-//                                if (file != null && !file.exists()) {
-//
-//                                    listDownloadingFile.add(sFileName);
-//
-//                                    Log.d(LOG_TAG, "sFileName=" + sFileName);
-////                            Log.d(LOG_TAG, "arrEntryPojos.get(position).getVideoLink()="+arrEntryPojos.get(position).getVideoLink());
-//                                    Log.d(LOG_TAG, "what to dowmload=" + arrEntryPojos.get(position).getDescription());
-//
-//                                    if (Utility.isNetworkAvailable(mContext)) {
-////                                        downloadFile(sFileName, listDownloadingFile, arrEntryPojos.get(position).getAudioLink(), new FileAsyncHttpResponseHandler(file) {
-////
-////                                            @Override
-////                                            public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
-////                                                Log.d(LOG_TAG,"Download fail audio=>"+arrEntryPojos.get(position).getVideoLink());
-////                                            }
-////
-////                                            @Override
-////                                            public void onSuccess(int arg0, Header[] arg1, File file) {
-////                                                Log.d(LOG_TAG, "download audio file=" + file.getName());
-////                                                listDownloadingFile.remove(file.getName());
-////                                                mActivity.runOnUiThread(new Runnable() {
-////                                                    @Override
-////                                                    public void run() {
-////                                                        notifyDataSetChanged();
-////                                                    }
-////                                                });
-////                                            }
-////                                        });
-//                                        downloadFile(FILEPATH + sFileName, listDownloadingFile, arrEntryPojos.get(position).getAudioLink(), new OnFileDownloadCallback() {
-//                                            @Override
-//                                            public void onDownload(File file) {
-//                                                Log.d(LOG_TAG, "download audio file=" + file.getName());
-//                                                listDownloadingFile.remove(file.getName());
-//                                                mActivity.runOnUiThread(new Runnable() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        notifyDataSetChanged();
-//                                                    }
-//                                                });
-//                                            }
-//
-//                                            @Override
-//                                            public void onFailure(String errorMessage) {
-//
-//                                            }
-//                                        });
-//                                    } else {
-//                                        Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-//                                    }
-//                                } else {
-//                                    viewHolder.progressbar.setVisibility(View.GONE);
-//                                }
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        } else {
-//                            viewHolder.progressbar.setVisibility(View.VISIBLE);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError() {
-//                        // TODO Auto-generated method stub
-//
-//                    }
-//                });
     }
 
     private void setVideoContentType(){
@@ -406,49 +338,75 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         });
     }
 
-
     private void onClickBtnFollow(){
-//        if (entryPojo.getIsMyStar()!=null && !entryPojo.getIsMyStar().equalsIgnoreCase("0")) {
-//            //unfollow
-//            Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
-//
-//            if (Utility.isNetworkAvailable(baseActivity)) {
-//                unFollowUserId = entryPojo.getUserID();
-//                new DeleteStarCall(entryPojo.getUserID()).start();
-//            } else {
-//                Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-//                Utility.HideDialog(mContext);
-//            }
-//        } else {
-//            Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-//
-//            if (Utility.isNetworkAvailable(mContext)) {
-//
-//                new AddStarCall(arrEntryPojos.get(pos).getUserID()).start();
-//
-//                final Dialog dialog = new Dialog(mContext, R.style.DialogAnimationTheme);
-//                dialog.setContentView(R.layout.dialog_add_star);
-//                dialog.show();
-//
-//                Timer timer = new Timer();
-//                TimerTask task = new TimerTask() {
-//
-//                    @Override
-//                    public void run() {
-//                        // TODO Auto-generated method stub
-//                        dialog.dismiss();
-//                    }
-//                };
-//                timer.schedule(task, 1000);
-//
-//            } else {
-//
-//                Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-//                Utility.HideDialog(mContext);
-//            }
-//
-//        }
+        if (entryPojo.getIsMyStar() != null && !entryPojo.getIsMyStar().equalsIgnoreCase("0")) {
+            deleteStarRequest();
+        } else {
+            addStarRequest();
+        }
     }
+
+    private void addStarRequest(){
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("star", entryPojo.getUserID());
+        Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
+        showStarDialog();
+        RestClient.getInstance(baseActivity).postRequest(Constant.STAR, params, new ConnectCallback<StarResponse>() {
+
+            @Override
+            public void onSuccess(StarResponse object) {
+                Utility.HideDialog(baseActivity);
+                if (object.getError() == null){
+                    entryPojo.setIsMyStar("1");
+                    setupViews();
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Utility.HideDialog(baseActivity);
+            }
+        });
+    }
+
+    private void showStarDialog(){
+        final Dialog dialog = new Dialog(baseActivity, R.style.DialogAnimationTheme);
+        dialog.setContentView(R.layout.dialog_add_star);
+        dialog.show();
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                dialog.dismiss();
+            }
+        };
+        timer.schedule(task, 1000);
+    }
+
+    private void deleteStarRequest(){
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("star", entryPojo.getUserID());
+        Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
+        RestClient.getInstance(baseActivity).deleteRequest(Constant.DELETE_STAR + entryPojo.getUserID(), params, new ConnectCallback<StarResponse>() {
+            @Override
+            public void onSuccess(StarResponse object) {
+                Utility.HideDialog(baseActivity);
+                final String error = object.getError();
+                if (error == null){
+                    entryPojo.setIsMyStar("0");
+                    setupViews();
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Utility.HideDialog(baseActivity);
+            }
+        });
+    }
+
 
     private void startCommentActivity(){
         final Intent intent = new Intent(baseActivity, CommentActivity.class);
@@ -518,14 +476,14 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     public void onSwipeLeft() {
 //        dislikeRequest();
         if (onRemoveEntryListener != null)
-            onRemoveEntryListener.onRemoveEntry(position);
+            onRemoveEntryListener.onRemoveEntry(getPos());
     }
 
     @Override
     public void onSwipeRight() {
 //        likeRequest();
         if (onRemoveEntryListener != null)
-            onRemoveEntryListener.onRemoveEntry(position);
+            onRemoveEntryListener.onRemoveEntry(getPos());
     }
 
     private void likeRequest(){
