@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by lipcha on 14.09.15.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> implements EntryItem.OnRemoveEntryListener {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> implements EntryItem.OnChangeEntryListener {
 
     private ArrayList<EntryPojo> arrEntryes;
     private LayoutInflater layoutInflater;
@@ -40,6 +40,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     }
 
     public EntryPojo getEntry(int position){
+        if (position > arrEntryes.size())
+            return arrEntryes.get(arrEntryes.size() - 1);
         return arrEntryes.get(position);
     }
 
@@ -67,6 +69,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     public void onRemoveEntry(int position) {
         arrEntryes.remove(position);
         notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onFollowEntry(String uId, String isMyStar) {
+        if (uId == null)
+            return;
+        for (int i = 0; i < arrEntryes.size(); i ++){
+            if (arrEntryes.get(i).getUserID().equalsIgnoreCase(uId))
+                arrEntryes.get(i).setIsMyStar(isMyStar);
+        }
+        notifyDataSetChanged();
     }
 
     public EntryItem getEntryAtPosition(int position){

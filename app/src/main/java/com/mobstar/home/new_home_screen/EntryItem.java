@@ -71,9 +71,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private BaseActivity baseActivity;
     private EntryPojo entryPojo;
     private SharedPreferences preferences;
-    private OnRemoveEntryListener onRemoveEntryListener;
+    private OnChangeEntryListener onChangeEntryListener;
     private FrameLayout containerPlayer;
-
 
     public EntryItem(View itemView) {
         super(itemView);
@@ -112,7 +111,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         containerPlayer = (FrameLayout) convertView.findViewById(R.id.conteiner_player);
     }
 
-    public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnRemoveEntryListener _onRemoveEntryListener){
+    public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onRemoveEntryListener){
         entryPojo = _entryPojo;
         baseActivity = _activity;
         position = _position;
@@ -123,7 +122,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             swipeCardView.resetTopView();
         }
 
-        onRemoveEntryListener = _onRemoveEntryListener;
+        onChangeEntryListener = _onRemoveEntryListener;
         setupViews();
         setListeners();
         setupImage();
@@ -330,14 +329,14 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 .placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(imageFrame, new Callback() {
             @Override
             public void onSuccess() {
-                Log.d(LOG_TAG,"setVideoContentType.onSuccess");
+                Log.d(LOG_TAG, "setVideoContentType.onSuccess");
                 progressbar.setVisibility(View.GONE);
                 imageFrame.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onError() {
-                Log.d(LOG_TAG,"setVideoContentType.onError");
+                Log.d(LOG_TAG, "setVideoContentType.onError");
             }
         });
     }
@@ -360,9 +359,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             @Override
             public void onSuccess(StarResponse object) {
                 Utility.HideDialog(baseActivity);
-                if (object.getError() == null) {
-                    entryPojo.setIsMyStar("1");
-                    setupViews();
+                if (object.getError() == null){
+                    if (onChangeEntryListener != null)
+                        onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "1");
                 }
             }
 
@@ -399,8 +398,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 Utility.HideDialog(baseActivity);
                 final String error = object.getError();
                 if (error == null) {
-                    entryPojo.setIsMyStar("0");
-                    setupViews();
+                    if (onChangeEntryListener != null)
+                        onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "0");
                 }
             }
 
@@ -479,15 +478,15 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     @Override
     public void onSwipeLeft() {
 //        dislikeRequest();
-        if (onRemoveEntryListener != null)
-            onRemoveEntryListener.onRemoveEntry(getPos());
+        if (onChangeEntryListener != null)
+            onChangeEntryListener.onRemoveEntry(getPos());
     }
 
     @Override
     public void onSwipeRight() {
 //        likeRequest();
-        if (onRemoveEntryListener != null)
-            onRemoveEntryListener.onRemoveEntry(getPos());
+        if (onChangeEntryListener != null)
+            onChangeEntryListener.onRemoveEntry(getPos());
     }
 
     private void likeRequest(){
@@ -527,8 +526,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     }
 
-    public interface OnRemoveEntryListener{
+    public interface OnChangeEntryListener {
         void onRemoveEntry(int position);
+        void onFollowEntry(String uId, String isMyStar);
     }
 
     public EntryPojo getEntryPojo() {
