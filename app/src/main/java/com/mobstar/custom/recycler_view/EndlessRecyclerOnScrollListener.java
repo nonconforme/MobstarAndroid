@@ -1,4 +1,4 @@
-package com.mobstar.home.new_home_screen;
+package com.mobstar.custom.recycler_view;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +19,25 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private LinearLayoutManager mLinearLayoutManager;
 
-    public EndlessRecyclerOnScrollListener(LinearLayoutManager linearLayoutManager) {
-        this.mLinearLayoutManager = linearLayoutManager;
+    public void reset(){
+        currentPage = 0;
+        loading = true;
+    }
+
+    public void setLinearLayoutManager(final LinearLayoutManager _linearLayoutManager){
+        mLinearLayoutManager = _linearLayoutManager;
     }
 
     @Override
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
+    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        super.onScrollStateChanged(recyclerView, newState);
+        if (mLinearLayoutManager == null || recyclerView.getAdapter().getItemCount() == 0)
+            return;
+        verifyLoadingNewPage(recyclerView);
+        onChangeState(recyclerView, newState);
+    }
 
+    private void verifyLoadingNewPage(final RecyclerView recyclerView){
         int totalItemCount = mLinearLayoutManager.getItemCount();
         if (loading) {
             if (totalItemCount > previousTotal) {
@@ -41,16 +52,15 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         }
     }
 
-    @Override
-    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        super.onScrollStateChanged(recyclerView, newState);
-
+    private void onChangeState(RecyclerView recyclerView, int newState){
         switch (newState){
             case RecyclerView.SCROLL_STATE_DRAGGING:
 
                 break;
             case RecyclerView.SCROLL_STATE_IDLE:
                 final int topVisiblePosition = getTopVisiblePosition(recyclerView, mLinearLayoutManager);
+                if (topVisiblePosition == -1)
+                    return;
                 if (currentTopItem != topVisiblePosition) {
                     oldTopItem = currentTopItem;
                     onLoadNewFile(topVisiblePosition, oldTopItem);
@@ -58,12 +68,13 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
                 }
                 break;
         }
-
     }
 
     public static int getTopVisiblePosition(final RecyclerView recyclerView, LinearLayoutManager linearLayoutManager){
         int firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition();
         final View firstVisibleItem = linearLayoutManager.findViewByPosition(firstVisiblePosition);
+        if (firstVisibleItem == null)
+            return -1;
         if (Math.abs(firstVisibleItem.getTop()) > firstVisibleItem.getHeight() / 2 && firstVisiblePosition < recyclerView.getAdapter().getItemCount() - 2){
             firstVisiblePosition++;
         }

@@ -3,14 +3,16 @@ package com.mobstar.home.new_home_screen;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.mobstar.BaseActivity;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
@@ -51,6 +53,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private TextView textStatasticCount;
     private ImageView imgMsg,ivIndicator;
     private SwipeCardView swipeCardView;
+    private CardView cardView;
 
     private View votingYes;
     private View votingNo;
@@ -71,7 +74,6 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     public int getPos(){
         return position;
     }
-
 
     private void findView(final View convertView){
         buttonVideoSplit = (TextView) convertView.findViewById(R.id.splitVideoButton);
@@ -97,12 +99,20 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         swipeCardView = (SwipeCardView) convertView.findViewById(R.id.swipe_card_view);
         votingNo = convertView.findViewById(R.id.voting_no);
         votingYes = convertView.findViewById(R.id.voting_yes);
+        cardView = (CardView) convertView.findViewById(R.id.cardView);
     }
 
     public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnRemoveEntryListener _onRemoveEntryListener){
         entryPojo = _entryPojo;
         baseActivity = _activity;
         position = _position;
+
+        if (swipeCardView.getTopView() == null){
+            swipeCardView.clearStack();
+            swipeCardView.addView(cardView);
+            swipeCardView.resetTopView();
+        }
+
         onRemoveEntryListener = _onRemoveEntryListener;
         setupViews();
         setListeners();
@@ -489,16 +499,18 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onSwipeLeft() {
-        dislikeRequest();
+        Log.d("Dfdsf", "onSwipeLeft");
+//        dislikeRequest();
         if (onRemoveEntryListener != null)
-            onRemoveEntryListener.onRemoveEntry(position);
+            onRemoveEntryListener.onRemoveEntry(getPos());
     }
 
     @Override
     public void onSwipeRight() {
-        likeRequest();
+        Log.d("Dfdsf", "onSwipeRight");
+//        likeRequest();
         if (onRemoveEntryListener != null)
-            onRemoveEntryListener.onRemoveEntry(position);
+            onRemoveEntryListener.onRemoveEntry(getPos());
     }
 
     private void likeRequest(){

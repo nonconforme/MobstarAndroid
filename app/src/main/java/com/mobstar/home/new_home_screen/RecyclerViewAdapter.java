@@ -1,6 +1,8 @@
 package com.mobstar.home.new_home_screen;
 
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +23,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     private BaseActivity baseActivity;
     private ArrayList<EntryItem> itemsList;
 
-    public RecyclerViewAdapter(ArrayList<EntryPojo> arrEntryes, final BaseActivity activity) {
-        this.arrEntryes = arrEntryes;
+    public RecyclerViewAdapter(final BaseActivity activity) {
+        this.arrEntryes = new ArrayList<>();
         baseActivity = activity;
         itemsList = new ArrayList<>();
     }
 
     public void setArrEntryes(final ArrayList<EntryPojo> _arrEntryes){
-        arrEntryes = _arrEntryes;
+        arrEntryes.clear();
+        arrEntryes.addAll(_arrEntryes);
+        notifyDataSetChanged();
+
+    }
+
+    public void addArrEntries(final ArrayList<EntryPojo> _arrEntryes){
+        arrEntryes.addAll(_arrEntryes);
+        notifyDataSetChanged();
+    }
+
+    public EntryPojo getEntry(int position){
+        return arrEntryes.get(position);
     }
 
     @Override
