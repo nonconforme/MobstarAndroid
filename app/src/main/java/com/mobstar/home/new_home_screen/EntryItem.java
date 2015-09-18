@@ -45,7 +45,7 @@ import java.util.TimerTask;
 public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickListener, SwipeCardView.OnSwipeDismissListener, TextureView.SurfaceTextureListener {
 
     private static final String LOG_TAG = EntryItem.class.getName();
-    private TextView textUserName, textDescription, textTime,textViews, buttonVideoSplit;
+    private TextView textUserName, textDescription, textTime, textViews, buttonVideoSplit;
     private ImageView imageFrame;
     private ProgressBar progressbar;
     private TextureView textureView;
@@ -59,7 +59,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private FrameLayout flPlaceHolder;
     private FrameLayout layoutStatastics;
     private TextView textStatasticCount;
-    private ImageView imgMsg,ivIndicator;
+    private ImageView imgMsg, ivIndicator;
     private SwipeCardView swipeCardView;
     private CardView cardView;
 
@@ -79,11 +79,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         findView(itemView);
     }
 
-    public int getPos(){
+    public int getPos() {
         return position;
     }
 
-    private void findView(final View convertView){
+    private void findView(final View convertView) {
         buttonVideoSplit = (TextView) convertView.findViewById(R.id.splitVideoButton);
         textUserName = (TextView) convertView.findViewById(R.id.textUserName);
         textTime = (TextView) convertView.findViewById(R.id.textTime);
@@ -102,8 +102,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
         imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
         flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
-        imgMsg=(ImageView) convertView.findViewById(R.id.imgMsg);
-        ivIndicator=(ImageView) convertView.findViewById(R.id.ivIndicator);
+        imgMsg = (ImageView) convertView.findViewById(R.id.imgMsg);
+        ivIndicator = (ImageView) convertView.findViewById(R.id.ivIndicator);
         swipeCardView = (SwipeCardView) convertView.findViewById(R.id.swipe_card_view);
         votingNo = convertView.findViewById(R.id.voting_no);
         votingYes = convertView.findViewById(R.id.voting_yes);
@@ -111,12 +111,12 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         containerPlayer = (FrameLayout) convertView.findViewById(R.id.conteiner_player);
     }
 
-    public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onRemoveEntryListener){
+    public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onRemoveEntryListener) {
         entryPojo = _entryPojo;
         baseActivity = _activity;
         position = _position;
 
-        if (swipeCardView.getTopView() == null){
+        if (swipeCardView.getTopView() == null) {
             swipeCardView.clearStack();
             swipeCardView.addView(cardView);
             swipeCardView.resetTopView();
@@ -129,7 +129,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         initItemContentType();
     }
 
-    private void setupViews(){
+    private void setupViews() {
 
         swipeCardView.setSwipeLeftViewIndicator(votingNo);
         swipeCardView.setSwipeRightViewIndicator(votingYes);
@@ -144,10 +144,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         textStatasticCount.setText(entryPojo.getUpVotesCount());
         if (preferences == null)
             preferences = baseActivity.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
-        if(preferences.getString("userid", "0").equalsIgnoreCase(entryPojo.getUserID())){
+        if (preferences.getString("userid", "0").equalsIgnoreCase(entryPojo.getUserID())) {
             btnFollow.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             btnFollow.setVisibility(View.VISIBLE);
             if (entryPojo.getIsMyStar() != null) {
                 if (!entryPojo.getIsMyStar().equalsIgnoreCase("0")) {
@@ -164,18 +163,17 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             if (!entryPojo.getType().equals("video") || entryPojo.getSplitVideoId() != null) {
                 buttonVideoSplit.setEnabled(false);
                 buttonVideoSplit.setTextColor(baseActivity.getResources().getColor(R.color.comment_color_state_disable));
-            } else if (entryPojo.getType().equals("video")){
+            } else if (entryPojo.getType().equals("video")) {
                 buttonVideoSplit.setEnabled(true);
                 buttonVideoSplit.setTextColor(baseActivity.getResources().getColor(R.color.comment_color));
                 buttonVideoSplit.setOnClickListener(this);
             }
-        }
-        catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             e.printStackTrace();
         }
     }
 
-    private void setListeners(){
+    private void setListeners() {
         btnFollow.setOnClickListener(this);
         imgMsg.setOnClickListener(this);
         textUserName.setOnClickListener(this);
@@ -192,7 +190,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.splitVideoButton:
                 startSplitActivity();
                 break;
@@ -224,11 +222,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         }
     }
 
-    private void setupImage(){
-        if (entryPojo.getIAmStar()!=null && entryPojo.getIAmStar().equalsIgnoreCase("1")) {
+    private void setupImage() {
+        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1")) {
             Picasso.with(baseActivity).load(R.drawable.msg_act_btn).into(imgMsg);
-        }
-        else{
+        } else {
             Picasso.with(baseActivity).load(R.drawable.msg_btn).into(imgMsg);
         }
 
@@ -244,7 +241,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     }
 
-    private void initItemContentType(){
+    private void initItemContentType() {
         switch (entryPojo.getType()) {
             case "image":
                 setImageContentType();
@@ -258,7 +255,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         }
     }
 
-    private void setImageContentType(){
+    private void setImageContentType() {
         Log.d(LOG_TAG, "setImageContentType" + position);
         Picasso.with(baseActivity).load(R.drawable.indicator_image).into(ivIndicator);
         // Log.v(Constant.TAG, "image position " + position);
@@ -288,8 +285,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         });
     }
 
-    private void setAudioContentType(){
-        Log.d(LOG_TAG, "setAudioContentType="+position);
+    private void setAudioContentType() {
+        Log.d(LOG_TAG, "setAudioContentType=" + position);
         Picasso.with(baseActivity).load(R.drawable.indicator_audio).into(ivIndicator);
 
         ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
@@ -315,8 +312,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 });
     }
 
-    private void setVideoContentType(){
-        Log.d(LOG_TAG, "setVideoContentType"+position);
+    private void setVideoContentType() {
+        Log.d(LOG_TAG, "setVideoContentType" + position);
         Picasso.with(baseActivity).load(R.drawable.indicator_video).into(ivIndicator);
         flPlaceHolder.setVisibility(View.VISIBLE);
         ivAudioIcon.setVisibility(View.GONE);
@@ -341,7 +338,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         });
     }
 
-    private void onClickBtnFollow(){
+    private void onClickBtnFollow() {
         if (entryPojo.getIsMyStar() != null && !entryPojo.getIsMyStar().equalsIgnoreCase("0")) {
             deleteStarRequest();
         } else {
@@ -349,7 +346,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         }
     }
 
-    private void addStarRequest(){
+    private void addStarRequest() {
         final HashMap<String, String> params = new HashMap<>();
         params.put("star", entryPojo.getUserID());
         Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
@@ -359,7 +356,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             @Override
             public void onSuccess(StarResponse object) {
                 Utility.HideDialog(baseActivity);
-                if (object.getError() == null){
+                if (object.getError() == null) {
                     if (onChangeEntryListener != null)
                         onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "1");
                 }
@@ -372,7 +369,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         });
     }
 
-    private void showStarDialog(){
+    private void showStarDialog() {
         final Dialog dialog = new Dialog(baseActivity, R.style.DialogAnimationTheme);
         dialog.setContentView(R.layout.dialog_add_star);
         dialog.show();
@@ -388,7 +385,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         timer.schedule(task, 1000);
     }
 
-    private void deleteStarRequest(){
+    private void deleteStarRequest() {
         final HashMap<String, String> params = new HashMap<>();
         params.put("star", entryPojo.getUserID());
         Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
@@ -411,35 +408,35 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
 
-    private void startCommentActivity(){
+    private void startCommentActivity() {
         final Intent intent = new Intent(baseActivity, CommentActivity.class);
         intent.putExtra("entry_id", entryPojo.getID());
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private void startInformationReportActivity(){
+    private void startInformationReportActivity() {
         final Intent intent = new Intent(baseActivity, InformationReportActivity.class);
         intent.putExtra("entry", entryPojo);
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private void startStatisticsActivity(){
+    private void startStatisticsActivity() {
         final Intent intent = new Intent(baseActivity, StatisticsActivity.class);
         intent.putExtra("entry", entryPojo);
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private void startShareActivity(){
+    private void startShareActivity() {
         final Intent intent = new Intent(baseActivity, ShareActivity.class);
         intent.putExtra("entry", entryPojo);
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private void startProfileActivity(){
+    private void startProfileActivity() {
         final Intent intent = new Intent(baseActivity, ProfileActivity.class);
         intent.putExtra("UserID", entryPojo.getUserID());
         intent.putExtra("UserName", entryPojo.getUserName());
@@ -452,7 +449,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private void startSplitActivity(){
+    private void startSplitActivity() {
         if (entryPojo.getVideoLink() == null)
             return;
         Intent intent = new Intent(baseActivity, SplitActivity.class);
@@ -461,17 +458,17 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private void startMessageActivity(){
+    private void startMessageActivity() {
         if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1")) {
             //following
-            final Intent intent=new Intent(baseActivity, MessageActivity.class);
+            final Intent intent = new Intent(baseActivity, MessageActivity.class);
             intent.putExtra("recipent", entryPojo.getUserID());
-            intent.putExtra("isDisableCompose",true);
+            intent.putExtra("isDisableCompose", true);
             startActivity(intent);
         }
     }
 
-    private void startActivity(final Intent intent){
+    private void startActivity(final Intent intent) {
         baseActivity.startActivity(intent);
     }
 
@@ -489,14 +486,14 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             onChangeEntryListener.onRemoveEntry(getPos());
     }
 
-    private void likeRequest(){
+    private void likeRequest() {
         final HashMap<String, String> params = new HashMap<>();
         params.put("entry", entryPojo.getID());
         params.put("type", "up");
         RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
     }
 
-    private void dislikeRequest(){
+    private void dislikeRequest() {
         final HashMap<String, String> params = new HashMap<>();
         params.put("entry", entryPojo.getID());
         params.put("type", "down");
@@ -505,7 +502,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        Log.d(LOG_TAG, "onSurfaceTextureAvailable.pos="+position);
+        Log.d(LOG_TAG, "onSurfaceTextureAvailable.pos=" + position);
         if (this.equals(PlayerManager.getInstance().getViewItem())) {
             PlayerManager.getInstance().setSurface(surface);
         }
@@ -526,8 +523,13 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     }
 
+    public void standartVideoState() {
+        flPlaceHolder.setVisibility(View.VISIBLE);
+    }
+
     public interface OnChangeEntryListener {
         void onRemoveEntry(int position);
+
         void onFollowEntry(String uId, String isMyStar);
     }
 
@@ -555,6 +557,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 //        textureView.setVisibility(View.GONE);
         imageFrame.setVisibility(View.VISIBLE);
     }
+
     public void pauseVideoState() {
         flPlaceHolder.setVisibility(View.GONE);
         ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
@@ -562,6 +565,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         progressbar.setVisibility(View.GONE);
 //        textureView.setVisibility(View.VISIBLE);
     }
+
     public void pauseAudioState() {
         flPlaceHolder.setVisibility(View.VISIBLE);
         imgPlaceHolder.setVisibility(View.GONE);
@@ -572,10 +576,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imageFrame.setVisibility(View.VISIBLE);
     }
 
-    public void showProgressBar(){
+    public void showProgressBar() {
         progressbar.setVisibility(View.VISIBLE);
     }
-    public void hideProgressBar(){
+
+    public void hideProgressBar() {
         progressbar.setVisibility(View.GONE);
     }
 

@@ -1,15 +1,20 @@
 package com.mobstar.player;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Surface;
 
+import com.mobstar.api.RestClient;
 import com.mobstar.home.new_home_screen.EntryItem;
+import com.mobstar.utils.Constant;
 
 import java.io.File;
+import java.util.HashMap;
 
 /**
  * Created by Alexandr on 16.09.2015.
@@ -33,6 +38,7 @@ public class PlayerManager {
     }
 
     public void init(Context context, EntryItem entryItem, String fileName) {
+//        standardizePrevious();
         this.mContext = context;
         this.mEntryItem = entryItem;
         isVideoFile = (mEntryItem.getEntryPojo().getType().equals("video"));
@@ -40,8 +46,13 @@ public class PlayerManager {
     }
 
     private void sendRequstAddCount() {
-//        Log.d(LOG_TAG, "sendRequstAddCount");
-
+        //todo create string constant; BASERESPONSE after marge
+        Log.d(LOG_TAG, "sendRequstAddCount");
+        SharedPreferences preferences = mContext.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("entryId", mEntryItem.getEntryPojo().getID());
+        params.put("userId", preferences.getString("userid", "0"));
+        RestClient.getInstance(mContext).postRequest(Constant.UPDATE_VIEW_COUNT, params, null);
     }
 
     public boolean tryToPlayNew() {
@@ -155,6 +166,7 @@ public class PlayerManager {
         }
         return false;
     }
+
     private boolean tryToStop() {
         Log.v(LOG_TAG, "tryToStop");
         if (mediaPlayer != null) {
@@ -212,6 +224,13 @@ public class PlayerManager {
             mediaPlayer.setSurface(mWorkingSurface);
             mediaPlayer.start();
             mEntryItem.playVideoState();
+        }
+    }
+
+    public void standardizePrevious() {
+        if (mEntryItem != null) {
+            Log.d(LOG_TAG, "standartVideoState");
+            mEntryItem.standartVideoState();
         }
     }
 }
