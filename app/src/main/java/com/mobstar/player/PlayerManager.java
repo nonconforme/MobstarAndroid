@@ -47,6 +47,7 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     public boolean tryToPlayNew() {
+        if (mContext == null) return false;
         Log.d(LOG_TAG, "mEntryItem.pos=" + mEntryItem.getPos());
         Log.d(LOG_TAG, "mEntryItem.pgetDescription=" + mEntryItem.getEntryPojo().getDescription());
 //        Log.d(LOG_TAG,"mEntryItem.pos"+mEntryItem.getPos());
