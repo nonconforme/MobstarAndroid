@@ -29,9 +29,9 @@ public class DownloadFileManager {
     }
 
     public void downloadFile(final String _fileUrl, final int position){
-        if (listDownloadingFile.containsKey(_fileUrl))
-            return;
         final String filePath = PATH + Utility.GetFileNameFromURl(_fileUrl);
+        if (listDownloadingFile.containsKey(filePath))
+            return;
         final File file = new File(filePath);
         if (file.exists() && downloadCallback != null){
             downloadCallback.onDownload(filePath, position);
@@ -44,19 +44,22 @@ public class DownloadFileManager {
                 int position = listDownloadingFile.get(file.getAbsolutePath());
                 if (downloadCallback != null)
                     downloadCallback.onDownload(file.getAbsolutePath(), position);
+                listDownloadingFile.remove(file.getAbsolutePath());
             }
 
             @Override
-            public void onFailure(String errorMessage) {
+            public void onFailure(String errorMessage, String filePath) {
                 if (downloadCallback != null)
                     downloadCallback.onFailed();
+                listDownloadingFile.remove(filePath);
             }
         });
     }
 
-    public void cancelFile(final String _tag){
-        listDownloadingFile.remove(_tag);
-        RestClient.getInstance(mContext).cancelRequest(_tag);
+    public void cancelFile(final String _fileUrl){
+        final String filePath = PATH + Utility.GetFileNameFromURl(_fileUrl);
+        listDownloadingFile.remove(filePath);
+        RestClient.getInstance(mContext).cancelRequest(filePath);
     }
 
     public interface DownloadCallback{

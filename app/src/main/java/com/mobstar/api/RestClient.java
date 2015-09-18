@@ -135,11 +135,12 @@ public class RestClient {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                file.delete();
+
                 if (onFileDownloadCallback != null)
-                    onFileDownloadCallback.onFailure(throwable.getMessage());
+                    onFileDownloadCallback.onFailure(throwable.getMessage(), file.getAbsolutePath());
                 Log.d("http_get_file", "error download file: " + file.getAbsolutePath() + throwable.getMessage());
                 Log.d("http_get_file", "error download file: url=" + url);
+                file.delete();
             }
         };
         asyncHttpResponseHandler.setTag(url);

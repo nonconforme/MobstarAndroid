@@ -7,5 +7,5 @@ import java.io.File;
  */
 public interface OnFileDownloadCallback {
     void onDownload(File file);
-    void onFailure(String errorMessage);
+    void onFailure(String errorMessage, String filePath);
 }
