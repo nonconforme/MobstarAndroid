@@ -6,7 +6,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Surface;
-import android.view.TextureView;
 
 import com.mobstar.home.new_home_screen.EntryItem;
 
@@ -15,7 +14,7 @@ import java.io.File;
 /**
  * Created by Alexandr on 16.09.2015.
  */
-public class PlayerManager implements TextureView.SurfaceTextureListener {
+public class PlayerManager {
     private static final String LOG_TAG = PlayerManager.class.getName();
     private MediaPlayer mediaPlayer;
     private Context mContext;
@@ -25,7 +24,6 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
     private boolean isMediaPlayerError = false;
     private boolean isVideoFile;
     private Surface mWorkingSurface;
-    private int oldPosition;
 
     public static PlayerManager getInstance() {
         if (instance == null) {
@@ -62,13 +60,11 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
                 mediaPlayer.setDataSource(mFilePath);
 
                 if (isVideoFile) {
-                    mEntryItem.getTextureView().setSurfaceTextureListener(this);
+//                    mEntryItem.getTextureView().setSurfaceTextureListener;
                     Log.v(LOG_TAG, "getTextureView().isAvailable()=" + mEntryItem.getTextureView().isAvailable());
                     if (mEntryItem.getTextureView().isAvailable()) {
                         mWorkingSurface = new Surface(mEntryItem.getTextureView().getSurfaceTexture());
                         mediaPlayer.setSurface(mWorkingSurface);
-                    } else {
-                        oldPosition = mEntryItem.getPos();
                     }
                     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 }
@@ -205,36 +201,17 @@ public class PlayerManager implements TextureView.SurfaceTextureListener {
         }
     }
 
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        Log.d(LOG_TAG, "onSurfaceTextureAvailable.old=" + oldPosition + " actual=" + mEntryItem.getPos());
-        if (oldPosition == mEntryItem.getPos()) {
-            if (mediaPlayer != null) {
-                mWorkingSurface = new Surface(surface);
-                mediaPlayer.setSurface(mWorkingSurface);
-                mediaPlayer.start();
-                mEntryItem.playVideoState();
-            }
+
+    public EntryItem getViewItem() {
+        return mEntryItem;
+    }
+
+    public void setSurface(SurfaceTexture surface) {
+        if (mediaPlayer != null) {
+            mWorkingSurface = new Surface(surface);
+            mediaPlayer.setSurface(mWorkingSurface);
+            mediaPlayer.start();
+            mEntryItem.playVideoState();
         }
-
-
-    }
-
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        Log.d(LOG_TAG, "onSurfaceTextureSizeChanged");
-    }
-
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        Log.d(LOG_TAG, "onSurfaceTextureDestroyed");
-        return false;
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-//        Log.d(LOG_TAG, "onSurfaceTextureUpdated");
-
-
     }
 }

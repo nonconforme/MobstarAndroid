@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.SurfaceTexture;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.mobstar.BaseActivity;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
@@ -32,6 +34,7 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -39,7 +42,7 @@ import java.util.TimerTask;
 /**
  * Created by lipcha on 14.09.15.
  */
-public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickListener, SwipeCardView.OnSwipeDismissListener {
+public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickListener, SwipeCardView.OnSwipeDismissListener, TextureView.SurfaceTextureListener {
 
     private static final String LOG_TAG = EntryItem.class.getName();
     private TextView textUserName, textDescription, textTime,textViews, buttonVideoSplit;
@@ -184,6 +187,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         textCommentCount.setOnClickListener(this);
         swipeCardView.setOnSwipeDismissListener(this);
         containerPlayer.setOnClickListener(this);
+        textureView.setSurfaceTextureListener(this);
 
     }
 
@@ -256,7 +260,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void setImageContentType(){
-        Log.d(LOG_TAG, "setImageContentType"+position);
+        Log.d(LOG_TAG, "setImageContentType" + position);
         Picasso.with(baseActivity).load(R.drawable.indicator_image).into(ivIndicator);
         // Log.v(Constant.TAG, "image position " + position);
 
@@ -356,7 +360,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             @Override
             public void onSuccess(StarResponse object) {
                 Utility.HideDialog(baseActivity);
-                if (object.getError() == null){
+                if (object.getError() == null) {
                     entryPojo.setIsMyStar("1");
                     setupViews();
                 }
@@ -394,7 +398,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             public void onSuccess(StarResponse object) {
                 Utility.HideDialog(baseActivity);
                 final String error = object.getError();
-                if (error == null){
+                if (error == null) {
                     entryPojo.setIsMyStar("0");
                     setupViews();
                 }
@@ -498,6 +502,29 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         params.put("entry", entryPojo.getID());
         params.put("type", "down");
         RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
+    }
+
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        Log.d(LOG_TAG, "onSurfaceTextureAvailable.pos="+position);
+        if (this.equals(PlayerManager.getInstance().getViewItem())) {
+            PlayerManager.getInstance().setSurface(surface);
+        }
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        return false;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
     }
 
     public interface OnRemoveEntryListener{
