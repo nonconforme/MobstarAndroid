@@ -65,7 +65,8 @@ public class SearchFragment extends Fragment {
 
 				Fragment f = mFragmentManager.findFragmentById(R.id.frag_content);
 				if (!(f instanceof HomeFragment)) {
-					SearchListFragment videoListFragment = new SearchListFragment();
+//					SearchListFragment videoListFragment = new SearchListFragment();
+					HomeVideoListBaseFragment videoListFragment = new HomeVideoListBaseFragment();
 					Bundle extras = new Bundle();
 					extras.putBoolean("isSearchAPI", true);
 					extras.putString("SearchTerm", SearchTerm);

@@ -68,7 +68,10 @@ public class RestClient {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 try {
-                    final JSONObject jsonObject = new JSONObject(new String(bytes, "US-ASCII"));
+                    String jsonStr = new String(bytes, "US-ASCII");
+                    if (jsonStr.equals("[]"))
+                        jsonStr = "{}";
+                    final JSONObject jsonObject = new JSONObject(jsonStr);
                     if (callback != null) {
                         callback.parse(jsonObject);
                     }

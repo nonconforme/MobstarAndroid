@@ -28,8 +28,10 @@ public abstract class ConnectCallback<T extends BaseResponse> {
         try {
             object.configure(o);
         } catch (JSONException e) {
-            e.printStackTrace();
-            onFailure(e.toString());
+            if (e != null) {
+                e.printStackTrace();
+                onFailure(e.toString());
+            }
             return;
         }
         onSuccess(object);

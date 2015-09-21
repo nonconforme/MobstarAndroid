@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
@@ -44,6 +45,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     private boolean isSearchAPI, isMobitAPI, isVoteAPI, isEntryIdAPI, isEntryAPI;
     private String SearchTerm, deeplinkEntryId, LatestORPopular, CategoryId, VoteType;
+    private TextView textNoData;
     private SharedPreferences preferences;
 //    private ArrayList<EntryPojo> arrEntryPojos = new ArrayList<>();
 
@@ -82,10 +84,12 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     private void findViews(final View inflatedView) {
+        textNoData = (TextView) inflatedView.findViewById(R.id.textNoData);
         pullToRefreshRecyclerView = (PullToRefreshRecyclerView) inflatedView.findViewById(R.id.pullToRefreshRecyclerView);
     }
 
     private void getEntryRequest(final int pageNo) {
+        textNoData.setVisibility(View.GONE);
         final HashMap<String, String> params = new HashMap<>();
         String url = Constant.GET_ENTRY;
         if (isEntryIdAPI) {
@@ -93,8 +97,9 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
                 url = url + deeplinkEntryId;
 //            Query = Constant.SERVER_URL + Constant.GET_ENTRY  + deeplinkEntryId;
         } else if (isSearchAPI) {
-            url = url + Constant.SEARCH_ENTRY;
+            url = Constant.SEARCH_ENTRY;
             params.put("term", SearchTerm);
+            params.put("page", Integer.toString(pageNo));
 //            Query = Constant.SERVER_URL + Constant.SEARCH_ENTRY + "?term=" + SearchTerm;
         } else if (isEntryAPI) {
             if (CategoryId != null && CategoryId.length() > 0) {
@@ -128,7 +133,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onSuccess(EntriesResponse object) {
-                if (pageNo == 0) {
+                if (pageNo == 1) {
                     entryAdapter.setArrEntryes(object.getArrEntry());
                     endlessRecyclerOnScrollListener.reset();
                     downloadFirstFile();
@@ -140,6 +145,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
                 refreshEntryList();
                 Utility.HideDialog(getActivity());
                 pullToRefreshRecyclerView.onRefreshComplete();
+                setNoEntriesMessage();
             }
 
             @Override
@@ -150,8 +156,18 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         });
     }
 
+    private void setNoEntriesMessage(){
+        if (entryAdapter.getItemCount() != 0)
+            return;
+        textNoData.setVisibility(View.VISIBLE);
+        if (isSearchAPI){
+            textNoData.setText(getString(R.string.nothinh_found_for) + " \"" + SearchTerm + "\"");
+        }else
+            textNoData.setText(getString(R.string.there_are_no_entries_yet));
+    }
+
     private void downloadFirstFile() {
-        if (entryAdapter.getItemCount() == 0)
+        if (entryAdapter.getItemCount() == 0 || entryAdapter.getEntry(0).getType() == null)
             return;
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
@@ -204,9 +220,11 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         public void onLoadNewFile(int currentPosition, int oldPosition) {
             Log.d("entryitem", "onLoadNewFile.pos=" + currentPosition);
 //                entryAdapter.getEntryAtPosition(oldPosition).hideProgressBar();
-            if (entryAdapter.getEntryAtPosition(currentPosition) != null)
-                if (!entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType().equals("image"))
+            if (entryAdapter.getEntryAtPosition(currentPosition) != null) {
+                final String type = entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType();
+                if (type != null && !type.equals("image"))
                     entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
+            }
             PlayerManager.getInstance().standardizePrevious();
             PlayerManager.getInstance().finalizePlayer();
             cancelDownloadFile(oldPosition);
@@ -240,7 +258,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     private void cancelDownloadFile(int cancelPosition) {
-        if (cancelPosition == -1)
+        if (cancelPosition == -1 || cancelPosition >= entryAdapter.getItemCount() || entryAdapter.getEntry(cancelPosition).getType() == null)
             return;
         switch (entryAdapter.getEntry(cancelPosition).getType()) {
             case "audio":
@@ -253,7 +271,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     private void downloadFile(int currentPosition) {
-
+        if (entryAdapter.getEntry(currentPosition) == null || entryAdapter.getEntry(currentPosition).getType() == null)
+            return;
         switch (entryAdapter.getEntry(currentPosition).getType()) {
             case "audio":
                 downloadFileManager.downloadFile(entryAdapter.getEntry(currentPosition).getAudioLink(), currentPosition);

@@ -12,6 +12,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -53,12 +54,12 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private TextView btnFollow;
     private FrameLayout btnInfo;
     private ImageView ivAudioIcon;
-    private ImageView imgUserPic;
+    private ImageView imgUserPic, imgUserItemPic;
     private TextView textCommentCount;
     private ImageView imgPlaceHolder;
     private FrameLayout flPlaceHolder;
     private FrameLayout layoutStatastics;
-    private TextView textStatasticCount;
+    private TextView textStatasticCount, tvUserItemName;
     private ImageView imgMsg, ivIndicator;
     private SwipeCardView swipeCardView;
     private CardView cardView;
@@ -73,6 +74,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private SharedPreferences preferences;
     private OnChangeEntryListener onChangeEntryListener;
     private FrameLayout containerPlayer;
+    private LinearLayout llItemEntry;
+    private LinearLayout llItemUser;
 
     public EntryItem(View itemView) {
         super(itemView);
@@ -109,6 +112,13 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         votingYes = convertView.findViewById(R.id.voting_yes);
         cardView = (CardView) convertView.findViewById(R.id.cardView);
         containerPlayer = (FrameLayout) convertView.findViewById(R.id.conteiner_player);
+
+        llItemEntry = (LinearLayout) convertView.findViewById(R.id.llRowEntry);
+        llItemUser = (LinearLayout) convertView.findViewById(R.id.llItemUser);
+        imgUserItemPic = (ImageView) convertView.findViewById(R.id.imgUserItemPic);
+        tvUserItemName = (TextView) convertView.findViewById(R.id.textUserItemName);
+
+
     }
 
     public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onRemoveEntryListener) {
@@ -123,14 +133,35 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         }
 
         onChangeEntryListener = _onRemoveEntryListener;
-        setupViews();
-        setListeners();
-        setupImage();
-        initItemContentType();
+        if (entryPojo.getCategory() != null && entryPojo.getCategory().equalsIgnoreCase("onlyprofile")){
+            setupUserViews();
+        }
+        else {
+            setupEntryViews();
+            setListeners();
+            setupImage();
+            initItemContentType();
+        }
     }
 
-    private void setupViews() {
+    private void setupUserViews(){
+        llItemUser.setVisibility(View.VISIBLE);
+        llItemEntry.setVisibility(View.GONE);
+        llItemUser.setOnClickListener(this);
+        tvUserItemName.setText(entryPojo.getUserName());
+        if (entryPojo.getProfileImage().equals("")) {
+            imgUserItemPic.setImageResource(R.drawable.ic_pic_small);
+        } else {
+            imgUserItemPic.setImageResource(R.drawable.ic_pic_small);
 
+            Picasso.with(baseActivity).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(baseActivity, 45), Utility.dpToPx(baseActivity, 45)).centerCrop()
+                    .placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(imgUserItemPic);
+        }
+    }
+
+    private void setupEntryViews() {
+        llItemUser.setVisibility(View.GONE);
+        llItemEntry.setVisibility(View.VISIBLE);
         swipeCardView.setSwipeLeftViewIndicator(votingNo);
         swipeCardView.setSwipeRightViewIndicator(votingYes);
 
@@ -218,6 +249,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 break;
             case R.id.conteiner_player:
                 PlayerManager.getInstance().tryToPause(position);
+                break;
+            case R.id.llItemUser:
+                startProfileActivity();
                 break;
         }
     }
