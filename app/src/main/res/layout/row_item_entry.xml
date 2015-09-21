@@ -26,7 +26,9 @@
                 android:layout_marginTop="@dimen/scale_5"
                 android:background="@color/talent_pool_row_bg"
                 android:orientation="horizontal"
-                android:id="@+id/llItemUser">
+                android:id="@+id/llItemUser"
+                android:layout_marginBottom="@dimen/scale_5"
+                android:visibility="gone">
 
                 <FrameLayout
                     android:layout_width="55dp"

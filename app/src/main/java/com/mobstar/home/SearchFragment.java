@@ -56,20 +56,13 @@ public class SearchFragment extends Fragment {
 //				Log.v(Constant.TAG, "SearchText " + SearchText);
 				searchView.clearFocus();
 
-				String SearchTerm = "";
-				try {
-					SearchTerm = URLEncoder.encode(SearchText.trim(), "utf-8");
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-
 				Fragment f = mFragmentManager.findFragmentById(R.id.frag_content);
 				if (!(f instanceof HomeFragment)) {
 //					SearchListFragment videoListFragment = new SearchListFragment();
 					HomeVideoListBaseFragment videoListFragment = new HomeVideoListBaseFragment();
 					Bundle extras = new Bundle();
 					extras.putBoolean("isSearchAPI", true);
-					extras.putString("SearchTerm", SearchTerm);
+					extras.putString("SearchTerm", SearchText);
 					videoListFragment.setArguments(extras);
 					replaceFragment(videoListFragment, "SearchListFragment");
 					
