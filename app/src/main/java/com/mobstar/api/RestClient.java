@@ -62,7 +62,7 @@ public class RestClient {
         }
         final RequestParams requestParams = new RequestParams(params);
         final String absoluteUrl = Constant.SERVER_URL + url;
-        Log.d("http get request: ", absoluteUrl + "?" + requestParams.toString());
+        Log.d("http request get: ", absoluteUrl + "?" + requestParams.toString());
         httpClient.get(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -95,7 +95,7 @@ public class RestClient {
         }
         final String absoluteUrl = Constant.SERVER_URL + url;
         final RequestParams requestParams = new RequestParams(params);
-        Log.d("http post request: ", absoluteUrl + "?" + requestParams.toString());
+        Log.d("http request post: ", absoluteUrl + "?" + requestParams.toString());
         httpClient.removeHeader("Content-Type");
         httpClient.post(null, absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
@@ -123,6 +123,8 @@ public class RestClient {
 
     public void getFileRequest(final String url, final String filePath, final OnFileDownloadCallback onFileDownloadCallback){
         httpClient.removeHeader("Content-Type");
+        httpClient.removeHeader("X-API-KEY");
+        httpClient.removeHeader("X-API-TOKEN");
         final File file = new File(filePath);
         FileAsyncHttpResponseHandler asyncHttpResponseHandler = new FileAsyncHttpResponseHandler(file) {
 
@@ -144,6 +146,7 @@ public class RestClient {
             }
         };
         asyncHttpResponseHandler.setTag(url);
+        Log.d("http request download file: ", url);
         httpClient.get(url, asyncHttpResponseHandler);
     }
 
@@ -155,7 +158,7 @@ public class RestClient {
         }
         final RequestParams requestParams = new RequestParams(params);
         final String absoluteUrl = Constant.SERVER_URL + url;
-        Log.d("http get request: ", absoluteUrl + "?" + requestParams.toString());
+        Log.d("http request delete: ", absoluteUrl + "?" + requestParams.toString());
         httpClient.delete(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -181,6 +184,7 @@ public class RestClient {
     }
 
     public void cancelRequest(final String url){
+        Log.d("http request cancel: ", url);
         httpClient.cancelRequestsByTAG(url, false);
     }
 

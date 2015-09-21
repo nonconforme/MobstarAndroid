@@ -17,6 +17,7 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -58,8 +59,8 @@ public class PullToRefreshListView extends ListView {
 	private int headerPadding;
 	private boolean hasResetHeader;
 	private State state;
-	private LinearLayout headerContainer;
-	private RelativeLayout header;
+	private FrameLayout headerContainer;
+	private FrameLayout header;
 	private RotateAnimation flipAnimation;
 	private RotateAnimation reverseFlipAnimation;
 	private ImageView image;
@@ -212,8 +213,8 @@ public class PullToRefreshListView extends ListView {
 	private void init() {
 		setVerticalFadingEdgeEnabled(false);
 
-		headerContainer = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_refresh_header, null);
-		header = (RelativeLayout) headerContainer.findViewById(R.id.ptr_id_header);
+		headerContainer = (FrameLayout) LayoutInflater.from(getContext()).inflate(R.layout.layout_refresh_header, null);
+		header = (FrameLayout) headerContainer.findViewById(R.id.ptr_id_header);
 		image = (ImageView) header.findViewById(R.id.ptr_id_image);
 		spinner = (ProgressBar) header.findViewById(R.id.ptr_id_spinner);
 		// spinner.getIndeterminateDrawable().setColorFilter(

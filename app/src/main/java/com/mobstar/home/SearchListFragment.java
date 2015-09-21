@@ -45,6 +45,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -1021,7 +1022,9 @@ public class SearchListFragment extends Fragment {
 				if (type == 0) {
 					// Inflate the layout with image
 					convertView = inflater.inflate(R.layout.row_item_mobit, parent, false);
-					viewHolder.btnLike=(ImageView)convertView.findViewById(R.id.btnLike);
+					viewHolder.btnLike=(LinearLayout)convertView.findViewById(R.id.btnLike);
+					viewHolder.tvLikeText = (TextView) convertView.findViewById(R.id.tvLikeText);
+					viewHolder.ivLike = (ImageView) convertView.findViewById(R.id.ivLike);
 					viewHolder.textLikeCount=(TextView)convertView.findViewById(R.id.textLikeCount);
 				}
 				else {
@@ -1045,7 +1048,7 @@ public class SearchListFragment extends Fragment {
 				viewHolder.btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
 
 				viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
-				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
+//				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
 				viewHolder.textCommentCount = (TextView) convertView.findViewById(R.id.textCommentCount);
 				viewHolder.imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
 				viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
@@ -1116,16 +1119,16 @@ public class SearchListFragment extends Fragment {
 						mContext.startActivity(intent);
 					}
 				});
-
-				if(arrEntryPojos.get(position).getIsVotedByYou().equalsIgnoreCase("0")){
-					viewHolder.tvLikeText.setVisibility(View.GONE);
-					viewHolder.ivLike.setImageResource(R.drawable.icn_like);
-				}
-				else {
-					viewHolder.tvLikeText.setVisibility(View.VISIBLE);
-					viewHolder.ivLike.setImageResource(R.drawable.icn_btn_unlike);
+				if (viewHolder.tvLikeText != null) {
+					if (arrEntryPojos.get(position).getIsVotedByYou().equalsIgnoreCase("0")) {
+						viewHolder.tvLikeText.setVisibility(View.GONE);
+						viewHolder.ivLike.setImageResource(R.drawable.icn_like);
+					} else {
+						viewHolder.tvLikeText.setVisibility(View.VISIBLE);
+						viewHolder.ivLike.setImageResource(R.drawable.icn_btn_unlike);
 
 //					viewHolder.btnLike.setImageResource(R.drawable.btn_unlike);
+					}
 				}
 
 				viewHolder.btnLike.setOnClickListener(new OnClickListener() {
@@ -1344,7 +1347,7 @@ public class SearchListFragment extends Fragment {
 				}
 			});
 
-			viewHolder.layoutComment.setOnClickListener(new OnClickListener() {
+			viewHolder.textCommentCount.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -2155,10 +2158,10 @@ public class SearchListFragment extends Fragment {
 			FrameLayout btnShare;
 			TextView btnFollow;
 			FrameLayout btnInfo;
-			ImageView btnLike;
+			LinearLayout btnLike;
 			// ImageView btnStatistics;
 			ImageView ivAudioIcon;
-			FrameLayout layoutComment;
+//			FrameLayout layoutComment;
 			ImageView imgUserPic;
 			TextView textCommentCount;
 			ImageView imgPlaceHolder;

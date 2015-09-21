@@ -18,6 +18,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.utils.Utility;
 
 public class SearchFragment extends Fragment {

@@ -981,101 +981,101 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 //				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, convertView.findViewById(R.id.rigthView));
 //				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.leftView));
-				viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
-					@Override
-					public void onStartOpen(SwipeLayout swipeLayout) {
-
-					}
-
-					@Override
-					public void onOpen(SwipeLayout swipeLayout) {
-						if (!onVoitingSwipeItem)
-							return;
-						onVoitingSwipeItem = false;
-						switch (swipeLayout.getDragEdge()) {
-							case Left:
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									if (arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
-
-									} else {
-										String[] name = {"entry", "type"};
-										String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "down"};
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-//									if(view!=null && !isFinishing()){
-//										Log.d("mobstar","open dialog dislike");
-//																					Utility.DisLikeDialog(ProfileActivity.this);
-//										DisLikeDialog();
+//				viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+//					@Override
+//					public void onStartOpen(SwipeLayout swipeLayout) {
+//
+//					}
+//
+//					@Override
+//					public void onOpen(SwipeLayout swipeLayout) {
+//						if (!onVoitingSwipeItem)
+//							return;
+//						onVoitingSwipeItem = false;
+//						switch (swipeLayout.getDragEdge()) {
+//							case Left:
+//								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
+//									if (arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
+//
+//									} else {
+//										String[] name = {"entry", "type"};
+//										String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "down"};
+//										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
+////									if(view!=null && !isFinishing()){
+////										Log.d("mobstar","open dialog dislike");
+////																					Utility.DisLikeDialog(ProfileActivity.this);
+////										DisLikeDialog();
+////									}
+//
+//
+//										mFirstVisibleItem = 0;
+//										if (mediaPlayer != null) {
+//											mediaPlayer.reset();
+//										}
+//										indexCurrentPlayAudio = -1;
+////									entryListAdapter.notifyDataSetChanged();
 //									}
-
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-//									entryListAdapter.notifyDataSetChanged();
-									}
-
-								}
-
-								swipeLayout.close();
-								break;
-							case Right:
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									if (arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
-
-									} else {
-										String[] name = {"entry", "type"};
-										String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "up"};
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-										Log.d("mobstar", "imageFrame touch--- likedialog");
-
-//									if(view!=null && !isFinishing()){
-//										Log.d("mobstar","imageFrame touch--- view not null");
-//										Log.d("mobstar","open dialog like");
-//										//													Utility.LikeDialog(ProfileActivity.this);
-//										LikeDialog();
+//
+//								}
+//
+//								swipeLayout.close();
+//								break;
+//							case Right:
+//								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
+//									if (arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
+//
+//									} else {
+//										String[] name = {"entry", "type"};
+//										String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "up"};
+//										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
+//										Log.d("mobstar", "imageFrame touch--- likedialog");
+//
+////									if(view!=null && !isFinishing()){
+////										Log.d("mobstar","imageFrame touch--- view not null");
+////										Log.d("mobstar","open dialog like");
+////										//													Utility.LikeDialog(ProfileActivity.this);
+////										LikeDialog();
+////
+////									}
+//
+//										mFirstVisibleItem = 0;
+//										if (mediaPlayer != null) {
+//											mediaPlayer.reset();
+//										}
+//										indexCurrentPlayAudio = -1;
+////									entryListAdapter.notifyDataSetChanged();
 //
 //									}
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-//									entryListAdapter.notifyDataSetChanged();
-
-									}
-
-								}
-								swipeLayout.close();
-
-								break;
-						}
-
-//					entryListAdapter.notifyDataSetChanged();
-					}
-
-					@Override
-					public void onStartClose(SwipeLayout swipeLayout) {
-
-					}
-
-					@Override
-					public void onClose(SwipeLayout swipeLayout) {
-
-					}
-
-					@Override
-					public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
-						onVoitingSwipeItem = true;
-					}
-
-					@Override
-					public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
-
-					}
-				});
+//
+//								}
+//								swipeLayout.close();
+//
+//								break;
+//						}
+//
+////					entryListAdapter.notifyDataSetChanged();
+//					}
+//
+//					@Override
+//					public void onStartClose(SwipeLayout swipeLayout) {
+//
+//					}
+//
+//					@Override
+//					public void onClose(SwipeLayout swipeLayout) {
+//
+//					}
+//
+//					@Override
+//					public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
+//						onVoitingSwipeItem = true;
+//					}
+//
+//					@Override
+//					public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
+//
+//					}
+//				});
 			}else {
 
 			}

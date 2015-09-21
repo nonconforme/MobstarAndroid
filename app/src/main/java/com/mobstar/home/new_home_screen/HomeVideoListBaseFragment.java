@@ -135,6 +135,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
                 } else {
                     entryAdapter.addArrEntries(object.getArrEntry());
                 }
+                if (object.hasNextPage())
+                    endlessRecyclerOnScrollListener.existNextPage();
                 refreshEntryList();
                 Utility.HideDialog(getActivity());
                 pullToRefreshRecyclerView.onRefreshComplete();

@@ -14,9 +14,15 @@ import java.util.ArrayList;
 public class EntriesResponse implements BaseResponse {
 
     private ArrayList<EntryPojo> arrEntry;
+    private String next;
+    private String previous;
 
     public ArrayList<EntryPojo> getArrEntry() {
         return arrEntry;
+    }
+
+    public boolean hasNextPage() {
+        return next != null && next.length() != 0;
     }
 
     @Override
@@ -34,6 +40,11 @@ public class EntriesResponse implements BaseResponse {
 
             }
         }
+
+        if (jsonObject.has("next"))
+            next = jsonObject.getString("next");
+        if (jsonObject.has("previous"))
+            previous = jsonObject.getString("previous");
 
     }
 }
