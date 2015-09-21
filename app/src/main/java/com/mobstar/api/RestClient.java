@@ -29,6 +29,7 @@ import java.util.HashMap;
 public class RestClient {
 
 
+    private static final String LOG_TAG = RestClient.class.getName();
     private static RestClient instance;
     private AsyncHttpClient httpClient;
     private SharedPreferences preferences;
@@ -62,7 +63,7 @@ public class RestClient {
         }
         final RequestParams requestParams = new RequestParams(params);
         final String absoluteUrl = Constant.SERVER_URL + url;
-        Log.d("http request get: ", absoluteUrl + "?" + requestParams.toString());
+        Log.d(LOG_TAG, "http request get: "+ absoluteUrl + "?" + requestParams.toString());
         httpClient.get(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -95,7 +96,7 @@ public class RestClient {
         }
         final String absoluteUrl = Constant.SERVER_URL + url;
         final RequestParams requestParams = new RequestParams(params);
-        Log.d("http request post: ", absoluteUrl + "?" + requestParams.toString());
+        Log.d(LOG_TAG,"http request post: "+ absoluteUrl + "?" + requestParams.toString());
         httpClient.removeHeader("Content-Type");
         httpClient.post(null, absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
@@ -132,7 +133,7 @@ public class RestClient {
             public void onSuccess(int statusCode, Header[] headers, File file) {
                 if (onFileDownloadCallback != null)
                     onFileDownloadCallback.onDownload(file);
-                Log.d("http_get_file", "download file: " + file.getAbsolutePath());
+                Log.d(LOG_TAG, "http_get_file download file: " + file.getAbsolutePath());
             }
 
             @Override
@@ -140,13 +141,14 @@ public class RestClient {
 
                 if (onFileDownloadCallback != null)
                     onFileDownloadCallback.onFailure(throwable.getMessage(), file.getAbsolutePath());
-                Log.d("http_get_file", "error download file: " + file.getAbsolutePath() + throwable.getMessage());
-                Log.d("http_get_file", "error download file: url=" + url);
+                Log.d(LOG_TAG, "http_get_file error download file: " + file.getAbsolutePath() + throwable.getMessage());
+                Log.d(LOG_TAG, "http_get_file error download file: url=" + url);
                 file.delete();
             }
         };
         asyncHttpResponseHandler.setTag(url);
-        Log.d("http request download file: ", url);
+        Log.d(LOG_TAG, "http request download file: " + url);
+        httpClient.setURLEncodingEnabled(false);
         httpClient.get(url, asyncHttpResponseHandler);
     }
 
@@ -158,7 +160,7 @@ public class RestClient {
         }
         final RequestParams requestParams = new RequestParams(params);
         final String absoluteUrl = Constant.SERVER_URL + url;
-        Log.d("http request delete: ", absoluteUrl + "?" + requestParams.toString());
+        Log.d(LOG_TAG, "http request delete: "+ absoluteUrl + "?" + requestParams.toString());
         httpClient.delete(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
@@ -184,7 +186,7 @@ public class RestClient {
     }
 
     public void cancelRequest(final String url){
-        Log.d("http request cancel: ", url);
+        Log.d(LOG_TAG, "http request cancel: "+ url);
         httpClient.cancelRequestsByTAG(url, false);
     }
 
