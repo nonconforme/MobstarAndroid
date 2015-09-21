@@ -15,18 +15,18 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private boolean loading = true;
     private int currentTopItem = -1;
     private int oldTopItem = 0;
-    private int currentPage = 0;
-    private int limetPage;
+    private int currentPage = 1;
+    private int limitPage = 1;
 
     private LinearLayoutManager mLinearLayoutManager;
 
     public void reset(){
-        currentPage = 0;
+        currentPage = 1;
         loading = true;
     }
 
     public void existNextPage(){
-        limetPage++;
+        limitPage++;
     }
 
     public void setLinearLayoutManager(final LinearLayoutManager _linearLayoutManager){
@@ -51,7 +51,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
             }
         }
         if (!loading && (totalItemCount - recyclerView.getChildCount()) <= (mLinearLayoutManager.findFirstVisibleItemPosition() + VISIBLE_THRESHOLD)) {
-            if (currentPage >= limetPage)
+            if (currentPage >= limitPage)
                 return;
             currentPage++;
             onLoadMore(currentPage);

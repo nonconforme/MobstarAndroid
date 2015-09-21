@@ -77,7 +77,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         getArgs();
         Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
         createEntryList();
-        getEntryRequest(0);
+        getEntryRequest(1);
         return inflatedView;
     }
 
@@ -266,7 +266,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     @Override
     public void onRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-        getEntryRequest(0);
+        getEntryRequest(1);
     }
 
     private void getArgs() {
