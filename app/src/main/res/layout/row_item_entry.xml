@@ -1,81 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mobstar.custom.swipe_card_view.SwipeCardView
-    android:id="@+id/swipe_card_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView"
+    <com.mobstar.custom.swipe_card_view.SwipeCardView
+        android:id="@+id/swipe_card_view"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="4dp">
-        <FrameLayout
+        android:layout_gravity="center">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/scale_5"
-                android:layout_marginRight="@dimen/scale_5"
-                android:layout_marginTop="@dimen/scale_5"
-                android:background="@color/talent_pool_row_bg"
-                android:orientation="horizontal"
-                android:id="@+id/llItemUser"
-                android:layout_marginBottom="@dimen/scale_5"
-                android:visibility="gone">
-
-                <FrameLayout
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
-                    android:layout_margin="5dp" >
-
-                    <ImageView
-                        android:id="@+id/imgUserItemPic"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/ic_pic_small" />
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/talent_pool_photo_holder" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="5dp"
-                    android:orientation="vertical" >
-
-                    <com.mobstar.custom.CustomTextviewBold
-                        android:id="@+id/textUserItemName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="5dp"
-                        android:text="@string/temp_uname"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp" />
-                </LinearLayout>
-            </LinearLayout>
-
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:id="@+id/llRowEntry">
+                android:id="@+id/llRowEntry"
+                android:visibility="visible">
 
                 <FrameLayout
                     android:id="@+id/conteiner_player"
@@ -151,32 +101,6 @@
                         android:indeterminateDrawable="@drawable/custom_progressbar"
                         android:visibility="gone"/>
 
-                    <!--
-                         <com.mobstar.utils.ProgressWheelPercentage
-                        android:id="@+id/progressbar"
-                        android:layout_width="150dp"
-                        android:layout_height="150dp"
-                        android:layout_gravity="center"
-                        app:barColor="#339BB9"
-                        app:barLength="60dp"
-                        app:barWidth="25dp"
-                        app:rimColor="#44000000"
-                        app:rimWidth="25dp"
-                        app:spinSpeed="3dp"
-                        app:text="Click\none of the\nbuttons"
-                        app:textColor="#222222"
-                      />
-                    -->
-                    <!--
-                         <com.mobstar.custom.progressbar_circular.RateTextCircularProgressBar
-                        android:id="@+id/rate_progress_bar"
-                        android:layout_width="75dp"
-                        android:layout_height="75dp"
-                        android:layout_marginBottom="30dp"
-                        android:layout_marginTop="20dp"
-                        android:visibility="invisible" />
-                    -->
-
                     <ImageView
                         android:id="@+id/ivIndicator"
                         android:layout_width="wrap_content"
@@ -235,6 +159,7 @@
                             android:layout_height="45dp"
                             android:contentDescription="@string/app_name"
                             android:src="@drawable/circle"/>
+
                     </FrameLayout>
 
                     <LinearLayout
@@ -360,17 +285,6 @@
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp">
 
-                        <!--
-                             <ImageView
-                            android:id="@+id/btnStatistics"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="1"
-                            android:contentDescription="@string/app_name"
-                            android:src="@drawable/icon_statics" />
-                        -->
-
                         <com.mobstar.custom.CustomTextviewBold
                             android:id="@+id/textStatasticCount"
                             android:layout_width="match_parent"
@@ -459,9 +373,61 @@
                 </LinearLayout>
             </LinearLayout>
 
+
+            <!--</com.daimajia.swipe.SwipeLayout>-->
+        </android.support.v7.widget.CardView>
+    </com.mobstar.custom.swipe_card_view.SwipeCardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/scale_5"
+        android:layout_marginRight="@dimen/scale_5"
+        android:layout_marginTop="@dimen/scale_5"
+        android:background="@color/talent_pool_row_bg"
+        android:orientation="horizontal"
+        android:id="@+id/llItemUser"
+        android:layout_marginBottom="@dimen/scale_5"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="5dp" >
+
+            <ImageView
+                android:id="@+id/imgUserItemPic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_pic_small" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/talent_pool_photo_holder" />
         </FrameLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="5dp"
+            android:orientation="vertical" >
 
-        <!--</com.daimajia.swipe.SwipeLayout>-->
-    </android.support.v7.widget.CardView>
-</com.mobstar.custom.swipe_card_view.SwipeCardView>
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/textUserItemName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:text="@string/temp_uname"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

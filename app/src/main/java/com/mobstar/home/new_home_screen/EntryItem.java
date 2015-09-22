@@ -508,14 +508,14 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onSwipeLeft() {
-//        dislikeRequest();
+        dislikeRequest();
         if (onChangeEntryListener != null)
             onChangeEntryListener.onRemoveEntry(getPos());
     }
 
     @Override
     public void onSwipeRight() {
-//        likeRequest();
+        likeRequest();
         if (onChangeEntryListener != null)
             onChangeEntryListener.onRemoveEntry(getPos());
     }
