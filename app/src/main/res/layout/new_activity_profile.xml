@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/splash_bg"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp">
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/textUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:drawableLeft="@drawable/ic_back"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/temp_uname"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/header_text_size" />
+
+        <ImageView
+            android:id="@+id/imgMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="@dimen/scale_5"
+            android:src="@drawable/msg_btn" />
+
+        <TextView
+            android:id="@+id/imgFollow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/imgMsg"
+            android:contentDescription="@string/app_name"
+            android:background="@drawable/yellow_btn"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:text="@string/follow" />
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/btnEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:contentDescription="@string/app_name"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:background="@drawable/yellow_btn"
+            android:text="@string/edit"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/fragmentContainer"></FrameLayout>
+</LinearLayout>

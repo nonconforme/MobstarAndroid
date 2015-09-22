@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.pojo.EntryPojo;
@@ -14,17 +13,18 @@ import java.util.ArrayList;
 /**
  * Created by lipcha on 14.09.15.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> implements EntryItem.OnChangeEntryListener {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements EntryItem.OnChangeEntryListener {
 
-    private ArrayList<EntryPojo> arrEntryes;
-    private LayoutInflater layoutInflater;
-    private BaseActivity baseActivity;
-    private ArrayList<EntryItem> itemsList;
+    protected ArrayList<EntryPojo> arrEntryes;
+    protected LayoutInflater layoutInflater;
+    protected BaseActivity baseActivity;
+    protected ArrayList<EntryItem> itemsList;
 
     public RecyclerViewAdapter(final BaseActivity activity) {
         this.arrEntryes = new ArrayList<>();
         baseActivity = activity;
         itemsList = new ArrayList<>();
+        layoutInflater = LayoutInflater.from(baseActivity);
     }
 
     public void setArrEntryes(final ArrayList<EntryPojo> _arrEntryes){
@@ -46,9 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     }
 
     @Override
-    public EntryItem onCreateViewHolder(ViewGroup viewGroup, int i) {
-        if (layoutInflater == null)
-            layoutInflater = LayoutInflater.from(viewGroup.getContext());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         final View inflatedView = layoutInflater.inflate(R.layout.row_item_entry, viewGroup, false);
         final EntryItem entryItem = new EntryItem(inflatedView);
         itemsList.add(entryItem);
@@ -56,8 +54,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     }
 
     @Override
-    public void onBindViewHolder(EntryItem entryItem, int position) {
-        entryItem.init(arrEntryes.get(position), position, baseActivity, this);
+    public void onBindViewHolder(RecyclerView.ViewHolder entryItem, int position) {
+        ((EntryItem)entryItem).init(arrEntryes.get(position), position, baseActivity, this);
     }
 
     @Override

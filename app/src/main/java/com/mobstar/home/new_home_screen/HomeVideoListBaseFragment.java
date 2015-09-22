@@ -45,15 +45,15 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     private boolean isSearchAPI, isMobitAPI, isVoteAPI, isEntryIdAPI, isEntryAPI;
     private String SearchTerm, deeplinkEntryId, LatestORPopular, CategoryId, VoteType;
-    private TextView textNoData;
+    protected TextView textNoData;
     private SharedPreferences preferences;
 //    private ArrayList<EntryPojo> arrEntryPojos = new ArrayList<>();
 
 
-    private RecyclerViewAdapter entryAdapter;
-    private RecyclerView recyclerView;
-    private PullToRefreshRecyclerView pullToRefreshRecyclerView;
-    private DownloadFileManager downloadFileManager;
+    protected RecyclerViewAdapter entryAdapter;
+    protected RecyclerView recyclerView;
+    protected PullToRefreshRecyclerView pullToRefreshRecyclerView;
+    protected DownloadFileManager downloadFileManager;
 
     public static HomeVideoListBaseFragment newInstance(final boolean isEntryIdAPI, final String deepLinkedId, final String sLatestPopular, final String categoryId, boolean isEntryAPI) {
         final HomeVideoListBaseFragment baseFragment = new HomeVideoListBaseFragment();
@@ -88,7 +88,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         pullToRefreshRecyclerView = (PullToRefreshRecyclerView) inflatedView.findViewById(R.id.pullToRefreshRecyclerView);
     }
 
-    private void getEntryRequest(final int pageNo) {
+    protected void getEntryRequest(final int pageNo) {
         textNoData.setVisibility(View.GONE);
         final HashMap<String, String> params = new HashMap<>();
         String url = Constant.GET_ENTRY;
@@ -129,6 +129,10 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 //                Query = Constant.SERVER_URL + Constant.VOTE + "?type=" + VoteType + "&user=" + preferences.getString("userid", "0") + "&page=" + pageNo;
             }
         }
+        getEntry(url, params, pageNo);
+    }
+
+    protected void getEntry(final String url, final HashMap<String, String> params, final int pageNo){
         RestClient.getInstance(getActivity()).getRequest(url, params, new ConnectCallback<EntriesResponse>() {
 
             @Override
@@ -194,7 +198,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         PlayerManager.getInstance().tryToPauseAll();
     }
 
-    private void createEntryList() {
+    protected void createEntryList() {
         pullToRefreshRecyclerView.setOnRefreshListener(this);
         recyclerView = pullToRefreshRecyclerView.getRefreshableView();
         recyclerView.setHasFixedSize(true);
@@ -209,7 +213,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     }
 
-    private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener() {
+    protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener() {
         @Override
         public void onLoadMore(int currentPage) {
             Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
@@ -288,7 +292,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         getEntryRequest(1);
     }
 
-    private void getArgs() {
+    protected void getArgs() {
         Bundle extras = getArguments();
         if (extras != null) {
             if (extras.containsKey("isSearchAPI")) {

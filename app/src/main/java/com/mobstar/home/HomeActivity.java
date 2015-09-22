@@ -18,8 +18,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,11 +31,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mobstar.BaseActivity;
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.blog.BlogFragment;
 import com.mobstar.fanconnect.FanConnectHomeFragment;
 import com.mobstar.help.HelpFragment;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.inbox.InboxFragment;
 import com.mobstar.login.LoginSocialActivity;
 import com.mobstar.service.NotificationService;
@@ -552,7 +550,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 		// isMenuOpen = false;
 		// }
 		else if (imgUserPic.equals(view)) {
-			Intent intent = new Intent(mContext, ProfileActivity.class);
+			Intent intent = new Intent(mContext, NewProfileActivity.class);
 			intent.putExtra("UserID", preferences.getString("userid", ""));
 			intent.putExtra("UserName", preferences.getString("username", ""));
 			intent.putExtra("UserPic", preferences.getString("profile_image", ""));
@@ -562,7 +560,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 			startActivity(intent);
 			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		} else if (textUserDisplayName.equals(view)) {
-			Intent intent = new Intent(mContext, ProfileActivity.class);
+			Intent intent = new Intent(mContext, NewProfileActivity.class);
 			intent.putExtra("UserID", preferences.getString("userid", ""));
 			intent.putExtra("UserName", preferences.getString("username", ""));
 			intent.putExtra("UserDisplayName", preferences.getString("displayName", ""));
@@ -572,7 +570,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 			startActivity(intent);
 			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		} else if (textUserFullName.equals(view)) {
-			Intent intent = new Intent(mContext, ProfileActivity.class);
+			Intent intent = new Intent(mContext, NewProfileActivity.class);
 			intent.putExtra("UserID", preferences.getString("userid", ""));
 			intent.putExtra("UserName", preferences.getString("username", ""));
 			intent.putExtra("UserDisplayName", preferences.getString("displayName", ""));
