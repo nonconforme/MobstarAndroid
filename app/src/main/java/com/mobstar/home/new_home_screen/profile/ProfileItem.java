@@ -32,7 +32,7 @@ public class ProfileItem extends RecyclerView.ViewHolder {
         imgCoverPage = (ImageView)convertView.findViewById(R.id.imgCoverPage);
     }
 
-    public void init(BaseActivity baseActivity, ){
+    public void init(BaseActivity baseActivity){
 
     }
 }

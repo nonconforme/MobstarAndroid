@@ -37,7 +37,7 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder entryItem, int position) {
         if (position == 0)
-            ((ProfileItem)entryItem).init();
+            ((ProfileItem)entryItem).init(baseActivity);
         else
             ((EntryItem)entryItem).init(arrEntryes.get(position), position, baseActivity, this);
     }
@@ -63,7 +63,7 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
 
     @Override
     public void onBindHeaderViewHolder(ProfileStickyHeader stickyHeader, int i) {
-        stickyHeader.init();
+        stickyHeader.init(baseActivity, true, null);
     }
 
 
