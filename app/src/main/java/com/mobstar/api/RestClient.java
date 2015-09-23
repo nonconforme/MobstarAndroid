@@ -15,13 +15,14 @@ import com.mobstar.api.responce.OnFileDownloadCallback;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
-import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by lipcha on 08.09.15.

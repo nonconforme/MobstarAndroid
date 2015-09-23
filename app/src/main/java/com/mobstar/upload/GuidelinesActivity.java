@@ -2,7 +2,7 @@ package com.mobstar.upload;
 
 import java.io.File;
 
-import org.apache.http.Header;
+import cz.msebera.android.httpclient.Header;
 import org.json.JSONObject;
 
 import android.app.Activity;
