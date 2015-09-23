@@ -134,7 +134,6 @@ public class SearchListFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 
 		View view = inflater.inflate(R.layout.fragment_video_list, container, false);
 
@@ -237,7 +236,6 @@ public class SearchListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		isInPauseState = false;
-		// TODO Auto-generated method stub
 		super.onResume();
 		// Log.v(Constant.TAG, "VideoListFragment onResume");
 		if (entryListAdapter != null) {
@@ -260,7 +258,6 @@ public class SearchListFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 
 		isInPauseState = false;
@@ -1364,6 +1361,7 @@ public class SearchListFragment extends Fragment {
 				}
 			});
 
+            if (type!=1)
 			viewHolder.layoutComment.setOnClickListener(new OnClickListener() {
 
 				@Override
