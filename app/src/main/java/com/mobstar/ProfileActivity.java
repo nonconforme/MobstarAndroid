@@ -45,6 +45,9 @@ import android.widget.Toast;
 import com.daimajia.swipe.SwipeLayout;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.StarCall;
+import com.mobstar.api.responce.NullResponse;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
@@ -81,7 +84,8 @@ public class ProfileActivity extends Activity implements OnClickListener,Adapter
 StickyListHeadersListView.OnStickyHeaderOffsetChangedListener,
 StickyListHeadersListView.OnStickyHeaderChangedListener {
 
-	Context mContext;
+    private static final String LOG_TAG = ProfileActivity.class.getName();
+    Context mContext;
 
 	EntryListAdapter entryListAdapter;
 	StickyListHeadersListView listEntry;
@@ -275,41 +279,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 					Picasso.with(mContext).load(UserPic).resize(Utility.dpToPx(mContext, 126), Utility.dpToPx(mContext, 126)).centerCrop().placeholder(R.drawable.profile_pic_new)
 					.error(R.drawable.profile_pic_new).transform(new RoundedTransformation(Utility.dpToPx(mContext, 126), 0)).into(imgUserPic);
 
-					// Ion.with(mContext).load(UserPic).withBitmap().placeholder(R.drawable.profile_pic).error(R.drawable.profile_pic)
-					// .resize(Utility.dpToPx(mContext, 126),
-					// Utility.dpToPx(mContext,
-					// 126)).centerCrop().asBitmap().setCallback(new
-					// FutureCallback<Bitmap>() {
-					//
-					// @Override
-					// public void onCompleted(Exception exception, Bitmap
-					// bitmap) {
-					// // TODO Auto-generated method stub
-					// if (exception == null) {
-					// if (bitmap.getWidth() > 0 && bitmap.getHeight() > 0) {
-					// Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-					// bitmap.getHeight(), Config.ARGB_8888);
-					// Canvas canvas = new Canvas(output);
-					//
-					// final int color = 0xff424242;
-					// final Paint paint = new Paint();
-					// final Rect rect = new Rect(0, 0, bitmap.getWidth(),
-					// bitmap.getHeight());
-					//
-					// paint.setAntiAlias(true);
-					// canvas.drawARGB(0, 0, 0, 0);
-					// paint.setColor(color);
-					// canvas.drawCircle(bitmap.getWidth() / 2,
-					// bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
-					// paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-					// canvas.drawBitmap(bitmap, rect, rect, paint);
-					//
-					// imgUserPic.setImageBitmap(output);
-					// imgUserPic.invalidate();
-					// }
-					// }
-					// }
-					// });
 				}
 
 				UserCoverImage = preferences.getString("cover_image", "");
@@ -321,35 +290,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					Picasso.with(mContext).load(UserCoverImage).fit().centerCrop().placeholder(R.drawable.cover_bg).error(R.drawable.cover_bg).into(imgCoverPage);
 
-					// Ion.with(mContext).load(UserCoverImage).withBitmap().placeholder(R.drawable.cover_bg).error(R.drawable.cover_bg)
-					// .resize(Utility.dpToPx(mContext, 360),
-					// Utility.dpToPx(mContext,
-					// 180)).centerCrop().asBitmap().setCallback(new
-					// FutureCallback<Bitmap>() {
-					//
-					// @SuppressWarnings("deprecation")
-					// @SuppressLint("NewApi")
-					// @Override
-					// public void onCompleted(Exception exception, Bitmap
-					// bitmap) {
-					// // TODO Auto-generated method stub
-					// if (exception == null) {
-					//
-					// Drawable drawable = new BitmapDrawable(getResources(),
-					// bitmap);
-					//
-					// int sdk = android.os.Build.VERSION.SDK_INT;
-					// if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-					// imgCoverPage.setBackgroundDrawable(drawable);
-					// } else {
-					// imgCoverPage.setBackground(drawable);
-					// }
-					//
-					// imgCoverPage.invalidate();
-					//
-					// }
-					// }
-					// });
 				}
 			}
 			if (intent.getAction().equalsIgnoreCase("star_added")) {
@@ -506,7 +446,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 			@Override
 			public void onClick(View view) {
-				// TODO Auto-generated method stub
 				onBackPressed();
 			}
 		});
@@ -549,40 +488,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			imgUserPic.setImageResource(R.drawable.profile_pic_new);
 		} else {
 			imgUserPic.setImageResource(R.drawable.profile_pic_new);
-			// Ion.with(mContext).load(UserPic).withBitmap().placeholder(R.drawable.profile_pic).error(R.drawable.profile_pic)
-			// .resize(Utility.dpToPx(mContext, 126), Utility.dpToPx(mContext,
-			// 126)).centerCrop().asBitmap().setCallback(new
-			// FutureCallback<Bitmap>() {
-			//
-			// @Override
-			// public void onCompleted(Exception exception, Bitmap bitmap) {
-			// // TODO Auto-generated method stub
-			// if (exception == null) {
-			//
-			// if (bitmap.getWidth() > 0 && bitmap.getHeight() > 0) {
-			// Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-			// bitmap.getHeight(), Config.ARGB_8888);
-			// Canvas canvas = new Canvas(output);
-			//
-			// final int color = 0xff424242;
-			// final Paint paint = new Paint();
-			// final Rect rect = new Rect(0, 0, bitmap.getWidth(),
-			// bitmap.getHeight());
-			//
-			// paint.setAntiAlias(true);
-			// canvas.drawARGB(0, 0, 0, 0);
-			// paint.setColor(color);
-			// canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-			// bitmap.getWidth() / 2, paint);
-			// paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-			// canvas.drawBitmap(bitmap, rect, rect, paint);
-			//
-			// imgUserPic.setImageBitmap(output);
-			// imgUserPic.invalidate();
-			// }
-			// }
-			// }
-			// });
 
 			// Log.v(Constant.TAG, "UserPic URl " + UserPic);
 			Picasso.with(mContext).load(UserPic).resize(Utility.dpToPx(mContext, 126), Utility.dpToPx(mContext, 126)).centerCrop().placeholder(R.drawable.profile_pic_new)
@@ -615,7 +520,26 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					if (Utility.isNetworkAvailable(mContext)) {
 
-						new AddStarCall(UserID).start();
+                        StarCall.addStarCall(mContext, UserID, new ConnectCallback<NullResponse>() {
+                            @Override
+                            public void onSuccess(NullResponse object) {
+                                Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
+                                for (int i = 0; i < arrEntryPojos.size(); i++) {
+                                    if (arrEntryPojos.get(i).getUserID().equalsIgnoreCase(UserID)) {
+                                        arrEntryPojos.get(i).setIsMyStar("1");
+                                    }
+
+                                }
+                                handlerAddStar.sendEmptyMessage(1);
+                            }
+
+                            @Override
+                            public void onFailure(String error) {
+                                Utility.HideDialog(mContext);
+                                Log.d(LOG_TAG,"StarCall.addStarCall.onFailure.error="+error);
+                                handlerAddStar.sendEmptyMessage(0);
+                            }
+                        });
 
 						final Dialog dialog = new Dialog(mContext, R.style.DialogAnimationTheme);
 						dialog.setContentView(R.layout.dialog_add_star);
@@ -714,7 +638,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		@Override
 		public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int arg1, int arg2) {
-			// TODO Auto-generated method stub
 			// Log.v(Constant.TAG, "onSurfaceTextureAvailable " + arg1 + " " +
 			// arg2);
 			Surface surface = new Surface(surfaceTexture);
@@ -727,20 +650,17 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		@Override
 		public boolean onSurfaceTextureDestroyed(SurfaceTexture texture) {
-			// TODO Auto-generated method stub
 			// Log.v(Constant.TAG, "onSurfaceTextureDestroyed");
 			return false;
 		}
 
 		@Override
 		public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int arg1, int arg2) {
-			// TODO Auto-generated method stub
 			// Log.v(Constant.TAG, "onSurfaceTextureSizeChanged");
 		}
 
 		@Override
 		public void onSurfaceTextureUpdated(SurfaceTexture texture) {
-			// TODO Auto-generated method stub
 			// Log.v(Constant.TAG, "onSurfaceTextureUpdated");
 		}
 
@@ -1094,7 +1014,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 
 						Intent intent = new Intent(mContext, StatisticsActivity.class);
 						intent.putExtra("entry", arrEntryPojos.get(position));
@@ -1237,7 +1156,22 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 						if (Utility.isNetworkAvailable(mContext)) {
 
-							new AddStarCall(arrEntryPojos.get(position).getUserID()).start();
+//							new AddStarCall(arrEntryPojos.get(position).getUserID()).start();
+                            StarCall.addStarCall(mContext, arrEntryPojos.get(position).getUserID(), new ConnectCallback<NullResponse>() {
+                                @Override
+                                public void onSuccess(NullResponse object) {
+                                    Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess on item");
+                                    arrEntryPojos.get(position).setIsMyStar("1");
+                                    handlerAddStar.sendEmptyMessage(1);
+                                }
+
+                                @Override
+                                public void onFailure(String error) {
+                                    Utility.HideDialog(mContext);
+                                    Log.d(LOG_TAG, "StarCall.addStarCall.onFailure.error=" + error);
+                                    handlerAddStar.sendEmptyMessage(0);
+                                }
+                            });
 
 							final Dialog dialog = new Dialog(mContext, R.style.DialogAnimationTheme);
 							dialog.setContentView(R.layout.dialog_add_star);
@@ -1248,7 +1182,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 								@Override
 								public void run() {
-									// TODO Auto-generated method stub
 									dialog.dismiss();
 								}
 							};
@@ -1265,24 +1198,23 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				}
 			});
 
-
-			viewHolder.textUserName.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-//					Intent intent = new Intent(mContext, ProfileActivity.class);
-//					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
-//					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
-//					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
-//					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
-//					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
-//					intent.putExtra("IsMyStar", IsMyStar);
-//					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
-//					startActivity(intent);
-//					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-				}
-			});
+//
+//			viewHolder.textUserName.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+////					Intent intent = new Intent(mContext, ProfileActivity.class);
+////					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
+////					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
+////					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
+////					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
+////					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
+////					intent.putExtra("IsMyStar", IsMyStar);
+////					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
+////					startActivity(intent);
+////					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//				}
+//			});
 
 			if (arrEntryPojos.get(position).getProfileImage().equals("")) {
 				viewHolder.imgUserPic.setImageResource(R.drawable.ic_pic_small);
@@ -1292,23 +1224,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				Picasso.with(mContext).load(arrEntryPojos.get(position).getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop()
 				.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(viewHolder.imgUserPic);
 
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getProfileImage()).withBitmap().placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small)
-				// .resize(Utility.dpToPx(mContext, 45),
-				// Utility.dpToPx(mContext,
-				// 45)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				// if (exception == null) {
-				// viewHolder.imgUserPic.setImageBitmap(bitmap);
-				// } else {
-				// // Log.v(Constant.TAG, "Exception " +
-				// // exception.toString());
-				// }
-				// }
-				// });
+
 			}
 
 			viewHolder.imgUserPic.setOnClickListener(new OnClickListener() {
@@ -1335,7 +1251,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 
 					Intent intent = new Intent(mContext, ShareActivity.class);
 					intent.putExtra("entry", arrEntryPojos.get(position));
@@ -1363,7 +1278,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 
 					if (isDataLoaded) {
 
@@ -1379,7 +1293,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 
 					Intent intent = new Intent(mContext, CommentActivity.class);
 					intent.putExtra("entry_id", arrEntryPojos.get(position).getID());
@@ -1424,7 +1337,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onSuccess() {
-						// TODO Auto-generated method stub
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
 						notifyDataSetChanged();
@@ -1432,31 +1344,9 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onError() {
-						// TODO Auto-generated method stub
 
 					}
 				});
-				//
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getImageLink()).withBitmap().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder)
-				// .resize(Utility.dpToPx(mContext, 332),
-				// Utility.dpToPx(mContext,
-				// 360)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				// if (exception == null) {
-				// viewHolder.progressbar.setVisibility(View.GONE);
-				// viewHolder.imageFrame.setImageBitmap(bitmap);
-				// viewHolder.imageFrame.setVisibility(View.VISIBLE);
-				// notifyDataSetChanged();
-				// } else {
-				// // Log.v(Constant.TAG, "Exception " +
-				// // exception.toString());
-				// }
-				// }
-				// });
 
 			} else if (arrEntryPojos.get(position).getType().equals("audio")) {
 
@@ -1478,7 +1368,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onSuccess() {
-						// TODO Auto-generated method stub
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
 
@@ -1508,7 +1397,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 											@Override
 											public void onSuccess(int arg0, Header[] arg1, File file) {
-												// TODO Auto-generated
 												// method
 												// stub
 												// Log.v(Constant.TAG,
@@ -1557,7 +1445,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onError() {
-						// TODO Auto-generated method stub
 
 					}
 				});
@@ -1570,7 +1457,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				//
 				// @Override
 				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
 				//
 				// viewHolder.imageFrame.setImageBitmap(bitmap);
 				// viewHolder.imageFrame.setVisibility(View.VISIBLE);
@@ -1629,7 +1515,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onSuccess() {
-						// TODO Auto-generated method stub
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
 						notifyDataSetChanged();
@@ -1637,35 +1522,10 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onError() {
-						// TODO Auto-generated method stub
 
 					}
 				});
 
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getVideoThumb()).withBitmap().placeholder(R.drawable.video_placeholder).error(R.drawable.video_placeholder)
-				// .resize(Utility.dpToPx(mContext, 332),
-				// Utility.dpToPx(mContext,
-				// 360)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				// if (exception == null) {
-				//
-				// viewHolder.progressbar.setVisibility(View.GONE);
-				// viewHolder.imageFrame.setVisibility(View.VISIBLE);
-				// viewHolder.imageFrame.setImageBitmap(bitmap);
-				//
-				// // Log.v(Constant.TAG,
-				// // "Video thumbnail is loaded " + position);
-				//
-				// } else {
-				// // Log.v(Constant.TAG, "Exception " +
-				// // exception.toString());
-				// }
-				// }
-				// });
 
 				// ***************temp comment by khyati
 
@@ -1696,7 +1556,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 									@Override
 									public void onSuccess(int arg0, Header[] arg1, File file) {
-										// TODO Auto-generated method stub
 										// Log.v(Constant.TAG,
 										// "onSuccess Video File  downloaded");
 										viewHolder.progressbar.setVisibility(View.GONE);
@@ -3094,60 +2953,59 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 	}
 
-	class AddStarCall extends Thread {
-
-		String UserID;
-
-		public AddStarCall(String UserID) {
-			this.UserID = UserID;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String[] name = { "star" };
-			String[] value = { UserID };
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.STAR, name, value, preferences.getString("token", null));
-
-			//			Log.v(Constant.TAG, "AddStarCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerAddStar.sendEmptyMessage(0);
-					} else {
-						for (int i = 0; i < arrEntryPojos.size(); i++) {
-							if (arrEntryPojos.get(i).getUserID().equalsIgnoreCase(UserID)) {
-								arrEntryPojos.get(i).setIsMyStar("1");
-							}
-
-						}
-						handlerAddStar.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerAddStar.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerAddStar.sendEmptyMessage(0);
-			}
-
-		}
-	}
+    //todo must del befor magre
+//	class AddStarCall extends Thread {
+//
+//		String UserID;
+//
+//		public AddStarCall(String UserID) {
+//			this.UserID = UserID;
+//		}
+//
+//		@Override
+//		public void run() {
+//
+//			String[] name = { "star" };
+//			String[] value = { UserID };
+//
+//			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.STAR, name, value, preferences.getString("token", null));
+//
+//			//			Log.v(Constant.TAG, "AddStarCall response " + response);
+//
+//			if (response != null) {
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						sErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
+//						handlerAddStar.sendEmptyMessage(0);
+//					} else {
+//						for (int i = 0; i < arrEntryPojos.size(); i++) {
+//							if (arrEntryPojos.get(i).getUserID().equalsIgnoreCase(UserID)) {
+//								arrEntryPojos.get(i).setIsMyStar("1");
+//							}
+//
+//						}
+//						handlerAddStar.sendEmptyMessage(1);
+//					}
+//
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					handlerAddStar.sendEmptyMessage(0);
+//				}
+//
+//			} else {
+//
+//				handlerAddStar.sendEmptyMessage(0);
+//			}
+//
+//		}
+//	}
 
 	Handler handlerAddStar = new Handler() {
 

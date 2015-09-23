@@ -101,7 +101,6 @@ public class CommentActivity extends Activity {
 
 			@Override
 			public void onClick(View view) {
-				// TODO Auto-generated method stub
 
 				if (!editComment.getText().toString().trim().equals("")) {
 
@@ -133,7 +132,6 @@ public class CommentActivity extends Activity {
 
 			@Override
 			public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
-				// TODO Auto-generated method stub
 				switch (item.getItemId()) {
 				case R.id.menu_delete:
 //					Log.d("mobstar","List size"+arrSelectionCommentedID.size());
@@ -155,7 +153,7 @@ public class CommentActivity extends Activity {
 
 			@Override
 			public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
-				// TODO Auto-generated method stub
+				//  Auto-generated method stub
 				MenuInflater inflater = mode.getMenuInflater();
 				inflater.inflate(R.menu.context_menu, menu);
 
@@ -164,19 +162,16 @@ public class CommentActivity extends Activity {
 
 			@Override
 			public void onDestroyActionMode(android.view.ActionMode arg0) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public boolean onPrepareActionMode(android.view.ActionMode arg0, Menu arg1) {
-				// TODO Auto-generated method stub
 				return false;
 			}
 
 			@Override
 			public void onItemCheckedStateChanged(android.view.ActionMode arg0, int position, long arg2, boolean arg3) {
-				// TODO Auto-generated method stub
 				final int checkedCount = listComment.getCheckedItemCount();
 				// Set the CAB title according to total checked items
 				arg0.setTitle(checkedCount + " " + getString(R.string.selected));
@@ -308,25 +303,6 @@ public class CommentActivity extends Activity {
 				Picasso.with(mContext).load(arrCommentpPojos.get(position).getUserProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop()
 				.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(viewHolder.imgUserPic);
 
-				// Ion.with(mContext).load(arrCommentpPojos.get(position).getUserProfileImage()).withBitmap().placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small)
-				// .resize(Utility.dpToPx(mContext, 45),
-				// Utility.dpToPx(mContext,
-				// 45)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				// if (exception == null) {
-				//
-				// viewHolder.imgUserPic.setImageBitmap(bitmap);
-				//
-				// } else {
-				// // Log.v(Constant.TAG, "Exception " +
-				// // exception.toString());
-				// }
-				// }
-				// });
 			}
 
 			return convertView;
@@ -349,7 +325,6 @@ public class CommentActivity extends Activity {
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 
 			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.GET_COMMENT + "?entry=" + EntryID, preferences.getString("token", null));
 
@@ -423,7 +398,6 @@ public class CommentActivity extends Activity {
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 			Utility.HideDialog(mContext);
 			if (arrCommentpPojos.size() == 0) {
 				textNoData.setVisibility(View.VISIBLE);
@@ -452,7 +426,6 @@ public class CommentActivity extends Activity {
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 
 			String[] name = { "comment" };
 			String[] value = { CommentID };
@@ -478,7 +451,6 @@ public class CommentActivity extends Activity {
 					}
 
 				} catch (Exception e) {
-					// TODO: handle exception
 					e.printStackTrace();
 					handlerDeleteComment.sendEmptyMessage(0);
 				}
@@ -495,7 +467,6 @@ public class CommentActivity extends Activity {
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 
 			if (msg.what == 1) {
 
@@ -533,8 +504,7 @@ public class CommentActivity extends Activity {
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			
+
 			
 			String[] name = { "comment", "entryId" };
 			String[] value = { Comment, EntryID };
@@ -556,12 +526,11 @@ public class CommentActivity extends Activity {
 					if (sErrorMessage != null && !sErrorMessage.equals("")) {
 						handlerPostComment.sendEmptyMessage(0);
 					} else {
-                        AdWordsManager.getInstance().sendEngagementEvent();
+                        AdWordsManager.getInstance().sendWroteCommentEvent();
 						handlerPostComment.sendEmptyMessage(1);
 					}
 
 				} catch (Exception e) {
-					// TODO: handle exception
 					e.printStackTrace();
 					handlerPostComment.sendEmptyMessage(0);
 				}
@@ -578,7 +547,6 @@ public class CommentActivity extends Activity {
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 
 			if (msg.what == 1) {
 				if (Utility.isNetworkAvailable(mContext)) {
