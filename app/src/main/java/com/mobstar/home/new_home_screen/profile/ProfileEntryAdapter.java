@@ -25,6 +25,7 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     public ProfileEntryAdapter(BaseActivity activity, UserProfileData _userdata) {
         super(activity);
         userData = _userdata;
+        itemModeType = ENTRY_ITEM_TYPE;
 
     }
 
@@ -49,13 +50,30 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     public void onBindViewHolder(RecyclerView.ViewHolder entryItem, int position) {
         if (position == 0)
             ((ProfileItem)entryItem).init(baseActivity, userData);
-        else
-            ((EntryItem)entryItem).init(arrEntryes.get(position), position, baseActivity, this);
+        else{
+            switch (itemModeType){
+                case ENTRY_ITEM_TYPE:
+                    ((EntryItem)entryItem).init(arrEntryes.get(position), position, baseActivity, this);
+                    break;
+                case PROFILE_VIEW_TYPE:
+
+                    break;
+                case NO_DATA_VIEW_TYPE:
+
+                    break;
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-        return arrEntryes.size();
+        switch (itemModeType){
+            case PROFILE_VIEW_TYPE:
+            case NO_DATA_VIEW_TYPE:
+                return 1;
+            default:
+                return arrEntryes.size();
+        }
     }
 
     @Override
@@ -83,7 +101,7 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     public int getItemViewType(int position) {
         if (position == 0)
             return PROFILE_HEADER_VIEW_TYPE;
-        return ENTRY_ITEM_TYPE;
+        return itemModeType;
     }
 }
 

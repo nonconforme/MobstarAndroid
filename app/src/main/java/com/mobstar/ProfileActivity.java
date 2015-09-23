@@ -969,7 +969,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
 				viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
 				viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
-				viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
+//				viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
 				convertView.setTag(viewHolder);
 
 			} else {

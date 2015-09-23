@@ -955,7 +955,8 @@ public class VideoListFragment extends Fragment {
 
 		@Override
 		public int getSwipeLayoutResourceId(int i) {
-			return R.id.swipe;
+//			return R.id.swipe;
+			return 0;
 		}
 
 
@@ -1863,7 +1864,7 @@ public class VideoListFragment extends Fragment {
             viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
             viewHolder.imgMsg=(ImageView) convertView.findViewById(R.id.imgMsg);
             viewHolder.ivIndicator=(ImageView) convertView.findViewById(R.id.ivIndicator);
-			viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
+//			viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
 
         }
 
