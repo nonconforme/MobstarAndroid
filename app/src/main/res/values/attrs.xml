@@ -54,6 +54,7 @@
 
     <declare-styleable name="CheckableView">
         <attr name="isChowChecked" format="boolean" />
+        <attr name="isShowShadow" format="boolean" />
         <attr name="checkedTitle" format="string"/>
         <attr name="leftImage" format="reference"/>
         <attr name="heightCheckableView" format="dimension"/>
