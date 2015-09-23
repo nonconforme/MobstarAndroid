@@ -66,7 +66,7 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new RemoveAnimation(this));
-        entryAdapter = new ProfileEntryAdapter((BaseActivity) getActivity());
+        entryAdapter = new ProfileEntryAdapter((BaseActivity) getActivity(), userData);
         recyclerView.setAdapter(entryAdapter);
         recyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration((StickyRecyclerHeadersAdapter) entryAdapter));
         downloadFileManager = new DownloadFileManager(getActivity(), this);

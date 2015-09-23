@@ -9,13 +9,14 @@ public class UserProfileData implements Serializable {
 
     private String userDisplayName = "";
     private boolean isProfile;
-    private String userTagline;
+    private String userTagline = "";
     private String userCoverImage;
     private String isMyStar;
     private String userPic;
-    private String userName;
+    private String userName = "";
     private String userId;
     private String entryId;
+    private String userFan = "";
 
     private UserProfileData() {
     }
@@ -56,6 +57,10 @@ public class UserProfileData implements Serializable {
         this.entryId = entryId;
     }
 
+    public void setUserFan(String userFan){
+        this.userFan = userFan;
+    }
+
     public String getUserDisplayName() {
         return userDisplayName;
     }
@@ -90,6 +95,10 @@ public class UserProfileData implements Serializable {
 
     public String getEntryId() {
         return entryId;
+    }
+
+    public String getUserFan(){
+        return userFan;
     }
 
     public static Builder newBuilder(){
@@ -144,6 +153,11 @@ public class UserProfileData implements Serializable {
 
         public Builder setEntryId(String entryId) {
             UserProfileData.this.setEntryId(entryId);
+            return this;
+        }
+
+        public Builder setUserFan(String userFan){
+            UserProfileData.this.setUserFan(userFan);
             return this;
         }
 
