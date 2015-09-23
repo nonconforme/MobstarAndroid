@@ -22,14 +22,15 @@ import java.util.HashMap;
  * Created by lipcha on 22.09.15.
  */
 public class ProfileFragment extends HomeVideoListBaseFragment {
-    public static final String USER_ID = "user_id";
 
-    private String userId;
+    public static final String USER = "user";
 
-    public static final ProfileFragment getInstance(final String userId){
+    private UserProfileData userData;
+
+    public static final ProfileFragment getInstance(final UserProfileData userData){
         final ProfileFragment profileFragment = new ProfileFragment();
         final Bundle args = new Bundle();
-        args.putString(USER_ID, userId);
+        args.putSerializable(USER, userData);
         profileFragment.setArguments(args);
         return profileFragment;
     }
@@ -43,8 +44,8 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
     @Override
     protected void getEntryRequest(int pageNo) {
         final HashMap<String, String> params = new HashMap<>();
-        if (userId != null)
-            params.put("user", userId);
+        if (userData!= null && userData.getUserId() != null)
+            params.put("user", userData.getUserId());
         params.put("page", Integer.toString(pageNo));
         textNoData.setVisibility(View.GONE);
         getEntry(Constant.MIX_ENTRY, params, pageNo);
@@ -53,8 +54,9 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
     @Override
     protected void getArgs() {
         final Bundle args = getArguments();
-        if (args.containsKey(USER_ID))
-            userId = args.getString(USER_ID);
+        if (args.containsKey(USER))
+            userData = (UserProfileData) args.getSerializable(USER);
+
     }
 
     @Override

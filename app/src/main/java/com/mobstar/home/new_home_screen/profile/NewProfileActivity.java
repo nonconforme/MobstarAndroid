@@ -116,7 +116,18 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     private void addProfileListFragment(){
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        final ProfileFragment profileFragment = ProfileFragment.getInstance(UserID);
+        final UserProfileData userData = UserProfileData.newBuilder()
+                .setUserDisplayName(UserDisplayName)
+                .setIsProfile(isProfile)
+                .setUserTagline(UserTagline)
+                .setUserCoverImage(UserCoverImage)
+                .setIsMyStar(IsMyStar)
+                .setUserPic(UserPic)
+                .setUserName(UserName)
+                .setUserId(UserID)
+                .setEntryId(EntryId)
+                .build();
+        final ProfileFragment profileFragment = ProfileFragment.getInstance(userData);
         fragmentTransaction.replace(R.id.fragmentContainer, profileFragment);
         fragmentTransaction.commit();
     }
