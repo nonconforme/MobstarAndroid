@@ -143,6 +143,7 @@ public class PlayerManager {
     }
 
     public boolean tryToPause(int position) {
+        if (mEntryItem == null) return false;
         if (position != mEntryItem.getPos()) {
             return false;
         }
