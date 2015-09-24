@@ -18,7 +18,8 @@ public class Constant {
 
 //	public static String SERVER_URL = "http://api.mobstar.com/";
 //	public static String SERVER_URL = "http://192.168.88.250:1080/";
-	public static String SERVER_URL = "http://134.249.164.53:1080/";
+//	public static String SERVER_URL = "http://134.249.164.53:1080/";
+	public static String SERVER_URL = "http://api-mobstar.test.thinkmobiles.com/";
 //	public static String SERVER_URL = "http://192.168.1.32/project/mobstarapi/public/index.php/";
 	
 	public static String SIGNUP = "user/";

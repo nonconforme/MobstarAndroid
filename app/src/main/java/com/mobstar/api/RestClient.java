@@ -100,7 +100,7 @@ public class RestClient {
         }
         final String absoluteUrl = Constant.SERVER_URL + url;
         final RequestParams requestParams = new RequestParams(params);
-        Log.d(LOG_TAG,"http request post: "+ absoluteUrl + "?" + requestParams.toString());
+        Log.d(LOG_TAG, "http request post: "+ absoluteUrl + "?" + requestParams.toString());
         httpClient.removeHeader("Content-Type");
         httpClient.post(null, absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
