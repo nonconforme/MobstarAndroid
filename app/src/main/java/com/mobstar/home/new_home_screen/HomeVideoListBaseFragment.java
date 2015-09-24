@@ -261,7 +261,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     }
 
-    private void cancelDownloadFile(int cancelPosition) {
+    protected void cancelDownloadFile(int cancelPosition) {
         if (cancelPosition == -1 || cancelPosition >= entryAdapter.getItemCount() || entryAdapter.getEntry(cancelPosition).getType() == null)
             return;
         switch (entryAdapter.getEntry(cancelPosition).getType()) {
@@ -274,7 +274,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         }
     }
 
-    private void downloadFile(int currentPosition) {
+    protected void downloadFile(int currentPosition) {
         if (entryAdapter.getEntry(currentPosition) == null || entryAdapter.getEntry(currentPosition).getType() == null)
             return;
         switch (entryAdapter.getEntry(currentPosition).getType()) {

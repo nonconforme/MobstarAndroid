@@ -1,45 +1,73 @@
 package com.mobstar.home.new_home_screen.profile;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.home.new_home_screen.RecyclerViewAdapter;
+import com.mobstar.pojo.EntryPojo;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 /**
  * Created by lipcha on 22.09.15.
  */
-public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRecyclerHeadersAdapter<ProfileStickyHeader> {
+public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRecyclerHeadersAdapter<ProfileStickyHeaderItem> {
 
-    private static final int ENTRY_ITEM_TYPE = 1;
-    private static final int PROFILE_HEADER_VIEW_TYPE = 2;
-    private static final int PROFILE_VIEW_TYPE = 3;
-    private static final int NO_DATA_VIEW_TYPE = 4;
+
+    public static final int UPDATES_PAGE = 1;
+    public static final int PROFILE_PAGE = 2;
+
+
+    public static final int ENTRY_ITEM_VIEW_TYPE = 3;
+    public static final int PROFILE_HEADER_VIEW_TYPE = 4;
+    public static final int PROFILE_VIEW_TYPE = 5;
+    public static final int NO_DATA_VIEW_TYPE = 6;
 
     private UserProfileData userData;
-    private int itemModeType;
+    private int page = UPDATES_PAGE;
+    private ProfileStickyHeaderItem stickyHeaderItem;
+
 
     public ProfileEntryAdapter(BaseActivity activity, UserProfileData _userdata) {
         super(activity);
         userData = _userdata;
-        itemModeType = ENTRY_ITEM_TYPE;
+        page = UPDATES_PAGE;
 
     }
 
-    public void setItemModeType(int modeType){
-        itemModeType = modeType;
+    public void setPage(int _page){
+        page = _page;
+        stickyHeaderItem.setupViews(_page);
+        notifyDataSetChanged();
+    }
+
+    public int getPage(){
+        return page;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        if (i == PROFILE_HEADER_VIEW_TYPE){
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+
+        if (viewType == PROFILE_HEADER_VIEW_TYPE){
             final View inflatedView = layoutInflater.inflate(R.layout.new_layout_profile_header, viewGroup, false);
-            final ProfileItem itemProfile = new ProfileItem(inflatedView);
+            final ProfileHeaderItem itemProfile = new ProfileHeaderItem(inflatedView);
             return itemProfile;
         }
+        if (viewType == PROFILE_VIEW_TYPE){
+            final View inflatedView = layoutInflater.inflate(R.layout.fragment_profile, viewGroup, false);
+            final ProfileItem profileItem = new ProfileItem(inflatedView);
+            return profileItem;
+        }
+
+        if (viewType == NO_DATA_VIEW_TYPE){
+            final View inflatedView = layoutInflater.inflate(R.layout.layout_profile_nodata, viewGroup, false);
+            final NoDataItem noDataItem = new NoDataItem(inflatedView);
+            return noDataItem;
+        }
+
         final View inflatedView = layoutInflater.inflate(R.layout.row_item_entry, viewGroup, false);
         final EntryItem entryItem = new EntryItem(inflatedView);
         itemsList.add(entryItem);
@@ -47,19 +75,19 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder entryItem, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewItem, int position) {
         if (position == 0)
-            ((ProfileItem)entryItem).init(baseActivity, userData);
+            ((ProfileHeaderItem)viewItem).init(baseActivity, userData);
         else{
-            switch (itemModeType){
-                case ENTRY_ITEM_TYPE:
-                    ((EntryItem)entryItem).init(arrEntryes.get(position), position, baseActivity, this);
+            switch (page){
+                case UPDATES_PAGE:
+                    if (arrEntryes.size() == 0)
+                        ((NoDataItem)viewItem).init(baseActivity);
+                    else
+                        ((EntryItem)viewItem).init(arrEntryes.get(position - 1), position, baseActivity, this);
                     break;
-                case PROFILE_VIEW_TYPE:
-
-                    break;
-                case NO_DATA_VIEW_TYPE:
-
+                case PROFILE_PAGE:
+                    ((ProfileItem)viewItem).init(baseActivity, userData.getUserPic(), userData.getUserName());
                     break;
             }
         }
@@ -67,13 +95,13 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
 
     @Override
     public int getItemCount() {
-        switch (itemModeType){
-            case PROFILE_VIEW_TYPE:
-            case NO_DATA_VIEW_TYPE:
-                return 1;
-            default:
-                return arrEntryes.size();
+        if (page == UPDATES_PAGE ){
+            if (arrEntryes.size() == 0)
+                return 2;
+            else
+                return arrEntryes.size() + 1;
         }
+        else return 2;
     }
 
     @Override
@@ -84,24 +112,37 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     }
 
     @Override
-    public ProfileStickyHeader onCreateHeaderViewHolder(ViewGroup viewGroup) {
+    public ProfileStickyHeaderItem onCreateHeaderViewHolder(ViewGroup viewGroup) {
         final View inflatedView = layoutInflater.inflate(R.layout.layout_profile_sticky_header, viewGroup, false);
-        final ProfileStickyHeader stickyHeader = new ProfileStickyHeader(inflatedView);
+        inflatedView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        final ProfileStickyHeaderItem stickyHeader = new ProfileStickyHeaderItem(inflatedView);
         return stickyHeader;
     }
 
     @Override
-    public void onBindHeaderViewHolder(ProfileStickyHeader stickyHeader, int i) {
-        stickyHeader.init(baseActivity, true, null);
+    public void onBindHeaderViewHolder(ProfileStickyHeaderItem stickyHeader, int i) {
+        stickyHeader.init(baseActivity, UPDATES_PAGE);
+        stickyHeaderItem = stickyHeader;
     }
-
-
 
     @Override
     public int getItemViewType(int position) {
         if (position == 0)
             return PROFILE_HEADER_VIEW_TYPE;
-        return itemModeType;
+        switch (page){
+            case UPDATES_PAGE:
+                if (arrEntryes.size() == 0)
+                    return NO_DATA_VIEW_TYPE;
+                else return ENTRY_ITEM_VIEW_TYPE;
+            case PROFILE_PAGE:
+                return PROFILE_VIEW_TYPE;
+        }
+        return PROFILE_HEADER_VIEW_TYPE;
     }
 }
 

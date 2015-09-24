@@ -44,6 +44,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return arrEntryes.get(arrEntryes.size() - 1);
         return arrEntryes.get(position);
     }
+    public ArrayList<EntryPojo> getArrEntries(){
+        return arrEntryes;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
