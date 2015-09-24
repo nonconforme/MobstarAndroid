@@ -80,7 +80,7 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
     protected void createEntryList() {
         pullToRefreshRecyclerView.setOnRefreshListener(this);
         recyclerView = pullToRefreshRecyclerView.getRefreshableView();
-        recyclerView.setHasFixedSize(true);
+//        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new RemoveAnimation(this));
         entryAdapter = new ProfileEntryAdapter((BaseActivity) getActivity(), userData);
@@ -89,7 +89,6 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
         downloadFileManager = new DownloadFileManager(getActivity(), this);
         endlessRecyclerOnScrollListener.setLinearLayoutManager((LinearLayoutManager) recyclerView.getLayoutManager());
         recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
-
 
         final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration((ProfileEntryAdapter)entryAdapter);
         recyclerView.addItemDecoration(headersDecor);

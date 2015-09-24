@@ -1,8 +1,8 @@
 package com.mobstar.home.new_home_screen.profile;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.BaseActivity;
@@ -16,6 +16,7 @@ public class ProfileStickyHeaderItem extends RecyclerView.ViewHolder{
     private BaseActivity context;
     private TextView textUpdates;
     private TextView textProfile;
+    private LinearLayout llSticky;
 
     public ProfileStickyHeaderItem(View itemView) {
         super(itemView);
@@ -23,18 +24,20 @@ public class ProfileStickyHeaderItem extends RecyclerView.ViewHolder{
     }
 
     private void findViews(final View convertView){
-        textUpdates=(TextView)convertView.findViewById(R.id.textUpdates);
-        textProfile=(TextView)convertView.findViewById(R.id.textProfile);
+        textUpdates = (TextView)convertView.findViewById(R.id.textUpdates);
+        textProfile = (TextView)convertView.findViewById(R.id.textProfile);
+        llSticky = (LinearLayout) convertView.findViewById(R.id.llSticky);
     }
 
     public void init(final BaseActivity _baseActivity, final int page){
         context = _baseActivity;
         setupViews(page);
+        llSticky.setVisibility(View.VISIBLE);
     }
 
 
     public void setupViews(int modeType){
-        if(modeType == ProfileEntryAdapter.PROFILE_PAGE){
+        if(modeType != ProfileEntryAdapter.PROFILE_PAGE){
             textUpdates.setBackgroundColor(context.getResources().getColor(R.color.splash_bg));
             textProfile.setBackgroundColor(context.getResources().getColor(R.color.gray_color));
         }

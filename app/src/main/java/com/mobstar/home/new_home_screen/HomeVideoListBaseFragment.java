@@ -3,6 +3,7 @@ package com.mobstar.home.new_home_screen;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -173,22 +174,21 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     private void downloadFirstFile() {
         if (entryAdapter.getItemCount() == 0 || entryAdapter.getEntry(0).getType() == null)
             return;
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
+        Handler handler = new Handler();
+        handler.postDelayed(
+                new Runnable() {
+                    public void run() {
+                        switch (entryAdapter.getEntry(0).getType()) {
+                            case "audio":
+                                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getAudioLink(), 0);
+                                break;
+                            case "video":
+                                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getVideoLink(), 0);
+                                break;
+                        }
+                    }
+                }, 500);
 
-            @Override
-            public void run() {
-                switch (entryAdapter.getEntry(0).getType()) {
-                    case "audio":
-                        downloadFileManager.downloadFile(entryAdapter.getEntry(0).getAudioLink(), 0);
-                        break;
-                    case "video":
-                        downloadFileManager.downloadFile(entryAdapter.getEntry(0).getVideoLink(), 0);
-                        break;
-                }
-            }
-        };
-        timer.schedule(task, 500);
     }
 
     private void refreshEntryList() {

@@ -114,12 +114,6 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     @Override
     public ProfileStickyHeaderItem onCreateHeaderViewHolder(ViewGroup viewGroup) {
         final View inflatedView = layoutInflater.inflate(R.layout.layout_profile_sticky_header, viewGroup, false);
-        inflatedView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
         final ProfileStickyHeaderItem stickyHeader = new ProfileStickyHeaderItem(inflatedView);
         return stickyHeader;
     }
