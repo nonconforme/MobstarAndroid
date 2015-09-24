@@ -516,6 +516,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     @Override
     public void onSwipeRight() {
         likeRequest();
+//        if (swipeCardView.getTopView() == null) {
+//            swipeCardView.clearStack();
+//            swipeCardView.addView(cardView);
+//            swipeCardView.resetTopView();
+//        }
         if (onChangeEntryListener != null)
             onChangeEntryListener.onRemoveEntry(getPos());
     }

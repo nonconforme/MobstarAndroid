@@ -16,7 +16,8 @@ import android.widget.TextView;
 
 import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
-import com.mobstar.home.VideoListFragment;
+
+import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.utils.Utility;
 
 public class TalentConnectVotesActivity extends FragmentActivity {
@@ -94,7 +95,7 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 
 	void GetData(String VoteType) {
 
-		VideoListFragment videoListFragment = new VideoListFragment();
+		HomeVideoListBaseFragment videoListFragment = new HomeVideoListBaseFragment();
 		Bundle extras = new Bundle();
 		extras.putBoolean("isVoteAPI", true);
 		extras.putString("VoteType", VoteType);
