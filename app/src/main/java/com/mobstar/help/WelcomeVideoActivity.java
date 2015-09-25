@@ -364,8 +364,7 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 					// Environment.getExternalStorageDirectory() +
 					// "/.mobstar/" + sFileName);
 
-					String path = Environment.getExternalStorageDirectory().getPath()
-							+ "/Android/data/" + mContext.getPackageName() +"/";
+					String path = Utility.getCurrentDirectory(WelcomeVideoActivity.this);
 					
 //					File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
 					
