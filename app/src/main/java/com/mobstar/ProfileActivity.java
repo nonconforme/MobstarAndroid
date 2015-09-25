@@ -15,7 +15,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
+
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -41,13 +41,13 @@ import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.daimajia.swipe.SwipeLayout;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.mobstar.api.RestClient;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
+import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.fanconnect.FansActivity;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
@@ -70,6 +70,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -945,7 +946,24 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 					viewHolder.layoutStatastics = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
 					viewHolder.textStatasticCount = (TextView) convertView.findViewById(R.id.textStatasticCount);
 					viewHolder.imgMsg= (ImageView) convertView.findViewById(R.id.imgMsg);
+					viewHolder.swipeCardView = (SwipeCardView) convertView.findViewById(R.id.swipe_card_view);
+					viewHolder.swipeCardView.setOnSwipeDismissListener(new SwipeCardView.OnSwipeDismissListener() {
+						@Override
+						public void onSwipeLeft() {
+							dislikeRequest(position);
+							Utility.DisLikeDialog(ProfileActivity.this);
+							viewHolder.swipeCardView.resetTopView();
+							entryListAdapter.notifyDataSetChanged();
+						}
 
+						@Override
+						public void onSwipeRight() {
+							likeRequest(position);
+							Utility.LikeDialog(ProfileActivity.this);
+							viewHolder.swipeCardView.resetTopView();
+							entryListAdapter.notifyDataSetChanged();
+						}
+					});
 
 				}
 
@@ -967,7 +985,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
 				viewHolder.flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
 				viewHolder.btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
-				viewHolder.swipeLayout = (SwipeLayout) convertView.findViewById(R.id.swipe);
 				convertView.setTag(viewHolder);
 
 			} else {
@@ -2013,7 +2030,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			ImageView imgMsg,ivIndicator;
 			TextView tvLikeText;
 			ImageView ivLike;
-			SwipeLayout swipeLayout;
+			SwipeCardView swipeCardView;
+
 		}
 
 		class ViewHolderProfile {
@@ -2320,6 +2338,20 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			}.start();
 		}
 
+	}
+
+	private void likeRequest(int position) {
+		final HashMap<String, String> params = new HashMap<>();
+		params.put("entry", arrEntryPojos.get(position).getID());
+		params.put("type", "up");
+		RestClient.getInstance(this).postRequest(Constant.VOTE, params, null);
+	}
+
+	private void dislikeRequest(int position) {
+		final HashMap<String, String> params = new HashMap<>();
+		params.put("entry", arrEntryPojos.get(position).getID());
+		params.put("type", "down");
+		RestClient.getInstance(this).postRequest(Constant.VOTE, params, null);
 	}
 
 	void PlayAudio(int position) {

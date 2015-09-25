@@ -502,7 +502,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onSwipeLeft() {
-//        dislikeRequest();
+        dislikeRequest();
         Utility.DisLikeDialog(baseActivity);
         if (onChangeEntryListener != null)
             onChangeEntryListener.onRemoveEntry(getPos());

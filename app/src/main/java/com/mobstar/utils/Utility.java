@@ -132,7 +132,7 @@ public class Utility {
 
 	/** Create a File for saving an image or video */
 	public static File getOutputMediaFile(int type,Context mContext) {
-		String path = Environment.getExternalStorageDirectory().getPath()
+		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
 				+ "/Android/data/" + mContext.getPackageName() +"/";
 		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
 		File mediaStorageDir = new File(path);
@@ -160,7 +160,7 @@ public class Utility {
 	}
 
 	public static File getTemporaryMediaFile(Context mContext, String name) {
-		String path = Environment.getExternalStorageDirectory().getPath()
+		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
 				+ "/Android/data/" + mContext.getPackageName() +"/";
 		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
 		File mediaStorageDir = new File(path);
@@ -193,7 +193,7 @@ public class Utility {
 	@SuppressLint("NewApi")
 	public static String getPath(final Context context, final Uri uri) {
 
-		String path = Environment.getExternalStorageDirectory().getPath()
+		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
 				+ "/Android/data/" + context.getPackageName() +"/";
 
 		final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
