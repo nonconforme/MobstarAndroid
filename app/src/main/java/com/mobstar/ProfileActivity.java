@@ -175,9 +175,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		mContext = ProfileActivity.this;
 		handler=new Handler();
-
-		FILEPATH = Environment.getExternalStorageDirectory().getPath()
-				+ "/Android/data/" + mContext.getPackageName() +"/";
+		FILEPATH = Utility.getCurrentDirectory(mContext);
 
 		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
 

@@ -57,8 +57,7 @@ public class Utility {
 	private static boolean isSpinning=false;
 
 	public static final String getCurrentDirectory(final Context context) {
-		return Environment.getExternalStorageDirectory().getPath()
-				+ "/Android/data/" + context.getPackageName() + "/";
+		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + "/Android/data/" + context.getPackageName() + "/";
 	}
 
 	public static void ShareLink(Context mContext, String link) {
