@@ -10,7 +10,6 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
 import com.mobstar.R;
 import com.mobstar.api.responce.OnFileDownloadCallback;
 import com.mobstar.utils.Constant;
@@ -52,6 +51,7 @@ public class RestClient {
         instance.httpClient = new AsyncHttpClient();
         instance.httpClient.setTimeout(Constant.TIMEOUTCONNECTION);
         instance.httpClient.addHeader("Content-Type", "application/json");
+        instance.httpClient.addHeader("Content-Type", "multipart/form-data");
         instance.httpClient.addHeader("X-API-KEY", Constant.API_KEY);
         instance.httpClient.addHeader("X-API-TOKEN", instance.preferences.getString("token", null));
         return instance;
