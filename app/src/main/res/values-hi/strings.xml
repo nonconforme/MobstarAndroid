@@ -52,6 +52,7 @@
     <string name="delete_entry_question">दर्ज किये सवाल खारीच करे? </string>
     <string name="meet_the_mentors">मेंटोर से मिले </string>
     <string name="personal_details">व्यक्तिगत जानकारी </string>
+    <string name="personal_details_">व्यक्तिगत जानकारी </string>
     <string name="save">सेव्ह करे </string>
     <string name="cancel">रद्द करें </string>
     <string name="my_stars">माय स्टार </string>
@@ -60,6 +61,7 @@
     <string name="old_password">पुराना पासवर्ड </string>
     <string name="new_password">नया पासवर्ड </string>
     <string name="change_password">पासवर्ड बदले </string>
+    <string name="change_password_">पासवर्ड बदले </string>
     <string name="report_abuse">दुरुपयोग होने की सूचना दें </string>
     <string name="send_report">सूचना भेजें </string>
     <string name="report_abuse_text">हम इस अनुप्रयोग के सभी दुरुपयोग बहुत गंभीरता सेले।  दुरुपयोग की रिपोर्ट करें किसी भी तरहसे, कृपया नीचे दिएगएफार्म का उपयोग&amp; रूप में संभव केरूपमें विस्तृत किया </string>
