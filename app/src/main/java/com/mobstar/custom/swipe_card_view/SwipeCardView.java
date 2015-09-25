@@ -242,6 +242,7 @@ public class SwipeCardView extends FrameLayout {
                     break;
                 case MotionEvent.ACTION_MOVE:
                     pointerIndex = event.findPointerIndex(this.mActivePointerId);
+                    if (pointerIndex == -1) return false;
                     x = event.getX(pointerIndex);
                     y = event.getY(pointerIndex);
                     float dx = x - this.mLastTouchX;
