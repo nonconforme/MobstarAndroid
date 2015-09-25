@@ -120,7 +120,8 @@ public class Utility {
 	}
 
 	public static void HideDialog(Context mContext) {
-
+		if (mContext == null || dialog == null)
+			return;
 		if (!((Activity) mContext).isFinishing() && dialog.isShowing()) {
 			dialog.dismiss();
 		}
