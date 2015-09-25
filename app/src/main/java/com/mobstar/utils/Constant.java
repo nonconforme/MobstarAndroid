@@ -8,7 +8,7 @@ public class Constant {
 	
 	public static String PROFILE_CATEGORYID="7";
 	
-	public static int TIMEOUTCONNECTION = 7000;
+	public static int TIMEOUTCONNECTION = 30000;
 	
 	public static int TIMEOUTSOCKET = 20000;
 

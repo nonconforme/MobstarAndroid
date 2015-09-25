@@ -49,7 +49,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private void verifyLoadingNewPage(final RecyclerView recyclerView) {
         int totalItemCount = mLinearLayoutManager.getItemCount();
         if (loading) {
-            if (totalItemCount > previousTotal) {
+            if (totalItemCount > previousTotal || limitPage > currentPage) {
                 loading = false;
                 previousTotal = totalItemCount;
             }
