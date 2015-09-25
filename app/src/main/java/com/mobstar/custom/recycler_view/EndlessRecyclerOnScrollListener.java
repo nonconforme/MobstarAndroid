@@ -19,17 +19,18 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private int limitPage = 1;
 
     private LinearLayoutManager mLinearLayoutManager;
+    private boolean delFlag = false;
 
-    public void reset(){
+    public void reset() {
         currentPage = 1;
         loading = true;
     }
 
-    public void existNextPage(){
+    public void existNextPage() {
         limitPage++;
     }
 
-    public void setLinearLayoutManager(final LinearLayoutManager _linearLayoutManager){
+    public void setLinearLayoutManager(final LinearLayoutManager _linearLayoutManager) {
         mLinearLayoutManager = _linearLayoutManager;
     }
 
@@ -42,7 +43,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         onChangeState(recyclerView, newState);
     }
 
-    private void verifyLoadingNewPage(final RecyclerView recyclerView){
+    private void verifyLoadingNewPage(final RecyclerView recyclerView) {
         int totalItemCount = mLinearLayoutManager.getItemCount();
         if (loading) {
             if (totalItemCount > previousTotal) {
@@ -59,8 +60,8 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         }
     }
 
-    private void onChangeState(RecyclerView recyclerView, int newState){
-        switch (newState){
+    private void onChangeState(RecyclerView recyclerView, int newState) {
+        switch (newState) {
             case RecyclerView.SCROLL_STATE_DRAGGING:
 
                 break;
@@ -68,7 +69,8 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
                 final int topVisiblePosition = getTopVisiblePosition(recyclerView, mLinearLayoutManager);
                 if (topVisiblePosition == -1)
                     return;
-                if (currentTopItem != topVisiblePosition) {
+                if (currentTopItem != topVisiblePosition || delFlag) {
+                    delFlag = false;
                     oldTopItem = currentTopItem;
                     onLoadNewFile(topVisiblePosition, oldTopItem);
                     currentTopItem = topVisiblePosition;
@@ -77,12 +79,12 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         }
     }
 
-    public static int getTopVisiblePosition(final RecyclerView recyclerView, LinearLayoutManager linearLayoutManager){
+    public static int getTopVisiblePosition(final RecyclerView recyclerView, LinearLayoutManager linearLayoutManager) {
         int firstVisiblePosition = linearLayoutManager.findFirstVisibleItemPosition();
         final View firstVisibleItem = linearLayoutManager.findViewByPosition(firstVisiblePosition);
         if (firstVisibleItem == null)
             return 0;
-        if (Math.abs(firstVisibleItem.getTop()) > firstVisibleItem.getHeight() / 2 && firstVisiblePosition < recyclerView.getAdapter().getItemCount() - 2){
+        if (Math.abs(firstVisibleItem.getTop()) > firstVisibleItem.getHeight() / 2 && firstVisiblePosition < recyclerView.getAdapter().getItemCount() - 2) {
             firstVisiblePosition++;
         }
         return firstVisiblePosition;
@@ -91,4 +93,9 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     public abstract void onLoadMore(int current_page);
 
     public abstract void onLoadNewFile(int currentPosition, int oldPosition);
+
+    public void setDelFlag(boolean b) {
+        delFlag = b;
+
+    }
 }

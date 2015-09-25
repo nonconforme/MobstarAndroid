@@ -1,6 +1,5 @@
 package com.mobstar.home.new_home_screen;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -84,7 +83,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     public int getPos() {
-        return position;
+        return getPosition();
     }
 
     private void findView(final View convertView) {
@@ -503,7 +502,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onSwipeLeft() {
-        dislikeRequest();
+//        dislikeRequest();
         Utility.DisLikeDialog(baseActivity);
         if (onChangeEntryListener != null)
             onChangeEntryListener.onRemoveEntry(getPos());
@@ -558,6 +557,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     public void standartVideoState() {
         flPlaceHolder.setVisibility(View.VISIBLE);
+    }
+
+    public void setPosition(int i) {
+        position = i;
     }
 
     public interface OnChangeEntryListener {

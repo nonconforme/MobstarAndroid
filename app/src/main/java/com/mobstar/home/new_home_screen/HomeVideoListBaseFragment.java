@@ -30,8 +30,6 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by lipcha on 14.09.15.
@@ -233,6 +231,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     @Override
     public void onRemoveItemAnimationEnd() {
+        endlessRecyclerOnScrollListener.setDelFlag(true);
         refreshEntryList();
     }
 

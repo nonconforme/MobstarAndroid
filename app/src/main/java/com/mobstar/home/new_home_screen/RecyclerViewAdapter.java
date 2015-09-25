@@ -69,6 +69,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<EntryItem> impleme
     public void onRemoveEntry(int position) {
         arrEntryes.remove(position);
         notifyItemRemoved(position);
+        EntryItem entryItem = getEntryAtPosition(position);
+        entryItem.setPosition(-1);
     }
 
     @Override
