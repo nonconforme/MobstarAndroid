@@ -5,7 +5,7 @@ import org.json.JSONObject;
 /**
  * Created by Alexandr on 22.09.2015.
  */
-public class NullResponse implements BaseResponse {
+public class NullResponse extends BaseResponse {
 
     @Override
     public void configure(JSONObject jsonObject) throws JSONException {

@@ -1,14 +1,5 @@
 package com.mobstar.home;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import cz.msebera.android.httpclient.Header;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -72,7 +63,6 @@ import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -80,6 +70,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import cz.msebera.android.httpclient.Header;
+
 
 public class SearchListFragment extends Fragment {
 

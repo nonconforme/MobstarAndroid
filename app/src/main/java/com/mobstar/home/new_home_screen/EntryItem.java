@@ -16,11 +16,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mobstar.AdWordsManager;
 import com.mobstar.BaseActivity;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
+import com.mobstar.api.StarCall;
 import com.mobstar.api.responce.StarResponse;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.home.CommentActivity;
@@ -379,10 +381,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         params.put("star", entryPojo.getUserID());
         Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
         showStarDialog();
-        RestClient.getInstance(baseActivity).postRequest(Constant.STAR, params, new ConnectCallback<StarResponse>() {
-
+        StarCall.addStarCall(baseActivity, entryPojo.getUserID(), new ConnectCallback<StarResponse>() {
             @Override
             public void onSuccess(StarResponse object) {
+                Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
                 Utility.HideDialog(baseActivity);
                 if (object.getError() == null) {
                     if (onChangeEntryListener != null)
@@ -392,9 +394,26 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
             @Override
             public void onFailure(String error) {
+                Log.d(LOG_TAG, "StarCall.addStarCall.onFailure.error=" + error);
                 Utility.HideDialog(baseActivity);
             }
         });
+//        RestClient.getInstance(baseActivity).postRequest(Constant.STAR, params, new ConnectCallback<StarResponse>() {
+//
+//            @Override
+//            public void onSuccess(StarResponse object) {
+//                Utility.HideDialog(baseActivity);
+//                if (object.getError() == null) {
+//                    if (onChangeEntryListener != null)
+//                        onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "1");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(String error) {
+//                Utility.HideDialog(baseActivity);
+//            }
+//        });
     }
 
     private void showStarDialog() {
@@ -502,7 +521,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     @Override
     public void onSwipeLeft() {
-//        dislikeRequest();
+        dislikeRequest();
         Utility.DisLikeDialog(baseActivity);
         if (onChangeEntryListener != null)
             onChangeEntryListener.onRemoveEntry(getPos());
@@ -523,6 +542,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         params.put("entry", entryPojo.getID());
         params.put("type", "up");
         RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
+        AdWordsManager.getInstance().sendEngagementEvent();
     }
 
     private void dislikeRequest() {
@@ -530,6 +550,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         params.put("entry", entryPojo.getID());
         params.put("type", "down");
         RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
+        AdWordsManager.getInstance().sendEngagementEvent();
     }
 
     @Override

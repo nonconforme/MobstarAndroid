@@ -149,7 +149,6 @@ public class MessageActivity extends Activity implements OnClickListener{
 					if (sErrorMessage != null && !sErrorMessage.equals("")) {
 						handlerMessage.sendEmptyMessage(0);
 					} else {
-                        AdWordsManager.getInstance().sendMessageSentEvent();
 						handlerMessage.sendEmptyMessage(1);
 					}
 
