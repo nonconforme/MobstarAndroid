@@ -15,7 +15,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -41,12 +40,13 @@ import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
 import com.mobstar.api.StarCall;
 import com.mobstar.api.responce.NullResponse;
-import com.mobstar.api.RestClient;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
@@ -67,7 +67,6 @@ import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import cz.msebera.android.httpclient.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -77,6 +76,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cz.msebera.android.httpclient.Header;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -2204,6 +2204,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 		params.put("entry", arrEntryPojos.get(position).getID());
 		params.put("type", "up");
 		RestClient.getInstance(this).postRequest(Constant.VOTE, params, null);
+        AdWordsManager.getInstance().sendEngagementEvent();
 	}
 
 	private void dislikeRequest(int position) {
@@ -2211,6 +2212,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 		params.put("entry", arrEntryPojos.get(position).getID());
 		params.put("type", "down");
 		RestClient.getInstance(this).postRequest(Constant.VOTE, params, null);
+        AdWordsManager.getInstance().sendEngagementEvent();
 	}
 
 	void PlayAudio(int position) {

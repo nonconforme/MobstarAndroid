@@ -328,6 +328,7 @@ public class SwipeCardView extends FrameLayout {
                     break;
                 case 2:
                     pointerIndex = event.findPointerIndex(this.mActivePointerId);
+                    if (pointerIndex == -1) return false;
                     x = event.getX(pointerIndex);
                     y = event.getY(pointerIndex);
                     if(Math.abs(x - this.mLastTouchX) > (float)this.mTouchSlop || Math.abs(y - this.mLastTouchY) > (float)this.mTouchSlop) {
