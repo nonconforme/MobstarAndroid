@@ -375,18 +375,20 @@ public class SwipeCardView extends FrameLayout {
                 }
 
                 duration = Math.min(500L, duration);
-                mTopView = getChildAt(getChildCount() - 2);
+//                mTopView = getChildAt(getChildCount() - 2);
 
                 final float finalTargetX = targetX;
                 topCard.animate().setDuration(duration).alpha(0.75F).setInterpolator(new LinearInterpolator()).x(targetX).y(targetY).rotation(Math.copySign(45.0F, velocityX)).setListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Animator animation) {
 //                        removeViewInLayout(topCard);
+                        invalidate();
                         if(onSwipeDismissListener != null) {
                             if(finalTargetX > 0.0F) {
                                 onSwipeDismissListener.onSwipeRight();
                             } else {
                                 onSwipeDismissListener.onSwipeLeft();
                             }
+
                         }
 
                     }

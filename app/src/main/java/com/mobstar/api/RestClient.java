@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -32,7 +33,7 @@ public class RestClient {
 
     private static final String LOG_TAG = RestClient.class.getName();
     private static RestClient instance;
-    private SyncHttpClient httpClient;
+    private AsyncHttpClient httpClient;
     private SharedPreferences preferences;
     private Context context;
     private Toast toast;
@@ -48,7 +49,7 @@ public class RestClient {
         if (instance.preferences == null)
             instance.preferences = _context.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
         instance.context = _context;
-        instance.httpClient = new SyncHttpClient();
+        instance.httpClient = new AsyncHttpClient();
         instance.httpClient.setTimeout(Constant.TIMEOUTCONNECTION);
         instance.httpClient.addHeader("Content-Type", "application/json");
         instance.httpClient.addHeader("X-API-KEY", Constant.API_KEY);

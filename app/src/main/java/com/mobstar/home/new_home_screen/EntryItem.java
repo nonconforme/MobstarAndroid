@@ -1,5 +1,6 @@
 package com.mobstar.home.new_home_screen;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -125,13 +126,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         entryPojo = _entryPojo;
         baseActivity = _activity;
         position = _position;
-
-        if (swipeCardView.getTopView() == null) {
-            swipeCardView.clearStack();
-            swipeCardView.addView(cardView);
-            swipeCardView.resetTopView();
-        }
-
+        swipeCardView.resetTopView();
         onChangeEntryListener = _onRemoveEntryListener;
         if (entryPojo.getCategory() != null && entryPojo.getCategory().equalsIgnoreCase("onlyprofile")){
             setupUserViews();
@@ -509,6 +504,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     @Override
     public void onSwipeLeft() {
         dislikeRequest();
+        Utility.DisLikeDialog(baseActivity);
         if (onChangeEntryListener != null)
             onChangeEntryListener.onRemoveEntry(getPos());
     }
@@ -516,13 +512,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     @Override
     public void onSwipeRight() {
         likeRequest();
-//        if (swipeCardView.getTopView() == null) {
-//            swipeCardView.clearStack();
-//            swipeCardView.addView(cardView);
-//            swipeCardView.resetTopView();
-//        }
-        if (onChangeEntryListener != null)
-            onChangeEntryListener.onRemoveEntry(getPos());
+        swipeCardView.resetTopView();
+        Utility.LikeDialog(baseActivity);
+
+//        if (onChangeEntryListener != null)
+//            onChangeEntryListener.onRemoveEntry(getPos());
     }
 
     private void likeRequest() {
