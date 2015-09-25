@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by lipcha on 14.09.15.
  */
-public class EntriesResponse implements BaseResponse {
+public class EntriesResponse extends BaseResponse {
 
     private ArrayList<EntryPojo> arrEntry;
     private String next;

@@ -50,7 +50,7 @@ public class RestClient {
         instance.context = _context;
         instance.httpClient = new AsyncHttpClient();
         instance.httpClient.setTimeout(Constant.TIMEOUTCONNECTION);
-        instance.httpClient.addHeader("Content-Type", "application/json");
+//        instance.httpClient.addHeader("Content-Type", "application/json");
         instance.httpClient.addHeader("Content-Type", "multipart/form-data");
         instance.httpClient.addHeader("X-API-KEY", Constant.API_KEY);
         instance.httpClient.addHeader("X-API-TOKEN", instance.preferences.getString("token", null));

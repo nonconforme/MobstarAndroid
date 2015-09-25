@@ -1,18 +1,20 @@
 package com.mobstar.pojo;
 
 import com.mobstar.api.responce.BaseResponse;
+import com.mobstar.utils.Utility;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-import com.mobstar.utils.Utility;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-public class EntryPojo implements Serializable, BaseResponse {
+public class EntryPojo extends BaseResponse implements Serializable {
 
 	/**
 	 * 
