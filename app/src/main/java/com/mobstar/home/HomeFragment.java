@@ -21,10 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +40,6 @@ import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -441,7 +438,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //        extras.putBoolean("isEntryAPI", true);
 //        extras.putString("LatestORPopular", "latest");
 //        videoListFragment.setArguments(extras);
-		HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, null, "latest", null, true);
+		HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, "latest", null, true);
         replaceFragment(videoListFragment, "VideoListFragment");
     }
 

@@ -87,7 +87,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         final View firstVisibleItem = linearLayoutManager.findViewByPosition(firstVisiblePosition);
         if (firstVisibleItem == null)
             return 0;
-        if (Math.abs(firstVisibleItem.getTop()) > firstVisibleItem.getHeight() / 2 && firstVisiblePosition < recyclerView.getAdapter().getItemCount() - 2) {
+        if (Math.abs(firstVisibleItem.getTop()) > firstVisibleItem.getHeight() / 2 && firstVisiblePosition < recyclerView.getAdapter().getItemCount() - 1) {
             firstVisiblePosition++;
         }
         return firstVisiblePosition;
