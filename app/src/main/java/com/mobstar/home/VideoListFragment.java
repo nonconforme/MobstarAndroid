@@ -45,6 +45,9 @@ import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.loopj.android.http.SyncHttpClient;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.StarCall;
+import com.mobstar.api.responce.NullResponse;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.custom.PullToRefreshListView.OnRefreshListener;
 import com.mobstar.home.split.SplitActivity;
@@ -1100,11 +1103,27 @@ public class VideoListFragment extends Fragment {
 							Utility.HideDialog(mContext);
 						}
 					} else {
+                        Log.d(LOG_TAG,"btnFollow.onClick.follow");
 						Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
 						if (Utility.isNetworkAvailable(mContext)) {
 
-							new AddStarCall(arrEntryPojos.get(pos).getUserID()).start();
+//							new AddStarCall(arrEntryPojos.get(pos).getUserID()).start();
+                            StarCall.addStarCall(mContext, arrEntryPojos.get(pos).getUserID(), new ConnectCallback<NullResponse>() {
+                                @Override
+                                public void onSuccess(NullResponse object) {
+                                    Log.d(LOG_TAG,"StarCall.addStarCall.onSuccess");
+                                    arrEntryPojos.get(pos).setIsMyStar("1");
+                                    handlerAddStar.sendEmptyMessage(1);
+                                }
+
+                                @Override
+                                public void onFailure(String error) {
+                                    Utility.HideDialog(mContext);
+                                    Log.d(LOG_TAG,"StarCall.addStarCall.onFailure.error="+error);
+                                    handlerAddStar.sendEmptyMessage(0);
+                                }
+                            });
 
 							final Dialog dialog = new Dialog(mContext, R.style.DialogAnimationTheme);
 							dialog.setContentView(R.layout.dialog_add_star);
@@ -2104,61 +2123,60 @@ public class VideoListFragment extends Fragment {
 		}
 	}
 
-	// added by khyati
-	class AddStarCall extends Thread {
-
-		String userID;
-
-		AddStarCall(String userID) {
-			this.userID = userID;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String[] name = { "star" };
-			String[] value = { userID };
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.STAR, name, value, preferences.getString("token", null));
-
-//			Log.v(Constant.TAG, "AddStarCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerAddStar.sendEmptyMessage(0);
-					} else {
-						for (int i = 0; i < arrEntryPojos.size(); i++) {
-							if (arrEntryPojos.get(i).getUserID().equalsIgnoreCase(userID)) {
-								arrEntryPojos.get(i).setIsMyStar("1");
-							}
-
-						}
-						handlerAddStar.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerAddStar.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerAddStar.sendEmptyMessage(0);
-			}
-
-		}
-	}
+    // todo must del befor marge
+//	// added by khyati
+//	class AddStarCall extends Thread {
+//
+//		String userID;
+//
+//		AddStarCall(String userID) {
+//			this.userID = userID;
+//		}
+//
+//		@Override
+//		public void run() {
+//
+//			String[] name = { "star" };
+//			String[] value = { userID };
+//
+//			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.STAR, name, value, preferences.getString("token", null));
+//
+////			Log.v(Constant.TAG, "AddStarCall response " + response);
+//
+//			if (response != null) {
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						sErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
+//						handlerAddStar.sendEmptyMessage(0);
+//					} else {
+//						for (int i = 0; i < arrEntryPojos.size(); i++) {
+//							if (arrEntryPojos.get(i).getUserID().equalsIgnoreCase(userID)) {
+//								arrEntryPojos.get(i).setIsMyStar("1");
+//							}
+//
+//						}
+//						handlerAddStar.sendEmptyMessage(1);
+//					}
+//
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					handlerAddStar.sendEmptyMessage(0);
+//				}
+//
+//			} else {
+//
+//				handlerAddStar.sendEmptyMessage(0);
+//			}
+//
+//		}
+//	}
 
 	Handler handlerAddStar = new Handler() {
 

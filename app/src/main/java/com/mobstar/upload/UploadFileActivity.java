@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.home.split.SplitActivity;
 import com.mobstar.pojo.EntryPojo;
@@ -520,6 +521,7 @@ public class UploadFileActivity extends Activity {
 					setResult(Activity.RESULT_CANCELED);
 					onBackPressed();
 				} else {
+                    AdWordsManager.getInstance().sendUploadingContentEvent();
 					setResult(Activity.RESULT_OK);
 					onBackPressed();
 				}

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
@@ -384,7 +385,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 				pref.edit().putString("cover_image", ProfileCover).commit();
 
 
-
+                AdWordsManager.getInstance().sendSingupEvent();
 				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
 					startWelcomeActivity();
 				}else {

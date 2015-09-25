@@ -42,7 +42,8 @@ import java.util.TimerTask;
 
 public class SplashActivity extends Activity implements OnNetworkChangeListener {
 
-	Timer timer;
+    private static final String IS_FIRST_OPEN_PREFERENCE = "is first open";
+    Timer timer;
 	Context mContext;
 
 	GoogleCloudMessaging gcm;
@@ -76,6 +77,11 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 		}
 
 		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
+
+        if (preferences.getBoolean(IS_FIRST_OPEN_PREFERENCE, true)) {
+            preferences.edit().putBoolean(IS_FIRST_OPEN_PREFERENCE, false).apply();
+            AdWordsManager.getInstance().sendFirstOpenEvent();
+        }
 
 
 

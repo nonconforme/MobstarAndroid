@@ -1,5 +1,7 @@
 package com.mobstar.utils;
 
+import com.mobstar.AdWordsManager;
+
 public class EntryActionHelper {
 
 	public ActionListener actionListener;
@@ -34,6 +36,7 @@ public class EntryActionHelper {
 //			Log.d(Constant.TAG, "LikeEntry Response == " + jsonString);
 
 			actionListener.onComplete();
+            AdWordsManager.getInstance().sendEngagementEvent();
 		}
 	}
 	public void setActionListener(ActionListener actionListener) {

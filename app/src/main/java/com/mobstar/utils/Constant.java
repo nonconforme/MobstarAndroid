@@ -3,7 +3,8 @@ package com.mobstar.utils;
 
 public class Constant {
 
-//	public static String SENDER_ID = "397816546137";
+
+    //	public static String SENDER_ID = "397816546137";
 	public static String SENDER_ID = "367365382408";
 	
 	public static String PROFILE_CATEGORYID="7";
@@ -154,6 +155,9 @@ public class Constant {
 	public static final String USER_ACCOUNT = "settings/account/";
 
     public static final String USER_CONTINENT_FILTERS = "settings/continentFilter";
+
+    //value key
+    public static final String STAR_VALUE = "star";
 
     public static final String USER_CATEGORIES_FILTERS = "settings/categoryFilter";
 

@@ -1,31 +1,11 @@
 package com.mobstar.home;
 
-import static com.rosaloves.bitlyj.Bitly.as;
-import static com.rosaloves.bitlyj.Bitly.shorten;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ShareCompat;
@@ -43,6 +23,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.Settings;
 import com.google.android.gms.plus.PlusShare;
+import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.custom.RoundedTransformation;
 import com.mobstar.pojo.EntryPojo;
@@ -53,6 +34,18 @@ import com.mobstar.utils.ImageDownloader.ImageLoaderListener;
 import com.mobstar.utils.Utility;
 import com.rosaloves.bitlyj.Url;
 import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import static com.rosaloves.bitlyj.Bitly.as;
+import static com.rosaloves.bitlyj.Bitly.shorten;
 public class ShareActivity extends Activity {
 
 	Context mContext;
@@ -225,6 +218,7 @@ public class ShareActivity extends Activity {
 							if (action.equals("Success")) {
 
 								Utility.HideDialog(mContext);
+                                AdWordsManager.getInstance().sendSharedEntryEvent();
 
 							} else {
 								Utility.HideDialog(mContext);
@@ -248,6 +242,7 @@ public class ShareActivity extends Activity {
 							if (action.equals("Success")) {
 
 								Utility.HideDialog(mContext);
+                                AdWordsManager.getInstance().sendSharedEntryEvent();
 
 							} else {
 								Utility.HideDialog(mContext);
@@ -277,6 +272,7 @@ public class ShareActivity extends Activity {
 					}
 					try {
 						startActivity(Intent.createChooser(i, "Send mail..."));
+                        AdWordsManager.getInstance().sendSharedEntryEvent();
 					} catch (android.content.ActivityNotFoundException ex) {
 						Toast.makeText(ShareActivity.this, getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
 					}
@@ -288,6 +284,7 @@ public class ShareActivity extends Activity {
 					i.putExtra(Intent.EXTRA_TEXT, ShareText);
 					try {
 						startActivity(Intent.createChooser(i, "Send mail..."));
+                        AdWordsManager.getInstance().sendSharedEntryEvent();
 					} catch (android.content.ActivityNotFoundException ex) {
 						Toast.makeText(ShareActivity.this,  getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
 					}
@@ -311,11 +308,13 @@ public class ShareActivity extends Activity {
 					         .getIntent()
 					         .setPackage("com.google.android.apps.plus");
 					startActivityForResult(shareIntent, 0);
+                    AdWordsManager.getInstance().sendSharedEntryEvent();
 				}
 				else {
 					Intent shareIntent = new PlusShare.Builder(ShareActivity.this).setType("text/plain")
 							.setText(ShareText + "\n#mobstar").getIntent();
 					startActivityForResult(shareIntent, 0);
+                    AdWordsManager.getInstance().sendSharedEntryEvent();
 				}
 				
 				
@@ -415,6 +414,7 @@ public class ShareActivity extends Activity {
 
 												new AlertDialog.Builder(mContext).setTitle(R.string.app_name)
 														.setMessage(getString(R.string.post_successfully_shared_on_your_wall)).setPositiveButton("OK", null).show();
+                                                AdWordsManager.getInstance().sendSharedEntryEvent();
 											}
 
 										}
