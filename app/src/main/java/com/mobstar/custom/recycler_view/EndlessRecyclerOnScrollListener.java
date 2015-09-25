@@ -21,8 +21,11 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private LinearLayoutManager mLinearLayoutManager;
     private boolean delFlag = false;
 
-    public void reset() {
+    public void reset(){
+        previousTotal = 0;
         currentPage = 1;
+        oldTopItem = 0;
+        limitPage = 1;
         loading = true;
     }
 
@@ -88,6 +91,13 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
             firstVisiblePosition++;
         }
         return firstVisiblePosition;
+    }
+
+    public void onFailedLoading(){
+        loading = false;
+        previousTotal--;
+        if (currentPage > 2)
+            currentPage--;
     }
 
     public abstract void onLoadMore(int current_page);

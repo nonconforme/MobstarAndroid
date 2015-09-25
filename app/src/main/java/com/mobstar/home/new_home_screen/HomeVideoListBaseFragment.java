@@ -149,6 +149,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onFailure(String error) {
+                endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());
             }
