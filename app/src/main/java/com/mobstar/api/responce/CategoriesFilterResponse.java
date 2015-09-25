@@ -7,37 +7,37 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by Alexandr on 09.09.2015.
+ * Created by Alexandr on 10.09.2015.
  */
-public class ContinentFilterResponse extends BaseResponse {
+public class CategoriesFilterResponse extends BaseResponse {
 
-    public static final String KEY_CONTINENT_FILTER = "continentFilter";
+    public static final String KEY_CATEGORIES_FILTER = "categoryFilter";
 
-    private ArrayList<Integer> choosenContinents;
+    private ArrayList<Integer> choosenCategories;
 //    private String error="";
 
     @Override
     public void configure(JSONObject jsonObject) throws JSONException {
         super.configure(jsonObject);
         JSONArray jsonArray;
-        choosenContinents = new ArrayList<>();
-        if (jsonObject.has(KEY_CONTINENT_FILTER)) {
-            jsonArray = jsonObject.getJSONArray(KEY_CONTINENT_FILTER);
+        choosenCategories = new ArrayList<>();
+        if (jsonObject.has(KEY_CATEGORIES_FILTER)) {
+            jsonArray = jsonObject.getJSONArray(KEY_CATEGORIES_FILTER);
             if (jsonArray.length()>0) {
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    choosenContinents.add(jsonArray.getInt(i));
+                    choosenCategories.add(jsonArray.getInt(i));
                 }
             }
         }
-//
+
 //        if(jsonObject.has("error"))
 //            error = jsonObject.getString("error");
 //        if(jsonObject.has("errors"))
 //            error = jsonObject.getString("errors");
     }
 
-    public ArrayList<Integer> getChoosenContinents() {
-        return choosenContinents;
+    public ArrayList<Integer> getChoosenCategories() {
+        return choosenCategories;
     }
 
 //    public String getError() {

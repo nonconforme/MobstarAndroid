@@ -22,18 +22,15 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -78,7 +75,8 @@ import java.util.concurrent.TimeUnit;
 
 public class VideoListFragment extends Fragment {
 
-	private Context mContext;
+    private static final String LOG_TAG = VideoListFragment.class.getName();
+    private Context mContext;
 
 	EntryListAdapter entryListAdapter;
 	PullToRefreshListView listEntry;
@@ -823,8 +821,8 @@ public class VideoListFragment extends Fragment {
 
 	void PlayAudio(int position) {
 
-		// Log.v(Constant.TAG, "indexCurrentPlayAudio " +
-		// indexCurrentPlayAudio);
+//		 Log.v(LOG_TAG, "indexCurrentPlayAudio " +
+//		 indexCurrentPlayAudio);
 
 		if (indexCurrentPlayAudio == position) {
 
@@ -1971,7 +1969,7 @@ public class VideoListFragment extends Fragment {
 
 		} else {
 
-			// Log.v(Constant.TAG, "Current video is not playing");
+//			 Log.v(LOG_TAG, "Current video is not playing");
 			//khyati do webcall for view
 
 			if (Utility.isNetworkAvailable(mContext)) {
@@ -1997,7 +1995,9 @@ public class VideoListFragment extends Fragment {
 							mediaPlayer.reset();
 						}
 
-						final String sFileName = Utility.GetFileNameFromURl(arrEntryPojos.get(indexCurrentPlayAudio).getVideoLink());
+                        String link = arrEntryPojos.get(indexCurrentPlayAudio).getVideoLink();
+                        String nameFromURl=  Utility.GetFileNameFromURl(link);
+						final String sFileName = nameFromURl;
 
 						//						File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
 
@@ -2017,8 +2017,8 @@ public class VideoListFragment extends Fragment {
 								@Override
 								public void onPrepared(final MediaPlayer mediaPlayer) {
 
-									// Log.v(Constant.TAG,
-									// "mediaPlayer onPrepared");
+//									 Log.v(LOG_TAG,
+//									 "mediaPlayer onPrepared");
 									mediaPlayer.start();
 
 									Timer timer = new Timer();
@@ -2063,7 +2063,7 @@ public class VideoListFragment extends Fragment {
 								public void onCompletion(MediaPlayer mp) {
 
 									if(indexCurrentPlayAudio>=0 && !isMediaPlayerError){
-										
+
 										if (Utility.isNetworkAvailable(mContext)) {
 											new UpdateViewCountCall(arrEntryPojos.get(indexCurrentPlayAudio).getID()).start();
 										} else {
