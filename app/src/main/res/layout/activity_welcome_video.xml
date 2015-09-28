@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/login_logo" />
+            android:src="@drawable/login_logo"
+            android:layout_marginTop="10dp" />
 
         <FrameLayout
             android:layout_width="match_parent"

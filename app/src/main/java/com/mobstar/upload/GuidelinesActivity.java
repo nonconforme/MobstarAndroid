@@ -2,7 +2,7 @@ package com.mobstar.upload;
 
 import java.io.File;
 
-import org.apache.http.Header;
+import cz.msebera.android.httpclient.Header;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -274,8 +274,7 @@ public class GuidelinesActivity extends Activity implements OnClickListener{
 
 			sFileName = Utility.GetFileNameFromURl(videoURL);
 
-			String path = Environment.getExternalStorageDirectory().getPath()
-					+ "/Android/data/" + mContext.getPackageName() +"/";
+			String path = Utility.getCurrentDirectory(mContext);
 			
 //			File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
 			File file = new File(path+ sFileName);

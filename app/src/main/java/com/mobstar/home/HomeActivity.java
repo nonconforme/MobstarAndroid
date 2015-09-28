@@ -19,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.mobstar.BaseActivity;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.blog.BlogFragment;
@@ -51,7 +53,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-public class HomeActivity extends ActionBarActivity implements OnClickListener, DrawerListener {
+public class HomeActivity extends BaseActivity implements OnClickListener, DrawerListener {
 
 	ActionBar mActionBar;
 	Context mContext;

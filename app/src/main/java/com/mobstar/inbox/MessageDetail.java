@@ -1,11 +1,5 @@
 package com.mobstar.inbox;
 
-import java.util.ArrayList;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobstar.AdWordsManager;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.pojo.MessageThreadPojo;
@@ -38,6 +33,12 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class MessageDetail extends Activity implements OnClickListener{
 
@@ -314,6 +315,7 @@ public class MessageDetail extends Activity implements OnClickListener{
 					if (sErrorMessage != null && !sErrorMessage.equals("")) {
 						handlerReplayMessage.sendEmptyMessage(0);
 					} else {
+                        AdWordsManager.getInstance().sendMessageSentEvent();
 						handlerReplayMessage.sendEmptyMessage(1);
 					}
 

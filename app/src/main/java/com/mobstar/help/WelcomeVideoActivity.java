@@ -35,7 +35,7 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 
-import org.apache.http.Header;
+import cz.msebera.android.httpclient.Header;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -237,8 +237,7 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 
 			sFileName = Utility.GetFileNameFromURl(videoURL);
 
-			String path = Environment.getExternalStorageDirectory().getPath()
-					+ "/Android/data/" + mContext.getPackageName() +"/";
+			String path = Utility.getCurrentDirectory(mContext);
 			
 //			File folder = new File(Environment.getExternalStorageDirectory() + "/.mobstar");
 			
@@ -365,8 +364,7 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 					// Environment.getExternalStorageDirectory() +
 					// "/.mobstar/" + sFileName);
 
-					String path = Environment.getExternalStorageDirectory().getPath()
-							+ "/Android/data/" + mContext.getPackageName() +"/";
+					String path = Utility.getCurrentDirectory(WelcomeVideoActivity.this);
 					
 //					File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
 					

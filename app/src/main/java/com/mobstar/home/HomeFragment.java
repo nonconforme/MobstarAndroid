@@ -35,6 +35,7 @@ import com.mobstar.api.RestClient;
 import com.mobstar.api.responce.CategoriesFilterResponse;
 import com.mobstar.api.responce.ContinentFilterResponse;
 import com.mobstar.custom.CustomTextviewBold;
+import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -174,20 +175,22 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		//check for deeplink EntryId
 		if(deepLinkedId!=null && deepLinkedId.length()>0) {
 			Log.d("mobstar","Sending deepLinkedId"+deepLinkedId);
-			VideoListFragment videoListFragment = new VideoListFragment();
-			Bundle extras = new Bundle();
-			extras.putBoolean("isEntryIdAPI", true);
-			extras.putString("deepLinkedId",deepLinkedId);
-			extras.putString("LatestORPopular", sLatestPopular);
-			videoListFragment.setArguments(extras);
+//			VideoListFragment videoListFragment = new VideoListFragment();
+//			Bundle extras = new Bundle();
+//			extras.putBoolean("isEntryIdAPI", true);
+//			extras.putString("deepLinkedId",deepLinkedId);
+//			extras.putString("LatestORPopular", sLatestPopular);
+//			videoListFragment.setArguments(extras);
+			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, deepLinkedId, sLatestPopular, null, false);
 			replaceFragment(videoListFragment, "VideoListFragment");
 		}
 		else {
-			VideoListFragment videoListFragment = new VideoListFragment();
-			Bundle extras = new Bundle();
-			extras.putBoolean("isEntryAPI", true);
-			extras.putString("LatestORPopular", sLatestPopular);
-			videoListFragment.setArguments(extras);
+//			VideoListFragment videoListFragment = new VideoListFragment();
+//			Bundle extras = new Bundle();
+//			extras.putBoolean("isEntryAPI", true);
+//			extras.putString("LatestORPopular", sLatestPopular);
+//			videoListFragment.setArguments(extras);
+			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, sLatestPopular, null, true);
 			replaceFragment(videoListFragment, "VideoListFragment");	
 		}
 		isDataLoaded = true;
@@ -430,11 +433,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
     }
 
     private void onBeginVideoFragment() {
-        VideoListFragment videoListFragment = new VideoListFragment();
-        Bundle extras = new Bundle();
-        extras.putBoolean("isEntryAPI", true);
-        extras.putString("LatestORPopular", "latest");
-        videoListFragment.setArguments(extras);
+//        VideoListFragment videoListFragment = new VideoListFragment();
+//        Bundle extras = new Bundle();
+//        extras.putBoolean("isEntryAPI", true);
+//        extras.putString("LatestORPopular", "latest");
+//        videoListFragment.setArguments(extras);
+		HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, "latest", null, true);
         replaceFragment(videoListFragment, "VideoListFragment");
     }
 

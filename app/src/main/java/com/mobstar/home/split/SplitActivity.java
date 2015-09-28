@@ -15,7 +15,7 @@ import com.mobstar.home.split.position_variants.PositionVariantsFragment;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Utility;
 
-import org.apache.http.Header;
+import cz.msebera.android.httpclient.Header;
 
 import java.io.File;
 
