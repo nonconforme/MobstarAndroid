@@ -433,25 +433,26 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void deleteStarRequest() {
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("star", entryPojo.getUserID());
         Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
-        RestClient.getInstance(baseActivity).deleteRequest(Constant.DELETE_STAR + entryPojo.getUserID(), params, new ConnectCallback<StarResponse>() {
-            @Override
-            public void onSuccess(StarResponse object) {
-                Utility.HideDialog(baseActivity);
-                final String error = object.getError();
-                if (error == null) {
-                    if (onChangeEntryListener != null)
-                        onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "0");
-                }
-            }
+        StarCall.delStarCall(baseActivity, entryPojo.getUserID(),
+                new ConnectCallback<StarResponse>() {
+                    @Override
+                    public void onSuccess(StarResponse object) {
+                        Log.d(LOG_TAG, "StarCall.delStarCall.onSuccess");
+                        Utility.HideDialog(baseActivity);
+                        final String error = object.getError();
+                        if (error == null) {
+                            if (onChangeEntryListener != null)
+                                onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "0");
+                        }
+                    }
 
-            @Override
-            public void onFailure(String error) {
-                Utility.HideDialog(baseActivity);
-            }
-        });
+                    @Override
+                    public void onFailure(String error) {
+                        Log.d(LOG_TAG, "StarCall.delStarCall.onFailure.error="+error);
+                        Utility.HideDialog(baseActivity);
+                    }
+                });
     }
 
 

@@ -19,4 +19,12 @@ public class StarCall {
         AdWordsManager.getInstance().sendFollowedUserEvent();
     }
 
+
+    public static void delStarCall(Context context,String userID, ConnectCallback callback){
+        HashMap<String,String> params = new HashMap<>();
+        params.put(Constant.STAR_VALUE, userID);
+        RestClient.getInstance(context).deleteRequest(Constant.DELETE_STAR + userID, params, callback);
+//        AdWordsManager.getInstance().sendFollowedUserEvent();
+    }
+
 }
