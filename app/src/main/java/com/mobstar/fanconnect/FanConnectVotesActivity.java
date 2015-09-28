@@ -28,8 +28,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -414,14 +415,24 @@ public class FanConnectVotesActivity extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 
-					Intent intent = new Intent(mContext, ProfileActivity.class);
-					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
-					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
-					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
-					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
-					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
-					intent.putExtra("IsMyStar", arrEntryPojos.get(position).getIsMyStar());
-					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
+					Intent intent = new Intent(mContext, NewProfileActivity.class);
+					final UserProfile userProfile = UserProfile.newBuilder()
+							.setUserCoverImage(arrEntryPojos.get(position).getProfileCover())
+							.setUserId(arrEntryPojos.get(position).getUserID())
+							.setUserName(arrEntryPojos.get(position).getUserName())
+							.setUserDisplayName(arrEntryPojos.get(position).getUserDisplayName())
+							.setUserPic(arrEntryPojos.get(position).getProfileImage())
+							.setIsMyStar(arrEntryPojos.get(position).getIsMyStar())
+							.setUserTagline(arrEntryPojos.get(position).getTagline())
+							.build();
+					intent.putExtra(NewProfileActivity.USER, userProfile);
+//					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
+//					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
+//					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
+//					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
+//					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
+//					intent.putExtra("IsMyStar", arrEntryPojos.get(position).getIsMyStar());
+//					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
 					startActivity(intent);
 					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 				}

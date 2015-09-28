@@ -23,6 +23,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -232,23 +234,35 @@ public class LikesActivity extends Activity {
 			viewHolder.imgUserPic.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(mContext, ProfileActivity.class);
-					intent.putExtra("UserID",
-							arrStarPojos.get(position).getUserID());
-					intent.putExtra("UserName",
-							arrStarPojos.get(position).getUserDisplayName());
-					intent.putExtra("IsMyStar", arrStarPojos.get(position).getIsMyStar());
-					intent.putExtra("UserPic",
-							arrStarPojos.get(position).getProfileImage());
-					intent.putExtra("UserCoverImage",arrStarPojos.get(position).getProfileCover());
-					//					intent.putExtra("isProfile",true);
-					startActivity(intent);
-					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					startProfileActivity(position);
 				}
 			});
 
 			return convertView;
 		}
+	}
+
+	private void startProfileActivity(int position){
+		final Intent intent = new Intent(mContext, NewProfileActivity.class);
+		final UserProfile userProfile = UserProfile.newBuilder()
+				.setUserId(arrStarPojos.get(position).getUserID())
+				.setUserName(arrStarPojos.get(position).getUserDisplayName())
+				.setIsMyStar(arrStarPojos.get(position).getIsMyStar())
+				.setUserPic(arrStarPojos.get(position).getProfileImage())
+				.setUserCoverImage(arrStarPojos.get(position).getProfileCover())
+				.build();
+//		intent.putExtra("UserID",
+//				arrStarPojos.get(position).getUserID());
+//		intent.putExtra("UserName",
+//				arrStarPojos.get(position).getUserDisplayName());
+//		intent.putExtra("IsMyStar", arrStarPojos.get(position).getIsMyStar());
+//		intent.putExtra("UserPic",
+//				arrStarPojos.get(position).getProfileImage());
+//		intent.putExtra("UserCoverImage",arrStarPojos.get(position).getProfileCover());
+		//					intent.putExtra("isProfile",true);
+		intent.putExtra(NewProfileActivity.USER, userProfile);
+		startActivity(intent);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 

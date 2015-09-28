@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by lipcha on 23.09.15.
  */
-public class UserProfileData implements Serializable {
+public class UserProfile implements Serializable {
 
     private String userDisplayName = "";
     private boolean isProfile;
@@ -18,7 +18,7 @@ public class UserProfileData implements Serializable {
     private String entryId;
     private String userFan = "";
 
-    private UserProfileData() {
+    private UserProfile() {
     }
 
     public void setUserDisplayName(String userDisplayName) {
@@ -101,8 +101,10 @@ public class UserProfileData implements Serializable {
         return userFan;
     }
 
+
+
     public static Builder newBuilder(){
-        return new UserProfileData().new Builder();
+        return new UserProfile().new Builder();
     }
 
     public class Builder{
@@ -112,57 +114,57 @@ public class UserProfileData implements Serializable {
         }
 
         public Builder setUserDisplayName(String userDisplayName) {
-            UserProfileData.this.setUserDisplayName(userDisplayName);
+            UserProfile.this.setUserDisplayName(userDisplayName);
             return this;
         }
 
         public Builder setIsProfile(boolean isProfile) {
-            UserProfileData.this.setIsProfile(isProfile);
+            UserProfile.this.setIsProfile(isProfile);
             return this;
         }
 
         public Builder setUserTagline(String userTagline) {
-            UserProfileData.this.setUserTagline(userTagline);
+            UserProfile.this.setUserTagline(userTagline);
             return this;
         }
 
         public Builder setUserCoverImage(String userCoverImage) {
-            UserProfileData.this.setUserCoverImage(userCoverImage);
+            UserProfile.this.setUserCoverImage(userCoverImage);
             return this;
         }
 
         public Builder setIsMyStar(String isMyStar) {
-            UserProfileData.this.setIsMyStar(isMyStar);
+            UserProfile.this.setIsMyStar(isMyStar);
             return this;
         }
 
         public Builder setUserPic(String userPic) {
-            UserProfileData.this.setUserPic(userPic);
+            UserProfile.this.setUserPic(userPic);
             return this;
         }
 
         public Builder setUserName(String userName) {
-            UserProfileData.this.setUserName(userName);
+            UserProfile.this.setUserName(userName);
             return this;
         }
 
         public Builder setUserId(String userId) {
-            UserProfileData.this.setUserId(userId);
+            UserProfile.this.setUserId(userId);
             return this;
         }
 
         public Builder setEntryId(String entryId) {
-            UserProfileData.this.setEntryId(entryId);
+            UserProfile.this.setEntryId(entryId);
             return this;
         }
 
         public Builder setUserFan(String userFan){
-            UserProfileData.this.setUserFan(userFan);
+            UserProfile.this.setUserFan(userFan);
             return this;
         }
 
-        public UserProfileData build(){
-            return UserProfileData.this;
+        public UserProfile build(){
+            return UserProfile.this;
         }
     }
 }

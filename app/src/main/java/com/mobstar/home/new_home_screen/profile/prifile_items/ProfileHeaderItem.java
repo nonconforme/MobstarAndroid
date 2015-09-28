@@ -1,4 +1,4 @@
-package com.mobstar.home.new_home_screen.profile;
+package com.mobstar.home.new_home_screen.profile.prifile_items;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +12,7 @@ import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
 import com.mobstar.fanconnect.FansActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
@@ -23,7 +24,7 @@ public class ProfileHeaderItem extends RecyclerView.ViewHolder implements View.O
     private TextView textUserName, textUserDisplayName, textTagline, textFollowers;
     private ImageView imgUserPic, imgCoverPage;
     private BaseActivity baseActivity;
-    private UserProfileData userData;
+    private UserProfile userData;
 
     public ProfileHeaderItem(View itemView) {
         super(itemView);
@@ -38,7 +39,7 @@ public class ProfileHeaderItem extends RecyclerView.ViewHolder implements View.O
         imgCoverPage = (ImageView)convertView.findViewById(R.id.imgCoverPage);
     }
 
-    public void init(BaseActivity _baseActivity, UserProfileData _userData){
+    public void init(BaseActivity _baseActivity, UserProfile _userData){
         baseActivity = _baseActivity;
         userData = _userData;
         setupViews();

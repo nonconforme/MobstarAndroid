@@ -1,4 +1,4 @@
-package com.mobstar.home.new_home_screen.profile;
+package com.mobstar.home.new_home_screen.profile.prifile_items;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

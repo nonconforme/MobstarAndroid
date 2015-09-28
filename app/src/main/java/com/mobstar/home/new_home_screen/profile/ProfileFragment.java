@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import com.mobstar.BaseActivity;
 import com.mobstar.api.DownloadFileManager;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
+import com.mobstar.custom.recycler_view.sticky_recycler_view.DividerDecoration;
+import com.mobstar.custom.recycler_view.sticky_recycler_view.StickyHeadersTouchListener;
 import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.utils.Constant;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -23,9 +25,11 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
 
     public static final String USER = "user";
 
-    private UserProfileData userData;
+    private UserProfile user;
+    private int uploadPosition = -1;
+    private int profilePosition = -1;
 
-    public static final ProfileFragment getInstance(final UserProfileData userData){
+    public static final ProfileFragment getInstance(final UserProfile userData){
         final ProfileFragment profileFragment = new ProfileFragment();
         final Bundle args = new Bundle();
         args.putSerializable(USER, userData);
@@ -42,8 +46,8 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
     @Override
     protected void getEntryRequest(int pageNo) {
         final HashMap<String, String> params = new HashMap<>();
-        if (userData!= null && userData.getUserId() != null)
-            params.put("user", userData.getUserId());
+        if (user != null && user.getUserId() != null)
+            params.put("user", user.getUserId());
         params.put("page", Integer.toString(pageNo));
         textNoData.setVisibility(View.GONE);
         getEntry(Constant.MIX_ENTRY, params, pageNo);
@@ -53,7 +57,7 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
     protected void getArgs() {
         final Bundle args = getArguments();
         if (args.containsKey(USER))
-            userData = (UserProfileData) args.getSerializable(USER);
+            user = (UserProfile) args.getSerializable(USER);
 
     }
 
@@ -80,16 +84,20 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
     protected void createEntryList() {
         pullToRefreshRecyclerView.setOnRefreshListener(this);
         recyclerView = pullToRefreshRecyclerView.getRefreshableView();
-//        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new RemoveAnimation(this));
-        entryAdapter = new ProfileEntryAdapter((BaseActivity) getActivity(), userData);
+        entryAdapter = new ProfileEntryAdapter((BaseActivity) getActivity(), user);
         recyclerView.setAdapter(entryAdapter);
-        recyclerView.addItemDecoration(new StickyRecyclerHeadersDecoration((ProfileEntryAdapter) entryAdapter));
+        recyclerView.addItemDecoration(new DividerDecoration(getActivity()));
         downloadFileManager = new DownloadFileManager(getActivity(), this);
         endlessRecyclerOnScrollListener.setLinearLayoutManager((LinearLayoutManager) recyclerView.getLayoutManager());
         recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
 
+        initStickyHeader();
+    }
+
+    private void initStickyHeader(){
         final StickyRecyclerHeadersDecoration headersDecor = new StickyRecyclerHeadersDecoration((ProfileEntryAdapter)entryAdapter);
         recyclerView.addItemDecoration(headersDecor);
         StickyHeadersTouchListener touchListener = new StickyHeadersTouchListener(recyclerView, headersDecor, getActivity());
@@ -99,21 +107,36 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
                     @Override
                     public void onHeaderClickLeftButton() {
                         onChangePage(ProfileEntryAdapter.PROFILE_PAGE);
+                        uploadPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
                     }
 
                     @Override
                     public void onHeaderClickRightButton() {
                         onChangePage(ProfileEntryAdapter.UPDATES_PAGE);
+                        profilePosition = recyclerView.computeHorizontalScrollOffset();
+                        profilePosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
                     }
                 });
         recyclerView.addOnItemTouchListener(touchListener);
     }
 
-    private boolean onChangePage(int page) {
+    private void onChangePage(int page) {
         final  ProfileEntryAdapter adapter = ((ProfileEntryAdapter) entryAdapter);
         if (page != adapter.getPage()){
             adapter.setPage(page);
         }
-        return page == ProfileEntryAdapter.ENTRY_ITEM_VIEW_TYPE;
+        int position = 0;
+        switch (page){
+            case ProfileEntryAdapter.PROFILE_PAGE:
+                if (profilePosition != -1)
+                    position = profilePosition;
+                break;
+            case ProfileEntryAdapter.UPDATES_PAGE:
+                if (uploadPosition != -1)
+                    position = uploadPosition;
+                break;
+        }
+        recyclerView.scrollToPosition(position);
+        refreshEntryList();
     }
 }

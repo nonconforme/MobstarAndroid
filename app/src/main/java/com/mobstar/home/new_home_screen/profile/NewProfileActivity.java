@@ -30,15 +30,15 @@ import java.util.TimerTask;
  */
 public class NewProfileActivity extends BaseActivity implements View.OnClickListener {
 
-    private String UserID,EntryId, UserName = "", UserPic = "", IsMyStar = "", IAmStar= "", UserDisplayName = "", UserCoverImage = "", UserTagline = "",UserBio="", UserFan="";
-    private boolean isNotfiedUser = false;
-    private boolean isProfile = false;
+    public static final String USER = "user";
+
     private SharedPreferences preferences;
     private TextView textUserName;
     private TextView imgFollow;
     private ImageView imgMsg;
     private FrameLayout fragmentContainer;
     private TextView btnEdit;
+    private UserProfile user;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         setupViews();
         setListeners();
         addProfileListFragment();
-        if (UserID.equals(preferences.getString("userid", "0"))) {
+        if (user.getUserId().equals(preferences.getString("userid", "0"))) {
             Utility.SendDataToGA("UserProfile Screen", NewProfileActivity.this);
         } else {
             Utility.SendDataToGA("OtherProfile Screen", NewProfileActivity.this);
@@ -69,13 +69,13 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     }
 
     private void setupViews(){
-        textUserName.setText(UserName);
+        textUserName.setText(user.getUserName());
 
-        if (UserID.equals(preferences.getString("userid", "0"))) {
+        if (user.getUserId().equals(preferences.getString("userid", "0"))) {
             btnEdit.setVisibility(View.VISIBLE);
             imgFollow.setVisibility(View.INVISIBLE);
             imgMsg.setVisibility(View.GONE);
-        } else if (IsMyStar!=null && !IsMyStar.equalsIgnoreCase("0")) {
+        } else if (user.getIsMyStar() != null && !user.getIsMyStar().equalsIgnoreCase("0")) {
             btnEdit.setVisibility(View.GONE);
             imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
             imgFollow.setText(getString(R.string.following));
@@ -116,32 +116,21 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     private void addProfileListFragment(){
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        final UserProfileData userData = UserProfileData.newBuilder()
-                .setUserDisplayName(UserDisplayName)
-                .setIsProfile(isProfile)
-                .setUserTagline(UserTagline)
-                .setUserCoverImage(UserCoverImage)
-                .setIsMyStar(IsMyStar)
-                .setUserPic(UserPic)
-                .setUserName(UserName)
-                .setUserId(UserID)
-                .setEntryId(EntryId)
-                .build();
-        final ProfileFragment profileFragment = ProfileFragment.getInstance(userData);
+        final ProfileFragment profileFragment = ProfileFragment.getInstance(user);
         fragmentTransaction.replace(R.id.fragmentContainer, profileFragment);
         fragmentTransaction.commit();
     }
 
     private void startEditProfileActivity(){
         final Intent intent = new Intent(this, EditProfileActivity.class);
-        intent.putExtra("UserID", UserID);
-        intent.putExtra("UserName", UserName);
+        intent.putExtra("UserID", user.getUserId());
+        intent.putExtra("UserName", user.getUserName());
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     private void onClickFollow(){
-        if (!IsMyStar.equalsIgnoreCase("0")) {
+        if (!user.getIsMyStar().equalsIgnoreCase("0")) {
             deleteStarRequest();
         } else {
            addStarRequest();
@@ -150,9 +139,9 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
 
     private void deleteStarRequest() {
         final HashMap<String, String> params = new HashMap<>();
-        params.put("star", UserID);
+        params.put("star", user.getUserId());
         Utility.ShowProgressDialog(this, getString(R.string.loading));
-        RestClient.getInstance(this).deleteRequest(Constant.DELETE_STAR + UserID, params, new ConnectCallback<StarResponse>() {
+        RestClient.getInstance(this).deleteRequest(Constant.DELETE_STAR + user.getUserId(), params, new ConnectCallback<StarResponse>() {
             @Override
             public void onSuccess(StarResponse object) {
                 Utility.HideDialog(NewProfileActivity.this);
@@ -160,7 +149,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
                 if (error == null) {
 //                    if (onChangeEntryListener != null)
 //                        onChangeEntryListener.onFollowEntry(UserID, "0");
-                    IsMyStar="0";
+                    user.setIsMyStar("0");
                     imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
                     imgFollow.setText(getString(R.string.follow));
                     imgFollow.setVisibility(View.VISIBLE);
@@ -176,7 +165,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
 
     private void addStarRequest() {
         final HashMap<String, String> params = new HashMap<>();
-        params.put("star", UserID);
+        params.put("star", user.getUserId());
         Utility.ShowProgressDialog(this, getString(R.string.loading));
         showStarDialog();
         RestClient.getInstance(this).postRequest(Constant.STAR, params, new ConnectCallback<StarResponse>() {
@@ -218,37 +207,39 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     private void getBundleData(){
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-
-            if (extras.containsKey("EntryId")) {
-                EntryId = extras.getString("EntryId");
-                isNotfiedUser=true;
-
-                UserID = preferences.getString("userid", "0");
-            }
-            if (extras.containsKey("UserID")) {
-                UserID = extras.getString("UserID");
-            }
-            if (extras.containsKey("UserName")) {
-                UserName = extras.getString("UserName");
-            }
-            if (extras.containsKey("UserPic")) {
-                UserPic = extras.getString("UserPic");
-            }
-            if (extras.containsKey("IsMyStar")) {
-                IsMyStar = extras.getString("IsMyStar");
-            }
-            if (extras.containsKey("UserDisplayName")) {
-                UserDisplayName = extras.getString("UserDisplayName");
-            }
-            if (extras.containsKey("UserCoverImage")) {
-                UserCoverImage = extras.getString("UserCoverImage");
-            }
-            if (extras.containsKey("UserTagline")) {
-                UserTagline = extras.getString("UserTagline");
-            }
-            if (extras.containsKey("isProfile")) {
-                isProfile = extras.getBoolean("isProfile", false);
-            }
+            if (extras.containsKey(USER))
+                user = (UserProfile) extras.getSerializable(USER);
+//
+//            if (extras.containsKey("EntryId")) {
+//                EntryId = extras.getString("EntryId");
+//                isNotfiedUser=true;
+//
+//                UserID = preferences.getString("userid", "0");
+//            }
+//            if (extras.containsKey("UserID")) {
+//                UserID = extras.getString("UserID");
+//            }
+//            if (extras.containsKey("UserName")) {
+//                UserName = extras.getString("UserName");
+//            }
+//            if (extras.containsKey("UserPic")) {
+//                UserPic = extras.getString("UserPic");
+//            }
+//            if (extras.containsKey("IsMyStar")) {
+//                IsMyStar = extras.getString("IsMyStar");
+//            }
+//            if (extras.containsKey("UserDisplayName")) {
+//                UserDisplayName = extras.getString("UserDisplayName");
+//            }
+//            if (extras.containsKey("UserCoverImage")) {
+//                UserCoverImage = extras.getString("UserCoverImage");
+//            }
+//            if (extras.containsKey("UserTagline")) {
+//                UserTagline = extras.getString("UserTagline");
+//            }
+//            if (extras.containsKey("isProfile")) {
+//                isProfile = extras.getBoolean("isProfile", false);
+//            }
 
         }
     }

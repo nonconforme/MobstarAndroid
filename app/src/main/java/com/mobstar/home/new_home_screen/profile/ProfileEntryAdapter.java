@@ -1,14 +1,16 @@
 package com.mobstar.home.new_home_screen.profile;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.home.new_home_screen.RecyclerViewAdapter;
-import com.mobstar.pojo.EntryPojo;
+import com.mobstar.home.new_home_screen.profile.prifile_items.NoDataItem;
+import com.mobstar.home.new_home_screen.profile.prifile_items.ProfileHeaderItem;
+import com.mobstar.home.new_home_screen.profile.prifile_items.ProfileItem;
+import com.mobstar.home.new_home_screen.profile.prifile_items.ProfileStickyHeaderItem;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 /**
@@ -26,12 +28,12 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     public static final int PROFILE_VIEW_TYPE = 5;
     public static final int NO_DATA_VIEW_TYPE = 6;
 
-    private UserProfileData userData;
+    private UserProfile userData;
     private int page = UPDATES_PAGE;
     private ProfileStickyHeaderItem stickyHeaderItem;
 
 
-    public ProfileEntryAdapter(BaseActivity activity, UserProfileData _userdata) {
+    public ProfileEntryAdapter(BaseActivity activity, UserProfile _userdata) {
         super(activity);
         userData = _userdata;
         page = UPDATES_PAGE;

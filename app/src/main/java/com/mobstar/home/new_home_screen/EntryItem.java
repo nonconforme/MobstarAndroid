@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mobstar.BaseActivity;
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
@@ -26,6 +25,8 @@ import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
 import com.mobstar.home.StatisticsActivity;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.home.split.SplitActivity;
 import com.mobstar.info.report.InformationReportActivity;
 import com.mobstar.player.PlayerManager;
@@ -471,16 +472,29 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void startProfileActivity() {
-        final Intent intent = new Intent(baseActivity, ProfileActivity.class);
-        intent.putExtra("UserID", entryPojo.getUserID());
-        intent.putExtra("UserName", entryPojo.getUserName());
-        intent.putExtra("UserDisplayName", entryPojo.getUserDisplayName());
-        intent.putExtra("UserPic", entryPojo.getProfileImage());
-        intent.putExtra("UserCoverImage", entryPojo.getProfileCover());
-        intent.putExtra("IsMyStar", entryPojo.getIsMyStar());
-        intent.putExtra("UserTagline", entryPojo.getTagline());
+        final Intent intent = new Intent(baseActivity, NewProfileActivity.class);
+        final UserProfile userProfile =  UserProfile.newBuilder()
+                .setUserId(entryPojo.getUserID())
+                .setUserName(entryPojo.getUserName())
+                .setUserDisplayName(entryPojo.getUserDisplayName())
+                .setUserPic(entryPojo.getProfileImage())
+                .setUserCoverImage(entryPojo.getProfileCover())
+                .setIsMyStar(entryPojo.getIsMyStar())
+                .setUserTagline(entryPojo.getTagline())
+                .build();
+        intent.putExtra(NewProfileActivity.USER, userProfile);
+//        intent.putExtra("UserID", entryPojo.getUserID());
+//        intent.putExtra("UserName", entryPojo.getUserName());
+//        intent.putExtra("UserDisplayName", entryPojo.getUserDisplayName());
+//        intent.putExtra("UserPic", entryPojo.getProfileImage());
+//        intent.putExtra("UserCoverImage", entryPojo.getProfileCover());
+//        intent.putExtra("IsMyStar", entryPojo.getIsMyStar());
+//        intent.putExtra("UserTagline", entryPojo.getTagline());
+//        intent.putExtra(NewProfileActivity.USER, userProfile);
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+
     }
 
     private void startSplitActivity() {

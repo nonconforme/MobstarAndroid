@@ -29,10 +29,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.custom.PullToRefreshListView.OnRefreshListener;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.TopTalentPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -205,15 +206,23 @@ public class PositionActivity extends Activity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(mContext, ProfileActivity.class);
-				intent.putExtra("UserID",
-						arrTalentPojos.get(position).getUserID());
-				intent.putExtra("UserName",
-						arrTalentPojos.get(position).getUserName());
-				intent.putExtra("IsMyStar",arrTalentPojos.get(position).getIsMyStar());
-				intent.putExtra("UserPic",
-						arrTalentPojos.get(position).getProfileImage());
-				intent.putExtra("isProfile",true);
+				final Intent intent = new Intent(mContext, NewProfileActivity.class);
+				final UserProfile userProfile = UserProfile.newBuilder()
+						.setUserId(arrTalentPojos.get(position).getUserID())
+						.setUserName(arrTalentPojos.get(position).getUserName())
+						.setIsMyStar(arrTalentPojos.get(position).getIsMyStar())
+						.setUserPic(arrTalentPojos.get(position).getProfileImage())
+						.setIsProfile(true)
+						.build();
+				intent.putExtra(NewProfileActivity.USER, userProfile);
+//				intent.putExtra("UserID",
+//						arrTalentPojos.get(position).getUserID());
+//				intent.putExtra("UserName",
+//						arrTalentPojos.get(position).getUserName());
+//				intent.putExtra("IsMyStar",arrTalentPojos.get(position).getIsMyStar());
+//				intent.putExtra("UserPic",
+//						arrTalentPojos.get(position).getProfileImage());
+//				intent.putExtra("isProfile",true);
 				startActivity(intent);
 				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 			}

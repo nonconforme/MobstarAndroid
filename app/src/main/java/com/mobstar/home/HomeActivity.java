@@ -36,6 +36,7 @@ import com.mobstar.blog.BlogFragment;
 import com.mobstar.fanconnect.FanConnectHomeFragment;
 import com.mobstar.help.HelpFragment;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.inbox.InboxFragment;
 import com.mobstar.login.LoginSocialActivity;
 import com.mobstar.service.NotificationService;
@@ -550,36 +551,33 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 		// isMenuOpen = false;
 		// }
 		else if (imgUserPic.equals(view)) {
-			Intent intent = new Intent(mContext, NewProfileActivity.class);
-			intent.putExtra("UserID", preferences.getString("userid", ""));
-			intent.putExtra("UserName", preferences.getString("username", ""));
-			intent.putExtra("UserPic", preferences.getString("profile_image", ""));
-			intent.putExtra("UserDisplayName", preferences.getString("displayName", ""));
-			intent.putExtra("UserCoverImage", preferences.getString("cover_image", ""));
-			intent.putExtra("UserTagline", preferences.getString("tagline", ""));
-			startActivity(intent);
-			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+			startProfileActivity();
 		} else if (textUserDisplayName.equals(view)) {
-			Intent intent = new Intent(mContext, NewProfileActivity.class);
-			intent.putExtra("UserID", preferences.getString("userid", ""));
-			intent.putExtra("UserName", preferences.getString("username", ""));
-			intent.putExtra("UserDisplayName", preferences.getString("displayName", ""));
-			intent.putExtra("UserCoverImage", preferences.getString("cover_image", ""));
-			intent.putExtra("UserPic", preferences.getString("profile_image", ""));
-			intent.putExtra("UserTagline", preferences.getString("tagline", ""));
-			startActivity(intent);
-			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+			startProfileActivity();
 		} else if (textUserFullName.equals(view)) {
-			Intent intent = new Intent(mContext, NewProfileActivity.class);
-			intent.putExtra("UserID", preferences.getString("userid", ""));
-			intent.putExtra("UserName", preferences.getString("username", ""));
-			intent.putExtra("UserDisplayName", preferences.getString("displayName", ""));
-			intent.putExtra("UserPic", preferences.getString("profile_image", ""));
-			intent.putExtra("UserCoverImage", preferences.getString("cover_image", ""));
-			intent.putExtra("UserTagline", preferences.getString("tagline", ""));
-			startActivity(intent);
-			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+			startProfileActivity();
 		}
+	}
+
+	private void startProfileActivity(){
+		final Intent intent = new Intent(mContext, NewProfileActivity.class);
+		final UserProfile userProfile =  UserProfile.newBuilder()
+				.setUserId(preferences.getString("userid", ""))
+				.setUserName(preferences.getString("username", ""))
+				.setUserPic(preferences.getString("profile_image", ""))
+				.setUserDisplayName(preferences.getString("displayName", ""))
+				.setUserCoverImage(preferences.getString("cover_image", ""))
+				.setUserTagline(preferences.getString("tagline", ""))
+				.build();
+		intent.putExtra(NewProfileActivity.USER, userProfile);
+//			intent.putExtra("UserID", preferences.getString("userid", ""));
+//			intent.putExtra("UserName", preferences.getString("username", ""));
+//			intent.putExtra("UserPic", preferences.getString("profile_image", ""));
+//			intent.putExtra("UserDisplayName", preferences.getString("displayName", ""));
+//			intent.putExtra("UserCoverImage", preferences.getString("cover_image", ""));
+//			intent.putExtra("UserTagline", preferences.getString("tagline", ""));
+		startActivity(intent);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	private void closeMenu() {

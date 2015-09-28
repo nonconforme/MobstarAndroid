@@ -191,7 +191,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     }
 
-    private void refreshEntryList() {
+    protected void refreshEntryList() {
         PlayerManager.getInstance().tryToPauseAll();
         entryAdapter.notifyDataSetChanged();
         endlessRecyclerOnScrollListener.onScrollStateChanged(recyclerView, RecyclerView.SCROLL_STATE_IDLE);

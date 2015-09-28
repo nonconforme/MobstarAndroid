@@ -1,4 +1,4 @@
-package com.mobstar.home.new_home_screen.profile;
+package com.mobstar.custom.recycler_view.sticky_recycler_view;
 
 import android.content.Context;
 import android.graphics.Point;
