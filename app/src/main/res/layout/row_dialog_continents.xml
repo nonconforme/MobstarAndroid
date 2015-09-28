@@ -14,6 +14,6 @@
         custom:heightCheckableView="@dimen/category_button_height"
         custom:checkedTitle="@string/africa"
         custom:isChowChecked="true"
-        custom:leftImage="@drawable/ic_back"/>
+        custom:leftImage="@drawable/icn_btn_all"/>
 
 </LinearLayout>

@@ -24,8 +24,7 @@ public class DownloadFileManager {
         mContext = _context;
         downloadCallback  =_downloadCallback;
         listDownloadingFile = new HashMap<>();
-        PATH = Environment.getExternalStorageDirectory().getPath()
-                + "/Android/data/" + mContext.getPackageName() +"/";
+        PATH = Utility.getCurrentDirectory(mContext);
     }
 
     public void downloadFile(final String _fileUrl, final int position){

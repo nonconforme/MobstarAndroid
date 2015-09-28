@@ -18,7 +18,7 @@ import java.util.Collections;
 /**
  * Created by Alexandr on 08.09.2015.
  */
-public class ContinentsAdapter extends BaseAdapter implements CheckableView.OnCheckedChangeListener {
+public class ContinentsAdapter extends BaseAdapter {
     public final static String LOG_TAG = ContinentsAdapter.class.getName();
     private final LayoutInflater inflater;
     private final ArrayList<Integer> choosenContinents;
@@ -96,11 +96,6 @@ public class ContinentsAdapter extends BaseAdapter implements CheckableView.OnCh
                 Log.d(LOG_TAG,"choosenContinents.size()="+choosenContinents.size());
             }
         });
-    }
-
-    @Override
-    public void onCheckedChange(CheckableView _view, boolean _checked) {
-
     }
 
     private class ViewHolder {

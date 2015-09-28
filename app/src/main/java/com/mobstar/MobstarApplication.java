@@ -19,6 +19,7 @@ public class MobstarApplication extends Application{
 		// TODO Auto-generated method stub
 		super.onCreate();
         new TimeUtility().requestServerTime();
+        AdWordsManager.registerManager(getApplicationContext());
         //upload time--please uncomment instabug and uncaught exception handler
 //		Instabug.initialize(this).setAnnotationActivityClass(InstabugAnnotationActivity.class).setShowIntroDialog(false).setEnableOverflowMenuItem(false);
 //

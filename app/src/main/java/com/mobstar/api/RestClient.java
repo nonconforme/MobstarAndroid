@@ -15,13 +15,14 @@ import com.mobstar.api.responce.OnFileDownloadCallback;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
-import org.apache.http.Header;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by lipcha on 08.09.15.
@@ -49,7 +50,8 @@ public class RestClient {
         instance.context = _context;
         instance.httpClient = new AsyncHttpClient();
         instance.httpClient.setTimeout(Constant.TIMEOUTCONNECTION);
-        instance.httpClient.addHeader("Content-Type", "application/json");
+//        instance.httpClient.addHeader("Content-Type", "application/json");
+        instance.httpClient.addHeader("Content-Type", "multipart/form-data");
         instance.httpClient.addHeader("X-API-KEY", Constant.API_KEY);
         instance.httpClient.addHeader("X-API-TOKEN", instance.preferences.getString("token", null));
         return instance;
@@ -99,7 +101,7 @@ public class RestClient {
         }
         final String absoluteUrl = Constant.SERVER_URL + url;
         final RequestParams requestParams = new RequestParams(params);
-        Log.d(LOG_TAG,"http request post: "+ absoluteUrl + "?" + requestParams.toString());
+        Log.d(LOG_TAG, "http request post: "+ absoluteUrl + "?" + requestParams.toString());
         httpClient.removeHeader("Content-Type");
         httpClient.post(null, absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override

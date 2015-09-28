@@ -3,21 +3,24 @@ package com.mobstar.utils;
 
 public class Constant {
 
-//	public static String SENDER_ID = "397816546137";
+
+    //	public static String SENDER_ID = "397816546137";
 	public static String SENDER_ID = "367365382408";
 	
 	public static String PROFILE_CATEGORYID="7";
 	
-	public static int TIMEOUTCONNECTION = 7000;
+	public static int TIMEOUTCONNECTION = 30000;
 	
 	public static int TIMEOUTSOCKET = 20000;
 
 	public static String TAG = "log_tag";
 
-	public static String API_KEY = "fjwiofrnxhr892305hje93nf834m63lr93l5u3ntrhj4k";
+//	public static String API_KEY = "fjwiofrnxhr892305hje93nf834m63lr93l5u3ntrhj4k";
+	public static String API_KEY = "2_xPvd11Vjj1PfgYZ5C5fIWIosTmR4ADEgVIXsXp95";
 
 //	public static String SERVER_URL = "http://api.mobstar.com/";
 //	public static String SERVER_URL = "http://192.168.88.250:1080/";
+//	public static String SERVER_URL = "http://134.249.164.53:1080/";
 	public static String SERVER_URL = "http://api-mobstar.test.thinkmobiles.com/";
 //	public static String SERVER_URL = "http://192.168.1.32/project/mobstarapi/public/index.php/";
 	
@@ -152,6 +155,13 @@ public class Constant {
 	public static final String USER_ACCOUNT = "settings/account/";
 
     public static final String USER_CONTINENT_FILTERS = "settings/continentFilter";
+
+    //value key
+    public static final String STAR_VALUE = "star";
+    public static final String USER_ID_VALUE = "userId";
+    public static final String ENTRY_ID_VALUE = "entryId";
+
+    public static final String USER_CATEGORIES_FILTERS = "settings/categoryFilter";
 
 
 //	app constant

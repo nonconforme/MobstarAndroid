@@ -4,23 +4,20 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.ContinentResponse;
 import com.mobstar.custom.CheckableView;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.pojo.ContinentsPojo;
 import com.mobstar.utils.Constant;
 
 import java.util.HashMap;
-
-import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.ContinentResponse;
-import com.mobstar.api.responce.UserAccountResponse;
 
 /**
  * Created by lipcha on 08.09.15.
@@ -98,7 +95,7 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
 
     private void postCurrentRegionRequest(ContinentsPojo.Continents continents){
         final HashMap<String, String> params = new HashMap<>();
-        params.put("userContinent", Integer.toString(continents.ordinal()));
+        params.put(ContinentResponse.KEY_CONTINENT, Integer.toString(continents.ordinal()));
         showProgress();
         RestClient.getInstance(this).postRequest(Constant.USER_CONTINENT, params, new ConnectCallback<ContinentResponse>() {
 

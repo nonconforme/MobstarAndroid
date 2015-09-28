@@ -8,7 +8,7 @@ import org.json.JSONObject;
 /**
  * Created by lipcha on 09.09.15.
  */
-public class Google  implements BaseResponse {
+public class Google extends BaseResponse {
 
     private String displayName;
     private int id;
@@ -17,6 +17,7 @@ public class Google  implements BaseResponse {
 
     @Override
     public void configure(JSONObject jsonObject) throws JSONException {
+        super.configure(jsonObject);
         if (jsonObject.has("displayName"))
             displayName = jsonObject.getString("displayName");
         if (jsonObject.has("id"))

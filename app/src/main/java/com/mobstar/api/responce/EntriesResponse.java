@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by lipcha on 14.09.15.
  */
-public class EntriesResponse implements BaseResponse {
+public class EntriesResponse extends BaseResponse {
 
     private ArrayList<EntryPojo> arrEntry;
     private String next;
@@ -27,6 +27,7 @@ public class EntriesResponse implements BaseResponse {
 
     @Override
     public void configure(JSONObject jsonObject) throws JSONException {
+        super.configure(jsonObject);
         arrEntry = new ArrayList<>();
         if (jsonObject.has("entries")){
             final JSONArray entryJsonArray = jsonObject.getJSONArray("entries");

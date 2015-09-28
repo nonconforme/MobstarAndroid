@@ -9,12 +9,11 @@ import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Surface;
 
-import com.mobstar.api.RestClient;
+import com.mobstar.api.Api;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.utils.Constant;
 
 import java.io.File;
-import java.util.HashMap;
 
 /**
  * Created by Alexandr on 16.09.2015.
@@ -46,13 +45,10 @@ public class PlayerManager {
     }
 
     private void sendRequstAddCount() {
-        //todo create string constant; BASERESPONSE after marge
         Log.d(LOG_TAG, "sendRequstAddCount");
         SharedPreferences preferences = mContext.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("entryId", mEntryItem.getEntryPojo().getID());
-        params.put("userId", preferences.getString("userid", "0"));
-        RestClient.getInstance(mContext).postRequest(Constant.UPDATE_VIEW_COUNT, params, null);
+        Api.sendRequstAddCount(mContext, mEntryItem.getEntryPojo().getID(), preferences.getString("userid", "0"),null);
+
     }
 
     public boolean tryToPlayNew() {
@@ -143,6 +139,7 @@ public class PlayerManager {
     }
 
     public boolean tryToPause(int position) {
+        if (mEntryItem == null) return false;
         if (position != mEntryItem.getPos()) {
             return false;
         }

@@ -30,8 +30,6 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by lipcha on 14.09.15.
@@ -43,6 +41,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     public static final String LATEST_OR_POPULAR = "LatestORPopular";
     public static final String CATEGORY_ID = "categoryId";
     public static final String IS_ENTRY_IPI = "isEntryAPI";
+    private static final String LOG_TAG = HomeVideoListBaseFragment.class.getName();
 
     private boolean isSearchAPI, isMobitAPI, isVoteAPI, isEntryIdAPI, isEntryAPI;
     private String SearchTerm, deeplinkEntryId, LatestORPopular, CategoryId, VoteType;
@@ -155,6 +154,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onFailure(String error) {
+                Log.d(LOG_TAG,"http request get:getEntryRequest.onFailure.error="+error);
+                endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());
             }
@@ -188,7 +189,6 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
                         }
                     }
                 }, 500);
-
     }
 
     protected void refreshEntryList() {
@@ -238,6 +238,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     @Override
     public void onRemoveItemAnimationEnd() {
+        endlessRecyclerOnScrollListener.setDelFlag(true);
         refreshEntryList();
     }
 

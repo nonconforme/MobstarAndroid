@@ -52,6 +52,7 @@
     <string name="delete_entry_question">दर्ज किये सवाल खारीच करे? </string>
     <string name="meet_the_mentors">मेंटोर से मिले </string>
     <string name="personal_details">व्यक्तिगत जानकारी </string>
+    <string name="personal_details_">व्यक्तिगत जानकारी </string>
     <string name="save">सेव्ह करे </string>
     <string name="cancel">रद्द करें </string>
     <string name="my_stars">माय स्टार </string>
@@ -60,6 +61,7 @@
     <string name="old_password">पुराना पासवर्ड </string>
     <string name="new_password">नया पासवर्ड </string>
     <string name="change_password">पासवर्ड बदले </string>
+    <string name="change_password_">पासवर्ड बदले </string>
     <string name="report_abuse">दुरुपयोग होने की सूचना दें </string>
     <string name="send_report">सूचना भेजें </string>
     <string name="report_abuse_text">हम इस अनुप्रयोग के सभी दुरुपयोग बहुत गंभीरता सेले।  दुरुपयोग की रिपोर्ट करें किसी भी तरहसे, कृपया नीचे दिएगएफार्म का उपयोग&amp; रूप में संभव केरूपमें विस्तृत किया </string>
@@ -269,6 +271,108 @@
     <string name="where_are_you"> आप कहाँसे हो </string>
     <string name="select_current_region_activity_description"> नीचे दिए गए क्षेत्रों से अपने देश के नाम का चयन करें ताकि उनके रूचि अनुसार उस विषय में, हमारे सभी उपयोगकर्ताओं की मदद कर सके  </string>
     <string name="change_current_region_message"> किसी भी समय आप , क्षेत्र को , एप की सेटिंग में बदल सकते हैं  </string>
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    <string name="ga_id">UA-56775181-1</string>
+    <string name="fb_app_id">252687194923254</string>
+    <string name="temp_uname">lukeymo</string>
+    <string name="temp_name">Luke Mowatt</string>
+    <string name="temp_time">3 days ago</string>
+    <string name="temp_description">This is first entry</string>
+    <string name="temp_comments">15</string>
+    <string name="music">MUSIC</string>
+    <string name="english">ENGLISH</string>
+    <string name="_127">127</string>
+    <string name="temp_comment">Haha, really like this!</string>
+    <string name="temp_notification_text">mattf has commented on your entry "entrytitle"</string>
+    <string name="bono">Bono</string>
+    <string name="bono_description">Bono is the frontman of the Irish rock brand U2.He\'s also known for participating in global charity efforts.</string>
+    <string name="my_feedback">MY FEEDBACK</string>
+    <string name="faq_string">This is frequently ask question that is currently open?</string>
+    <string name="linked_accounts">LINKED ACCOUNTS</string>
+    <string name="linked_accounts_">LINKED\nACCOUNTS</string>
+    <string name="facebook">FACEBOOK</string>
+    <string name="temp_fb_email">lukeymo@hotmail.com</string>
+    <string name="twitter">TWITTER</string>
+    <string name="temp_twitter_name">\@lukeymo</string>
+    <string name="google">GOOGLE+</string>
+    <string name="temp_google_name">lukeymo@gmail.com</string>
+    <string name="pinterest">PINTEREST</string>
+    <string name="connect_your_account">CONNECT YOUR ACCOUNT</string>
+    <string name="app_settings">APP SETTINGS</string>
+    <string name="push_notifications">PUSH NOTIFICATIONS</string>
+
+    <string name="privacy_policy">PRIVACY POLICY</string>
+    <string name="privacy_policy_">PRIVACY\nPOLICY</string>
+    <string name="privacy_policy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Y</string>
+    <string name="somebody_stop_me">\"Somebody stop me\"</string>
+    <string name="mobstar_points">MOBSTAR POINTS</string>
+    <string name="available">AVAILABLE</string>
+    <string name="use_points">USE POINTS</string>
+    <string name="verify_mobileno">VERIFY MOBILE NUMBER</string>
+    <string name="country">COUNTRY</string>
+    <string name="mobile_no">MOBILE NUMBER</string>
+    <string name="hint_enter_mobileno">ENTER MOBILE NUMBER</string>
+    <string name="enter_mobileno">ENTER MOBILE NUMBER</string>
+    <string name="send_code">SEND CODE</string>
+    <string name="resend_code">RESEND CODE</string>
+    <string name="hint_dash">-</string>
+    <string name="bio">BIO</string>
+    <!-- <string name="admob_adUnitId">ca-app-pub-2850209089334804/2249032175</string> -->
+    <string name="admob_adUnitId">ca-app-pub-3673264464511081/6592488851</string>
+
+
+    <string name="send_error">Send error:</string>
+    <string name="deleted_messages_on_server">Deleted messages on server:</string>
+    <string name="login_successful">Login Successful</string>
+    <string name="login_failed">Login Failed</string>
+    <string name="twitter_">Twitter</string>
+
+    <string name="notif_split_screen_1">Your entry</string>
+    <string name="notif_split_screen_2">has been collaborated on by</string>
+    <string name="notif_split_screen_3">. Check it out...</string>
+    <string name="yes_voting">Yes!</string>
+    <string name="no_voting">No!</string>
+
+
+    <string name="get_started">GET STARTED</string>
+    <string name="create_account">CREATE ACCOUNT</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="existing_account">EXISTING ACCOUNT</string>
+    <string name="new_user">NEW USER?</string>
+    <string name="cant_login">CANT\' LOGIN</string>
+    <string name="reset_password">RESET PASSWORD</string>
+
+
+
+
+    <string name="no_select_current_region_message">Please, choose a continent</string>
+    <string name="location_settings">LOCATION\nSETTINGS</string>
+
+    <string name="you_are_now_following_this_user">UOU ARE NOW\nFOLLOWING THIS USER</string>
+    <string name="im_a_talent">I\'M A TALENT</string>
+    <string name="this_is_main_menu">THIS IS MAIN MENU</string>
+    <string name="this_is_where_you_find_your_notification">THIS IS WHERE YOU FIND YOUR NOTIFICATIONS</string>
+    <string name="tap_here_to_add_an_entry_to_mobstar">TAP HERE TO ADD AN ENTRY TO MOBSTAR</string>
+    <string name="search_for_anything_on_mobstar">SEARCH FOR ANYTHING ON MOBSTAR</string>
+    <string name="swipe_left_to_dislike">SWIPE LEFT TO DISLIKE</string>
+    <string name="swipe_right_tp_vote_yes">SWIPE RIGHT TO VOTE YES!</string>
+    <string name="view_stats">VIEW STATS</string>
+    <string name="share">SHARE</string>
+    <string name="entry_info">ENTRY INFO</string>
+    <string name="mobstar_would_like_to_access_your_facebook_account"><b>MOBSTAR</b> WOULD\nLIKE ACCESS YOUR\n<b>FACEBOOK</b> ACCOUNT</string>
+    <string name="app_tour">APP TOUR</string>
+    <string name="thank_you_for_giving_us_your_feedback">THANK YOU FOR GIVING US YOUR FEEDBACK</string>
+    <string name="your_details_have_been_changed">YOUR DETAILS\nHAVE BEEN CHANGED</string>
+    <string name="reported">REPORTED</string>
+    <string name="you_complaint_will_be_reviewed_and_dealt_with_promptly">YOUR COMPLAINT WILL\nBE REVIEWED AND\nDEALT WITH PROMPTLY</string>
+    <string name="your_tagline_yas_been_updated">YOUR TAGLINE HAS\nBEEN UPDATES</string>
+    <string name="this_entry_will_be_reviewed">THIS ENTRY WILL BE REVIEWED</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+
 
 </resources>
 

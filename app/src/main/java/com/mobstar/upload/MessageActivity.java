@@ -1,8 +1,5 @@
 package com.mobstar.upload;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +15,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONObject;
 
 public class MessageActivity extends Activity implements OnClickListener{
 	private Context mContext;
@@ -133,7 +134,7 @@ public class MessageActivity extends Activity implements OnClickListener{
 			String response = JSONParser.LikepostRequest(Constant.SERVER_URL + Constant.NEW_MESSAGE, name, value,preferences.getString("token", null));
 
 			Log.v(Constant.TAG, "PostMessage response " + response);
-
+            AdWordsManager.getInstance().sendMessageSentEvent();
 			if (response != null) {
 
 				try {
@@ -167,7 +168,6 @@ public class MessageActivity extends Activity implements OnClickListener{
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 			Utility.HideDialog(mContext);
 			isRefresh=true;
 			onBackPressed();
@@ -183,6 +183,6 @@ public class MessageActivity extends Activity implements OnClickListener{
 		}
 		finish();
 		
-	};
+	}
 
 }
