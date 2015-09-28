@@ -36,19 +36,22 @@ import java.util.HashMap;
  */
 public class HomeVideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>, DownloadFileManager.DownloadCallback, OnEndAnimationListener {
 
-    public static final String IS_ENTRY_ID_API = "isEntryIdAPI";
-    public static final String DEEP_LINKED_ID = "deepLinkedId";
+    public static final String IS_SEARCH_API     = "isSearchAPI";
+    public static final String SEARCH_TERM       = "SearchTerm";
+    public static final String IS_MOBIT_API      = "isMobitAPI";
+    public static final String IS_VOTE_API       = "isVoteAPI";
+    public static final String VOTE_TYPE         = "VoteType";
+    public static final String IS_ENTRY_ID_API   = "isEntryIdAPI";
+    public static final String DEEP_LINKED_ID    = "deepLinkedId";
     public static final String LATEST_OR_POPULAR = "LatestORPopular";
-    public static final String CATEGORY_ID = "categoryId";
-    public static final String IS_ENTRY_IPI = "isEntryAPI";
+    public static final String CATEGORY_ID       = "categoryId";
+    public static final String IS_ENTRY_IPI      = "isEntryAPI";
     private static final String LOG_TAG = HomeVideoListBaseFragment.class.getName();
 
     private boolean isSearchAPI, isMobitAPI, isVoteAPI, isEntryIdAPI, isEntryAPI;
     private String SearchTerm, deeplinkEntryId, LatestORPopular, CategoryId, VoteType;
     protected TextView textNoData;
     private SharedPreferences preferences;
-//    private ArrayList<EntryPojo> arrEntryPojos = new ArrayList<>();
-
 
     protected RecyclerViewAdapter entryAdapter;
     protected RecyclerView recyclerView;
@@ -100,6 +103,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
             url = Constant.SEARCH_ENTRY;
             params.put("term", SearchTerm);
             params.put("page", Integer.toString(pageNo));
+            params.put("orderBy", LatestORPopular);
 //            Query = Constant.SERVER_URL + Constant.SEARCH_ENTRY + "?term=" + SearchTerm;
         } else if (isEntryAPI) {
             if (CategoryId != null && CategoryId.length() > 0) {
@@ -296,15 +300,18 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     protected void getArgs() {
         Bundle extras = getArguments();
         if (extras != null) {
-            if (extras.containsKey("isSearchAPI")) {
-                isSearchAPI = extras.getBoolean("isSearchAPI");
+            if (extras.containsKey(IS_SEARCH_API)) {
+                isSearchAPI = extras.getBoolean(IS_SEARCH_API);
 
-                if (extras.containsKey("SearchTerm")) {
-                    SearchTerm = extras.getString("SearchTerm");
+                if (extras.containsKey(SEARCH_TERM)) {
+                    SearchTerm = extras.getString(SEARCH_TERM);
                 }
+
+                if (extras.containsKey(LATEST_OR_POPULAR))
+                    LatestORPopular = extras.getString(LATEST_OR_POPULAR);
             }
-            if (extras.containsKey("isMobitAPI")) {
-                isMobitAPI = extras.getBoolean("isMobitAPI");
+            if (extras.containsKey(IS_MOBIT_API)) {
+                isMobitAPI = extras.getBoolean(IS_MOBIT_API);
 
             }
             if (extras.containsKey(IS_ENTRY_ID_API)) {
@@ -322,11 +329,11 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
                     CategoryId = extras.getString(CATEGORY_ID);
                 }
             }
-            if (extras.containsKey("isVoteAPI")) {
-                isVoteAPI = extras.getBoolean("isVoteAPI");
+            if (extras.containsKey(IS_VOTE_API)) {
+                isVoteAPI = extras.getBoolean(IS_VOTE_API);
 
-                if (extras.containsKey("VoteType")) {
-                    VoteType = extras.getString("VoteType");
+                if (extras.containsKey(VOTE_TYPE)) {
+                    VoteType = extras.getString(VOTE_TYPE);
                 }
             }
         }

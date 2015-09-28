@@ -90,7 +90,6 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
         recyclerView.setItemAnimator(new RemoveAnimation(this));
         entryAdapter = new ProfileEntryAdapter((BaseActivity) getActivity(), user);
         recyclerView.setAdapter(entryAdapter);
-        recyclerView.addItemDecoration(new DividerDecoration(getActivity()));
         downloadFileManager = new DownloadFileManager(getActivity(), this);
         endlessRecyclerOnScrollListener.setLinearLayoutManager((LinearLayoutManager) recyclerView.getLayoutManager());
         recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
