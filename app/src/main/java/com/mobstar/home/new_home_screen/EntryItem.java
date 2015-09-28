@@ -79,6 +79,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private FrameLayout containerPlayer;
     private LinearLayout llItemEntry;
     private LinearLayout llItemUser;
+    private boolean isRemoveItemAfterVotingNo = true;
 
     public EntryItem(View itemView) {
         super(itemView);
@@ -124,12 +125,12 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     }
 
-    public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onRemoveEntryListener) {
+    public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onChangeEntryListener) {
         entryPojo = _entryPojo;
         baseActivity = _activity;
         position = _position;
         swipeCardView.resetTopView();
-        onChangeEntryListener = _onRemoveEntryListener;
+        onChangeEntryListener = _onChangeEntryListener;
         if (entryPojo.getCategory() != null && entryPojo.getCategory().equalsIgnoreCase("onlyprofile")){
             setupUserViews();
         }
@@ -139,6 +140,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             setupImage();
             initItemContentType();
         }
+    }
+
+    public void removeItemAfterVotingNo(boolean isRemoveItemAfterVotingNo) {
+        this.isRemoveItemAfterVotingNo = isRemoveItemAfterVotingNo;
     }
 
     private void setupUserViews(){
@@ -387,7 +392,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             public void onSuccess(StarResponse object) {
                 Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
                 Utility.HideDialog(baseActivity);
-                if (object.getError() == null) {
+                if (object.getError() == null || object.getError().equals("")) {
                     if (onChangeEntryListener != null)
                         onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "1");
                 }
@@ -399,22 +404,6 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 Utility.HideDialog(baseActivity);
             }
         });
-//        RestClient.getInstance(baseActivity).postRequest(Constant.STAR, params, new ConnectCallback<StarResponse>() {
-//
-//            @Override
-//            public void onSuccess(StarResponse object) {
-//                Utility.HideDialog(baseActivity);
-//                if (object.getError() == null) {
-//                    if (onChangeEntryListener != null)
-//                        onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "1");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(String error) {
-//                Utility.HideDialog(baseActivity);
-//            }
-//        });
     }
 
     private void showStarDialog() {
@@ -442,7 +431,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                         Log.d(LOG_TAG, "StarCall.delStarCall.onSuccess");
                         Utility.HideDialog(baseActivity);
                         final String error = object.getError();
-                        if (error == null) {
+                        if (error == null || error.equals("")) {
                             if (onChangeEntryListener != null)
                                 onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "0");
                         }
@@ -450,7 +439,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
                     @Override
                     public void onFailure(String error) {
-                        Log.d(LOG_TAG, "StarCall.delStarCall.onFailure.error="+error);
+                        Log.d(LOG_TAG, "StarCall.delStarCall.onFailure.error=" + error);
                         Utility.HideDialog(baseActivity);
                     }
                 });
@@ -538,15 +527,18 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     public void onSwipeLeft() {
         dislikeRequest();
         Utility.DisLikeDialog(baseActivity);
-        if (onChangeEntryListener != null)
-            onChangeEntryListener.onRemoveEntry(getPos());
+        if (isRemoveItemAfterVotingNo) {
+            if (onChangeEntryListener != null)
+                onChangeEntryListener.onRemoveEntry(getPos());
+        }
+        else swipeCardView.resetTopView();
     }
 
     @Override
     public void onSwipeRight() {
         likeRequest();
-        swipeCardView.resetTopView();
         Utility.LikeDialog(baseActivity);
+        swipeCardView.resetTopView();
 
 //        if (onChangeEntryListener != null)
 //            onChangeEntryListener.onRemoveEntry(getPos());

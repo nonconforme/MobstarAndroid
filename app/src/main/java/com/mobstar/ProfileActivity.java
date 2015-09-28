@@ -1834,19 +1834,19 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 						if(arrEntryPojos.get(position).getType().equals("image")){
 							if(addedviewImgId!=null && !addedviewImgId.equalsIgnoreCase(arrEntryPojos.get(position).getID())){
-                                Api.sendRequstAddCount(mContext, arrEntryPojos.get(position).getID(), preferences.getString("userid", "0"), new ConnectCallback() {
-                                    @Override
-                                    public void onSuccess(BaseResponse object) {
-                                        Log.d(LOG_TAG,"Api.sendRequstAddCount.onSuccess");
-                                        handlerUpdateViewCount.sendEmptyMessage(1);
-                                    }
+                                Api.sendRequestAddCount(mContext, arrEntryPojos.get(position).getID(), preferences.getString("userid", "0"), new ConnectCallback() {
+									@Override
+									public void onSuccess(BaseResponse object) {
+										Log.d(LOG_TAG, "Api.sendRequestAddCount.onSuccess");
+										handlerUpdateViewCount.sendEmptyMessage(1);
+									}
 
-                                    @Override
-                                    public void onFailure(String error) {
-                                        Log.d(LOG_TAG,"Api.sendRequstAddCount.onFailure.error="+error);
+									@Override
+									public void onFailure(String error) {
+										Log.d(LOG_TAG, "Api.sendRequestAddCount.onFailure.error=" + error);
 
-                                    }
-                                });
+									}
+								});
 //                                if (Utility.isNetworkAvailable(mContext)) {
 //									addedviewImgId=arrEntryPojos.get(position).getID();
 //									new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();

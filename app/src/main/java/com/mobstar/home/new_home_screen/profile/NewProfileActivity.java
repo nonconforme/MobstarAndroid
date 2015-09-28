@@ -1,29 +1,25 @@
 package com.mobstar.home.new_home_screen.profile;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.BaseActivity;
 import com.mobstar.EditProfileActivity;
 import com.mobstar.R;
+import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.RestClient;
 import com.mobstar.api.responce.StarResponse;
+import com.mobstar.upload.MessageActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
-
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by lipcha on 21.09.15.
@@ -36,9 +32,10 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     private TextView textUserName;
     private TextView imgFollow;
     private ImageView imgMsg;
-    private FrameLayout fragmentContainer;
     private TextView btnEdit;
     private UserProfile user;
+    private ProfileFragment profileFragment;
+    private String iAmStar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,9 +52,6 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         } else {
             Utility.SendDataToGA("OtherProfile Screen", NewProfileActivity.this);
         }
-
-
-
     }
 
     private void findViews(){
@@ -65,7 +59,6 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         imgFollow = (TextView) findViewById(R.id.imgFollow);
         imgMsg = (ImageView) findViewById(R.id.imgMsg);
         btnEdit = (TextView) findViewById(R.id.btnEdit);
-        fragmentContainer = (FrameLayout) findViewById(R.id.fragmentContainer);
     }
 
     private void setupViews(){
@@ -88,12 +81,20 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
             imgFollow.setVisibility(View.VISIBLE);
             imgMsg.setVisibility(View.VISIBLE);
         }
+
+        if(iAmStar != null && iAmStar.length() > 0 && iAmStar.equalsIgnoreCase("1")){
+            Picasso.with(this).load(R.drawable.msg_act_btn).into(imgMsg);
+        }
+        else{
+            Picasso.with(this).load(R.drawable.msg_btn).into(imgMsg);
+        }
     }
 
     private void setListeners(){
         textUserName.setOnClickListener(this);
         imgFollow.setOnClickListener(this);
         btnEdit.setOnClickListener(this);
+        imgMsg.setOnClickListener(this);
     }
 
 
@@ -109,14 +110,31 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
             case R.id.btnEdit:
                 startEditProfileActivity();
                 break;
-
+            case R.id.imgMsg:
+                if (iAmStar != null && iAmStar.length() > 0 && iAmStar.equalsIgnoreCase("1")) {
+                    startMessageActivity();
+                }
+                break;
         }
+    }
+
+    public void setIAmStar(final String _iAmStar){
+        iAmStar = _iAmStar;
+        setupViews();
+    }
+
+    private void startMessageActivity(){
+        final Intent intent=new Intent(this, MessageActivity.class);
+        intent.putExtra("recipent", user.getUserId());
+        intent.putExtra("isDisableCompose",true);
+        startActivity(intent);
+
     }
 
     private void addProfileListFragment(){
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        final ProfileFragment profileFragment = ProfileFragment.getInstance(user);
+        profileFragment = ProfileFragment.getInstance(user);
         fragmentTransaction.replace(R.id.fragmentContainer, profileFragment);
         fragmentTransaction.commit();
     }
@@ -137,22 +155,22 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         }
     }
 
+    public void setIsMyStar(final String star){
+        user.setIsMyStar(star);
+        setupViews();
+    }
+
     private void deleteStarRequest() {
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("star", user.getUserId());
         Utility.ShowProgressDialog(this, getString(R.string.loading));
-        RestClient.getInstance(this).deleteRequest(Constant.DELETE_STAR + user.getUserId(), params, new ConnectCallback<StarResponse>() {
+        Api.deleteStarRequest(this, user.getUserId(), new ConnectCallback<StarResponse>() {
             @Override
             public void onSuccess(StarResponse object) {
                 Utility.HideDialog(NewProfileActivity.this);
                 final String error = object.getError();
-                if (error == null) {
-//                    if (onChangeEntryListener != null)
-//                        onChangeEntryListener.onFollowEntry(UserID, "0");
-                    user.setIsMyStar("0");
-                    imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
-                    imgFollow.setText(getString(R.string.follow));
-                    imgFollow.setVisibility(View.VISIBLE);
+                if (error == null || error.equals("")) {
+                    if (profileFragment != null)
+                        profileFragment.onFollowEntry(user.getUserId(), "0");
+                    setIsMyStar("0");
                 }
             }
 
@@ -164,18 +182,16 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     }
 
     private void addStarRequest() {
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("star", user.getUserId());
         Utility.ShowProgressDialog(this, getString(R.string.loading));
-        showStarDialog();
-        RestClient.getInstance(this).postRequest(Constant.STAR, params, new ConnectCallback<StarResponse>() {
+        Api.addStarRequest(this, user.getUserId(), new ConnectCallback<StarResponse>() {
 
             @Override
             public void onSuccess(StarResponse object) {
                 Utility.HideDialog(NewProfileActivity.this);
-                if (object.getError() == null) {
-//                    if (onChangeEntryListener != null)
-//                        onChangeEntryListener.onFollowEntry(UserID, "1");
+                if (object.getError() == null || object.getError().equals("")) {
+                    if (profileFragment != null)
+                        profileFragment.onFollowEntry(user.getUserId(), "1");
+                    setIsMyStar("1");
                 }
             }
 
@@ -186,61 +202,17 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    private void showStarDialog() {
-        final Dialog dialog = new Dialog(this, R.style.DialogAnimationTheme);
-        dialog.setContentView(R.layout.dialog_add_star);
-        dialog.show();
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                dialog.dismiss();
-            }
-        };
-        timer.schedule(task, 1000);
-    }
-
-
-
     private void getBundleData(){
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.containsKey(USER))
                 user = (UserProfile) extras.getSerializable(USER);
-//
-//            if (extras.containsKey("EntryId")) {
-//                EntryId = extras.getString("EntryId");
-//                isNotfiedUser=true;
-//
-//                UserID = preferences.getString("userid", "0");
-//            }
-//            if (extras.containsKey("UserID")) {
-//                UserID = extras.getString("UserID");
-//            }
-//            if (extras.containsKey("UserName")) {
-//                UserName = extras.getString("UserName");
-//            }
-//            if (extras.containsKey("UserPic")) {
-//                UserPic = extras.getString("UserPic");
-//            }
-//            if (extras.containsKey("IsMyStar")) {
-//                IsMyStar = extras.getString("IsMyStar");
-//            }
-//            if (extras.containsKey("UserDisplayName")) {
-//                UserDisplayName = extras.getString("UserDisplayName");
-//            }
-//            if (extras.containsKey("UserCoverImage")) {
-//                UserCoverImage = extras.getString("UserCoverImage");
-//            }
-//            if (extras.containsKey("UserTagline")) {
-//                UserTagline = extras.getString("UserTagline");
-//            }
-//            if (extras.containsKey("isProfile")) {
-//                isProfile = extras.getBoolean("isProfile", false);
-//            }
-
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(101);
+        finish();
     }
 }

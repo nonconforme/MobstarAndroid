@@ -12,6 +12,7 @@ import com.mobstar.api.DownloadFileManager;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.custom.recycler_view.sticky_recycler_view.DividerDecoration;
 import com.mobstar.custom.recycler_view.sticky_recycler_view.StickyHeadersTouchListener;
+import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.utils.Constant;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 /**
  * Created by lipcha on 22.09.15.
  */
-public class ProfileFragment extends HomeVideoListBaseFragment {
+public class ProfileFragment extends HomeVideoListBaseFragment implements EntryItem.OnChangeEntryListener {
 
     public static final String USER = "user";
 
@@ -138,5 +139,22 @@ public class ProfileFragment extends HomeVideoListBaseFragment {
         }
         recyclerView.scrollToPosition(position);
         refreshEntryList();
+    }
+
+    @Override
+    protected void refreshEntryList() {
+        super.refreshEntryList();
+        if (entryAdapter.getArrEntries().size() > 0)
+            ((NewProfileActivity)getActivity()).setIAmStar(entryAdapter.getEntry(0).getIAmStar());
+    }
+
+    @Override
+    public void onRemoveEntry(int position) {
+
+    }
+
+    @Override
+    public void onFollowEntry(String uId, String isMyStar) {
+        entryAdapter.onFollowEntry(uId, isMyStar);
     }
 }

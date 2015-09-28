@@ -85,8 +85,11 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
                 case UPDATES_PAGE:
                     if (arrEntryes.size() == 0)
                         ((NoDataItem)viewItem).init(baseActivity);
-                    else
-                        ((EntryItem)viewItem).init(arrEntryes.get(position - 1), position, baseActivity, this);
+                    else {
+                        EntryItem entryItem = (EntryItem) viewItem;
+                        entryItem.init(arrEntryes.get(position - 1), position, baseActivity, this);
+                        entryItem.removeItemAfterVotingNo(false);
+                    }
                     break;
                 case PROFILE_PAGE:
                     ((ProfileItem)viewItem).init(baseActivity, userData.getUserPic(), userData.getUserName());
@@ -139,6 +142,12 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
                 return PROFILE_VIEW_TYPE;
         }
         return PROFILE_HEADER_VIEW_TYPE;
+    }
+
+    @Override
+    public void onFollowEntry(String uId, String isMyStar) {
+        super.onFollowEntry(uId, isMyStar);
+        ((NewProfileActivity)baseActivity).setIsMyStar(isMyStar);
     }
 }
 

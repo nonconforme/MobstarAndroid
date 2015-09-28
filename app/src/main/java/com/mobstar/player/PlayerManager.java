@@ -45,9 +45,9 @@ public class PlayerManager {
     }
 
     private void sendRequstAddCount() {
-        Log.d(LOG_TAG, "sendRequstAddCount");
+        Log.d(LOG_TAG, "sendRequestAddCount");
         SharedPreferences preferences = mContext.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
-        Api.sendRequstAddCount(mContext, mEntryItem.getEntryPojo().getID(), preferences.getString("userid", "0"),null);
+        Api.sendRequestAddCount(mContext, mEntryItem.getEntryPojo().getID(), preferences.getString("userid", "0"), null);
 
     }
 

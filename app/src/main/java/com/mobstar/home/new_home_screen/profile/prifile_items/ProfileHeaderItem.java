@@ -60,7 +60,7 @@ public class ProfileHeaderItem extends RecyclerView.ViewHolder implements View.O
     }
 
     private void startFansActivity(){
-        Intent i=new Intent(baseActivity, FansActivity.class);
+        Intent i = new Intent(baseActivity, FansActivity.class);
         i.putExtra("UserId", userData.getUserId());
         baseActivity.startActivity(i);
     }
@@ -81,7 +81,7 @@ public class ProfileHeaderItem extends RecyclerView.ViewHolder implements View.O
             textTagline.setVisibility(View.GONE);
         }
         textFollowers.setVisibility(View.VISIBLE);
-        textFollowers.setText(userData.getUserFan() + " Followers");
+        textFollowers.setText(userData.getUserFan() + " " + baseActivity.getString(R.string.followers));
 
         if (userData.getUserPic().equals("")) {
             imgUserPic.setImageResource(R.drawable.profile_pic_new);

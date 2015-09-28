@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -63,6 +61,8 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MobItVideoListFragment extends Fragment {
 
@@ -906,8 +906,8 @@ public class MobItVideoListFragment extends Fragment {
 				viewHolder.imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
 				viewHolder.progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
 				viewHolder.textureView = (TextureView) convertView.findViewById(R.id.textureView);
-				viewHolder.btnShare = (ImageView) convertView.findViewById(R.id.btnShare);
-				viewHolder.btnInfo = (ImageView) convertView.findViewById(R.id.btnInfo);
+				viewHolder.btnShare = (FrameLayout) convertView.findViewById(R.id.btnShare);
+				viewHolder.btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
 				viewHolder.textLikeCount = (TextView) convertView.findViewById(R.id.textLikeCount);
 				viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
 				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
@@ -2441,8 +2441,8 @@ public class MobItVideoListFragment extends Fragment {
 			ImageView imageFrame;
 			ProgressBar progressbar;
 			TextureView textureView;
-			ImageView btnShare;
-			ImageView btnInfo;
+			FrameLayout btnShare;
+			FrameLayout btnInfo;
 			ImageView ivAudioIcon;
 			FrameLayout layoutComment/*layoutLike*/;
 			ImageView imgUserPic;
@@ -2695,6 +2695,30 @@ public class MobItVideoListFragment extends Fragment {
 		}
 		
 	}
+
+	private void startProfileActivity(int position){
+		final Intent intent = new Intent(mContext, NewProfileActivity.class);
+		final UserProfile userProfile = UserProfile.newBuilder()
+				.setUserCoverImage(arrEntryPojos.get(position).getProfileCover())
+				.setUserId(arrEntryPojos.get(position).getUserID())
+				.setUserName(arrEntryPojos.get(position).getUserName())
+				.setUserDisplayName(arrEntryPojos.get(position).getUserDisplayName())
+				.setUserPic(arrEntryPojos.get(position).getProfileImage())
+				.setIsMyStar(arrEntryPojos.get(position).getIsMyStar())
+				.setUserTagline(arrEntryPojos.get(position).getTagline())
+				.build();
+		intent.putExtra(NewProfileActivity.USER, userProfile);
+//					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
+//					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
+//					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
+//					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
+//					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
+//					intent.putExtra("IsMyStar", arrEntryPojos.get(position).getIsMyStar());
+//					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
+		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+
 
 
 }

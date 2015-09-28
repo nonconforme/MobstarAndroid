@@ -4,7 +4,7 @@
     <FrameLayout
         android:id="@+id/fl_inner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingBottom="@dimen/header_footer_top_bottom_padding"
         android:paddingLeft="@dimen/header_footer_left_right_padding"
         android:paddingRight="@dimen/header_footer_left_right_padding"
@@ -14,9 +14,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:layout_gravity="center_horizontal|bottom"
+            android:orientation="vertical"
+            android:gravity="center|bottom">
 
             <TextView
                 android:id="@+id/pull_to_refresh_text"
@@ -38,14 +38,7 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" >
-
-            <ImageView
-                android:id="@+id/pull_to_refresh_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/pull_up" />
+            android:layout_gravity="center_horizontal|bottom">
 
             <ProgressBar
                 android:id="@+id/pull_to_refresh_progress"
@@ -57,6 +50,13 @@
                 android:indeterminate="true"
                 android:visibility="gone" />
         </FrameLayout>
+
+        <ImageView
+            android:id="@+id/pull_to_refresh_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/pull_up" />
     </FrameLayout>
 
 </merge>
