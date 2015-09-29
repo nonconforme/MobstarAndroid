@@ -40,16 +40,20 @@ public class FFCommandCreator {
 
     public static String getMergeVideoCommandString(String pathLeft, String pathRight, String pathResult, boolean isHeadphonesOn, PositionVariant positionVariant) {
 
-        String firstVideoPath = pathRight;
-        String secondVideoPath = pathLeft;
+        String firstVideoPath = pathLeft;
+        String secondVideoPath = pathRight;
+        String videoMergeCommand = "";
+        String audioMixCommand = "";
         switch (positionVariant){
             case ORIGIN_LEFT:
-
+                //this is correct!!!
+                videoMergeCommand  = "[bg][0:v:0]overlay=w;[1:v:0]pad=iw*2:ih[bg]";
                 break;
             case ORIGIN_RIGHT:
-                firstVideoPath = pathLeft;
-                secondVideoPath = pathRight;
+                //this is correct!!!
+                videoMergeCommand  = "[0:v:0]pad=iw*2:ih[bg];[bg][1:v:0]overlay=w";
                 break;
+
             case ORIGIN_RIGHT_TOP:
 
                 break;
@@ -62,10 +66,8 @@ public class FFCommandCreator {
             case ORIGIN_BOTTOM:
 
                 break;
-
         }
 
-        String audioMixCommand = "";
         if (isHeadphonesOn)
             audioMixCommand = ";amix=inputs=2:duration=first:dropout_transition=3";
         final StringBuilder stringBuilder = new StringBuilder();
@@ -75,9 +77,10 @@ public class FFCommandCreator {
                 .append(" -i ")
                 .append(secondVideoPath)
                 .append(" -strict experimental -filter_complex ")
+                .append(videoMergeCommand)
 //                        оригінал справа, з камери - зліва
-                .append("[0:v:0]pad=iw*2:ih[bg];")
-                .append("[bg][1:v:0]overlay=w")
+//                .append("[0:v:0]pad=iw*2:ih[bg];")
+//                .append("[bg][1:v:0]overlay=w")
 //                        оригінал справа знизу на пів екрана б з камери - зліва
 //                .append("pad=iw*2:ih[bg];")
 //                .append("overlay=w:150")
@@ -90,7 +93,7 @@ public class FFCommandCreator {
 //                .append("[1:v][bg][fg]overlay=w")
 
                 .append(audioMixCommand)
-                .append(" -s 308x308 -r 30 -b 15496k -vcodec mpeg4 ")
+                .append(" -s 308x308 -r 30 -b 15496k -vcodec mpeg4 -shortest ")
                 .append(pathResult);
 
         return stringBuilder.toString();
