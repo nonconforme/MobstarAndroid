@@ -61,14 +61,10 @@ public class FFCommandCreator {
 
                 break;
             case ORIGIN_TOP:
-                firstMergeCommand = "[0:v:0]pad=iw:ih*2[bg];";
-                secondMergeCommand = "[bg][1:v:0]overlay=0:main_h/2";
+                videoMergeCommand = "[bg][0:v:0]overlay=0:main_h/2;[1:v:0]pad=iw:ih*2[bg]";
                 break;
             case ORIGIN_BOTTOM:
-                firstVideoPath = pathLeft;
-                secondVideoPath = pathRight;
-                firstMergeCommand = "[0:v:0]pad=iw:ih*2[bg];";
-                secondMergeCommand = "[bg][1:v:0]overlay=0:main_h/2";
+                videoMergeCommand = "[0:v:0]pad=iw:ih*2[bg];[bg][1:v:0]overlay=0:main_h/2";
                 break;
         }
 

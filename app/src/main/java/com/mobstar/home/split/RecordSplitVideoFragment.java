@@ -29,9 +29,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.hardware.Camera.Size;
-import android.graphics.Matrix;
-import android.graphics.RectF;
+
 import com.mobstar.R;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.FFCommandCreator;
@@ -750,7 +748,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                 onOriginFullscreen();
                 break;
             case ORIGIN_TOP:
-                onOriginTop();
+                onOrigiTop();
                 break;
             case ORIGIN_BOTTOM:
                 onOriginBottom();
@@ -779,13 +777,13 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
     }
 
-    private void onOriginTop(){
-        llParalelVideoPosition.setOrientation(LinearLayout.VERTICAL);
-        onOriginLeft();
-    }
-
     private void onOriginBottom(){
         llParalelVideoPosition.setOrientation(LinearLayout.VERTICAL);
         onOriginRight();
+    }
+
+    private void onOrigiTop(){
+        llParalelVideoPosition.setOrientation(LinearLayout.VERTICAL);
+        onOriginLeft();
     }
 }
