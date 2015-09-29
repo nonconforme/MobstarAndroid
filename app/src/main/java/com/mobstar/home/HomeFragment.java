@@ -1,13 +1,9 @@
 package com.mobstar.home;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,24 +21,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.adapters.CategoriesAdapter;
+import com.mobstar.adapters.ContinentsAdapter;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.CategoriesFilterResponse;
+import com.mobstar.api.responce.ContinentFilterResponse;
 import com.mobstar.custom.CustomTextviewBold;
+import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
-import com.squareup.picasso.Picasso;
 
-public class HomeFragment extends Fragment {
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-	private Context mContext;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+
+
+
+public class HomeFragment extends Fragment implements OnClickListener {
+
+    private static final String LOG_TAG = HomeFragment.class.getName();
+    private Context mContext;
 
 	SharedPreferences preferences;
 
@@ -58,11 +69,14 @@ public class HomeFragment extends Fragment {
 	private String deepLinkedId="";
 	private String sErrorMessage="";
 	private ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
-	private CategoryAdapter categoryAdapter;
-	private Dialog categoryDialog;
-	
+    private ImageView vCategoryButton;
+    private int[] choosenContinents = {1,3,4};
+    private ProgressDialog progressDialog;
+    private ArrayList<Integer> listChoosenContinents;
+    private ArrayList<Integer> listChoosenCategories;
 
-	@Override
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle extras = getArguments();
@@ -73,6 +87,8 @@ public class HomeFragment extends Fragment {
 			}
 
 		}
+
+
 	}
 
 	@Override
@@ -87,7 +103,6 @@ public class HomeFragment extends Fragment {
 
 		preferences = getActivity().getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
 
-		categoryAdapter=new CategoryAdapter();
 
 		// Ion.getDefault(mContext).configure().setLogging("Ion", Log.DEBUG);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter("upload_successful"));
@@ -127,23 +142,13 @@ public class HomeFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		textAllEntries = (TextView) view.findViewById(R.id.textAllEntries);
-		textAllEntries.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				CategoryDialog();
-			}
-		});
+		textAllEntries.setOnClickListener(this);
 
 		textLatestPopular = (TextView) view.findViewById(R.id.textLatestPopular);
-		textLatestPopular.setOnClickListener(new OnClickListener() {
+		textLatestPopular.setOnClickListener(this);
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				LatestPopularDialog();
-			}
-		});
+        vCategoryButton = (ImageView) view.findViewById(R.id.btn_continents_home);
+        vCategoryButton.setOnClickListener(this);
 
 
 		if (!isDataLoaded) {
@@ -159,6 +164,8 @@ public class HomeFragment extends Fragment {
 
 	void GetData(String sLatestPopular) {
 		if (Utility.isNetworkAvailable(mContext)) {
+            getContinentsFilters();
+            getCategoriesFilters();
 			new CategoryCall().start();
 		} else {
 			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
@@ -168,27 +175,78 @@ public class HomeFragment extends Fragment {
 		//check for deeplink EntryId
 		if(deepLinkedId!=null && deepLinkedId.length()>0) {
 			Log.d("mobstar","Sending deepLinkedId"+deepLinkedId);
-			VideoListFragment videoListFragment = new VideoListFragment();
-			Bundle extras = new Bundle();
-			extras.putBoolean("isEntryIdAPI", true);
-			extras.putString("deepLinkedId",deepLinkedId);
-			extras.putString("LatestORPopular", sLatestPopular);
-			videoListFragment.setArguments(extras);
+//			VideoListFragment videoListFragment = new VideoListFragment();
+//			Bundle extras = new Bundle();
+//			extras.putBoolean("isEntryIdAPI", true);
+//			extras.putString("deepLinkedId",deepLinkedId);
+//			extras.putString("LatestORPopular", sLatestPopular);
+//			videoListFragment.setArguments(extras);
+			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, deepLinkedId, sLatestPopular, null, false);
 			replaceFragment(videoListFragment, "VideoListFragment");
 		}
 		else {
-			VideoListFragment videoListFragment = new VideoListFragment();
-			Bundle extras = new Bundle();
-			extras.putBoolean("isEntryAPI", true);
-			extras.putString("LatestORPopular", sLatestPopular);
-			videoListFragment.setArguments(extras);
+//			VideoListFragment videoListFragment = new VideoListFragment();
+//			Bundle extras = new Bundle();
+//			extras.putBoolean("isEntryAPI", true);
+//			extras.putString("LatestORPopular", sLatestPopular);
+//			videoListFragment.setArguments(extras);
+			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, sLatestPopular, null, true);
 			replaceFragment(videoListFragment, "VideoListFragment");	
 		}
 		isDataLoaded = true;
 	}
 
+    private void getCategoriesFilters() {
+        RestClient.getInstance(mContext).getRequest(Constant.USER_CATEGORIES_FILTERS, null, new ConnectCallback<CategoriesFilterResponse>() {
+            @Override
+            public void onSuccess(CategoriesFilterResponse filterResponse) {
+                Log.d(LOG_TAG, "CategoriesFilterResponse=" + filterResponse.getChoosenCategories().size());
+                if (!filterResponse.hasError()) {
+                    listChoosenCategories = filterResponse.getChoosenCategories();
+                } else {
+                    Log.d(LOG_TAG, "getCategoriesFilters.onFailure.error=" + filterResponse.getError());
+                    listChoosenCategories = new ArrayList<Integer>();
+//                    okayAlertDialog(filterResponse.getError());
+                }
+            }
 
-	private void replaceFragment(Fragment mFragment, String fragmentName) {
+            @Override
+            public void onFailure(String error) {
+                Log.d(LOG_TAG, "getCategoriesFilters.onFailure=" + error);
+
+//                okayAlertDialog(error);
+
+            }
+        });
+    }
+
+    private void getContinentsFilters() {
+        RestClient.getInstance(mContext).getRequest(Constant.USER_CONTINENT_FILTERS, null, new ConnectCallback<ContinentFilterResponse>() {
+            @Override
+            public void onSuccess(ContinentFilterResponse filterResponse) {
+                Log.d(LOG_TAG, "ContinentFilterResponse=" + filterResponse.getChoosenContinents().size());
+                if (!filterResponse.hasError()) {
+                    listChoosenContinents = filterResponse.getChoosenContinents();
+                } else {
+                    Log.d(LOG_TAG, "getContinentsFilters.onFailure.error=" + filterResponse.getError());
+                    listChoosenContinents = new ArrayList<Integer>();
+//                    okayAlertDialog(filterResponse.getError());
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.d(LOG_TAG, "getContinentsFilters.onFailure=" + error);
+
+//                okayAlertDialog(error);
+
+            }
+        });
+
+    }
+
+
+    private void replaceFragment(Fragment mFragment, String fragmentName) {
 
 		mFragmentTransaction = mFragmentManager.beginTransaction();
 		mFragmentTransaction.replace(R.id.childFragmentContent, mFragment, fragmentName);
@@ -205,175 +263,186 @@ public class HomeFragment extends Fragment {
 		btnLatest = (CustomTextviewBold) dialog.findViewById(R.id.btnLatest);
 		btnLatest.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (getActivity() != null) {
-					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							GetData("latest");
-							textLatestPopular.setText(getString(R.string.latest));
-							isLatest = true;
-						}
-					});
-				}
-				dialog.dismiss();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            GetData("latest");
+                            textLatestPopular.setText(getString(R.string.latest));
+                            isLatest = true;
+                        }
+                    });
+                }
+                dialog.dismiss();
+            }
+        });
 		btnPopular = (CustomTextviewBold) dialog.findViewById(R.id.btnPopular);
 		btnPopular.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (getActivity() != null) {
-					getActivity().runOnUiThread(new Runnable() {
-						public void run() {
-							GetData("popular");
-							isLatest = false;
-							textLatestPopular.setText(getString(R.string.popular));
-						}
-					});
-				}
-				dialog.dismiss();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            GetData("popular");
+                            isLatest = false;
+                            textLatestPopular.setText(getString(R.string.popular));
+                        }
+                    });
+                }
+                dialog.dismiss();
+            }
+        });
 		dialog.show();
 	}
 
-	void CategoryDialog() {
 
-		ListView listCategory;
+    private void showProgress(){
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage(getString(R.string.loading));
+        progressDialog.show();
+    }
 
-		categoryDialog = new Dialog(getActivity(), R.style.DialogTheme);
-		categoryDialog.setContentView(R.layout.dialog_category);
-		listCategory = (ListView) categoryDialog.findViewById(R.id.listCategory);
-		listCategory.setAdapter(categoryAdapter);
+    private void hideProgress(){
+        if (progressDialog != null)
+            progressDialog.hide();
+    }
 
-		categoryDialog.show();
-	}
+    @Override
+    public void onClick(View v) {
+        Log.d(LOG_TAG, "onClick");
+        switch (v.getId()) {
+            case R.id.textLatestPopular:
+                LatestPopularDialog();
+                break;
+            case R.id.textAllEntries:
+                ListView listCategory;
 
-	public class CategoryAdapter extends BaseAdapter {
+                final Dialog categoryDialog = new Dialog(getActivity(), R.style.DialogTheme);
+                categoryDialog.setContentView(R.layout.dialog_chooser_filter);
+                listCategory = (ListView) categoryDialog.findViewById(R.id.list_choose_dialog);
+                ((ImageButton) categoryDialog.findViewById(R.id.btn_close_dialog_filters)).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       sendNewCategoryFilter(categoryDialog);
 
-		private LayoutInflater inflater = null;
 
-		public CategoryAdapter() {
-			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    }
+                });
+                listCategory.setAdapter(new CategoriesAdapter(getActivity(),arrCategoryPojos,listChoosenCategories));
 
-		}
+                categoryDialog.show();
+                break;
 
-		@Override
-		public int getCount() {
-			// TODO Auto-generated method stub
-			return arrCategoryPojos.size();
-		}
+            case R.id.btn_continents_home:
+                //mock
+//                for (int i=0;i<choosenContinents.length;i++){
+//                    listChoosenContinents.add(choosenContinents[i]);
+//                }
+                ListView vListConinents;
 
-		@Override
-		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			return position;
-		}
+                final Dialog continentDialog = new Dialog(getActivity(), R.style.DialogTheme);
+                continentDialog.setContentView(R.layout.dialog_chooser_filter);
+                vListConinents = (ListView) continentDialog.findViewById(R.id.list_choose_dialog);
+                ((ImageButton) continentDialog.findViewById(R.id.btn_close_dialog_filters))
+                        .setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                sendNewContinentFilter(continentDialog);
+                            }
+                        });
 
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return position;
-		}
 
-		class ViewHolder {
-			CustomTextviewBold btnAll;
-			TextView textCategoryName;
-			ImageView imageIcon;
-			LinearLayout llCategory;
-		}
+                vListConinents.setAdapter(new ContinentsAdapter(continentDialog, listChoosenContinents));
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+                continentDialog.show();
+                break;
+        }
+    }
 
-			final ViewHolder viewHolder;
-			final CategoryPojo categoryObj=arrCategoryPojos.get(position);
-			if (convertView == null) {
+    private void sendNewCategoryFilter(final Dialog categoryDialog) {
+//        if (listChoosenCategories.size() == 6)
+//            listChoosenContinents.clear();
+        final HashMap<String, String> params = new HashMap<>();
+        JSONArray jsonArray = new JSONArray(listChoosenCategories);
+        Log.d(LOG_TAG, "listChoosenCategories.jsonArray=" + jsonArray.toString());
+        params.put(CategoriesFilterResponse.KEY_CATEGORIES_FILTER, jsonArray.toString());
+        showProgress();
+        RestClient.getInstance(mContext).postRequest(Constant.USER_CATEGORIES_FILTERS, params, new ConnectCallback<CategoriesFilterResponse>() {
 
-				convertView = inflater.inflate(R.layout.row_dialog_category, null);
+            @Override
+            public void onSuccess(CategoriesFilterResponse filterResponse) {
+                Log.d(LOG_TAG, "CategoriesFilterResponse=" + filterResponse.getChoosenCategories().size());
+                hideProgress();
+                if (filterResponse.hasError()){
+                    Log.d(LOG_TAG, "categoryDialog.onSuccess.error=" + filterResponse.getError());
+//                                    okayAlertDialog(object.getError());
+                } else {
+                    categoryDialog.dismiss();
+                    onBeginVideoFragment();
+                }
 
-				viewHolder = new ViewHolder();
+            }
 
-				viewHolder.btnAll=(CustomTextviewBold)convertView.findViewById(R.id.btnAll);
-				viewHolder.textCategoryName = (TextView) convertView.findViewById(R.id.textCategoryName);
-				viewHolder.imageIcon=(ImageView)convertView.findViewById(R.id.image_icon);
-				viewHolder.llCategory=(LinearLayout)convertView.findViewById(R.id.llCategory);
-				convertView.setTag(viewHolder);
+            @Override
+            public void onFailure(String error) {
+                Log.d(LOG_TAG, "categoryDialog.onFailure.error=" + error);
+                hideProgress();
+//                                okayAlertDialog(error);
+//                                showToastNotification(error);
+            }
+        });
+    }
 
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
+    private void sendNewContinentFilter(final Dialog continentDialog) {
+        if (listChoosenContinents.size() == 6)
+            listChoosenContinents.clear();
+        final HashMap<String, String> params = new HashMap<>();
+        JSONArray jsonArray = new JSONArray(listChoosenContinents);
+        Log.d(LOG_TAG, "listChoosenContinents.jsonArray=" + jsonArray.toString());
+        params.put(ContinentFilterResponse.KEY_CONTINENT_FILTER, jsonArray.toString());
+        showProgress();
+        RestClient.getInstance(mContext).postRequest(Constant.USER_CONTINENT_FILTERS, params, new ConnectCallback<ContinentFilterResponse>() {
 
-			if(position==0){
-				viewHolder.btnAll.setVisibility(View.VISIBLE);
-			}
-			else {
-				viewHolder.btnAll.setVisibility(View.GONE);
-			}
+            @Override
+            public void onSuccess(ContinentFilterResponse filterResponse) {
+                Log.d(LOG_TAG, "ContinentFilterResponse=" + filterResponse.getChoosenContinents().size());
+                hideProgress();
+                if (filterResponse.hasError()) {
+                    Log.d(LOG_TAG, "continentDialog.onSuccess.error=" + filterResponse.getError());
+//                                    okayAlertDialog(object.getError());
+                } else {
+                    continentDialog.dismiss();
+                    onBeginVideoFragment();
+                }
 
-			if(categoryObj.getCategoryName()!=null && categoryObj.getCategoryName().length()>0){
-				viewHolder.textCategoryName.setText(categoryObj.getCategoryName());
-			}
+            }
 
-			if(categoryObj.getCategoryDescription()!=null && categoryObj.getCategoryDescription().length()>0) {
-				Picasso.with(mContext).load(categoryObj.getCategoryDescription()).placeholder(R.drawable.ic_pic_small).into(viewHolder.imageIcon);
-			}
-			else {
-				Picasso.with(mContext).load(R.drawable.ic_pic_small).into(viewHolder.imageIcon);
-			}
+            @Override
+            public void onFailure(String error) {
+                Log.d(LOG_TAG, "continentDialog.onFailure.error=" + error);
+                hideProgress();
+//                                okayAlertDialog(error);
+//                                showToastNotification(error);
+            }
+        });
+    }
 
-			//set background
-			if(categoryObj.getCategoryActive()){
-				viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.oval_yellow_button_background));
-			}
-			else {
-				viewHolder.llCategory.setBackground(getResources().getDrawable(R.drawable.btn_coming_soon));
-			}
+    private void onBeginVideoFragment() {
+//        VideoListFragment videoListFragment = new VideoListFragment();
+//        Bundle extras = new Bundle();
+//        extras.putBoolean("isEntryAPI", true);
+//        extras.putString("LatestORPopular", "latest");
+//        videoListFragment.setArguments(extras);
+		HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, "latest", null, true);
+        replaceFragment(videoListFragment, "VideoListFragment");
+    }
 
-			viewHolder.btnAll.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					if(categoryDialog!=null) {
-						categoryDialog.dismiss();
-					}
-					VideoListFragment videoListFragment = new VideoListFragment();
-					Bundle extras = new Bundle();
-					extras.putBoolean("isEntryAPI", true);
-					extras.putString("LatestORPopular","latest");
-					videoListFragment.setArguments(extras);
-					replaceFragment(videoListFragment, "VideoListFragment");
-				}
-			});
-
-			viewHolder.llCategory.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					if(categoryDialog!=null) {
-						categoryDialog.dismiss();
-					}
-					if(categoryObj.getCategoryActive()){
-						VideoListFragment videoListFragment = new VideoListFragment();
-						Bundle extras = new Bundle();
-						extras.putBoolean("isEntryAPI", true);
-						extras.putString("categoryId",categoryObj.getID());
-						extras.putString("LatestORPopular","latest");
-						videoListFragment.setArguments(extras);
-						replaceFragment(videoListFragment, "VideoListFragment");
-					}
-				}
-			});
-
-			return convertView;
-
-		}
-
-	}
+//
 
 	@Override
 	public void onDestroy() {
@@ -461,16 +530,16 @@ public class HomeFragment extends Fragment {
 			isDataLoaded = true;
 
 			if (msg.what == 1) {
-				categoryAdapter.notifyDataSetChanged();
+//				categoryAdapter.notifyDataSetChanged();
 
 			} else {
-				OkayAlertDialog(sErrorMessage);
+				okayAlertDialog(sErrorMessage);
 
 			}
 		}
 	};
 
-	void OkayAlertDialog(final String msg) {
+	void okayAlertDialog(final String msg) {
 
 		if (getActivity() != null && !getActivity().isFinishing()) {
 			getActivity().runOnUiThread(new Runnable() {

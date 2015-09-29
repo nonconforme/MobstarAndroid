@@ -1,12 +1,5 @@
 package com.mobstar.login;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,7 +13,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.facebook.LoggingBehavior;
@@ -35,11 +28,16 @@ import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.mobstar.AdWordsManager;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
 import com.mobstar.custom.AbstractGetNameTask;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.GetNameInForeground;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.twitter.ImageTwitter;
@@ -48,11 +46,18 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 public class LoginSocialActivity extends Activity implements OnClickListener {
 
 	Context mContext;
 
-	ImageView btnGetStarted, btnSignIn;
+	LinearLayout btnGetStarted, btnSignIn;
 	private CustomTextview btnLoginFB,  btnLoginTwitter, btnLoginGoogle;
 	private CustomTextviewBold btnCountinueWOSignin;
 
@@ -102,10 +107,10 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 
 	void initControls() {
 
-		btnGetStarted = (ImageView) findViewById(R.id.btnGetStarted);
+		btnGetStarted = (LinearLayout) findViewById(R.id.btnGetStarted);
 		btnGetStarted.setOnClickListener(this);
 
-		btnSignIn = (ImageView) findViewById(R.id.btnSignIn);
+		btnSignIn = (LinearLayout) findViewById(R.id.btnSignIn);
 		btnSignIn.setOnClickListener(this);
 
 		btnLoginFB = (CustomTextview) findViewById(R.id.btnLoginFB);
@@ -607,11 +612,11 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 				pref.edit().putString("bio", UserBio).commit();
 				pref.edit().putBoolean("isLogin", true).commit();
 
-				
+                AdWordsManager.getInstance().sendSingupEvent();
 				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
 					startWelcomeActivity();
 				}else {
-					startHomeActivity();
+					getUserAccountRequest();
 				}
 				
 			} else {
@@ -627,6 +632,32 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 		startActivity(intent);
 		finish();
 	}
+
+	private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(mContext);
+				if (object.getUser().getUserContinentId() == 0) {
+					startSelectCurrentRegionActivity();
+				} else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(mContext);
+				startHomeActivity();
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
 
 	private void startHomeActivity(){
 		Intent intent = new Intent(mContext, HomeActivity.class);

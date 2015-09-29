@@ -1,14 +1,5 @@
 package com.mobstar.home;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -45,6 +36,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +48,9 @@ import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.LikesActivity;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.StarCall;
+import com.mobstar.api.responce.NullResponse;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.info.report.InformationReportActivity;
 import com.mobstar.pojo.EntryPojo;
@@ -68,9 +63,21 @@ import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import cz.msebera.android.httpclient.Header;
+
+
 public class SearchListFragment extends Fragment {
 
-	private Context mContext;
+    private static final String LOG_TAG = SearchListFragment.class.getName();
+    private Context mContext;
 
 	EntryListAdapter entryListAdapter;
 	PullToRefreshListView listEntry;
@@ -130,14 +137,12 @@ public class SearchListFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 
 		View view = inflater.inflate(R.layout.fragment_video_list, container, false);
 
 		mContext = getActivity();
 
-		FILEPATH = Environment.getExternalStorageDirectory().getPath()
-				+ "/Android/data/" + mContext.getPackageName() +"/";
+		FILEPATH = Utility.getCurrentDirectory(mContext);
 
 		preferences = getActivity().getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
 
@@ -233,7 +238,6 @@ public class SearchListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		isInPauseState = false;
-		// TODO Auto-generated method stub
 		super.onResume();
 		// Log.v(Constant.TAG, "VideoListFragment onResume");
 		if (entryListAdapter != null) {
@@ -256,7 +260,6 @@ public class SearchListFragment extends Fragment {
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
 
 		isInPauseState = false;
@@ -1021,7 +1024,9 @@ public class SearchListFragment extends Fragment {
 				if (type == 0) {
 					// Inflate the layout with image
 					convertView = inflater.inflate(R.layout.row_item_mobit, parent, false);
-					viewHolder.btnLike=(ImageView)convertView.findViewById(R.id.btnLike);
+					viewHolder.btnLike=(LinearLayout)convertView.findViewById(R.id.btnLike);
+					viewHolder.tvLikeText = (TextView) convertView.findViewById(R.id.tvLikeText);
+					viewHolder.ivLike = (ImageView) convertView.findViewById(R.id.ivLike);
 					viewHolder.textLikeCount=(TextView)convertView.findViewById(R.id.textLikeCount);
 				}
 				else {
@@ -1045,7 +1050,7 @@ public class SearchListFragment extends Fragment {
 				viewHolder.btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
 
 				viewHolder.ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
-				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
+//				viewHolder.layoutComment = (FrameLayout) convertView.findViewById(R.id.layoutComment);
 				viewHolder.textCommentCount = (TextView) convertView.findViewById(R.id.textCommentCount);
 				viewHolder.imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
 				viewHolder.imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
@@ -1116,16 +1121,16 @@ public class SearchListFragment extends Fragment {
 						mContext.startActivity(intent);
 					}
 				});
-
-				if(arrEntryPojos.get(position).getIsVotedByYou().equalsIgnoreCase("0")){
-					viewHolder.tvLikeText.setVisibility(View.GONE);
-					viewHolder.ivLike.setImageResource(R.drawable.icn_like);
-				}
-				else {
-					viewHolder.tvLikeText.setVisibility(View.VISIBLE);
-					viewHolder.ivLike.setImageResource(R.drawable.icn_btn_unlike);
+				if (viewHolder.tvLikeText != null) {
+					if (arrEntryPojos.get(position).getIsVotedByYou().equalsIgnoreCase("0")) {
+						viewHolder.tvLikeText.setVisibility(View.GONE);
+						viewHolder.ivLike.setImageResource(R.drawable.icn_like);
+					} else {
+						viewHolder.tvLikeText.setVisibility(View.VISIBLE);
+						viewHolder.ivLike.setImageResource(R.drawable.icn_btn_unlike);
 
 //					viewHolder.btnLike.setImageResource(R.drawable.btn_unlike);
+					}
 				}
 
 				viewHolder.btnLike.setOnClickListener(new OnClickListener() {
@@ -1205,9 +1210,25 @@ public class SearchListFragment extends Fragment {
 							if (Utility.isNetworkAvailable(mContext)) {
 
 								userFollowId=arrEntryPojos.get(position).getUserID();
-								new AddStarCall(arrEntryPojos.get(position).getUserID()).start();
+//								new AddStarCall(arrEntryPojos.get(position).getUserID()).start();
+                                StarCall.addStarCall(mContext, arrEntryPojos.get(position).getUserID(), new ConnectCallback<NullResponse>() {
+                                    @Override
+                                    public void onSuccess(NullResponse object) {
+                                        Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
+                                        arrEntryPojos.get(position).setIsMyStar("1");
+                                        handlerAddStar.sendEmptyMessage(1);
+                                    }
 
-								final Dialog dialog = new Dialog(mContext, R.style.DialogAnimationTheme);
+                                    @Override
+                                    public void onFailure(String error) {
+                                        Utility.HideDialog(mContext);
+                                        Log.d(LOG_TAG, "StarCall.addStarCall.onFailure.error=" + error);
+                                        handlerAddStar.sendEmptyMessage(0);
+                                    }
+                                });
+
+
+                                final Dialog dialog = new Dialog(mContext, R.style.DialogAnimationTheme);
 								dialog.setContentView(R.layout.dialog_add_star);
 								dialog.show();
 
@@ -1344,7 +1365,8 @@ public class SearchListFragment extends Fragment {
 				}
 			});
 
-			viewHolder.layoutComment.setOnClickListener(new OnClickListener() {
+            if (type!=1)
+			viewHolder.textCommentCount.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -2155,10 +2177,10 @@ public class SearchListFragment extends Fragment {
 			FrameLayout btnShare;
 			TextView btnFollow;
 			FrameLayout btnInfo;
-			ImageView btnLike;
+			LinearLayout btnLike;
 			// ImageView btnStatistics;
 			ImageView ivAudioIcon;
-			FrameLayout layoutComment;
+//			FrameLayout layoutComment;
 			ImageView imgUserPic;
 			TextView textCommentCount;
 			ImageView imgPlaceHolder;
@@ -2326,59 +2348,7 @@ public class SearchListFragment extends Fragment {
 		}
 	}
 
-	// added by khyati
-	class AddStarCall extends Thread {
 
-		String userID;
-
-		AddStarCall(String userID) {
-			this.userID = userID;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String[] name = { "star" };
-			String[] value = { userID };
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.STAR, name, value, preferences.getString("token", null));
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerAddStar.sendEmptyMessage(0);
-					} else {
-						for (int i = 0; i < arrEntryPojos.size(); i++) {
-							if (arrEntryPojos.get(i).getUserID().equalsIgnoreCase(userID)) {
-								arrEntryPojos.get(i).setIsMyStar("1");
-							}
-
-						}
-						handlerAddStar.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerAddStar.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerAddStar.sendEmptyMessage(0);
-			}
-
-		}
-	}
 
 	Handler handlerAddStar = new Handler() {
 

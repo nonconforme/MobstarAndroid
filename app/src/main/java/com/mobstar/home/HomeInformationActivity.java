@@ -16,6 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.utils.AppRater;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -76,7 +80,7 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 	public void onClick(View v) {
 		switch (v.getId()){
 			case R.id.btnClose:
-				startHomeActivity();
+				getUserAccountRequest();
 				break;
 		}
 	}
@@ -161,11 +165,38 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 	};
 	
 	public void onBackPressed() {
-		startHomeActivity();
+		getUserAccountRequest();
 	};
 
+
+	private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(HomeInformationActivity.this);
+				if (object.getUser().getUserContinentId() == 0){
+					startSelectCurrentRegionActivity();
+				}
+				else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(HomeInformationActivity.this);
+				startHomeActivity();
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
 	private void startHomeActivity(){
-		Intent intent = new Intent(mContext,HomeActivity.class);
+		Intent intent = new Intent(mContext, HomeActivity.class);
 		startActivity(intent);
 		finish();
 	}

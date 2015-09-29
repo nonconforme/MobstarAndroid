@@ -133,29 +133,77 @@
         android:layout_marginTop="80dp"
         android:gravity="center_horizontal" >
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/btnNewUser"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:layout_gravity="center"
-            android:layout_marginRight="20dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/login_new_user" />
+            android:gravity="center_vertical">
+            <com.mobstar.custom.CustomTextviewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_user"
+                android:textColor="@color/white_color" />
+            <com.mobstar.custom.CustomTextview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white_color"
+                android:text="@string/create_account"
+                android:textSize="10sp" />
+        </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/login_small_vert_devider" />
+            android:src="@drawable/login_small_vert_devider"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
 
-        <ImageView
+
+        <LinearLayout
             android:id="@+id/btnResetPassword"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/login_cant_login" />
+            android:gravity="center_vertical">
+            <com.mobstar.custom.CustomTextviewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cant_login"
+                android:textColor="@color/white_color"/>
+            <com.mobstar.custom.CustomTextview
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white_color"
+                android:text="@string/reset_password"
+                android:textSize="10sp"/>
+        </LinearLayout>
+        <!--<ImageView-->
+            <!--android:id="@+id/btnNewUser"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:contentDescription="@string/app_name"-->
+            <!--android:src="@drawable/login_new_user" />-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:contentDescription="@string/app_name"-->
+            <!--android:src="@drawable/login_small_vert_devider" />-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/btnResetPassword"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:contentDescription="@string/app_name"-->
+            <!--android:src="@drawable/login_cant_login" />-->
     </LinearLayout>
 
 </LinearLayout>

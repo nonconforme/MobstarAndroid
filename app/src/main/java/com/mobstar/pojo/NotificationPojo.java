@@ -1,117 +1,90 @@
 package com.mobstar.pojo;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-
-import com.mobstar.utils.Utility;
+import com.mobstar.utils.TimeUtility;
 
 public class NotificationPojo {
 
-	private String NotificationID, NotificationContent, NotificationDate, IsRead,NotificationType,EntryId,EntryName,NotificationIcon,MessageGroup,notificationRead;
+    private String NotificationID, NotificationContent, NotificationDate, IsRead, NotificationType, EntryId, EntryName, NotificationIcon, MessageGroup, notificationRead;
 
-	public String getNotificationRead() {
-		return notificationRead;
-	}
+    public String getNotificationRead() {
+        return notificationRead;
+    }
 
-	public void setNotificationRead(String notificationRead) {
-		this.notificationRead = notificationRead;
-	}
+    public void setNotificationRead(String notificationRead) {
+        this.notificationRead = notificationRead;
+    }
 
-	public String getEntryName() {
-		return EntryName;
-	}
+    public String getEntryName() {
+        return EntryName;
+    }
 
-	public void setEntryName(String entryName) {
-		EntryName = entryName;
-	}
+    public void setEntryName(String entryName) {
+        EntryName = entryName;
+    }
 
-	public String getNotificationID() {
-		return NotificationID;
-	}
+    public String getNotificationID() {
+        return NotificationID;
+    }
 
-	public void setNotificationID(String notificationID) {
-		NotificationID = notificationID;
-	}
+    public void setNotificationID(String notificationID) {
+        NotificationID = notificationID;
+    }
 
-	public String getMessageGroup() {
-		return MessageGroup;
-	}
+    public String getMessageGroup() {
+        return MessageGroup;
+    }
 
-	public void setMessageGroup(String messageGroup) {
-		MessageGroup = messageGroup;
-	}
+    public void setMessageGroup(String messageGroup) {
+        MessageGroup = messageGroup;
+    }
 
-	public String getNotificationContent() {
-		return NotificationContent;
-	}
-	
-	public void setNotificationIcon(String notificationIcon) {
-		NotificationIcon = notificationIcon;
-	}
+    public String getNotificationContent() {
+        return NotificationContent;
+    }
 
-	public String getNotificationIcon() {
-		return NotificationIcon;
-	}
+    public void setNotificationIcon(String notificationIcon) {
+        NotificationIcon = notificationIcon;
+    }
 
-	public void setNotificationContent(String notificationContent) {
-		NotificationContent = notificationContent;
-	}
+    public String getNotificationIcon() {
+        return NotificationIcon;
+    }
 
-	public String getNotificationDate() {
-		String tempDate = null;
-		Calendar today = Calendar.getInstance();
+    public void setNotificationContent(String notificationContent) {
+        NotificationContent = notificationContent;
+    }
 
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		Date gmtTime = null;
+    public String getNotificationDate() {
+        String tempDate = null;
+        tempDate = TimeUtility.getStringTime(TimeUtility.getDiffTime(NotificationDate));
+        return tempDate + "";
+    }
 
-		try {
-			gmtTime = formatter.parse(NotificationDate);// catch exception
+    public void setNotificationDate(String notificationDate) {
+        NotificationDate = notificationDate;
+    }
 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    public String getIsRead() {
+        return IsRead;
+    }
 
-		Calendar thatDay = Calendar.getInstance();
-		thatDay.setTime(gmtTime);
+    public void setIsRead(String isRead) {
+        IsRead = isRead;
+    }
 
-		long diff = (today.getTimeInMillis() - thatDay.getTimeInMillis()) / 1000;
+    public String getNotificationType() {
+        return NotificationType;
+    }
 
-		// Log.v(Constant.TAG, "Difference "+diff);
+    public void setNotificationType(String notificationType) {
+        NotificationType = notificationType;
+    }
 
-		tempDate=Utility.GetStringTime(diff);
+    public void setEntryId(String entryId) {
+        EntryId = entryId;
+    }
 
-		return tempDate + "";
-	}
-
-	public void setNotificationDate(String notificationDate) {
-		NotificationDate = notificationDate;
-	}
-
-	public String getIsRead() {
-		return IsRead;
-	}
-
-	public void setIsRead(String isRead) {
-		IsRead = isRead;
-	}
-
-	public String getNotificationType() {
-		return NotificationType;
-	}
-
-	public void setNotificationType(String notificationType) {
-		NotificationType = notificationType;
-	}
-	
-	public void setEntryId(String entryId){
-		EntryId=entryId;
-	}
-	
-	public String getEntryId(){
-		return EntryId;
-	}
+    public String getEntryId() {
+        return EntryId;
+    }
 }

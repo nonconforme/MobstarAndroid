@@ -1,16 +1,5 @@
 package com.mobstar;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,7 +15,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -40,7 +28,6 @@ import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -56,9 +43,14 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.StarCall;
+import com.mobstar.api.responce.NullResponse;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
+import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.fanconnect.FansActivity;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
@@ -75,12 +67,26 @@ import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import cz.msebera.android.httpclient.Header;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
+
 
 public class ProfileActivity extends Activity implements OnClickListener,AdapterView.OnItemClickListener, StickyListHeadersListView.OnHeaderClickListener,
 StickyListHeadersListView.OnStickyHeaderOffsetChangedListener,
 StickyListHeadersListView.OnStickyHeaderChangedListener {
 
-	Context mContext;
+    private static final String LOG_TAG = ProfileActivity.class.getName();
+    Context mContext;
 
 	EntryListAdapter entryListAdapter;
 	StickyListHeadersListView listEntry;
@@ -174,9 +180,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		mContext = ProfileActivity.this;
 		handler=new Handler();
-
-		FILEPATH = Environment.getExternalStorageDirectory().getPath()
-				+ "/Android/data/" + mContext.getPackageName() +"/";
+		FILEPATH = Utility.getCurrentDirectory(mContext);
 
 		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
 
@@ -267,48 +271,13 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				{
 					imgUserPic.setImageResource(R.drawable.profile_pic_new);
 				}
-				else 
+				else
 				{
 					imgUserPic.setImageResource(R.drawable.profile_pic_new);
 
 					Picasso.with(mContext).load(UserPic).resize(Utility.dpToPx(mContext, 126), Utility.dpToPx(mContext, 126)).centerCrop().placeholder(R.drawable.profile_pic_new)
 					.error(R.drawable.profile_pic_new).transform(new RoundedTransformation(Utility.dpToPx(mContext, 126), 0)).into(imgUserPic);
 
-					// Ion.with(mContext).load(UserPic).withBitmap().placeholder(R.drawable.profile_pic).error(R.drawable.profile_pic)
-					// .resize(Utility.dpToPx(mContext, 126),
-					// Utility.dpToPx(mContext,
-					// 126)).centerCrop().asBitmap().setCallback(new
-					// FutureCallback<Bitmap>() {
-					//
-					// @Override
-					// public void onCompleted(Exception exception, Bitmap
-					// bitmap) {
-					// // TODO Auto-generated method stub
-					// if (exception == null) {
-					// if (bitmap.getWidth() > 0 && bitmap.getHeight() > 0) {
-					// Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-					// bitmap.getHeight(), Config.ARGB_8888);
-					// Canvas canvas = new Canvas(output);
-					//
-					// final int color = 0xff424242;
-					// final Paint paint = new Paint();
-					// final Rect rect = new Rect(0, 0, bitmap.getWidth(),
-					// bitmap.getHeight());
-					//
-					// paint.setAntiAlias(true);
-					// canvas.drawARGB(0, 0, 0, 0);
-					// paint.setColor(color);
-					// canvas.drawCircle(bitmap.getWidth() / 2,
-					// bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
-					// paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-					// canvas.drawBitmap(bitmap, rect, rect, paint);
-					//
-					// imgUserPic.setImageBitmap(output);
-					// imgUserPic.invalidate();
-					// }
-					// }
-					// }
-					// });
 				}
 
 				UserCoverImage = preferences.getString("cover_image", "");
@@ -320,35 +289,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					Picasso.with(mContext).load(UserCoverImage).fit().centerCrop().placeholder(R.drawable.cover_bg).error(R.drawable.cover_bg).into(imgCoverPage);
 
-					// Ion.with(mContext).load(UserCoverImage).withBitmap().placeholder(R.drawable.cover_bg).error(R.drawable.cover_bg)
-					// .resize(Utility.dpToPx(mContext, 360),
-					// Utility.dpToPx(mContext,
-					// 180)).centerCrop().asBitmap().setCallback(new
-					// FutureCallback<Bitmap>() {
-					//
-					// @SuppressWarnings("deprecation")
-					// @SuppressLint("NewApi")
-					// @Override
-					// public void onCompleted(Exception exception, Bitmap
-					// bitmap) {
-					// // TODO Auto-generated method stub
-					// if (exception == null) {
-					//
-					// Drawable drawable = new BitmapDrawable(getResources(),
-					// bitmap);
-					//
-					// int sdk = android.os.Build.VERSION.SDK_INT;
-					// if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-					// imgCoverPage.setBackgroundDrawable(drawable);
-					// } else {
-					// imgCoverPage.setBackground(drawable);
-					// }
-					//
-					// imgCoverPage.invalidate();
-					//
-					// }
-					// }
-					// });
 				}
 			}
 			if (intent.getAction().equalsIgnoreCase("star_added")) {
@@ -422,7 +362,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		//		childFragmentContent=(FrameLayout)findViewById(R.id.childFragmentContent);
 
-		//		
+		//
 
 		//		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		//		View v = inflater.inflate(R.layout.top_layout, null);
@@ -505,14 +445,13 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 			@Override
 			public void onClick(View view) {
-				// TODO Auto-generated method stub
 				onBackPressed();
 			}
 		});
 
 
 		if(UserDisplayName!=null && UserDisplayName.length()>0){
-			textUserDisplayName.setText(UserDisplayName);	
+			textUserDisplayName.setText(UserDisplayName);
 		}
 		else {
 			textUserDisplayName.setText(UserName);
@@ -520,7 +459,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		if(UserTagline!=null && UserTagline.length()>0){
 			textTagline.setVisibility(View.VISIBLE);
-			textTagline.setText(Utility.unescape_perl_string(UserTagline));	
+			textTagline.setText(Utility.unescape_perl_string(UserTagline));
 		}
 		else {
 			textTagline.setVisibility(View.GONE);
@@ -548,40 +487,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			imgUserPic.setImageResource(R.drawable.profile_pic_new);
 		} else {
 			imgUserPic.setImageResource(R.drawable.profile_pic_new);
-			// Ion.with(mContext).load(UserPic).withBitmap().placeholder(R.drawable.profile_pic).error(R.drawable.profile_pic)
-			// .resize(Utility.dpToPx(mContext, 126), Utility.dpToPx(mContext,
-			// 126)).centerCrop().asBitmap().setCallback(new
-			// FutureCallback<Bitmap>() {
-			//
-			// @Override
-			// public void onCompleted(Exception exception, Bitmap bitmap) {
-			// // TODO Auto-generated method stub
-			// if (exception == null) {
-			//
-			// if (bitmap.getWidth() > 0 && bitmap.getHeight() > 0) {
-			// Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-			// bitmap.getHeight(), Config.ARGB_8888);
-			// Canvas canvas = new Canvas(output);
-			//
-			// final int color = 0xff424242;
-			// final Paint paint = new Paint();
-			// final Rect rect = new Rect(0, 0, bitmap.getWidth(),
-			// bitmap.getHeight());
-			//
-			// paint.setAntiAlias(true);
-			// canvas.drawARGB(0, 0, 0, 0);
-			// paint.setColor(color);
-			// canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2,
-			// bitmap.getWidth() / 2, paint);
-			// paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-			// canvas.drawBitmap(bitmap, rect, rect, paint);
-			//
-			// imgUserPic.setImageBitmap(output);
-			// imgUserPic.invalidate();
-			// }
-			// }
-			// }
-			// });
 
 			// Log.v(Constant.TAG, "UserPic URl " + UserPic);
 			Picasso.with(mContext).load(UserPic).resize(Utility.dpToPx(mContext, 126), Utility.dpToPx(mContext, 126)).centerCrop().placeholder(R.drawable.profile_pic_new)
@@ -614,7 +519,26 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					if (Utility.isNetworkAvailable(mContext)) {
 
-						new AddStarCall(UserID).start();
+                        StarCall.addStarCall(mContext, UserID, new ConnectCallback<NullResponse>() {
+                            @Override
+                            public void onSuccess(NullResponse object) {
+                                Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
+                                for (int i = 0; i < arrEntryPojos.size(); i++) {
+                                    if (arrEntryPojos.get(i).getUserID().equalsIgnoreCase(UserID)) {
+                                        arrEntryPojos.get(i).setIsMyStar("1");
+                                    }
+
+                                }
+                                handlerAddStar.sendEmptyMessage(1);
+                            }
+
+                            @Override
+                            public void onFailure(String error) {
+                                Utility.HideDialog(mContext);
+                                Log.d(LOG_TAG,"StarCall.addStarCall.onFailure.error="+error);
+                                handlerAddStar.sendEmptyMessage(0);
+                            }
+                        });
 
 						final Dialog dialog = new Dialog(mContext, R.style.DialogAnimationTheme);
 						dialog.setContentView(R.layout.dialog_add_star);
@@ -703,203 +627,9 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		listEntry.setOnScrollListener(new EndlessScrollListener());
 
-		//		listEntry.setOnScrollListener(new EndlessScrollListener() {
-		//			
-		//			@Override
-		//			public void onLoadMore(int page, int totalItemsCount) {
-		//				Log.d("mobstar","api page call1"+page);
-		//				if ( isNextPageAvail && !isPageLoaded) {
-		//					Log.d("mobstar","api page call2 is"+page);
-		//					if(Utility.isNetworkAvailable(mContext)){
-		//						Log.d("mobstar","api call.. on scroll");
-		//						isPageLoaded=true;
-		//						Utility.ShowProgressDialog(mContext, "Loading11111111");
-		//						new EntryCall(UserID,page).start();
-		//					}
-		//					else {
-		//
-		//						Toast.makeText(mContext, "No, Internet Access!", Toast.LENGTH_SHORT).show();
-		//						Utility.HideDialog(mContext);
-		//					}
-		//
-		//				} 
-		//			}
-		//			
-		//			public void onScrollStateChanged(AbsListView view, int scrollState) {
-		//				// TODO Auto-generated method stub
-		//				isScrolling = true;
-		//				// Log.i(Constant.TAG, "scrolling..." + isScrolling +
-		//				// " scrollState " + scrollState);
-		//				if (scrollState == 0 && !disLikedialog.isShowing() && !Likedialog.isShowing()) {
-		//
-		//					int previousFirstVisibleItem = mFirstVisibleItem;
-		//					//					Log.d("mobstar","priviousvisible"+previousFirstVisibleItem);
-		//
-		//					isVideoSurfaceReady = false;
-		//
-		//					isScrolling = false;
-		//
-		//					//					Log.i(Constant.TAG, "***scrolling stopped..." + isScrolling);
-		//
-		//					mFirstVisibleItem = listEntry.getFirstVisiblePosition();
-		//
-		//					if (listEntry.getChildAt(0) != null) {
-		//						int height = view.getChildAt(0).getHeight();
-		//						int d=(height/2)+ dpToPx(30);
-		//
-		//						//						Log.d("mobstar", "top"+view.getChildAt(0).getTop()+" < "+d);
-		//						////						int d=height/2;
-		//						//						Log.d("mobstar","height"+d);
-		//
-		//
-		//						if (mFirstVisibleItem != 0) {
-		//							mFirstVisibleItem--;
-		//						}
-		//						//						if (view.getChildAt(0).getTop() < -((height / 2)))
-		//						if (view.getChildAt(0).getTop() < -((height / 2))+dpToPx(30)){
-		//							mFirstVisibleItem++;
-		//						}
-		//					}
-		//
-		//					if (previousFirstVisibleItem != mFirstVisibleItem) {
-		//						indexCurrentPlayAudio = -1;
-		//					}
-		//
-		//					//					Log.v(Constant.TAG, "*********mFirstVisibleItem " + mFirstVisibleItem);
-		//					entryListAdapter.notifyDataSetChanged();
-		//
-		//				}
-		//			}
-		//		});
-
-		//		listEntry.setOnScrollListener(new OnScrollListener() {
-		//
-		//
-		//			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		//
-		//
-		//
-		//			}
-		//
-		//			public void onScrollStateChanged(AbsListView view, int scrollState) {
-		//				// TODO Auto-generated method stub
-		//				isScrolling = true;
-		//				// Log.i(Constant.TAG, "scrolling..." + isScrolling +
-		//				// " scrollState " + scrollState);
-		//				if (scrollState == 0 && !disLikedialog.isShowing() && !Likedialog.isShowing()) {
-		//
-		//					int previousFirstVisibleItem = mFirstVisibleItem;
-		//					//					Log.d("mobstar","priviousvisible"+previousFirstVisibleItem);
-		//
-		//					isVideoSurfaceReady = false;
-		//
-		//					isScrolling = false;
-		//
-		//					//					Log.i(Constant.TAG, "***scrolling stopped..." + isScrolling);
-		//
-		//					mFirstVisibleItem = listEntry.getFirstVisiblePosition();
-		//
-		//					if (listEntry.getChildAt(0) != null) {
-		//						int height = view.getChildAt(0).getHeight();
-		//						int d=(height/2)+ dpToPx(30);
-		//
-		//						//						Log.d("mobstar", "top"+view.getChildAt(0).getTop()+" < "+d);
-		//						////						int d=height/2;
-		//						//						Log.d("mobstar","height"+d);
-		//
-		//
-		//						if (mFirstVisibleItem != 0) {
-		//							mFirstVisibleItem--;
-		//						}
-		//						//						if (view.getChildAt(0).getTop() < -((height / 2)))
-		//						if (view.getChildAt(0).getTop() < -((height / 2))+dpToPx(30)){
-		//							mFirstVisibleItem++;
-		//						}
-		//					}
-		//
-		//					if (previousFirstVisibleItem != mFirstVisibleItem) {
-		//						indexCurrentPlayAudio = -1;
-		//					}
-		//
-		//					//					Log.v(Constant.TAG, "*********mFirstVisibleItem " + mFirstVisibleItem);
-		//					entryListAdapter.notifyDataSetChanged();
-		//
-		//				}
-		//			}
-		//		});
-
-
-
-
-
-		//		listEntry.getViewTreeObserver().addOnGlobalLayoutListener(
-		//				new ViewTreeObserver.OnGlobalLayoutListener() {
-		//					@SuppressLint("NewApi")
-		//					@SuppressWarnings("deprecation")
-		//					@Override
-		//					public void onGlobalLayout() {
-		//						onScrollChanged();
-		//
-		//						ViewTreeObserver obs = listEntry.getViewTreeObserver();
-		//						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-		//							obs.removeOnGlobalLayoutListener(this);
-		//						} else {
-		//							obs.removeGlobalOnLayoutListener(this);
-		//						}
-		//					}
-		//				});
-
-		/*listEntry.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//				onScrollChanged();
-			}
-		});*/
-
-
 
 
 	}
-
-	//	private void onScrollChanged() {
-	//		View v = listEntry.getChildAt(0);
-	//		
-	//		int top = (v == null) ? 0 : v.getTop();
-	//		// This check is needed because when the first element reaches the top of the window, the top values from top are not longer valid. 
-	//		if (listEntry.getFirstVisiblePosition() == 0) {
-	//			llSticky.setTranslationY(Math.max(0, mPlaceholderView.getTop() + top));
-	//			int m=mPlaceholderView.getTop()+top;
-	//			Log.d("mobstar","topview"+m);
-	//			Log.d("mobstar","top"+top);
-	//			// Set the image to scroll half of the amount scrolled in the ListView.
-	////			llTop.setTranslationY((top / 2)-150);
-	//			if(top!=0){
-	//				llHeader.setTranslationY((top / 2));	
-	//			}
-	//			else {
-	//				llHeader.setTranslationY((top / 2));
-	//			}
-	//			
-	//		}	
-	//		else {
-	//			if(llSticky.getY()!=0){
-	//				llSticky.setTranslationY(0);
-	//			}
-	//			
-	//		}
-	//	}
-
-	//	private void replaceFragment(Fragment mFragment, String fragmentName) {
-	//
-	//		mFragmentTransaction = mFragmentManager.beginTransaction();
-	//		mFragmentTransaction.replace(R.id.childFragmentContent, mFragment, fragmentName);
-	//		mFragmentTransaction.commitAllowingStateLoss();
-	//	}
 
 	public class CustomSurfaceTextureListener implements SurfaceTextureListener {
 
@@ -907,7 +637,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		@Override
 		public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int arg1, int arg2) {
-			// TODO Auto-generated method stub
 			// Log.v(Constant.TAG, "onSurfaceTextureAvailable " + arg1 + " " +
 			// arg2);
 			Surface surface = new Surface(surfaceTexture);
@@ -920,20 +649,17 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		@Override
 		public boolean onSurfaceTextureDestroyed(SurfaceTexture texture) {
-			// TODO Auto-generated method stub
 			// Log.v(Constant.TAG, "onSurfaceTextureDestroyed");
 			return false;
 		}
 
 		@Override
 		public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int arg1, int arg2) {
-			// TODO Auto-generated method stub
 			// Log.v(Constant.TAG, "onSurfaceTextureSizeChanged");
 		}
 
 		@Override
 		public void onSurfaceTextureUpdated(SurfaceTexture texture) {
-			// TODO Auto-generated method stub
 			// Log.v(Constant.TAG, "onSurfaceTextureUpdated");
 		}
 
@@ -985,6 +711,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 		private LayoutInflater inflater = null;
 
+		private boolean onVoitingSwipeItem = false;
+
 		public EntryListAdapter() {
 			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -1019,7 +747,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 					return 3;//null data
 				}
 				else {
-					return (arrEntryPojos.get(position).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(position).getCategory().equalsIgnoreCase(MixContactType2)) ? 0 : 1;	
+					return (arrEntryPojos.get(position).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(position).getCategory().equalsIgnoreCase(MixContactType2)) ? 0 : 1;
 				}
 
 			}
@@ -1138,7 +866,24 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 					viewHolder.layoutStatastics = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
 					viewHolder.textStatasticCount = (TextView) convertView.findViewById(R.id.textStatasticCount);
 					viewHolder.imgMsg= (ImageView) convertView.findViewById(R.id.imgMsg);
+					viewHolder.swipeCardView = (SwipeCardView) convertView.findViewById(R.id.swipe_card_view);
+					viewHolder.swipeCardView.setOnSwipeDismissListener(new SwipeCardView.OnSwipeDismissListener() {
+						@Override
+						public void onSwipeLeft() {
+							dislikeRequest(position);
+							Utility.DisLikeDialog(ProfileActivity.this);
+							viewHolder.swipeCardView.resetTopView();
+							entryListAdapter.notifyDataSetChanged();
+						}
 
+						@Override
+						public void onSwipeRight() {
+							likeRequest(position);
+							Utility.LikeDialog(ProfileActivity.this);
+							viewHolder.swipeCardView.resetTopView();
+							entryListAdapter.notifyDataSetChanged();
+						}
+					});
 
 				}
 
@@ -1166,6 +911,110 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 
+			if (!arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || !arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
+
+
+//				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, convertView.findViewById(R.id.rigthView));
+//				viewHolder.swipeLayout.addDrag(SwipeLayout.DragEdge.Left, convertView.findViewById(R.id.leftView));
+//				viewHolder.swipeLayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+//					@Override
+//					public void onStartOpen(SwipeLayout swipeLayout) {
+//
+//					}
+//
+//					@Override
+//					public void onOpen(SwipeLayout swipeLayout) {
+//						if (!onVoitingSwipeItem)
+//							return;
+//						onVoitingSwipeItem = false;
+//						switch (swipeLayout.getDragEdge()) {
+//							case Left:
+//								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
+//									if (arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
+//
+//									} else {
+//										String[] name = {"entry", "type"};
+//										String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "down"};
+//										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
+////									if(view!=null && !isFinishing()){
+////										Log.d("mobstar","open dialog dislike");
+////																					Utility.DisLikeDialog(ProfileActivity.this);
+////										DisLikeDialog();
+////									}
+//
+//
+//										mFirstVisibleItem = 0;
+//										if (mediaPlayer != null) {
+//											mediaPlayer.reset();
+//										}
+//										indexCurrentPlayAudio = -1;
+////									entryListAdapter.notifyDataSetChanged();
+//									}
+//
+//								}
+//
+//								swipeLayout.close();
+//								break;
+//							case Right:
+//								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
+//									if (arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)) {
+//
+//									} else {
+//										String[] name = {"entry", "type"};
+//										String[] value = {arrEntryPojos.get(mFirstVisibleItem).getID(), "up"};
+//										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
+//										Log.d("mobstar", "imageFrame touch--- likedialog");
+//
+////									if(view!=null && !isFinishing()){
+////										Log.d("mobstar","imageFrame touch--- view not null");
+////										Log.d("mobstar","open dialog like");
+////										//													Utility.LikeDialog(ProfileActivity.this);
+////										LikeDialog();
+////
+////									}
+//
+//										mFirstVisibleItem = 0;
+//										if (mediaPlayer != null) {
+//											mediaPlayer.reset();
+//										}
+//										indexCurrentPlayAudio = -1;
+////									entryListAdapter.notifyDataSetChanged();
+//
+//									}
+//
+//								}
+//								swipeLayout.close();
+//
+//								break;
+//						}
+//
+////					entryListAdapter.notifyDataSetChanged();
+//					}
+//
+//					@Override
+//					public void onStartClose(SwipeLayout swipeLayout) {
+//
+//					}
+//
+//					@Override
+//					public void onClose(SwipeLayout swipeLayout) {
+//
+//					}
+//
+//					@Override
+//					public void onUpdate(SwipeLayout swipeLayout, int i, int i1) {
+//						onVoitingSwipeItem = true;
+//					}
+//
+//					@Override
+//					public void onHandRelease(SwipeLayout swipeLayout, float v, float v1) {
+//
+//					}
+//				});
+			}else {
+
+			}
+
 			viewHolder.textCommentCount.setText(arrEntryPojos.get(position).getTotalComments());
 			viewHolder.textUserName.setText(arrEntryPojos.get(position).getName());
 			viewHolder.textDescription.setText(Utility.unescape_perl_string(arrEntryPojos.get(position).getDescription()));
@@ -1180,7 +1029,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onClick(View v) {
-						// TODO Auto-generated method stub
 
 						Intent intent = new Intent(mContext, StatisticsActivity.class);
 						intent.putExtra("entry", arrEntryPojos.get(position));
@@ -1323,7 +1171,22 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 						if (Utility.isNetworkAvailable(mContext)) {
 
-							new AddStarCall(arrEntryPojos.get(position).getUserID()).start();
+//							new AddStarCall(arrEntryPojos.get(position).getUserID()).start();
+                            StarCall.addStarCall(mContext, arrEntryPojos.get(position).getUserID(), new ConnectCallback<NullResponse>() {
+                                @Override
+                                public void onSuccess(NullResponse object) {
+                                    Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess on item");
+                                    arrEntryPojos.get(position).setIsMyStar("1");
+                                    handlerAddStar.sendEmptyMessage(1);
+                                }
+
+                                @Override
+                                public void onFailure(String error) {
+                                    Utility.HideDialog(mContext);
+                                    Log.d(LOG_TAG, "StarCall.addStarCall.onFailure.error=" + error);
+                                    handlerAddStar.sendEmptyMessage(0);
+                                }
+                            });
 
 							final Dialog dialog = new Dialog(mContext, R.style.DialogAnimationTheme);
 							dialog.setContentView(R.layout.dialog_add_star);
@@ -1334,7 +1197,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 								@Override
 								public void run() {
-									// TODO Auto-generated method stub
 									dialog.dismiss();
 								}
 							};
@@ -1351,24 +1213,23 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				}
 			});
 
-
-			viewHolder.textUserName.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-//					Intent intent = new Intent(mContext, ProfileActivity.class);
-//					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
-//					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
-//					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
-//					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
-//					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
-//					intent.putExtra("IsMyStar", IsMyStar);
-//					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
-//					startActivity(intent);
-//					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-				}
-			});
+//
+//			viewHolder.textUserName.setOnClickListener(new OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+////					Intent intent = new Intent(mContext, ProfileActivity.class);
+////					intent.putExtra("UserID", arrEntryPojos.get(position).getUserID());
+////					intent.putExtra("UserName", arrEntryPojos.get(position).getUserName());
+////					intent.putExtra("UserDisplayName", arrEntryPojos.get(position).getUserDisplayName());
+////					intent.putExtra("UserPic", arrEntryPojos.get(position).getProfileImage());
+////					intent.putExtra("UserCoverImage", arrEntryPojos.get(position).getProfileCover());
+////					intent.putExtra("IsMyStar", IsMyStar);
+////					intent.putExtra("UserTagline", arrEntryPojos.get(position).getTagline());
+////					startActivity(intent);
+////					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//				}
+//			});
 
 			if (arrEntryPojos.get(position).getProfileImage().equals("")) {
 				viewHolder.imgUserPic.setImageResource(R.drawable.ic_pic_small);
@@ -1378,23 +1239,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				Picasso.with(mContext).load(arrEntryPojos.get(position).getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop()
 				.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(viewHolder.imgUserPic);
 
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getProfileImage()).withBitmap().placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small)
-				// .resize(Utility.dpToPx(mContext, 45),
-				// Utility.dpToPx(mContext,
-				// 45)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				// if (exception == null) {
-				// viewHolder.imgUserPic.setImageBitmap(bitmap);
-				// } else {
-				// // Log.v(Constant.TAG, "Exception " +
-				// // exception.toString());
-				// }
-				// }
-				// });
+
 			}
 
 			viewHolder.imgUserPic.setOnClickListener(new OnClickListener() {
@@ -1421,7 +1266,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 
 					Intent intent = new Intent(mContext, ShareActivity.class);
 					intent.putExtra("entry", arrEntryPojos.get(position));
@@ -1449,7 +1293,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 
 					if (isDataLoaded) {
 
@@ -1465,7 +1308,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 
 					Intent intent = new Intent(mContext, CommentActivity.class);
 					intent.putExtra("entry_id", arrEntryPojos.get(position).getID());
@@ -1492,7 +1334,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			if (arrEntryPojos.get(position).getType().equals("image")) {
 
 				if(type==1){
-					Picasso.with(mContext).load(R.drawable.indicator_image).into(viewHolder.ivIndicator);	
+					Picasso.with(mContext).load(R.drawable.indicator_image).into(viewHolder.ivIndicator);
 				}
 
 				// Log.v(Constant.TAG, "image position " + position);
@@ -1510,7 +1352,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onSuccess() {
-						// TODO Auto-generated method stub
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
 						notifyDataSetChanged();
@@ -1518,31 +1359,9 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onError() {
-						// TODO Auto-generated method stub
 
 					}
 				});
-				//
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getImageLink()).withBitmap().placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder)
-				// .resize(Utility.dpToPx(mContext, 332),
-				// Utility.dpToPx(mContext,
-				// 360)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				// if (exception == null) {
-				// viewHolder.progressbar.setVisibility(View.GONE);
-				// viewHolder.imageFrame.setImageBitmap(bitmap);
-				// viewHolder.imageFrame.setVisibility(View.VISIBLE);
-				// notifyDataSetChanged();
-				// } else {
-				// // Log.v(Constant.TAG, "Exception " +
-				// // exception.toString());
-				// }
-				// }
-				// });
 
 			} else if (arrEntryPojos.get(position).getType().equals("audio")) {
 
@@ -1564,7 +1383,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onSuccess() {
-						// TODO Auto-generated method stub
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
 
@@ -1594,7 +1412,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 											@Override
 											public void onSuccess(int arg0, Header[] arg1, File file) {
-												// TODO Auto-generated
 												// method
 												// stub
 												// Log.v(Constant.TAG,
@@ -1643,7 +1460,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onError() {
-						// TODO Auto-generated method stub
 
 					}
 				});
@@ -1656,7 +1472,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 				//
 				// @Override
 				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
 				//
 				// viewHolder.imageFrame.setImageBitmap(bitmap);
 				// viewHolder.imageFrame.setVisibility(View.VISIBLE);
@@ -1699,7 +1514,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			} else if (arrEntryPojos.get(position).getType().equals("video")) {
 
 				if(type==1){
-					Picasso.with(mContext).load(R.drawable.indicator_video).into(viewHolder.ivIndicator);	
+					Picasso.with(mContext).load(R.drawable.indicator_video).into(viewHolder.ivIndicator);
 				}
 
 				viewHolder.ivAudioIcon.setVisibility(View.GONE);
@@ -1715,7 +1530,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onSuccess() {
-						// TODO Auto-generated method stub
 						viewHolder.progressbar.setVisibility(View.GONE);
 						viewHolder.imageFrame.setVisibility(View.VISIBLE);
 						notifyDataSetChanged();
@@ -1723,35 +1537,10 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 					@Override
 					public void onError() {
-						// TODO Auto-generated method stub
 
 					}
 				});
 
-				// Ion.with(mContext).load(arrEntryPojos.get(position).getVideoThumb()).withBitmap().placeholder(R.drawable.video_placeholder).error(R.drawable.video_placeholder)
-				// .resize(Utility.dpToPx(mContext, 332),
-				// Utility.dpToPx(mContext,
-				// 360)).centerCrop().asBitmap().setCallback(new
-				// FutureCallback<Bitmap>() {
-				//
-				// @Override
-				// public void onCompleted(Exception exception, Bitmap bitmap) {
-				// // TODO Auto-generated method stub
-				// if (exception == null) {
-				//
-				// viewHolder.progressbar.setVisibility(View.GONE);
-				// viewHolder.imageFrame.setVisibility(View.VISIBLE);
-				// viewHolder.imageFrame.setImageBitmap(bitmap);
-				//
-				// // Log.v(Constant.TAG,
-				// // "Video thumbnail is loaded " + position);
-				//
-				// } else {
-				// // Log.v(Constant.TAG, "Exception " +
-				// // exception.toString());
-				// }
-				// }
-				// });
 
 				// ***************temp comment by khyati
 
@@ -1782,7 +1571,6 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 									@Override
 									public void onSuccess(int arg0, Header[] arg1, File file) {
-										// TODO Auto-generated method stub
 										// Log.v(Constant.TAG,
 										// "onSuccess Video File  downloaded");
 										viewHolder.progressbar.setVisibility(View.GONE);
@@ -1837,335 +1625,131 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 			}
 
-			viewHolder.imageFrame.setOnTouchListener(new OnTouchListener() {
-
+			viewHolder.imageFrame.setOnClickListener(new OnClickListener() {
 				@Override
-				public boolean onTouch(View view, MotionEvent event) {
-					// TODO Auto-generated method stub
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-
-						touchX = event.getX();
-						touchY = event.getY();
-
-						isMoveDone = false;
-
-						break;
-
-					case MotionEvent.ACTION_UP:
-
-						final float yDistance = Math.abs(touchY - event.getY());
-
-						if (yDistance < Utility.dpToPx(mContext, 5)) {
-							if (arrEntryPojos.get(position).getType().equals("audio") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								//will not fire other feed click // khayti
-								if(indexCurrentPlayAudio == position){
-									if (mediaPlayer != null) {
-										if (mediaPlayer.isPlaying()) {
-											mediaPlayer.pause();
-											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-											viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-											indexCurrentPauseVideo = position;
-										} else {
-											PlayAudio(position);
-											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
-											viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
-											indexCurrentPauseVideo = -1;
-										}
-									} else {
-										PlayAudio(position);
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
-										viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
-										indexCurrentPauseVideo = -1;
-
-									}
+				public void onClick(View v) {
+					if (arrEntryPojos.get(position).getType().equals("audio") && !listDownloadingFile.contains(sFileName)) {
+						//will not fire other feed click // khayti
+						if(indexCurrentPlayAudio == position){
+							if (mediaPlayer != null) {
+								if (mediaPlayer.isPlaying()) {
+									mediaPlayer.pause();
+									viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+									viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
+									indexCurrentPauseVideo = position;
+								} else {
+									PlayAudio(position);
+									viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
+									viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
+									indexCurrentPauseVideo = -1;
 								}
-
-							} else if (arrEntryPojos.get(position).getType().equals("video") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								//will not fire other feed click // khayti
-								if(indexCurrentPlayAudio == position || indexCurrentPauseVideo == position){
-									if (mediaPlayer != null) {
-										if (mediaPlayer.isPlaying()) {
-											mediaPlayer.pause();
-											indexCurrentPauseVideo = position;
-											viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-											viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-										} else {
-											// isVideoSurfaceReady = false;
-											// Log.v(Constant.TAG,
-											// "imageFrame ACTION_UP1");
-											indexCurrentPauseVideo = -1;
-											isVideoSurfaceReady = true;
-											notifyDataSetChanged();
-										}
-									} else {
-
-										// isVideoSurfaceReady = false;
-										// Log.v(Constant.TAG,
-										// "imageFrame ACTION_UP2");
-										indexCurrentPlayAudio = -1;
-										indexCurrentPauseVideo = -1;
-
-										isVideoSurfaceReady = true;
-										notifyDataSetChanged();
-									}
-								}
+							} else {
+								PlayAudio(position);
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
+								viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
+								indexCurrentPauseVideo = -1;
 
 							}
 						}
 
-						break;
-
-					case MotionEvent.ACTION_MOVE:
-
-						final float yDistance1 = Math.abs(touchY - event.getY());
-
-						if (yDistance1 < Utility.dpToPx(mContext, 50) && !isMoveDone) {
-
-							if (touchX > event.getX() + Utility.dpToPx(mContext, 100)) {
-
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									if(arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)){
-
-									}
-									else {
-										String[] name = { "entry", "type" };
-										String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "down" };
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-										if(view!=null && !isFinishing()){
-											Log.d("mobstar","open dialog dislike");
-											//											Utility.DisLikeDialog(ProfileActivity.this);
-											DisLikeDialog();
-										}
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-										entryListAdapter.notifyDataSetChanged();
-									}
-
-
-
-
+					} else if (arrEntryPojos.get(position).getType().equals("video") && !listDownloadingFile.contains(sFileName)) {
+						//will not fire other feed click // khayti
+						if(indexCurrentPlayAudio == position || indexCurrentPauseVideo == position){
+							if (mediaPlayer != null) {
+								if (mediaPlayer.isPlaying()) {
+									mediaPlayer.pause();
+									indexCurrentPauseVideo = position;
+									viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+									viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
+								} else {
+									// isVideoSurfaceReady = false;
+									// Log.v(Constant.TAG,
+									// "imageFrame ACTION_UP1");
+									indexCurrentPauseVideo = -1;
+									isVideoSurfaceReady = true;
+									notifyDataSetChanged();
 								}
+							} else {
 
-							} else if (touchX < event.getX() - Utility.dpToPx(mContext, 100)) {
+								// isVideoSurfaceReady = false;
+								// Log.v(Constant.TAG,
+								// "imageFrame ACTION_UP2");
+								indexCurrentPlayAudio = -1;
+								indexCurrentPauseVideo = -1;
 
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-									if(arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)){
-
-									}
-									else{
-										String[] name = { "entry", "type" };
-										String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "up" };
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-										Log.d("mobstar","imageFrame touch--- likedialog");
-
-										if(view!=null && !isFinishing()){
-											Log.d("mobstar","imageFrame touch--- view not null");
-											Log.d("mobstar","open dialog like");
-											//													Utility.LikeDialog(ProfileActivity.this);
-											LikeDialog();
-
-										}
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-
-										entryListAdapter.notifyDataSetChanged();
-
-									}
-
-								}
+								isVideoSurfaceReady = true;
+								notifyDataSetChanged();
 							}
 						}
 
-						break;
-					default:
-						break;
 					}
-
-					return true;
-
 				}
 			});
 
-			viewHolder.textureView.setOnTouchListener(new OnTouchListener() {
-
+			viewHolder.textureView.setOnClickListener(new OnClickListener() {
 				@Override
-				public boolean onTouch(View view, MotionEvent event) {
-					// TODO Auto-generated method stub
-					switch (event.getAction()) {
-					case MotionEvent.ACTION_DOWN:
+				public void onClick(View v) {
+					if (arrEntryPojos.get(position).getType().equals("video") && !listDownloadingFile.contains(sFileName)) {
+						if (mediaPlayer != null) {
+							if (mediaPlayer.isPlaying()) {
+								mediaPlayer.pause();
 
-						touchX = event.getX();
-						touchY = event.getY();
+								indexCurrentPauseVideo = position;
 
-						isMoveDone = false;
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+								viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
 
-						break;
+							} else {
 
-					case MotionEvent.ACTION_UP:
+								indexCurrentPauseVideo = -1;
 
-						final float yDistance = Math.abs(touchY - event.getY());
+								isVideoSurfaceReady = true;
+								entryListAdapter.notifyDataSetChanged();
 
-						if (yDistance < Utility.dpToPx(mContext, 5)) {
-							if (arrEntryPojos.get(position).getType().equals("video") && !listDownloadingFile.contains(sFileName) && !isMoveDone) {
-								if (mediaPlayer != null) {
-									if (mediaPlayer.isPlaying()) {
-										mediaPlayer.pause();
-
-										indexCurrentPauseVideo = position;
-
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-										viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-
-									} else {
-
-										indexCurrentPauseVideo = -1;
-
-										isVideoSurfaceReady = true;
-										entryListAdapter.notifyDataSetChanged();
-
-										// Log.v(Constant.TAG,
-										// "textureView ACTION_UP1");
-									}
-								} else {
-									indexCurrentPlayAudio = -1;
-									indexCurrentPauseVideo = -1;
-									isVideoSurfaceReady = true;
-									entryListAdapter.notifyDataSetChanged();
-
-									// Log.v(Constant.TAG,
-									// "textureView ACTION_UP2");
-
-								}
+								// Log.v(Constant.TAG,
+								// "textureView ACTION_UP1");
 							}
-							else if(arrEntryPojos.get(position).getType().equals("audio") && !listDownloadingFile.contains(sFileName) && !isMoveDone){
-								if (mediaPlayer != null) {
-									if (mediaPlayer.isPlaying()) {
-										mediaPlayer.pause();
+						} else {
+							indexCurrentPlayAudio = -1;
+							indexCurrentPauseVideo = -1;
+							isVideoSurfaceReady = true;
+							entryListAdapter.notifyDataSetChanged();
 
-										indexCurrentPauseVideo = position;
-										Log.d("mobstar","audio pause 2");
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
-										viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
-
-									} else {
-										Log.d("mobstar","go for play3");
-										PlayAudio(position);
-										viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
-										viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
-										indexCurrentPauseVideo = -1;
-										//										 Log.v(Constant.TAG,
-										//										 "textureView ACTION_UP1");
-									}
-								} else {
-									indexCurrentPlayAudio = -1;
-									indexCurrentPauseVideo = -1;
-									isVideoSurfaceReady = true;
-									entryListAdapter.notifyDataSetChanged();
-
-									//									 Log.v(Constant.TAG,
-									//									 "textureView ACTION_UP2");
-
-								}
-							}
+							// Log.v(Constant.TAG,
+							// "textureView ACTION_UP2");
 
 						}
-
-						break;
-
-					case MotionEvent.ACTION_MOVE:
-
-						final float yDistance1 = Math.abs(touchY - event.getY());
-
-						if (yDistance1 < Utility.dpToPx(mContext, 50) && !isMoveDone) {
-
-							if (touchX > event.getX() + Utility.dpToPx(mContext, 100)) {
-
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-
-									if(arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)){
-
-									}
-									else {
-										String[] name = { "entry", "type" };
-										String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "down" };
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-										if(view!=null && !isFinishing()){
-											Log.d("mobstar","open dialog dislike");
-											//											Utility.DisLikeDialog(ProfileActivity.this);
-											DisLikeDialog();
-										}
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-
-										entryListAdapter.notifyDataSetChanged();
-									}
-
-								}
-
-							} else if (touchX < event.getX() - Utility.dpToPx(mContext, 100)) {
-
-								isMoveDone = true;
-
-								if (arrEntryPojos.size() > 0 && mFirstVisibleItem >= 0) {
-
-									if(arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType1) || arrEntryPojos.get(mFirstVisibleItem).getCategory().equalsIgnoreCase(MixContactType2)){
-
-									}
-									else {
-										String[] name = { "entry", "type" };
-										String[] value = { arrEntryPojos.get(mFirstVisibleItem).getID(), "up" };
-										entryActionHelper.LikeDislikeEntry(name, value, preferences.getString("token", null));
-										Log.d("mobstar","texttureview touch-- open likedialog");
-										if(view!=null){
-											Log.d("mobstar","texttureview touch-- view not null");
-											if(view!=null && !isFinishing()){
-												Log.d("mobstar","open dialog like");
-												//												Utility.LikeDialog(ProfileActivity.this);
-												LikeDialog();
-											}
-
-										}
-
-										mFirstVisibleItem = 0;
-										if (mediaPlayer != null) {
-											mediaPlayer.reset();
-										}
-										indexCurrentPlayAudio = -1;
-
-										entryListAdapter.notifyDataSetChanged();
-
-									}
-
-								}
-							}
-						}
-
-						break;
-					default:
-						break;
 					}
+					else if(arrEntryPojos.get(position).getType().equals("audio") && !listDownloadingFile.contains(sFileName)){
+						if (mediaPlayer != null) {
+							if (mediaPlayer.isPlaying()) {
+								mediaPlayer.pause();
 
-					return true;
+								indexCurrentPauseVideo = position;
+								Log.d("mobstar","audio pause 2");
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_video_pause);
+								viewHolder.ivAudioIcon.setVisibility(View.VISIBLE);
 
+							} else {
+								Log.d("mobstar","go for play3");
+								PlayAudio(position);
+								viewHolder.ivAudioIcon.setImageResource(R.drawable.ic_audio_volume);
+								viewHolder.ivAudioIcon.setVisibility(View.INVISIBLE);
+								indexCurrentPauseVideo = -1;
+								//										 Log.v(Constant.TAG,
+								//										 "textureView ACTION_UP1");
+							}
+						} else {
+							indexCurrentPlayAudio = -1;
+							indexCurrentPauseVideo = -1;
+							isVideoSurfaceReady = true;
+							entryListAdapter.notifyDataSetChanged();
+
+							//									 Log.v(Constant.TAG,
+							//									 "textureView ACTION_UP2");
+
+						}
+					}
 				}
 			});
 
@@ -2305,6 +1889,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			ImageView imgMsg,ivIndicator;
 			TextView tvLikeText;
 			ImageView ivLike;
+			SwipeCardView swipeCardView;
+
 		}
 
 		class ViewHolderProfile {
@@ -2611,6 +2197,22 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 			}.start();
 		}
 
+	}
+
+	private void likeRequest(int position) {
+		final HashMap<String, String> params = new HashMap<>();
+		params.put("entry", arrEntryPojos.get(position).getID());
+		params.put("type", "up");
+		RestClient.getInstance(this).postRequest(Constant.VOTE, params, null);
+        AdWordsManager.getInstance().sendEngagementEvent();
+	}
+
+	private void dislikeRequest(int position) {
+		final HashMap<String, String> params = new HashMap<>();
+		params.put("entry", arrEntryPojos.get(position).getID());
+		params.put("type", "down");
+		RestClient.getInstance(this).postRequest(Constant.VOTE, params, null);
+        AdWordsManager.getInstance().sendEngagementEvent();
 	}
 
 	void PlayAudio(int position) {
@@ -2969,7 +2571,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 
 						if (arrEntryPojos != null && arrEntryPojos.size() > 0) {
-							mFirstVisibleItem = arrEntryPojos.size();
+							mFirstVisibleItem = arrEntryPojos.size() - 1;
 							arrEntryPojos.addAll(arrEntryPojosParent);
 
 						} else {
@@ -3264,7 +2866,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 
 						if (arrEntryPojos != null && arrEntryPojos.size() > 0) {
-							mFirstVisibleItem = arrEntryPojos.size();
+							mFirstVisibleItem = arrEntryPojos.size() - 1;
 							arrEntryPojos.addAll(arrEntryPojosParent);
 
 						} else {
@@ -3383,60 +2985,7 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 	}
 
-	class AddStarCall extends Thread {
-
-		String UserID;
-
-		public AddStarCall(String UserID) {
-			this.UserID = UserID;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String[] name = { "star" };
-			String[] value = { UserID };
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.STAR, name, value, preferences.getString("token", null));
-
-			//			Log.v(Constant.TAG, "AddStarCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerAddStar.sendEmptyMessage(0);
-					} else {
-						for (int i = 0; i < arrEntryPojos.size(); i++) {
-							if (arrEntryPojos.get(i).getUserID().equalsIgnoreCase(UserID)) {
-								arrEntryPojos.get(i).setIsMyStar("1");
-							}
-
-						}
-						handlerAddStar.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerAddStar.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerAddStar.sendEmptyMessage(0);
-			}
-
-		}
-	}
+   
 
 	Handler handlerAddStar = new Handler() {
 
@@ -4076,8 +3625,10 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 							mFirstVisibleItem--;
 						}
 						//						if (view.getChildAt(0).getTop() < -((height / 2)))
-						if (view.getChildAt(0).getTop() < -((height / 2))+dpToPx(30)){
-							mFirstVisibleItem++;
+						if (view.getChildAt(0).getTop() < - ((height / 2)) + dpToPx(30)){
+							if (mFirstVisibleItem  < arrEntryPojos.size() - 2 )
+								mFirstVisibleItem++;
+
 						}
 					}
 

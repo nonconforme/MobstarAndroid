@@ -11,9 +11,10 @@
         android:background="@color/splash_bg" >
 
         <com.mobstar.custom.CustomTextviewBold
+            android:background="?android:attr/selectableItemBackground"
             android:id="@+id/textAllEntries"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
@@ -29,11 +30,26 @@
             android:layout_gravity="center_vertical"
             android:contentDescription="@string/app_name"
             android:src="@drawable/sub_head_devider" />
+        <ImageView
+            android:id="@+id/btn_continents_home"
+            android:background="@drawable/selector_continent_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_gravity="center"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/sub_head_devider" />
 
         <com.mobstar.custom.CustomTextviewBold
+            android:background="?android:attr/selectableItemBackground"
             android:id="@+id/textLatestPopular"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"

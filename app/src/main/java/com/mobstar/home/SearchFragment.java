@@ -18,6 +18,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.utils.Utility;
 
 public class SearchFragment extends Fragment {
@@ -55,19 +56,13 @@ public class SearchFragment extends Fragment {
 //				Log.v(Constant.TAG, "SearchText " + SearchText);
 				searchView.clearFocus();
 
-				String SearchTerm = "";
-				try {
-					SearchTerm = URLEncoder.encode(SearchText.trim(), "utf-8");
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-
 				Fragment f = mFragmentManager.findFragmentById(R.id.frag_content);
 				if (!(f instanceof HomeFragment)) {
-					SearchListFragment videoListFragment = new SearchListFragment();
+//					SearchListFragment videoListFragment = new SearchListFragment();
+					HomeVideoListBaseFragment videoListFragment = new HomeVideoListBaseFragment();
 					Bundle extras = new Bundle();
 					extras.putBoolean("isSearchAPI", true);
-					extras.putString("SearchTerm", SearchTerm);
+					extras.putString("SearchTerm", SearchText);
 					videoListFragment.setArguments(extras);
 					replaceFragment(videoListFragment, "SearchListFragment");
 					

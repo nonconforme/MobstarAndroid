@@ -1,9 +1,5 @@
 package com.mobstar.home;
 
-import java.io.File;
-
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -23,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.mobstar.BaseActivity;
 import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.blog.BlogFragment;
@@ -51,7 +49,11 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-public class HomeActivity extends ActionBarActivity implements OnClickListener, DrawerListener {
+import org.json.JSONObject;
+
+import java.io.File;
+
+public class HomeActivity extends BaseActivity implements OnClickListener, DrawerListener {
 
 	ActionBar mActionBar;
 	Context mContext;
@@ -73,7 +75,7 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 	private FragmentTransaction mFragmentTransaction;
 
 	HomeFragment homeFragment;
-
+	private LinearLayout llIamFan, llIamTalent;
 	ImageView imgIamTalent, imgIamFan, imgMentorsDivider;
 
 	LinearLayout llMentors, llSettings, llHelp, llTalentConnect, llFanConnect, llPoints, llLogout, llInbox,llBlog;
@@ -298,14 +300,15 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 		llFanConnect.setOnClickListener(this);
 
 		llMentors = (LinearLayout) findViewById(R.id.llMentors);
-
+		llIamFan = (LinearLayout) findViewById(R.id.llIamFan);
 		imgIamFan = (ImageView) findViewById(R.id.imgIamFan);
 		imgIamFan.setImageResource(R.drawable.side_iam_fan_act);
-		imgIamFan.setOnClickListener(this);
+		llIamFan.setOnClickListener(this);
 
+		llIamTalent = (LinearLayout) findViewById(R.id.llIamTalent);
 		imgIamTalent = (ImageView) findViewById(R.id.imgIamTalent);
 		imgIamTalent.setImageResource(R.drawable.side_iam_talent);
-		imgIamTalent.setOnClickListener(this);
+		llIamTalent.setOnClickListener(this);
 
 		llMentors = (LinearLayout) findViewById(R.id.llMentors);
 		llMentors.setOnClickListener(this);
@@ -411,25 +414,25 @@ public class HomeActivity extends ActionBarActivity implements OnClickListener, 
 			}
 			closeMenu();
 
-		} else if (imgIamFan.equals(view)) {
+		} else if (llIamFan.equals(view)) {
 			imgIamFan.setImageResource(R.drawable.side_iam_fan_act);
-			imgIamFan.setBackgroundColor(getResources().getColor(R.color.side_act_bg));
+			llIamFan.setBackgroundColor(getResources().getColor(R.color.side_act_bg));
 			llFanConnect.setVisibility(View.GONE);
 			llTalentConnect.setVisibility(View.VISIBLE);
-			imgIamTalent.setBackgroundColor(getResources().getColor(R.color.splash_bg));
+			llIamTalent.setBackgroundColor(getResources().getColor(R.color.splash_bg));
 			imgIamTalent.setImageResource(R.drawable.side_iam_talent);
 			llMentors.setVisibility(View.GONE);
 			imgMentorsDivider.setVisibility(View.GONE);
 			llBlog.setVisibility(View.GONE);
 			imgBlogDivider.setVisibility(View.GONE);
-		} else if (imgIamTalent.equals(view)) {
+		} else if (llIamTalent.equals(view)) {
 			imgIamTalent.setImageResource(R.drawable.side_iam_talent_act);
-			imgIamTalent.setBackgroundColor(getResources().getColor(R.color.side_act_bg));
+			llIamTalent.setBackgroundColor(getResources().getColor(R.color.side_act_bg));
 			llTalentConnect.setVisibility(View.GONE);
 			llFanConnect.setVisibility(View.VISIBLE);
 			llMentors.setVisibility(View.VISIBLE);
 			imgMentorsDivider.setVisibility(View.VISIBLE);
-			imgIamFan.setBackgroundColor(getResources().getColor(R.color.splash_bg));
+			llIamFan.setBackgroundColor(getResources().getColor(R.color.splash_bg));
 			imgIamFan.setImageResource(R.drawable.side_iam_fan);
 			llBlog.setVisibility(View.VISIBLE);
 			imgBlogDivider.setVisibility(View.VISIBLE);

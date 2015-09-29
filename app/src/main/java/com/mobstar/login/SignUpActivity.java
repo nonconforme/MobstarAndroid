@@ -1,7 +1,5 @@
 package com.mobstar.login;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,12 +17,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobstar.AdWordsManager;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
+
+import org.json.JSONObject;
 
 public class SignUpActivity extends Activity implements OnClickListener {
 
@@ -380,11 +385,11 @@ public class SignUpActivity extends Activity implements OnClickListener {
 				pref.edit().putString("cover_image", ProfileCover).commit();
 
 
-
+                AdWordsManager.getInstance().sendSingupEvent();
 				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
 					startWelcomeActivity();
 				}else {
-					startHomeActivity();
+					getUserAccountRequest();
 				}
 
 				
@@ -415,6 +420,33 @@ public class SignUpActivity extends Activity implements OnClickListener {
 		Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		finish();
+	}
+
+
+	private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(SignUpActivity.this);
+				if (object.getUser().getUserContinentId() == 0){
+					startSelectCurrentRegionActivity();
+				}
+				else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(SignUpActivity.this);
+				startHomeActivity();
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
 		startActivity(intent);
 		finish();
 	}

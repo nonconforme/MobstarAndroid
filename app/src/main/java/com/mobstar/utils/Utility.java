@@ -1,37 +1,17 @@
 package com.mobstar.utils;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.time.DateUtils;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -44,7 +24,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -56,6 +35,19 @@ import com.mobstar.MobstarApplication.TrackerName;
 import com.mobstar.R;
 import com.mobstar.SplashActivity;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Utility {
 
 	public static final String PROPERTY_REG_ID = "registration_id";
@@ -65,8 +57,7 @@ public class Utility {
 	private static boolean isSpinning=false;
 
 	public static final String getCurrentDirectory(final Context context) {
-		return Environment.getExternalStorageDirectory().getPath()
-				+ "/Android/data/" + context.getPackageName() + "/";
+		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + "/Android/data/" + context.getPackageName() + "/";
 	}
 
 	public static void ShareLink(Context mContext, String link) {
@@ -128,7 +119,8 @@ public class Utility {
 	}
 
 	public static void HideDialog(Context mContext) {
-
+		if (mContext == null || dialog == null)
+			return;
 		if (!((Activity) mContext).isFinishing() && dialog.isShowing()) {
 			dialog.dismiss();
 		}
@@ -140,7 +132,7 @@ public class Utility {
 
 	/** Create a File for saving an image or video */
 	public static File getOutputMediaFile(int type,Context mContext) {
-		String path = Environment.getExternalStorageDirectory().getPath()
+		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
 				+ "/Android/data/" + mContext.getPackageName() +"/";
 		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
 		File mediaStorageDir = new File(path);
@@ -168,7 +160,7 @@ public class Utility {
 	}
 
 	public static File getTemporaryMediaFile(Context mContext, String name) {
-		String path = Environment.getExternalStorageDirectory().getPath()
+		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
 				+ "/Android/data/" + mContext.getPackageName() +"/";
 		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
 		File mediaStorageDir = new File(path);
@@ -201,7 +193,7 @@ public class Utility {
 	@SuppressLint("NewApi")
 	public static String getPath(final Context context, final Uri uri) {
 
-		String path = Environment.getExternalStorageDirectory().getPath()
+		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
 				+ "/Android/data/" + context.getPackageName() +"/";
 
 		final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
@@ -694,6 +686,7 @@ public class Utility {
 		System.out.println(what);
 	}
 
+
 	public static String GetStringTime(long seconds){
 
 		String TimeInString = "";
@@ -715,44 +708,6 @@ public class Utility {
 		} else if (seconds >= 31104000) {
 			TimeInString = seconds / 31104000 + " year ago";
 		}
-
-		return TimeInString;
-	}
-
-	public static String GetDifferenceTime(long seconds){
-
-		String TimeInString = "";
-
-
-		if (seconds <= 0) {
-			//			TimeInString = "just now";
-			TimeInString= "Today";
-		} else if (seconds < 60) {
-			//			TimeInString = seconds + " s ago";
-			TimeInString= "Today";
-		} else if (seconds < 3600) {
-			//			TimeInString = seconds / 60 + " m ago";
-			TimeInString= "Today";
-		} else if (seconds < 86400) {
-			//			TimeInString = seconds / 3600 + " h ago";
-			TimeInString= "Today";
-		} else if (seconds < 604800) {
-			//			TimeInString = seconds / 86400 + " day ago";
-			long day=seconds/86400;
-			if(day<=1){
-				TimeInString = "Yesterday";
-			}
-			else{
-				TimeInString ="";
-			}
-		} 
-		//			else if (seconds < 2592000) {
-		//			TimeInString = seconds / 604800 + " week ago";
-		//		} else if (seconds < 31104000) {
-		//			TimeInString = seconds / 2592000 + " month ago";
-		//		} else if (seconds >= 31104000) {
-		//			TimeInString = seconds / 31104000 + " year ago";
-		//		}
 
 		return TimeInString;
 	}

@@ -20,13 +20,17 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.home.HomeInformationActivity;
 import com.mobstar.login.LoginSocialActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
-import com.mobstar.utils.OnNetworkChangeListener;
 import com.mobstar.utils.NetworkChangeReceiver;
+import com.mobstar.utils.OnNetworkChangeListener;
 import com.mobstar.utils.Utility;
 
 import org.json.JSONObject;
@@ -38,7 +42,8 @@ import java.util.TimerTask;
 
 public class SplashActivity extends Activity implements OnNetworkChangeListener {
 
-	Timer timer;
+    private static final String IS_FIRST_OPEN_PREFERENCE = "is first open";
+    Timer timer;
 	Context mContext;
 
 	GoogleCloudMessaging gcm;
@@ -73,6 +78,11 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 
 		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
 
+        if (preferences.getBoolean(IS_FIRST_OPEN_PREFERENCE, true)) {
+            preferences.edit().putBoolean(IS_FIRST_OPEN_PREFERENCE, false).apply();
+            AdWordsManager.getInstance().sendFirstOpenEvent();
+        }
+
 
 
 		//Added by khyati for deeplinking
@@ -98,9 +108,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 		if (preferences.getBoolean("isLogin", false)) {
 
 			if(deepLinkedId!=null) {
-				Intent intent1 = new Intent(mContext,HomeActivity.class);
-				intent1.putExtra("deepLinkedId",deepLinkedId);
-				startActivity(intent1);
+				getUserAccountRequest();
 			}
 			else {
 				//clear badge
@@ -170,6 +178,38 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 			}
 		}
 
+	}
+
+	private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(SplashActivity.this, getString(R.string.loading));
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(SplashActivity.this);
+				if (object.getUser().getUserContinentId() == 0){
+					startSelectCurrentRegionActivity();
+				}
+				else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(SplashActivity.this);
+				startHomeActivity();
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startHomeActivity(){
+		final Intent intent = new Intent(mContext, HomeActivity.class);
+		intent.putExtra("deepLinkedId", deepLinkedId);
+		startActivity(intent);
 	}
 
 	private void registerNetworkConnectReceiver(){

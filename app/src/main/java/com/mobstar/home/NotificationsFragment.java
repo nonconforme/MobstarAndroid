@@ -1,10 +1,5 @@
 package com.mobstar.home;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +36,11 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class NotificationsFragment extends Fragment {
 
@@ -325,9 +325,9 @@ public class NotificationsFragment extends Fragment {
 								NotificationId=NotificationId+jsonObjNotification.getString("notificationId")+",";	
 								Log.d("mobstar","Notification=>"+NotificationId);
 							}
-							tempNotificationPojo.setNotificationContent(jsonObjNotification.getString("notificationContent"));
+							tempNotificationPojo.setNotificationContent(Utility.unescape_perl_string(
+                                    jsonObjNotification.getString("notificationContent")));
 							tempNotificationPojo.setNotificationDate(jsonObjNotification.getString("notificationDate"));
-							tempNotificationPojo.setNotificationContent(jsonObjNotification.getString("notificationContent"));
 							tempNotificationPojo.setNotificationType(jsonObjNotification.getString("notificationType"));
 							tempNotificationPojo.setNotificationIcon(jsonObjNotification.getString("notificationIcon"));
 							tempNotificationPojo.setNotificationRead(jsonObjNotification.getString("notificationRead"));

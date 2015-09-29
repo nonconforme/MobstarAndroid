@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobstar"
-    android:versionCode="19"
-    android:versionName="1.8" >
+    android:versionCode="21"
+    android:versionName="2.1" >
 
     <!--<uses-sdk-->
         <!--android:minSdkVersion="14"-->
@@ -50,6 +50,12 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppTheme" >
+        <receiver android:name="com.google.ads.conversiontracking.InstallReceiver"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait" >
@@ -307,6 +313,16 @@
             android:theme="@style/DialogTheme">
         </activity>
 
+        <activity android:name=".geo_filtering.SelectCurrentRegionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+
         <!-- Instabug Configuration -->
 
         <!--<activity-->
@@ -351,14 +367,14 @@
             android:name=".talentconnect.TalentConnectCommentActivity"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name=".login.VerifyMobileNoActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".login.VerifyMobilenoCodeActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".login.VerifyMobileNoActivity"-->
+            <!--android:screenOrientation="portrait" >-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name=".login.VerifyMobilenoCodeActivity"-->
+            <!--android:screenOrientation="portrait" >-->
+        <!--</activity>-->
         <activity
             android:name=".login.WhoToFollowActivity"
             android:screenOrientation="portrait" >

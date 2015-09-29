@@ -20,7 +20,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
+import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
@@ -238,8 +243,34 @@ public class TakeTourActivity extends FragmentActivity implements OnClickListene
 		if (v.equals(btnStartOver)) {
 			mPager.setCurrentItem(0);
 		} else if (v.equals(btnFinishTour)) {
-			startHomeActivity();
+			getUserAccountRequest();
 		}
+	}
+
+	private void getUserAccountRequest(){
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
+		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+			@Override
+			public void onSuccess(UserAccountResponse object) {
+				Utility.HideDialog(TakeTourActivity.this);
+				if (object.getUser().getUserContinentId() == 0){
+					startSelectCurrentRegionActivity();
+				}
+				else startHomeActivity();
+			}
+
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(TakeTourActivity.this);
+				startHomeActivity();
+			}
+		});
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	private void startHomeActivity(){
