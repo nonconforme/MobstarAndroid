@@ -3,12 +3,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '19.1.0'
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         applicationId "com.mobstar"
         minSdkVersion 15
-        targetSdkVersion 20
+        targetSdkVersion 21
     }
 
     buildTypes {

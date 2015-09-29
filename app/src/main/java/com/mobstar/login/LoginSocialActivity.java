@@ -774,8 +774,11 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			sErrorMessage = "";
 			SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 			pref.edit().putBoolean("isSocialLogin",true).commit();
-			new GoogleLoginCall(jsonObject.getString("id"), jsonObject.getString("given_name"), jsonObject.getString("name"), jsonObject.getString("gender"),
-					jsonObject.getString("name")).start();
+			new GoogleLoginCall(jsonObject.optString("id", "")
+                    , jsonObject.optString("given_name", "")
+                    , jsonObject.optString("name", "")
+                    , jsonObject.optString("gender", "")
+                    , jsonObject.optString("name", "")).start();
 //			Intent i=new Intent(LoginSocialActivity.this,YouTubeData.class);
 //			startActivity(i);
 

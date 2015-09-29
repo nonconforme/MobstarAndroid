@@ -10,12 +10,12 @@ public class UserProfile implements Serializable {
     private String userDisplayName = "";
     private boolean isProfile;
     private String userTagline = "";
-    private String userCoverImage;
-    private String isMyStar;
-    private String userPic;
+    private String userCoverImage = "";
+    private String isMyStar = "";
+    private String userPic = "";
     private String userName = "";
-    private String userId;
-    private String entryId;
+    private String userId = "";
+    private String entryId = "";
     private String userFan = "";
 
     private UserProfile() {
