@@ -15,6 +15,7 @@ import com.mobstar.EditProfileActivity;
 import com.mobstar.R;
 import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.StarCall;
 import com.mobstar.api.responce.StarResponse;
 import com.mobstar.upload.MessageActivity;
 import com.mobstar.utils.Constant;
@@ -162,7 +163,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
 
     private void deleteStarRequest() {
         Utility.ShowProgressDialog(this, getString(R.string.loading));
-        Api.deleteStarRequest(this, user.getUserId(), new ConnectCallback<StarResponse>() {
+        StarCall.delStarCall(this, user.getUserId(), new ConnectCallback<StarResponse>() {
             @Override
             public void onSuccess(StarResponse object) {
                 Utility.HideDialog(NewProfileActivity.this);
@@ -183,7 +184,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
 
     private void addStarRequest() {
         Utility.ShowProgressDialog(this, getString(R.string.loading));
-        Api.addStarRequest(this, user.getUserId(), new ConnectCallback<StarResponse>() {
+        StarCall.addStarCall(this, user.getUserId(), new ConnectCallback<StarResponse>() {
 
             @Override
             public void onSuccess(StarResponse object) {

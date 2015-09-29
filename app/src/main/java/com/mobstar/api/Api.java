@@ -23,31 +23,4 @@ public class Api {
 
     }
 
-    public static void deleteStarRequest(final Context context, final String userId, final ConnectCallback connectCallback){
-        final HashMap<String, String> params = new HashMap<>();
-        params.put(Constant.STAR_VALUE, userId);
-        RestClient.getInstance(context).deleteRequest(Constant.DELETE_STAR + userId, params, connectCallback);
-    }
-
-    public static void addStarRequest(final Context context, final String userId, final ConnectCallback connectCallback){
-        final Dialog dialog = new Dialog(context, R.style.DialogAnimationTheme);
-        dialog.setContentView(R.layout.dialog_add_star);
-        dialog.show();
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                dialog.dismiss();
-            }
-        };
-        timer.schedule(task, 1000);
-
-        final HashMap<String, String> params = new HashMap<>();
-        params.put(Constant.STAR_VALUE, userId);
-        RestClient.getInstance(context).postRequest(Constant.STAR, params, connectCallback);
-    }
-
-
 }
