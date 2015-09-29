@@ -29,6 +29,10 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         loading = true;
     }
 
+    public void resetCurrentTopItem () {
+        currentTopItem = -1;
+    }
+
     public void existNextPage() {
         limitPage++;
     }

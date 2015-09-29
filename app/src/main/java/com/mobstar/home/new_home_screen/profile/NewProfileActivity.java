@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.mobstar.BaseActivity;
 import com.mobstar.EditProfileActivity;
 import com.mobstar.R;
-import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.StarCall;
 import com.mobstar.api.responce.StarResponse;
@@ -27,7 +26,9 @@ import com.squareup.picasso.Picasso;
  */
 public class NewProfileActivity extends BaseActivity implements View.OnClickListener {
 
+//    public static final String USER = "user";
     public static final String USER = "user";
+    public static final String IS_NOTIFICATION = "is notification";
 
     private SharedPreferences preferences;
     private TextView textUserName;
@@ -37,6 +38,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     private UserProfile user;
     private ProfileFragment profileFragment;
     private String iAmStar;
+    private boolean isNotification = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,7 +129,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     private void startMessageActivity(){
         final Intent intent=new Intent(this, MessageActivity.class);
         intent.putExtra("recipent", user.getUserId());
-        intent.putExtra("isDisableCompose",true);
+        intent.putExtra("isDisableCompose", true);
         startActivity(intent);
 
     }
@@ -135,7 +137,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     private void addProfileListFragment(){
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        profileFragment = ProfileFragment.getInstance(user);
+        profileFragment = ProfileFragment.getInstance(user, isNotification);
         fragmentTransaction.replace(R.id.fragmentContainer, profileFragment);
         fragmentTransaction.commit();
     }
@@ -208,6 +210,8 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         if (extras != null) {
             if (extras.containsKey(USER))
                 user = (UserProfile) extras.getSerializable(USER);
+            if (extras.containsKey(IS_NOTIFICATION))
+                isNotification = extras.getBoolean(IS_NOTIFICATION);
         }
     }
 

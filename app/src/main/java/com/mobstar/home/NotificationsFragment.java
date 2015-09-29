@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mobstar.R;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
@@ -184,6 +185,7 @@ public class NotificationsFragment extends Fragment {
 							.setEntryId(arrNotificationPojos.get(position).getEntryId())
 							.build();
 					intent.putExtra(NewProfileActivity.USER, userProfile);
+					intent.putExtra(NewProfileActivity.IS_NOTIFICATION, true);
 //					intent.putExtra("EntryId",arrNotificationPojos.get(position).getEntryId());
 					startActivityForResult(intent, 101);
 				}

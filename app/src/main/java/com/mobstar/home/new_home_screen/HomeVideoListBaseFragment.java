@@ -234,7 +234,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
                     entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
             }
             PlayerManager.getInstance().standardizePrevious();
-            PlayerManager.getInstance().finalizePlayer();
+            PlayerManager.getInstance().stopPlayer();
             cancelDownloadFile(oldPosition);
             downloadFile(currentPosition);
         }
@@ -342,12 +342,13 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     @Override
     public void onPause() {
         super.onPause();
-        PlayerManager.getInstance().finalizePlayer();
+        PlayerManager.getInstance().stopPlayer();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        PlayerManager.getInstance().tryToPlayNew();
+        endlessRecyclerOnScrollListener.resetCurrentTopItem();
+        refreshEntryList();
     }
 }

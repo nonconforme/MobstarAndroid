@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.mobstar.BaseActivity;
 import com.mobstar.api.DownloadFileManager;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
-import com.mobstar.custom.recycler_view.sticky_recycler_view.DividerDecoration;
 import com.mobstar.custom.recycler_view.sticky_recycler_view.StickyHeadersTouchListener;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
@@ -24,16 +23,17 @@ import java.util.HashMap;
  */
 public class ProfileFragment extends HomeVideoListBaseFragment implements EntryItem.OnChangeEntryListener {
 
-    public static final String USER = "user";
 
     private UserProfile user;
     private int uploadPosition = -1;
     private int profilePosition = -1;
+    private boolean isNotification = false;
 
-    public static final ProfileFragment getInstance(final UserProfile userData){
+    public static final ProfileFragment getInstance(final UserProfile userData, final boolean isNotification){
         final ProfileFragment profileFragment = new ProfileFragment();
         final Bundle args = new Bundle();
-        args.putSerializable(USER, userData);
+        args.putSerializable(NewProfileActivity.USER, userData);
+        args.putBoolean(NewProfileActivity.IS_NOTIFICATION, isNotification);
         profileFragment.setArguments(args);
         return profileFragment;
     }
@@ -51,14 +51,20 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
             params.put("user", user.getUserId());
         params.put("page", Integer.toString(pageNo));
         textNoData.setVisibility(View.GONE);
-        getEntry(Constant.MIX_ENTRY, params, pageNo);
+        if (isNotification)
+            getEntry(Constant.GET_ENTRY + user.getEntryId(),null,1);
+        else
+            getEntry(Constant.MIX_ENTRY, params, pageNo);
     }
 
     @Override
     protected void getArgs() {
         final Bundle args = getArguments();
-        if (args.containsKey(USER))
-            user = (UserProfile) args.getSerializable(USER);
+        if (args.containsKey(NewProfileActivity.USER))
+            user = (UserProfile) args.getSerializable(NewProfileActivity.USER);
+        if (args.containsKey(NewProfileActivity.IS_NOTIFICATION))
+            isNotification = args.getBoolean(NewProfileActivity.IS_NOTIFICATION);
+
 
     }
 

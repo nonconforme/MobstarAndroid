@@ -164,26 +164,45 @@ public class PlayerManager {
         return false;
     }
 
-    private boolean tryToStop() {
-        Log.v(LOG_TAG, "tryToStop");
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            return true;
-        }
-        return false;
-    }
+//    private boolean tryToStop() {
+//        Log.v(LOG_TAG, "tryToStop");
+//        if (mediaPlayer != null) {
+//            mediaPlayer.stop();
+//            return true;
+//        }
+//        return false;
+//    }
 
-    private boolean tryToReset() {
-        Log.v(LOG_TAG, "tryToReset");
-        if (mediaPlayer != null) {
-            mediaPlayer.reset();
-            return true;
-        }
-        return false;
-    }
+//    private boolean tryToReset() {
+//        Log.v(LOG_TAG, "tryToReset");
+//        if (mediaPlayer != null) {
+//            mediaPlayer.reset();
+//            return true;
+//        }
+//        return false;
+//    }
 
-    public boolean finalizePlayer() {
+    public void finalizePlayer() {
         Log.v(LOG_TAG, "finalizePlayer");
+        releaseMP();
+        mContext = null;
+        mEntryItem = null;
+        mFilePath = null;
+    }
+
+    public void onlyPausePlayer() {
+        Log.v(LOG_TAG, "onlyPausePlayer");
+        if (mediaPlayer != null){
+            if (mediaPlayer.isPlaying()){
+                mediaPlayer.pause();
+                if (isVideoFile) mEntryItem.pauseVideoState();
+                else mEntryItem.pauseAudioState();
+            }
+        }
+    }
+
+    public boolean stopPlayer() {
+        Log.v(LOG_TAG, "stopPlayer");
         if (mediaPlayer != null) {
             try {
                 mediaPlayer.reset();
@@ -191,7 +210,7 @@ public class PlayerManager {
                 mediaPlayer = null;
                 return true;
             } catch (Exception e) {
-                Log.v(LOG_TAG, "finalizePlayer.error=" + e.toString());
+                Log.v(LOG_TAG, "stopPlayer.error=" + e.toString());
                 e.printStackTrace();
                 return false;
             }
