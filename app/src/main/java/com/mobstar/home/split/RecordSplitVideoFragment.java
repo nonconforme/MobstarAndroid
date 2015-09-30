@@ -764,17 +764,28 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     }
 
     private void onOriginRight(){
+
         final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         flVerticalLeft.addView(flCameraPreviewContaner, layoutParams);
         flVerticalRight.addView(flVideoPreviewContainer, layoutParams);
     }
 
     private void onOriginRightTop(){
-
+        final FrameLayout.LayoutParams layoutCameraParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        final FrameLayout.LayoutParams layoutVideoParams = new FrameLayout.LayoutParams(Utility.convertDpToPixel(120, getActivity()), Utility.convertDpToPixel(120, getActivity()));
+        layoutVideoParams.gravity = Gravity.RIGHT;
+        flVerticalRight.setVisibility(View.GONE);
+        flVerticalLeft.addView(flCameraPreviewContaner, layoutCameraParams);
+        flVerticalLeft.addView(flVideoPreviewContainer, layoutVideoParams);
     }
 
     private void onOriginFullscreen(){
-
+        final FrameLayout.LayoutParams layoutCameraParams = new FrameLayout.LayoutParams(Utility.convertDpToPixel(120, getActivity()), Utility.convertDpToPixel(120, getActivity()));
+        layoutCameraParams.gravity = Gravity.RIGHT;
+        final FrameLayout.LayoutParams layoutVideoParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        flVerticalRight.setVisibility(View.GONE);
+        flVerticalLeft.addView(flVideoPreviewContainer, layoutVideoParams);
+        flVerticalLeft.addView(flCameraPreviewContaner, layoutCameraParams);
     }
 
     private void onOriginBottom(){

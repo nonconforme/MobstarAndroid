@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.R;
+import com.mobstar.api.DownloadFileManager;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.home.split.position_variants.PositionVariantsFragment;
 import com.mobstar.pojo.EntryPojo;
@@ -22,7 +23,7 @@ import java.io.File;
 /**
  * Created by vasia on 06.08.15.
  */
-public class SplitActivity extends Activity {
+public class SplitActivity extends Activity implements DownloadFileManager.DownloadCallback {
 
     public static final String ENTRY_SPLIT = "entry split";
 
@@ -105,46 +106,60 @@ public class SplitActivity extends Activity {
     }
 
     public void downloadVideo() {
-        final String sFileName = Utility.GetFileNameFromURl(entry.getVideoLink());
-        final String filePath = Utility.getCurrentDirectory(this);
-        try {
-            final File file = new File(filePath + sFileName);
-
-            if (file != null && !file.exists()) {
-
-                if (Utility.isNetworkAvailable(this)) {
-                    AsyncHttpClient client = new AsyncHttpClient();
-                    final int DEFAULT_TIMEOUT = 60 * 1000;
-
-                    client.setTimeout(DEFAULT_TIMEOUT);
-                    client.get(entry.getVideoLink(), new FileAsyncHttpResponseHandler(file) {
-
-                        @Override
-                        public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
-//										Log.d("mobstar","Download fail video=>"+arrEntryPojos.get(position).getVideoLink());
-                            if (onDownloadFileCompletedListener != null)
-                                onDownloadFileCompletedListener.onFailed();
-
-                        }
-
-                        @Override
-                        public void onSuccess(int arg0, Header[] arg1, File file) {
-                            videoFilePath = filePath + sFileName;
-                            if (onDownloadFileCompletedListener != null)
-                                onDownloadFileCompletedListener.onCompleted(videoFilePath);
-                        }
-
-                    });
-                } else {
-                    Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                videoFilePath = filePath + sFileName;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        DownloadFileManager downloadFileManager = new DownloadFileManager(this, this);
+        downloadFileManager.downloadFile(entry.getVideoLink(), 0);
+//        final String sFileName = Utility.GetFileNameFromURl(entry.getVideoLink());
+//        final String filePath = Utility.getCurrentDirectory(this);
+//        try {
+//            final File file = new File(filePath + sFileName);
+//
+//            if (file != null && !file.exists()) {
+//
+//                if (Utility.isNetworkAvailable(this)) {
+//                    AsyncHttpClient client = new AsyncHttpClient();
+//                    final int DEFAULT_TIMEOUT = 60 * 1000;
+//
+//                    client.setTimeout(DEFAULT_TIMEOUT);
+//                    client.get(entry.getVideoLink(), new FileAsyncHttpResponseHandler(file) {
+//
+//                        @Override
+//                        public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
+////										Log.d("mobstar","Download fail video=>"+arrEntryPojos.get(position).getVideoLink());
+//                            if (onDownloadFileCompletedListener != null)
+//                                onDownloadFileCompletedListener.onFailed();
+//
+//                        }
+//
+//                        @Override
+//                        public void onSuccess(int arg0, Header[] arg1, File file) {
+//                            videoFilePath = filePath + sFileName;
+//                            if (onDownloadFileCompletedListener != null)
+//                                onDownloadFileCompletedListener.onCompleted(videoFilePath);
+//                        }
+//
+//                    });
+//                } else {
+//                    Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//                }
+//            } else {
+//                videoFilePath = filePath + sFileName;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
     }
 
+    @Override
+    public void onDownload(String filePath, int position) {
+        videoFilePath = filePath;
+        if (onDownloadFileCompletedListener != null)
+            onDownloadFileCompletedListener.onCompleted(videoFilePath);
+    }
+
+    @Override
+    public void onFailed() {
+        if (onDownloadFileCompletedListener != null)
+            onDownloadFileCompletedListener.onFailed();
+    }
 }
