@@ -197,7 +197,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             layoutParams.gravity = Gravity.CENTER;
             mCameraPreview.setLayoutParams(layoutParams);
             flCameraPreviewContaner.addView(mCameraPreview);
-            setPreviewSize();
+//            setPreviewSize();
 
         }
     }
