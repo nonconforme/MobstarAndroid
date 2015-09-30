@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -127,8 +129,8 @@ public class GcmIntentService extends IntentService {
 
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, HomeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.mobstar_notification))
+		NotificationCompat.Builder mBuilder = getNotificationBuilder();
+        mBuilder.setContentTitle(getString(R.string.mobstar_notification))
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
 		mBuilder.setAutoCancel(true);
 		mBuilder.setContentIntent(contentIntent);
@@ -157,8 +159,8 @@ public class GcmIntentService extends IntentService {
 			i.putExtra("FromNotification",true);
 			contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
 		}
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.mobstar_notification))
+		NotificationCompat.Builder mBuilder =getNotificationBuilder();
+        mBuilder.setContentTitle(getString(R.string.mobstar_notification))
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
 		mBuilder.setAutoCancel(true);
 		mBuilder.setContentIntent(contentIntent);
@@ -179,14 +181,25 @@ public class GcmIntentService extends IntentService {
 				.build();
 //		i.putExtra("EntryId",entryId);
 		i.putExtra(NewProfileActivity.USER, userProfile);
+        i.putExtra(NewProfileActivity.IS_NOTIFICATION, true);
 		contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-				.setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.mobstar_notification))
+		NotificationCompat.Builder mBuilder = getNotificationBuilder();
+        mBuilder.setContentTitle(getString(R.string.mobstar_notification))
 				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
 		mBuilder.setAutoCancel(true);
 		mBuilder.setContentIntent(contentIntent);
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 	}
+
+    private NotificationCompat.Builder getNotificationBuilder() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT){
+            builder.setColor(getResources().getColor(R.color.yellow_color));
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+            builder.setSmallIcon(R.drawable.ic_notification_5);
+        } else  builder.setSmallIcon(R.drawable.ic_launcher);
+        return builder;
+    }
 	
 	
 }
