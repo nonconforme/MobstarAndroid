@@ -1,6 +1,7 @@
 package com.mobstar.home.new_home_screen.profile;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.custom.recycler_view.sticky_recycler_view.StickyHeadersTouchListener;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
+import com.mobstar.player.PlayerManager;
 import com.mobstar.utils.Constant;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -112,15 +114,15 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
 
                     @Override
                     public void onHeaderClickLeftButton() {
-                        onChangePage(ProfileEntryAdapter.PROFILE_PAGE);
+                        PlayerManager.getInstance().stopPlayer();
                         uploadPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                        onChangePage(ProfileEntryAdapter.PROFILE_PAGE);
                     }
 
                     @Override
                     public void onHeaderClickRightButton() {
-                        onChangePage(ProfileEntryAdapter.UPDATES_PAGE);
-                        profilePosition = recyclerView.computeHorizontalScrollOffset();
                         profilePosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                        onChangePage(ProfileEntryAdapter.UPDATES_PAGE);
                     }
                 });
         recyclerView.addOnItemTouchListener(touchListener);
@@ -131,26 +133,36 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
         if (page != adapter.getPage()){
             adapter.setPage(page);
         }
-        int position = 0;
+        int position;
         switch (page){
             case ProfileEntryAdapter.PROFILE_PAGE:
-                if (profilePosition != -1)
+                if (profilePosition != -1) {
                     position = profilePosition;
+                    recyclerView.scrollToPosition(position);
+                }
                 break;
             case ProfileEntryAdapter.UPDATES_PAGE:
-                if (uploadPosition != -1)
-                    position = uploadPosition;
+                if (uploadPosition != -1) {
+                    position = uploadPosition + 1;
+                    recyclerView.scrollToPosition(position);
+                    Handler handler = new Handler();
+                    final int finalPosition = position;
+                    handler.postDelayed(
+                            new Runnable() {
+                                public void run() {
+                                    downloadFile(finalPosition);
+                                }
+                            }, 500);
+                }
                 break;
         }
-        recyclerView.scrollToPosition(position);
-        refreshEntryList();
     }
 
     @Override
     protected void refreshEntryList() {
         super.refreshEntryList();
         if (entryAdapter.getArrEntries().size() > 0)
-            ((NewProfileActivity)getActivity()).setIAmStar(entryAdapter.getEntry(0).getIAmStar());
+            ((NewProfileActivity) getActivity()).setIAmStar(entryAdapter.getEntry(0).getIAmStar());
     }
 
     @Override
