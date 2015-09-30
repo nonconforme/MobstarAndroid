@@ -239,6 +239,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".home.new_home_screen.profile.NewProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
             android:name=".settings.ChangePasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme"

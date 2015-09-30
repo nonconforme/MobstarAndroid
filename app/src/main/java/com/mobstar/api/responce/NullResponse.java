@@ -9,6 +9,7 @@ public class NullResponse extends BaseResponse {
 
     @Override
     public void configure(JSONObject jsonObject) throws JSONException {
+        super.configure(jsonObject);
 
     }
 

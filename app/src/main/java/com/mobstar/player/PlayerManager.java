@@ -9,12 +9,11 @@ import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Surface;
 
-import com.mobstar.api.RestClient;
+import com.mobstar.api.Api;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.utils.Constant;
 
 import java.io.File;
-import java.util.HashMap;
 
 /**
  * Created by Alexandr on 16.09.2015.
@@ -46,13 +45,10 @@ public class PlayerManager {
     }
 
     private void sendRequstAddCount() {
-        //todo create string constant; BASERESPONSE after marge
-        Log.d(LOG_TAG, "sendRequstAddCount");
+        Log.d(LOG_TAG, "sendRequestAddCount");
         SharedPreferences preferences = mContext.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("entryId", mEntryItem.getEntryPojo().getID());
-        params.put("userId", preferences.getString("userid", "0"));
-        RestClient.getInstance(mContext).postRequest(Constant.UPDATE_VIEW_COUNT, params, null);
+        Api.sendRequestAddCount(mContext, mEntryItem.getEntryPojo().getID(), preferences.getString("userid", "0"), null);
+
     }
 
     public boolean tryToPlayNew() {
@@ -168,26 +164,45 @@ public class PlayerManager {
         return false;
     }
 
-    private boolean tryToStop() {
-        Log.v(LOG_TAG, "tryToStop");
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            return true;
-        }
-        return false;
-    }
+//    private boolean tryToStop() {
+//        Log.v(LOG_TAG, "tryToStop");
+//        if (mediaPlayer != null) {
+//            mediaPlayer.stop();
+//            return true;
+//        }
+//        return false;
+//    }
 
-    private boolean tryToReset() {
-        Log.v(LOG_TAG, "tryToReset");
-        if (mediaPlayer != null) {
-            mediaPlayer.reset();
-            return true;
-        }
-        return false;
-    }
+//    private boolean tryToReset() {
+//        Log.v(LOG_TAG, "tryToReset");
+//        if (mediaPlayer != null) {
+//            mediaPlayer.reset();
+//            return true;
+//        }
+//        return false;
+//    }
 
-    public boolean finalizePlayer() {
+    public void finalizePlayer() {
         Log.v(LOG_TAG, "finalizePlayer");
+        releaseMP();
+        mContext = null;
+        mEntryItem = null;
+        mFilePath = null;
+    }
+
+    public void onlyPausePlayer() {
+        Log.v(LOG_TAG, "onlyPausePlayer");
+        if (mediaPlayer != null){
+            if (mediaPlayer.isPlaying()){
+                mediaPlayer.pause();
+                if (isVideoFile) mEntryItem.pauseVideoState();
+                else mEntryItem.pauseAudioState();
+            }
+        }
+    }
+
+    public boolean stopPlayer() {
+        Log.v(LOG_TAG, "stopPlayer");
         if (mediaPlayer != null) {
             try {
                 mediaPlayer.reset();
@@ -195,7 +210,7 @@ public class PlayerManager {
                 mediaPlayer = null;
                 return true;
             } catch (Exception e) {
-                Log.v(LOG_TAG, "finalizePlayer.error=" + e.toString());
+                Log.v(LOG_TAG, "stopPlayer.error=" + e.toString());
                 e.printStackTrace();
                 return false;
             }

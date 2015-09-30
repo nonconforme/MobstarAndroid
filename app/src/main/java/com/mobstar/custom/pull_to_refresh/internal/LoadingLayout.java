@@ -198,7 +198,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 				return mInnerLayout.getWidth();
 			case VERTICAL:
 			default:
-				return mInnerLayout.getHeight();
+				return 100;
 		}
 	}
 

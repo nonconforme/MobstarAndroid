@@ -23,9 +23,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.ParticipantsPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -71,11 +71,18 @@ public class GroupMember extends Activity{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
-				Intent intent=new Intent(mContext,ProfileActivity.class);
-				intent.putExtra("UserID", arrParticipants.get(position).getUserId());
-				intent.putExtra("UserDisplayName",arrParticipants.get(position).getDisplayName());
-				intent.putExtra("UserPic",arrParticipants.get(position).getProfileImage());
-				intent.putExtra("UserCoverImage",arrParticipants.get(position).getProfileCover());
+				final Intent intent = new Intent(mContext, NewProfileActivity.class);
+				final UserProfile userProfile = UserProfile.newBuilder()
+						.setUserId(arrParticipants.get(position).getUserId())
+						.setUserDisplayName(arrParticipants.get(position).getDisplayName())
+						.setUserPic(arrParticipants.get(position).getProfileImage())
+						.setUserCoverImage(arrParticipants.get(position).getProfileCover())
+						.build();
+				intent.putExtra(NewProfileActivity.USER, userProfile);
+//				intent.putExtra("UserID", arrParticipants.get(position).getUserId());
+//				intent.putExtra("UserDisplayName",arrParticipants.get(position).getDisplayName());
+//				intent.putExtra("UserPic",arrParticipants.get(position).getProfileImage());
+//				intent.putExtra("UserCoverImage",arrParticipants.get(position).getProfileCover());
 				startActivity(intent);
 				
 			}

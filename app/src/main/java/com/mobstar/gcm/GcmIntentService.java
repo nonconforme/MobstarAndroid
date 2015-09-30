@@ -12,9 +12,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.home.HomeActivity;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.inbox.GroupMessageDetail;
 import com.mobstar.inbox.MessageDetail;
 import com.mobstar.utils.Constant;
@@ -172,8 +173,12 @@ public class GcmIntentService extends IntentService {
 		mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
 		PendingIntent contentIntent = null;
-		Intent i=new Intent(this,ProfileActivity.class);
-		i.putExtra("EntryId",entryId);
+		Intent i=new Intent(this, NewProfileActivity.class);
+		final UserProfile userProfile = UserProfile.newBuilder()
+				.setEntryId(entryId)
+				.build();
+//		i.putExtra("EntryId",entryId);
+		i.putExtra(NewProfileActivity.USER, userProfile);
 		contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
 				.setSmallIcon(R.drawable.ic_launcher).setContentTitle(getString(R.string.mobstar_notification))
