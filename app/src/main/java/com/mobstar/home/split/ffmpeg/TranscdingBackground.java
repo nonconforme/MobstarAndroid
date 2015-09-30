@@ -18,9 +18,9 @@ public class TranscdingBackground extends BaseBackground
 
     public TranscdingBackground(Activity act, String pathLeft, String pathRight, String pathResult, boolean isHeadphonesOn, final PositionVariant positionVariant, AfterDoneBackground afterDoneBackground) {
         super(act);
-        this.pathLeft=pathLeft;
-        this.pathRight=pathRight;
-        this.pathResult=pathResult;
+        this.pathLeft = pathLeft;
+        this.pathRight = pathRight;
+        this.pathResult = pathResult;
         this.afterDoneBackground = afterDoneBackground;
         title=activity.getString(R.string.join_title);
         final String command = FFCommandCreator.getMergeVideoCommandString(pathLeft, pathRight, pathResult, isHeadphonesOn, positionVariant);
