@@ -28,16 +28,16 @@
                 android:id="@+id/llRowEntry"
                 android:visibility="visible">
 
-                <FrameLayout
+                <com.mobstar.custom.SquareFrameLayout
                     android:id="@+id/conteiner_player"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/texture_view_height"
+                    android:layout_height="match_parent"
                     android:padding="3dp">
 
                     <TextureView
                         android:id="@+id/textureView"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/texture_view_height"/>
+                        android:layout_height="match_parent"/>
 
                     <FrameLayout
                         android:id="@+id/flPlaceHolder"
@@ -134,7 +134,7 @@
                             android:layout_margin="10dp"/>
                     </RelativeLayout>
 
-                </FrameLayout>
+                </com.mobstar.custom.SquareFrameLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -206,7 +206,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="@dimen/scale_5"
-                                android:src="@drawable/msg_btn"/>
+                                android:src="@drawable/msg_btn"
+                                android:layout_gravity="center_vertical" />
 
                         </LinearLayout>
 

@@ -35,11 +35,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.custom.PullToRefreshListView.OnRefreshListener;
 import com.mobstar.home.ShareActivity;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.StarPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -292,6 +293,31 @@ public class TalentPoolActivity extends Activity {
 		}
 	}
 
+	private void startProfileActivity(int position){
+
+		final Intent intent = new Intent(mContext, NewProfileActivity.class);
+		final UserProfile userProfile = UserProfile.newBuilder()
+				.setUserId(arrStarPojos.get(position).getStarID())
+				.setUserName(arrStarPojos.get(position).getStarName())
+				.setIsMyStar("1")
+				.setUserPic(arrStarPojos.get(position).getProfileImage())
+				.setUserCoverImage(arrStarPojos.get(position).getProfileCover())
+				.build();
+		intent.putExtra(NewProfileActivity.USER, userProfile);
+//		intent.putExtra("UserID",
+//				arrStarPojos.get(position).getStarID());
+//		intent.putExtra("UserName",
+//				arrStarPojos.get(position).getStarName());
+//		intent.putExtra("IsMyStar","1");
+//		intent.putExtra("UserPic",
+//				arrStarPojos.get(position).getProfileImage());
+//		intent.putExtra("UserCoverImage",arrStarPojos.get(position).getProfileCover());
+		//					intent.putExtra("isProfile",true);
+		startActivity(intent);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+	}
+
 	public class MyStarAdapter extends BaseAdapter {
 
 		public MyStarAdapter() {
@@ -385,37 +411,14 @@ public class TalentPoolActivity extends Activity {
 				public void onClick(View v) {
 
 					//					Log.d("mobstar","Profile img"+arrStarPojos.get(position).getProfileImage());
-
-					Intent intent = new Intent(mContext, ProfileActivity.class);
-					intent.putExtra("UserID",
-							arrStarPojos.get(position).getStarID());
-					intent.putExtra("UserName",
-							arrStarPojos.get(position).getStarName());
-					intent.putExtra("IsMyStar","1");
-					intent.putExtra("UserPic",
-							arrStarPojos.get(position).getProfileImage());
-					intent.putExtra("UserCoverImage",arrStarPojos.get(position).getProfileCover());
-					//					intent.putExtra("isProfile",true);
-					startActivity(intent);
-					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					startProfileActivity(position);
 				}
 			});
 
 			viewHolder.imgUserPicTalent.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(mContext, ProfileActivity.class);
-					intent.putExtra("UserID",
-							arrStarPojos.get(position).getStarID());
-					intent.putExtra("UserName",
-							arrStarPojos.get(position).getStarName());
-					intent.putExtra("IsMyStar","1");
-					intent.putExtra("UserPic",
-							arrStarPojos.get(position).getProfileImage());
-					intent.putExtra("UserCoverImage",arrStarPojos.get(position).getProfileCover());
-					//					intent.putExtra("isProfile",true);
-					startActivity(intent);
-					overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					startProfileActivity(position);
 				}
 			});
 

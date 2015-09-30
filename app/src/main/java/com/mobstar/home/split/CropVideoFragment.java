@@ -130,10 +130,10 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener,
             return;
         if (mSplitActivity.getVideoFilePath() == null){
             progress.setVisibility(View.VISIBLE);
-            mSplitActivity.downloadVideo();
             mSplitActivity.setOnDownloadFileCompletedListener(this);
-        }
-        createComplexVideoCommand();
+            mSplitActivity.downloadVideo();
+        }else
+            createComplexVideoCommand();
     }
 
 

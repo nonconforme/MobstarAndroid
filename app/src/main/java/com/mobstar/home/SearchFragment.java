@@ -52,7 +52,6 @@ public class SearchFragment extends Fragment {
 
 			@Override
 			public boolean onQueryTextSubmit(String SearchText) {
-				// TODO Auto-generated method stub
 //				Log.v(Constant.TAG, "SearchText " + SearchText);
 				searchView.clearFocus();
 
@@ -61,8 +60,9 @@ public class SearchFragment extends Fragment {
 //					SearchListFragment videoListFragment = new SearchListFragment();
 					HomeVideoListBaseFragment videoListFragment = new HomeVideoListBaseFragment();
 					Bundle extras = new Bundle();
-					extras.putBoolean("isSearchAPI", true);
-					extras.putString("SearchTerm", SearchText);
+					extras.putBoolean(HomeVideoListBaseFragment.IS_SEARCH_API, true);
+					extras.putString(HomeVideoListBaseFragment.SEARCH_TERM, SearchText);
+					extras.putString(HomeVideoListBaseFragment.LATEST_OR_POPULAR, "latest");
 					videoListFragment.setArguments(extras);
 					replaceFragment(videoListFragment, "SearchListFragment");
 					

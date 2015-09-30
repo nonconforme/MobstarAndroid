@@ -27,6 +27,7 @@ public class EntriesResponse extends BaseResponse {
 
     @Override
     public void configure(JSONObject jsonObject) throws JSONException {
+        super.configure(jsonObject);
         arrEntry = new ArrayList<>();
         if (jsonObject.has("entries")){
             final JSONArray entryJsonArray = jsonObject.getJSONArray("entries");

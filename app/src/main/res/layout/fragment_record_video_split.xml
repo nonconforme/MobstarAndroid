@@ -2,9 +2,9 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <FrameLayout
+    <com.mobstar.custom.SquareFrameLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:background="@color/black_color">
         <!--<LinearLayout-->
@@ -51,7 +51,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/llParalelVideoPosition">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -66,7 +67,7 @@
                 android:id="@+id/verticalRight"/>
         </LinearLayout>
 
-    </FrameLayout>
+    </com.mobstar.custom.SquareFrameLayout>
 
 
     <FrameLayout
