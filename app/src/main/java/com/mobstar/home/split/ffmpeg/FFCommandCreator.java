@@ -46,19 +46,21 @@ public class FFCommandCreator {
         String audioMixCommand = "";
         switch (positionVariant){
             case ORIGIN_LEFT:
-                //this is correct!!!
                 videoMergeCommand  = "[bg][0:v:0]overlay=w;[1:v:0]pad=iw*2:ih[bg]";
                 break;
             case ORIGIN_RIGHT:
-                //this is correct!!!
                 videoMergeCommand  = "[0:v:0]pad=iw*2:ih[bg];[bg][1:v:0]overlay=w";
                 break;
-
             case ORIGIN_RIGHT_TOP:
-
+//                videoMergeCommand = "[0:v:0]pad=0:main_h/2;[bg][1:v:0]overlay=w";
+//                videoMergeCommand = "[0:v:0]pad=iw*2:ih*2[bg];[bg][1:v:0]overlay=0:0";
+//                videoMergeCommand = "[0:v:0]overlay=0:main_w/2:0";
+                videoMergeCommand = "[0:v:0]pad=iw*2:ih[bg];[1:v:0]overlay=w:150";
                 break;
             case ORIGIN_FULLSCREEN:
-
+//                videoMergeCommand = "[0:v:0]pad=0:main_h/2;[bg][1:v:0]overlay=w";
+//                videoMergeCommand = "[1:v:0]overlay=main_w/2:0";
+                videoMergeCommand = "[0:v:0]pad=iw*2:ih[bg];[1:v:0]overlay=w:150";
                 break;
             case ORIGIN_TOP:
                 videoMergeCommand = "[bg][0:v:0]overlay=0:main_h/2;[1:v:0]pad=iw:ih*2[bg]";
