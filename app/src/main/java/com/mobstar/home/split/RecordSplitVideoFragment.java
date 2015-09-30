@@ -29,7 +29,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.mobstar.R;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.FFCommandCreator;
@@ -72,7 +71,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     private final int cMaxRecordDurationInMs = 30099;
     private final long cMaxFileSizeInBytes = 8000000;
     private final long cMaxFileSizeInBytesProfile = 52428800; //50MB
-    private String categoryId="7";
+    private String categoryId="0";
     private String subCat;
     private TextureView textureView;
     private String sVideoPathBack;
@@ -87,9 +86,6 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     private FrameLayout flCameraPreviewContaner;
     private HeadsetPlugReceiver headsetPlugReceiver;
     private boolean onHeadsetConnect;
-
-    private int w;
-    private int h;
 
     public static RecordSplitVideoFragment newInstance(final PositionVariant _positionVariant, final Bitmap _videoPreview){
         final RecordSplitVideoFragment recordSplitVideoFragment = new RecordSplitVideoFragment();
@@ -110,15 +106,13 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getFragmentArgs();
-        Bundle extras =savedInstanceState;
-        if (extras != null) {
-//            sVideoPathBack = extras.getString("video_path");
-
-            if(extras.containsKey("categoryId")) {
-                categoryId=extras.getString("categoryId");
-                subCat=extras.getString("subCat");
-            }
-        }
+//        Bundle extras = savedInstanceState;
+//        if (extras != null) {
+//            if(extras.containsKey("categoryId")) {
+//                categoryId = extras.getString("categoryId");
+//                subCat = extras.getString("subCat");
+//            }
+//        }
     }
 
     private void getFragmentArgs(){
