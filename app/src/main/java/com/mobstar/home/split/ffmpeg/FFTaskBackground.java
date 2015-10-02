@@ -9,10 +9,10 @@ import com.netcompss.ffmpeg4android.GeneralUtils;
 /**
  * Created by Kesedi on 11.08.2015.
  */
-public class CropBackground extends BaseBackground {
+public class FFTaskBackground extends BaseBackground {
 
 
-    public CropBackground(Activity act, String _commandStr, AfterDoneBackground afterDoneBackground) {
+    public FFTaskBackground(Activity act, String _commandStr, AfterDoneBackground afterDoneBackground) {
         super(act);
         this.afterDoneBackground = afterDoneBackground;
 

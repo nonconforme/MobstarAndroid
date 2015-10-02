@@ -2,6 +2,7 @@ package com.mobstar.home.split.ffmpeg;
 
 import android.graphics.Rect;
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 
 import com.mobstar.home.split.position_variants.PositionVariant;
 
@@ -16,9 +17,9 @@ public class FFCommandCreator {
                 .append("ffmpeg -y -i ")
                 .append(fileInPath)
                 .append(" -strict experimental -vf crop=")
-                .append(rect.right - rect.left - 1)
+                .append(rect.width() - 1)
                 .append(":")
-                .append(rect.bottom - rect.top - 1)
+                .append(rect.height()- 1)
                 .append(":")
                 .append(rect.left)
                 .append(":")

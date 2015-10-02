@@ -24,10 +24,11 @@ public class PositionVariantsAdapter extends BaseAdapter {
         videoGroupVariants = new ArrayList<>();
         videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_RIGHT, true));
         videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_LEFT, true));
+        videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_TOP, true));
+        videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_BOTTOM, true));
+
         videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_RIGHT_TOP, false));
         videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_FULLSCREEN, false));
-        videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_TOP, false));
-        videoGroupVariants.add(new VideoPositionVariantsItem(PositionVariant.ORIGIN_BOTTOM, false));
     }
 
     public PositionVariant getSelectedPositionVariant(){
