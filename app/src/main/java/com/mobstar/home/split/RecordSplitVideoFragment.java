@@ -78,7 +78,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     private MediaPlayer mediaPlayer;
     private String readyFilePath;
     private SplitActivity splitActivity;
-    private String camersRotation ;
+    private String cameraRotationOutPath;
     private String backRotation ;
     private ImageView ivVideoPreview;
     private Bitmap imageVideoPreview;
@@ -143,7 +143,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
                     currentCount = 0;
 
-                    mCameraPreview.RecordVideo();
+                    mCameraPreview.recordVideo();
                     textRecordSecond.setText("0");
 
                 } else if ((millisUntilFinished / 1000) != 18) {
@@ -268,7 +268,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                             @Override
                             public void onPrepared(final MediaPlayer mediaPlayer) {
 
-                                mCameraPreview.RecordVideo();
+                                mCameraPreview.recordVideo();
 
                             }
                         });
@@ -322,7 +322,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     }
 
     private void removeTempFile(){
-        final String[] tempFileList = {backRotation, camersRotation, sFilepath};
+        final String[] tempFileList = {backRotation, cameraRotationOutPath, sFilepath};
         for (String aTempList : tempFileList) {
             if (aTempList == null)
                 continue;
@@ -441,9 +441,9 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             }
         }
 
-        void RecordVideo() {
+        private void recordVideo() {
 
-            //			Log.v(Constant.TAG, "RecordVideo " + isRecording);
+            //			Log.v(Constant.TAG, "recordVideo " + isRecording);
 
             if (isRecording) {
                 // stop recording and release camera
@@ -455,89 +455,11 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                 }
 
                 releaseMediaRecorder(); // release the MediaRecorder object
-
                 mCamera.lock(); // take camera access back from MediaRecorder
-
                 releaseCamera();
-
                 isRecording = false;
-                camersRotation = Utility.getTemporaryMediaFile(splitActivity, "camersRotation").toString();
-//                backRotation = Utility.getTemporaryMediaFile(mContext, "backRotation").toString();
-                backRotation = sVideoPathBack;
-                final String complexCommand = FFCommandCreator.getCropAndRotationComplexCommand(sFilepath, camersRotation, cropRect, positionVariant);
 
-                new FFTaskBackground(getActivity(), complexCommand, new AfterDoneBackground() {
-                    @Override
-                    public void onAfterDone() {
-                        Log.d(LOG_TAG, "start join video");
-                        readyFilePath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, splitActivity).toString();
-                        new TranscdingBackground(
-                                getActivity()
-                                , camersRotation,
-                                backRotation,
-                                readyFilePath,
-                                onHeadsetConnect,
-                                positionVariant,
-                                new AfterDoneBackground() {
-                                    @Override
-                                    public void onAfterDone() {
-                                        Log.d(LOG_TAG, "compleat readyFilePath");
-                                        removeTempFile();
-                                        startApproveActivity(readyFilePath);
-                                    }
-
-                                    @Override
-                                    public void onCancel() {
-                                        removeTempFile();
-                                        splitActivity.finish();
-                                    }
-                                }).runTranscoding();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        removeTempFile();
-                        splitActivity.finish();
-                    }
-                }).runTranscoding();
-
-
-//               new RotationBackground(getActivity()
-//                       , sFilepath, camersRotation, 2, FFCommandCreator.getOutputVideoSizeString(positionVariant), new AfterDoneBackground() {
-//                   @Override
-//                   public void onAfterDone() {
-//                       Log.d(LOG_TAG, "start join video");
-//                       readyFilePath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, splitActivity).toString();
-//                       new TranscdingBackground(
-//                               getActivity()
-//                               , camersRotation,
-//                               backRotation,
-//                               readyFilePath,
-//                               onHeadsetConnect,
-//                               positionVariant,
-//                               new AfterDoneBackground() {
-//                           @Override
-//                           public void onAfterDone() {
-//                               Log.d(LOG_TAG, "compleat readyFilePath");
-//                               removeTempFile();
-//                               startApproveActivity(readyFilePath);
-//                           }
-//
-//                           @Override
-//                           public void onCancel() {
-//                               removeTempFile();
-//                               splitActivity.finish();
-//                           }
-//                       }).runTranscoding();
-//                   }
-
-//                   @Override
-//                   public void onCancel() {
-//                       removeTempFile();
-//                       splitActivity.finish();
-//                   }
-//               }).runTranscoding();
-
+                startCropAndRotationCameraVideo();
 
             } else {
                 // initialize video camera
@@ -605,7 +527,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                     mCamera.stopPreview();
 
                     Camera.Parameters parameters = mCamera.getParameters();
-                    Camera.Size size = getOptimalPreviewSize(parameters.getSupportedPictureSizes(), width, height);
+                    Camera.Size size = getOptimalPreviewSize(parameters.getSupportedVideoSizes(), width, height);
 
                     if (size != null) {
                         parameters.setPreviewSize(size.width, size.height);
@@ -637,6 +559,48 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                 //				Log.d(Constant.TAG, "Error starting camera preview: " + e.getMessage());
             }
         }
+    }
+
+    private void startCropAndRotationCameraVideo(){
+        cameraRotationOutPath = Utility.getTemporaryMediaFile(splitActivity, "cameraRotationOutPath").toString();
+        if (cameraRotationOutPath == null)
+            return;
+        backRotation = sVideoPathBack;
+        final String complexCommand = FFCommandCreator.getCropAndRotationComplexCommand(sFilepath, cameraRotationOutPath, cropRect, positionVariant);
+
+        new FFTaskBackground(getActivity(), complexCommand, getString(R.string.rotation_title), new AfterDoneBackground() {
+            @Override
+            public void onAfterDone() {
+              startMergeVideo();
+            }
+
+            @Override
+            public void onCancel() {
+                removeTempFile();
+                splitActivity.finish();
+            }
+        }).runTranscoding();
+    }
+
+    private void startMergeVideo(){
+        Log.d(LOG_TAG, "start join video");
+        readyFilePath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, splitActivity).toString();
+        if (readyFilePath == null)
+            return;
+        new TranscdingBackground(getActivity(), cameraRotationOutPath, backRotation, readyFilePath, onHeadsetConnect, positionVariant, new AfterDoneBackground() {
+                    @Override
+                    public void onAfterDone() {
+                        Log.d(LOG_TAG, "compleat readyFilePath");
+                        removeTempFile();
+                        startApproveActivity(readyFilePath);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        removeTempFile();
+                        splitActivity.finish();
+                    }
+                }).runTranscoding();
     }
 
     private void startApproveActivity(String file) {
@@ -673,7 +637,10 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
         int width = flCameraPreviewContaner.getWidth();
         int height = flCameraPreviewContaner.getHeight();
 
-        final Camera.Size size = mCamera.getParameters().getPreviewSize();
+        final List<Camera.Size> supportedVideoSizes = mCamera.getParameters().getSupportedVideoSizes();
+
+//        final Camera.Size size = mCamera.getParameters().getPreferredPreviewSizeForVideo();
+        final Camera.Size size = getOptimalPreviewSize(supportedVideoSizes, width, height);
 
         int previewWidth = width;
         int previewHeight = height;
@@ -699,7 +666,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             public void run() {
                initializeCamera();
             }
-        }, 100);
+        }, 50);
     }
 
     private void releaseMediaRecorder() {

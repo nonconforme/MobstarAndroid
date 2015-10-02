@@ -160,7 +160,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener,
     }
 
     private void startCropTask(final String _stringCommand, final String _fileOutPath){
-        new FFTaskBackground(mSplitActivity, _stringCommand, new AfterDoneBackground() {
+        new FFTaskBackground(mSplitActivity, _stringCommand, getString(R.string.crop_title), new AfterDoneBackground() {
             @Override
             public void onAfterDone() {
                 mSplitActivity.setVideoFilePath(_fileOutPath);
