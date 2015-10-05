@@ -69,4 +69,6 @@
 
     <dimen name="ic_size_category">50dp</dimen>
     <dimen name="title_size_category">14sp</dimen>
+
+    <dimen name="heigth_progress_bar">60dp</dimen>
 </resources>
