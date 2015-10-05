@@ -60,6 +60,8 @@ public class RestClient {
     public void getRequest(final String url, HashMap<String, String> params, final ConnectCallback callback){
         if (!Utility.isNetworkAvailable(context)) {
             showToastNotification(context.getString(R.string.no_internet_access));
+            if (callback == null)
+                return;
             callback.onFailure("");
             return;
         }
@@ -96,6 +98,8 @@ public class RestClient {
     public void postRequest(final String url, HashMap<String, String> params, final ConnectCallback callback){
         if (!Utility.isNetworkAvailable(context)) {
             showToastNotification(context.getString(R.string.no_internet_access));
+            if (callback == null)
+                return;
             callback.onFailure("");
             return;
         }

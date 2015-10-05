@@ -42,6 +42,8 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener,
     private PositionVariant mPositionVariant;
     private ProgressBar progress;
     private Point fullScreenImageSize;
+    private boolean isCropping = false;
+    private boolean isDownloadBitmap = false;
 
     public static CropVideoFragment newInstance(final String videoThumb, PositionVariant positionVariant){
         final CropVideoFragment fragment = new CropVideoFragment();
@@ -126,7 +128,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener,
     }
 
     private void onClickNext(){
-        if (progress.getVisibility() == View.VISIBLE)
+        if (isCropping || !isDownloadBitmap)
             return;
         if (mSplitActivity.getVideoFilePath() == null){
             progress.setVisibility(View.VISIBLE);
@@ -149,6 +151,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener,
     }
 
     private void createComplexVideoCommand(){
+        isCropping = true;
         final String fileInPath = mSplitActivity.getVideoFilePath();
         final File file = Utility.getTemporaryMediaFile(mSplitActivity, "cropUot");
         if (file == null)
@@ -171,6 +174,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener,
             public void onCancel() {
                 removeFile(_fileOutPath);
                 mSplitActivity.setDefaultFilePath();
+                mSplitActivity.finish();
             }
         }).runTranscoding();
     }
@@ -206,6 +210,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener,
                 break;
         }
         ivVideoImage.setFixedAspectRatio(true);
+        isDownloadBitmap = true;
     }
 
     private void onOriginVertical(){

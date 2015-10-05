@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugReceiver.OnHeadsetPlugListener, View.OnClickListener {
     private static final String LOG_TAG = RecordSplitVideoFragment.class.getName();
-
+    private static final int BUTTON_CLICK_DELAY = 1000; //ms
     private Camera mCamera;
     private CameraPreview mCameraPreview;
     private FrameLayout flVideoPreviewContainer;
@@ -92,6 +92,11 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     private int surfaceWidth;
     private int surfaceHeight;
     private Rect cropRect;
+
+    private long buttonDelay;
+    private boolean isRecordStopped = false;
+    private boolean isPrepareRecord = false;
+
 
     public static RecordSplitVideoFragment newInstance(final PositionVariant _positionVariant, final Bitmap _videoPreview){
         final RecordSplitVideoFragment recordSplitVideoFragment = new RecordSplitVideoFragment();
@@ -145,7 +150,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
                     currentCount = 0;
 
-                    mCameraPreview.recordVideo();
+                    mCameraPreview.stopRecord();
                     textRecordSecond.setText("0");
 
                 } else if ((millisUntilFinished / 1000) != 18) {
@@ -213,10 +218,23 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnRecord:
-                Surface surface = new Surface(textureView.getSurfaceTexture());
-                startRecord(surface);
+//                if (resolveClick()) {
+                    if (textureView.getSurfaceTexture() == null || flCameraPreviewContaner.getHeight() == 0)
+                        return;
+                    Surface surface = new Surface(textureView.getSurfaceTexture());
+                    startRecord(surface);
+//                }
                 break;
         }
+    }
+
+    private boolean resolveClick(){
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - buttonDelay >= BUTTON_CLICK_DELAY) {
+            return true;
+        }
+        buttonDelay = currentTime;
+        return false;
     }
 
     private void findView(View inflatedView) {
@@ -246,11 +264,14 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
 
     private void startRecord(final Surface surface) {
-
-        new Thread() {
-
-            public void run() {
-
+        if (isRecording) {
+            mCameraPreview.stopRecord();
+            return;
+        }
+        if (isPrepareRecord)
+            return;
+//        new Thread() {
+//            public void run() {
                 try {
                     if (mediaPlayer != null) {
                         mediaPlayer.reset();
@@ -263,21 +284,22 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                         mediaPlayer.setSurface(surface);
                         mediaPlayer.setScreenOnWhilePlaying(true);
                         mediaPlayer.prepareAsync();
-
                         // Play video when the media source is ready for
                         // playback.
+                        isPrepareRecord = true;
                         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
                             public void onPrepared(final MediaPlayer mediaPlayer) {
-                                mCameraPreview.recordVideo();
+                                mCameraPreview.startRecord();
                             }
                         });
                     }
                 } catch (Exception e) {
+                    isPrepareRecord = false;
                     e.printStackTrace();
                 }
-            }
-        }.start();
+//            }
+//        }.start();
 
     }
 
@@ -341,7 +363,8 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
         }
 
         private boolean prepareVideoRecorder() {
-
+            if (mCamera == null)
+                return false;
             try {
                 mCamera.stopPreview();
                 mCamera.setPreviewDisplay(null);
@@ -355,28 +378,16 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             mCamera.unlock();
             mMediaRecorder.setCamera(mCamera);
 
-            // Step 2: Set sources
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-
-
-            // // Step 3: Set a CamcorderProfile (requires API Level 8 or
-            // higher)
-            CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
-//            int widthP = flCameraPreviewContaner.getWidth();
-//            int heightP = flCameraPreviewContaner.getHeight();
-//            Camera.Size optimalVideoSize = getOptimalPreviewSize(supportedVideoSizes, widthP, heightP);
             if (supportedVideoSizes != null) {
                 desiredWidth = mCameraPreview.getWidth();
                 desiredHeight = mCameraPreview.getHeight();
                 Log.d("tagSize", "setRecordSize = " + "width = " + optimalVideoSize.width + " height = " + optimalVideoSize.height);
-//                profile.videoFrameWidth = optimalVideoSize.width;
-//                profile.videoFrameHeight = optimalVideoSize.height;
                 calculateCropRect(optimalVideoSize);
             }
             mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
-            // Log.v(Constant.TAG, "optimalVideoSize width " +
-            // optimalVideoSize.width + " height " + optimalVideoSize.height);
+
              mMediaRecorder.setVideoSize(optimalVideoSize.width,
                      optimalVideoSize.height);
 
@@ -407,11 +418,9 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             try {
                 mMediaRecorder.prepare();
             } catch (IllegalStateException e) {
-                //				Log.d(Constant.TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
                 releaseMediaRecorder();
                 return false;
             } catch (IOException e) {
-                //				Log.d(Constant.TAG, "IOException preparing MediaRecorder: " + e.getMessage());
                 releaseMediaRecorder();
                 return false;
             }
@@ -439,49 +448,102 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             }
         }
 
-        private void recordVideo() {
+        private void startRecord(){
+            if (isRecording)
+                return;
+            if (prepareVideoRecorder()) {
 
-            //			Log.v(Constant.TAG, "recordVideo " + isRecording);
-
-            if (isRecording) {
-                // stop recording and release camera
+                isRecording = true;
+                ivVideoPreview.setVisibility(GONE);
                 try {
-                    mMediaRecorder.stop();
-                    mediaPlayer.stop();// stop the recording
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                releaseMediaRecorder(); // release the MediaRecorder object
-                mCamera.lock(); // take camera access back from MediaRecorder
-                releaseCamera();
-                isRecording = false;
-
-                startCropAndRotationCameraVideo();
-
-            } else {
-                // initialize video camera
-                if (prepareVideoRecorder()) {
-                    // Camera is available and unlocked, MediaRecorder is
-                    // prepared,
-                    // now you can start recording
-                    ivVideoPreview.setVisibility(GONE);
                     mMediaRecorder.start();
+                }
+                catch (RuntimeException e){
+                    e.printStackTrace();
+                    isPrepareRecord = false;
+                    isRecording = false;
+                    return;
+                }
 
 //                    layoutCameraOption.setVisibility(View.GONE);
-                    textRecordSecond.setVisibility(View.VISIBLE);
+                textRecordSecond.setVisibility(View.VISIBLE);
 
-                    recordTimer.start();
-                    mediaPlayer.start();
+                recordTimer.start();
+                mediaPlayer.start();
 
-                    isRecording = true;
-                } else {
-                    // prepare didn't work, release the camera
-                    releaseMediaRecorder();
-                    // inform user
-                }
+            } else {
+                // prepare didn't work, release the camera
+                releaseMediaRecorder();
+                // inform user
             }
         }
+
+        private void stopRecord(){
+            if (isRecordStopped)
+                return;
+            isRecordStopped = true;
+            // stop recording and release camera
+            try {
+                mMediaRecorder.stop();
+                mediaPlayer.stop();// stop the recording
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            isRecording = false;
+            releaseMediaRecorder(); // release the MediaRecorder object
+            mCamera.lock(); // take camera access back from MediaRecorder
+            releaseCamera();
+
+            startCropAndRotationCameraVideo();
+        }
+
+//        private void recordVideo() {
+//
+//            if (isRecording) {
+//                // stop recording and release camera
+//                try {
+//                    mMediaRecorder.stop();
+//                    mediaPlayer.stop();// stop the recording
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                isRecording = false;
+//                releaseMediaRecorder(); // release the MediaRecorder object
+//                mCamera.lock(); // take camera access back from MediaRecorder
+//                releaseCamera();
+//
+//                startCropAndRotationCameraVideo();
+//
+//            } else {
+//                // initialize video camera
+//                if (prepareVideoRecorder()) {
+//                    // Camera is available and unlocked, MediaRecorder is
+//                    // prepared,
+//                    // now you can start recording
+//                    isRecording = true;
+//                    ivVideoPreview.setVisibility(GONE);
+//                    try {
+//                        mMediaRecorder.start();
+//                    }
+//                    catch (RuntimeException e){
+//                        e.printStackTrace();
+//                        isRecording = false;
+//                        return;
+//                    }
+//
+////                    layoutCameraOption.setVisibility(View.GONE);
+//                    textRecordSecond.setVisibility(View.VISIBLE);
+//
+//                    recordTimer.start();
+//                    mediaPlayer.start();
+//
+//                } else {
+//                    // prepare didn't work, release the camera
+//                    releaseMediaRecorder();
+//                    // inform user
+//                }
+//            }
+//        }
 
         void setCamera(Camera camera) {
             mCamera = camera;
@@ -502,6 +564,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                 mCamera.startPreview();
                 setCameraDisplayOrientation((Activity) splitActivity, currentCameraId, mCamera);
             } catch (Exception e) {
+                e.printStackTrace();
                 //				Log.d(Constant.TAG, "Error setting camera preview: " + e.getMessage());
             }
         }
@@ -525,9 +588,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                     mCamera.stopPreview();
 
                     Camera.Parameters parameters = mCamera.getParameters();
-//                    int widthP = flCameraPreviewContaner.getWidth();
-//                    int heightP = flCameraPreviewContaner.getHeight();
-//                    Camera.Size size = getOptimalPreviewSize(parameters.getSupportedVideoSizes(), widthP, heightP);
+
                     Log.d("tagSize", "surfaceChangeSize = " + "width = " + optimalVideoSize.width + " height = " + optimalVideoSize.height);
                     if (optimalVideoSize != null) {
                         parameters.setPreviewSize(optimalVideoSize.width, optimalVideoSize.height);
@@ -557,6 +618,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                 mCamera.startPreview();
 
             } catch (Exception e) {
+                e.printStackTrace();
                 //				Log.d(Constant.TAG, "Error starting camera preview: " + e.getMessage());
             }
         }
@@ -564,7 +626,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
     private void startCropAndRotationCameraVideo(){
         cameraRotationOutPath = Utility.getTemporaryMediaFile(splitActivity, "cameraRotationOutPath").toString();
-        if (cameraRotationOutPath == null)
+        if (cameraRotationOutPath == null && sFilepath != null)
             return;
         backRotation = sVideoPathBack;
         final String complexCommand = FFCommandCreator.getCropAndRotationComplexCommand(sFilepath, cameraRotationOutPath, cropRect, positionVariant);
@@ -619,17 +681,48 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
         Camera.Size result = null;
         for (Camera.Size size : sizes) {
 
-            if (size.width <= width && size.height <= height) {
-                if (result == null) {
-                    result = size;
-                } else {
-                    int resultArea = result.width * result.height;
-                    int newArea = size.width * size.height;
-                    if (newArea > resultArea) {
-                        result = size;
+            switch (positionVariant){
+                case ORIGIN_TOP:
+                case ORIGIN_BOTTOM:
+                    if (size.width <= width && size.height <= height) {
+                        if (result == null) {
+                            result = size;
+                        } else {
+                            int resultArea = result.width * result.height;
+                            int newArea = size.width * size.height;
+                            if (newArea > resultArea) {
+                                result = size;
+                            }
+                        }
                     }
-                }
+                    break;
+                default:
+                    if (size.height <= height) {
+                        if (result == null) {
+                            result = size;
+                        } else {
+                            int resultArea = result.width * result.height;
+                            int newArea = size.width * size.height;
+                            if (newArea > resultArea) {
+                                result = size;
+
+                            }
+                        }
+                    }
+                    break;
             }
+//
+//            if (size.width <= width && size.height <= height) {
+//                if (result == null) {
+//                    result = size;
+//                } else {
+//                    int resultArea = result.width * result.height;
+//                    int newArea = size.width * size.height;
+//                    if (newArea > resultArea) {
+//                        result = size;
+//                    }
+//                }
+//            }
         }
         return (result);
     }
