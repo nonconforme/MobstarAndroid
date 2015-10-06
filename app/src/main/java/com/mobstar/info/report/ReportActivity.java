@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,15 +25,13 @@ import com.squareup.picasso.Picasso;
 
 public class ReportActivity extends Activity implements OnClickListener {
 
-	Context mContext;
-
-	EntryPojo entryPojo;
-
-	TextView textUserName, textTime, textDescription;
-	ImageView imgUserPic;
-
-	CustomTextviewBold btnInAppropriateImage, btnInAppropriateLanguage, btnSpam, btnOthers;
-	SharedPreferences preferences;
+	private Context mContext;
+	private EntryPojo entryPojo;
+	private TextView textUserName, textTime, textDescription;
+	private ImageView imgUserPic;
+	private CustomTextviewBold btnInAppropriateImage, btnInAppropriateLanguage, btnSpam, btnOthers;
+	private SharedPreferences preferences;
+	private ImageButton btnClose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,8 @@ public class ReportActivity extends Activity implements OnClickListener {
 	}
 
 	void InitControls() {
-
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
 		textUserName = (TextView) findViewById(R.id.textUserName);
 		textTime = (TextView) findViewById(R.id.textTime);
 		textDescription = (TextView) findViewById(R.id.textDescription);
@@ -108,6 +108,8 @@ public class ReportActivity extends Activity implements OnClickListener {
 		} else if (v.equals(btnOthers)) {
 			OpenReportedDialog();
 			new ReportCall(entryPojo.getID(), "other").start();
+		}else if (v.equals(btnClose)){
+			onBackPressed();
 		}
 	}
 

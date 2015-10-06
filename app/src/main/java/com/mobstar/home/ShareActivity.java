@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.support.v4.app.ShareCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,25 +47,23 @@ import java.util.List;
 
 import static com.rosaloves.bitlyj.Bitly.as;
 import static com.rosaloves.bitlyj.Bitly.shorten;
-public class ShareActivity extends Activity {
+public class ShareActivity extends Activity implements OnClickListener {
 
-	Context mContext;
-
-	EntryPojo entryPojo;
-
-	TextView textUserName, textTime, textDescription;
-	ImageView imgUserPic;
-
-	TextView btnTweet, btnSendToFriend, btnAddToGPlus, btnFBPost;
-	File picFile;
-	Uri pngUri;
+	private Context mContext;
+	private EntryPojo entryPojo;
+	private TextView textUserName, textTime, textDescription;
+	private ImageView imgUserPic;
+	private ImageButton btnClose;
+	private TextView btnTweet, btnSendToFriend, btnAddToGPlus, btnFBPost;
+	private File picFile;
+	private Uri pngUri;
 	private ImageDownloader mDownloader;
 	private static Bitmap bitmap;
 	private FileOutputStream fos;
 
-	String ShareText = "Hey, check out this entry on MobStar:";
-	String ShortURL="";
-	String TwitterShareText="Hey, check out this entry on @officialmobstar:";
+	private String ShareText = "Hey, check out this entry on MobStar:";
+	private String ShortURL="";
+	private String TwitterShareText="Hey, check out this entry on @officialmobstar:";
 	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private boolean isTalent=false;
@@ -137,6 +136,9 @@ public class ShareActivity extends Activity {
 	}
 
 	void InitControls() {
+
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
 
 		textUserName = (TextView) findViewById(R.id.textUserName);
 		textTime = (TextView) findViewById(R.id.textTime);
@@ -341,6 +343,15 @@ public class ShareActivity extends Activity {
 			session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
 		} else {
 			Session.openActiveSession(this, true, statusCallback);
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnClose:
+				onBackPressed();
+				break;
 		}
 	}
 

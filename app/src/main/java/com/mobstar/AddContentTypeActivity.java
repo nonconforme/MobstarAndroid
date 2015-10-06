@@ -12,6 +12,7 @@ import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.mobstar.custom.CustomTextviewBold;
@@ -23,16 +24,13 @@ import com.mobstar.utils.Utility;
 
 public class AddContentTypeActivity extends Activity implements OnClickListener{
 
-	Context mContext;
-
-	CustomTextviewBold btnBack, btnImage, btnMovieClip;
-
-	Typeface typefaceBtn;
-
-	String categoryId;
-
-	int IMG_PICKER_SELECT=32;
-	int VIDEO_PICKER_SELECT=33;
+	private ImageButton btnClose;
+	private Context mContext;
+	private CustomTextviewBold btnBack, btnImage, btnMovieClip;
+	private Typeface typefaceBtn;
+	private String categoryId;
+	private int IMG_PICKER_SELECT=32;
+	private int VIDEO_PICKER_SELECT=33;
 	private boolean isGallery=false,FromProfile=false;
 
 	@Override
@@ -74,12 +72,15 @@ public class AddContentTypeActivity extends Activity implements OnClickListener{
 
 		btnMovieClip = (CustomTextviewBold) findViewById(R.id.btnMovieClip);
 		btnMovieClip.setOnClickListener(this);
+
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View view) {
 		// TODO Auto-generated method stub
-		if (view.equals(btnBack)) {
+		if (view.equals(btnBack) || view.equals(btnClose)) {
 			onBackPressed();
 			
 		} else if (view.equals(btnImage)) {

@@ -256,11 +256,19 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	void LatestPopularDialog() {
 
 		CustomTextviewBold btnLatest, btnPopular;
+        final ImageButton btnClose;
 
 		final Dialog dialog = new Dialog(getActivity(), R.style.DialogTheme);
 		dialog.setContentView(R.layout.dialog_latest_popular);
 		dialog.setCancelable(true);
-		btnLatest = (CustomTextviewBold) dialog.findViewById(R.id.btnLatest);
+        btnClose = (ImageButton) dialog.findViewById(R.id.btnClose);
+        btnClose.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnLatest = (CustomTextviewBold) dialog.findViewById(R.id.btnLatest);
 		btnLatest.setOnClickListener(new OnClickListener() {
 
             @Override

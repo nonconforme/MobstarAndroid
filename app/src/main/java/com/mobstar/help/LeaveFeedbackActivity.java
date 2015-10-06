@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.mobstar.R;
@@ -26,15 +27,13 @@ import com.mobstar.utils.Utility;
 
 public class LeaveFeedbackActivity extends Activity implements OnClickListener {
 
-	EditText editFeedback;
-
-	Button btnCancel, btnLeaveFeedback;
-
-	Context mContext;
-
-	Typeface typefaceBtn;
-	SharedPreferences preferences;
+	private EditText editFeedback;
+	private Button btnCancel, btnLeaveFeedback;
+	private Context mContext;
+	private Typeface typefaceBtn;
+	private SharedPreferences preferences;
 	public String sErrorMessage;
+	private ImageButton btnClose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +49,9 @@ public class LeaveFeedbackActivity extends Activity implements OnClickListener {
 	}
 
 	void InitControls() {
+
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 
@@ -73,7 +75,7 @@ public class LeaveFeedbackActivity extends Activity implements OnClickListener {
 	public void onClick(View view) {
 		// TODO Auto-generated method stub
 
-		if (btnCancel.equals(view)) {
+		if (btnCancel.equals(view) || btnClose.equals(view)) {
 			onBackPressed();
 		} else if (btnLeaveFeedback.equals(view)) {
 			Utility.ShowProgressDialog(mContext, getString(R.string.loading) + "...");

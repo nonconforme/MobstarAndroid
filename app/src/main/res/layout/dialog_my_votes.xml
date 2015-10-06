@@ -1,30 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:background="@color/background_transparent"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:background="@color/background_transparent">
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:id="@+id/btnYesVotes"
-        android:contentDescription="@string/app_name"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:text="@string/yes_votes"
-        android:drawableLeft="@drawable/icn_btn_yes_votes"
-        style="@style/BaseButton.Gray"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp">
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:id="@+id/btnNotVotes"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/no_votes"
-        android:drawableLeft="@drawable/icn_btn_no_votes"
-        style="@style/BaseButton.Gray"/>
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/btnYesVotes"
+            android:contentDescription="@string/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_big_btn_height"
+            android:text="@string/yes_votes"
+            android:drawableLeft="@drawable/icn_btn_yes_votes"
+            style="@style/BaseButton.Gray"/>
 
-</LinearLayout>
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/btnNotVotes"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_big_btn_height"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/app_name"
+            android:text="@string/no_votes"
+            android:drawableLeft="@drawable/icn_btn_no_votes"
+            style="@style/BaseButton.Gray"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnClose"
+        style="@style/BtnClose"/>
+
+</FrameLayout>
