@@ -22,7 +22,7 @@ public class RotationBackground extends BaseBackground
         this.pathResult = pathResult;
         this.afterDoneBackground = afterDoneBackground;
         this.resolution = resolution;
-        title=activity.getString(R.string.rotation_title);
+        title = activity.getString(R.string.rotation_title);
 //        commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf transpose=" + rotation + " -s " + resolution + " -metadata:s:v rotate=0 -r 30 -aspect 3:4 -ab 48000 -ac 2 -ar 22050 -vcodec mpeg4 -b 2097152 "+ pathResult;
         commandStr = "ffmpeg -y -i "+pathLeft+" -strict experimental -vf transpose=" + rotation + " -s " + resolution + " -metadata:s:v rotate=0 -vcodec mpeg4 "+ pathResult;
         Log.d("tag complex command: ", commandStr);
