@@ -68,8 +68,6 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     private int currentCount = 15;
     private CountDownTimer recordTimer;
     private String sFilepath;
-    private int desiredWidth = 480;
-    private int desiredHeight = 720;
     private List<Camera.Size> supportedVideoSizes;
     private Camera.Size optimalVideoSize;
     private final int cMaxRecordDurationInMs = 30099;
@@ -372,8 +370,6 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
             if (supportedVideoSizes != null) {
-                desiredWidth = mCameraPreview.getWidth();
-                desiredHeight = mCameraPreview.getHeight();
                 Log.d("tagSize", "setRecordSize = " + "width = " + optimalVideoSize.width + " height = " + optimalVideoSize.height);
                 calculateCropRect(optimalVideoSize);
             }
