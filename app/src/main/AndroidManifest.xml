@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobstar"
-    android:versionCode="21"
-    android:versionName="2.1" >
+    android:versionCode="22"
+    android:versionName="2.2" >
 
     <!--<uses-sdk-->
         <!--android:minSdkVersion="14"-->
@@ -237,6 +237,11 @@
         <activity
             android:name=".ProfileActivity"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".home.new_home_screen.profile.NewProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
             android:name=".settings.ChangePasswordActivity"

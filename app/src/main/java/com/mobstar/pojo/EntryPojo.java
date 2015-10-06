@@ -112,14 +112,16 @@ public class EntryPojo extends BaseResponse implements Serializable {
 			e.printStackTrace();
 		}
 
-		Calendar thatDay = Calendar.getInstance();
-		thatDay.setTime(gmtTime);
+		if (gmtTime != null) {
+			Calendar thatDay = Calendar.getInstance();
+			thatDay.setTime(gmtTime);
 
-		long diff = (today.getTimeInMillis() - thatDay.getTimeInMillis()) / 1000;
-		
 
-		tempDate=Utility.GetStringTime(diff);
+			long diff = (today.getTimeInMillis() - thatDay.getTimeInMillis()) / 1000;
 
+
+			tempDate = Utility.GetStringTime(diff);
+		}
 		return tempDate + "";
 	}
 

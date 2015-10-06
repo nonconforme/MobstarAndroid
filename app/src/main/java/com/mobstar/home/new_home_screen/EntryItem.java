@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.mobstar.AdWordsManager;
 import com.mobstar.BaseActivity;
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
@@ -28,6 +27,8 @@ import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
 import com.mobstar.home.StatisticsActivity;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.home.split.SplitActivity;
 import com.mobstar.info.report.InformationReportActivity;
 import com.mobstar.player.PlayerManager;
@@ -78,6 +79,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private FrameLayout containerPlayer;
     private LinearLayout llItemEntry;
     private LinearLayout llItemUser;
+    private boolean isRemoveItemAfterVotingNo = true;
 
     public EntryItem(View itemView) {
         super(itemView);
@@ -123,12 +125,12 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     }
 
-    public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onRemoveEntryListener) {
+    public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onChangeEntryListener) {
         entryPojo = _entryPojo;
         baseActivity = _activity;
         position = _position;
         swipeCardView.resetTopView();
-        onChangeEntryListener = _onRemoveEntryListener;
+        onChangeEntryListener = _onChangeEntryListener;
         if (entryPojo.getCategory() != null && entryPojo.getCategory().equalsIgnoreCase("onlyprofile")){
             setupUserViews();
         }
@@ -138,6 +140,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             setupImage();
             initItemContentType();
         }
+    }
+
+    public void removeItemAfterVotingNo(boolean isRemoveItemAfterVotingNo) {
+        this.isRemoveItemAfterVotingNo = isRemoveItemAfterVotingNo;
     }
 
     private void setupUserViews(){
@@ -386,7 +392,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             public void onSuccess(StarResponse object) {
                 Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
                 Utility.HideDialog(baseActivity);
-                if (object.getError() == null) {
+                if (object.getError() == null || object.getError().equals("")) {
                     if (onChangeEntryListener != null)
                         onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "1");
                 }
@@ -398,22 +404,6 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 Utility.HideDialog(baseActivity);
             }
         });
-//        RestClient.getInstance(baseActivity).postRequest(Constant.STAR, params, new ConnectCallback<StarResponse>() {
-//
-//            @Override
-//            public void onSuccess(StarResponse object) {
-//                Utility.HideDialog(baseActivity);
-//                if (object.getError() == null) {
-//                    if (onChangeEntryListener != null)
-//                        onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "1");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(String error) {
-//                Utility.HideDialog(baseActivity);
-//            }
-//        });
     }
 
     private void showStarDialog() {
@@ -433,25 +423,26 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void deleteStarRequest() {
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("star", entryPojo.getUserID());
         Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
-        RestClient.getInstance(baseActivity).deleteRequest(Constant.DELETE_STAR + entryPojo.getUserID(), params, new ConnectCallback<StarResponse>() {
-            @Override
-            public void onSuccess(StarResponse object) {
-                Utility.HideDialog(baseActivity);
-                final String error = object.getError();
-                if (error == null) {
-                    if (onChangeEntryListener != null)
-                        onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "0");
-                }
-            }
+        StarCall.delStarCall(baseActivity, entryPojo.getUserID(),
+                new ConnectCallback<StarResponse>() {
+                    @Override
+                    public void onSuccess(StarResponse object) {
+                        Log.d(LOG_TAG, "StarCall.delStarCall.onSuccess");
+                        Utility.HideDialog(baseActivity);
+                        final String error = object.getError();
+                        if (error == null || error.equals("")) {
+                            if (onChangeEntryListener != null)
+                                onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "0");
+                        }
+                    }
 
-            @Override
-            public void onFailure(String error) {
-                Utility.HideDialog(baseActivity);
-            }
-        });
+                    @Override
+                    public void onFailure(String error) {
+                        Log.d(LOG_TAG, "StarCall.delStarCall.onFailure.error=" + error);
+                        Utility.HideDialog(baseActivity);
+                    }
+                });
     }
 
 
@@ -484,16 +475,29 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void startProfileActivity() {
-        final Intent intent = new Intent(baseActivity, ProfileActivity.class);
-        intent.putExtra("UserID", entryPojo.getUserID());
-        intent.putExtra("UserName", entryPojo.getUserName());
-        intent.putExtra("UserDisplayName", entryPojo.getUserDisplayName());
-        intent.putExtra("UserPic", entryPojo.getProfileImage());
-        intent.putExtra("UserCoverImage", entryPojo.getProfileCover());
-        intent.putExtra("IsMyStar", entryPojo.getIsMyStar());
-        intent.putExtra("UserTagline", entryPojo.getTagline());
+        final Intent intent = new Intent(baseActivity, NewProfileActivity.class);
+        final UserProfile userProfile =  UserProfile.newBuilder()
+                .setUserId(entryPojo.getUserID())
+                .setUserName(entryPojo.getUserName())
+                .setUserDisplayName(entryPojo.getUserDisplayName())
+                .setUserPic(entryPojo.getProfileImage())
+                .setUserCoverImage(entryPojo.getProfileCover())
+                .setIsMyStar(entryPojo.getIsMyStar())
+                .setUserTagline(entryPojo.getTagline())
+                .build();
+        intent.putExtra(NewProfileActivity.USER, userProfile);
+//        intent.putExtra("UserID", entryPojo.getUserID());
+//        intent.putExtra("UserName", entryPojo.getUserName());
+//        intent.putExtra("UserDisplayName", entryPojo.getUserDisplayName());
+//        intent.putExtra("UserPic", entryPojo.getProfileImage());
+//        intent.putExtra("UserCoverImage", entryPojo.getProfileCover());
+//        intent.putExtra("IsMyStar", entryPojo.getIsMyStar());
+//        intent.putExtra("UserTagline", entryPojo.getTagline());
+//        intent.putExtra(NewProfileActivity.USER, userProfile);
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+
     }
 
     private void startSplitActivity() {
@@ -523,15 +527,18 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     public void onSwipeLeft() {
         dislikeRequest();
         Utility.DisLikeDialog(baseActivity);
-        if (onChangeEntryListener != null)
-            onChangeEntryListener.onRemoveEntry(getPos());
+        if (isRemoveItemAfterVotingNo) {
+            if (onChangeEntryListener != null)
+                onChangeEntryListener.onRemoveEntry(getPos());
+        }
+        else swipeCardView.resetTopView();
     }
 
     @Override
     public void onSwipeRight() {
         likeRequest();
-        swipeCardView.resetTopView();
         Utility.LikeDialog(baseActivity);
+        swipeCardView.resetTopView();
 
 //        if (onChangeEntryListener != null)
 //            onChangeEntryListener.onRemoveEntry(getPos());

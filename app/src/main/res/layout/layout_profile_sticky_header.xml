@@ -1,53 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/llSticky"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-    <LinearLayout
-        android:id="@+id/llSticky"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/header_height"
+    android:layout_height="@dimen/header_height"
+    android:background="@color/splash_bg"
+    android:orientation="horizontal"
+    android:visibility="visible">
+
+    <com.mobstar.custom.CustomTextviewBold
+        android:id="@+id/textUpdates"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
         android:background="@color/splash_bg"
-        android:orientation="horizontal"
-        android:tag="sticky" >
+        android:gravity="center"
+        android:text="@string/update"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:clickable="true" />
 
-            <com.mobstar.custom.CustomTextviewBold
-                android:id="@+id/textUpdates"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@color/splash_bg"
-                android:gravity="center"
-                android:text="@string/update"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/sub_head_devider"
+        android:visibility="gone" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/sub_head_devider"
-                android:visibility="gone" />
-
-            <com.mobstar.custom.CustomTextviewBold
-                android:id="@+id/textProfile"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@color/gray_color"
-                android:gravity="center"
-                android:text="@string/profile"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-    
+    <com.mobstar.custom.CustomTextviewBold
+        android:id="@+id/textProfile"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:background="@color/gray_color"
+        android:gravity="center"
+        android:text="@string/profile"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:clickable="true" />
 
 </LinearLayout>
+

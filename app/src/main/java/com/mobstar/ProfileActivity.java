@@ -43,9 +43,11 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.StarCall;
+import com.mobstar.api.responce.BaseResponse;
 import com.mobstar.api.responce.NullResponse;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
@@ -1832,13 +1834,26 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 						if(arrEntryPojos.get(position).getType().equals("image")){
 							if(addedviewImgId!=null && !addedviewImgId.equalsIgnoreCase(arrEntryPojos.get(position).getID())){
-								if (Utility.isNetworkAvailable(mContext)) {
-									addedviewImgId=arrEntryPojos.get(position).getID();
-									new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
-								} else {
-									Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-									Utility.HideDialog(mContext);
-								}
+                                Api.sendRequestAddCount(mContext, arrEntryPojos.get(position).getID(), preferences.getString("userid", "0"), new ConnectCallback() {
+									@Override
+									public void onSuccess(BaseResponse object) {
+										Log.d(LOG_TAG, "Api.sendRequestAddCount.onSuccess");
+										handlerUpdateViewCount.sendEmptyMessage(1);
+									}
+
+									@Override
+									public void onFailure(String error) {
+										Log.d(LOG_TAG, "Api.sendRequestAddCount.onFailure.error=" + error);
+
+									}
+								});
+//                                if (Utility.isNetworkAvailable(mContext)) {
+//									addedviewImgId=arrEntryPojos.get(position).getID();
+//									new UpdateViewCountCall(arrEntryPojos.get(position).getID()).start();
+//								} else {
+//									Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//									Utility.HideDialog(mContext);
+//								}
 							}
 							else{
 							}
@@ -2338,7 +2353,8 @@ StickyListHeadersListView.OnStickyHeaderChangedListener {
 
 			String[] name = {"entryId","userId"};
 			String[] value = {entryId,preferences.getString("userid", "0")};
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.UPDATE_VIEW_COUNT, name, value,preferences.getString("token", null));
+
+            String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.UPDATE_VIEW_COUNT, name, value,preferences.getString("token", null));
 
 			//			Log.v(Constant.TAG, "UpdateView Response-> " + response);
 

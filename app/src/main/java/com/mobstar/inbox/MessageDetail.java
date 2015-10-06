@@ -25,8 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.AdWordsManager;
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.MessageThreadPojo;
 import com.mobstar.pojo.ParticipantsPojo;
 import com.mobstar.utils.Constant;
@@ -176,11 +177,18 @@ public class MessageDetail extends Activity implements OnClickListener{
 			}
 		}
 		else if(flImgHeader.equals(v)){
-			Intent intent=new Intent(mContext,ProfileActivity.class);
-			intent.putExtra("UserID",senderUserId);
-			intent.putExtra("UserDisplayName",UserName);
-			intent.putExtra("UserPic",profileimageUrl);
-			intent.putExtra("UserCoverImage",CoverImg);
+			final Intent intent = new Intent(mContext, NewProfileActivity.class);
+			final UserProfile userProfile = UserProfile.newBuilder()
+					.setUserId(senderUserId)
+					.setUserDisplayName(UserName)
+					.setUserPic(profileimageUrl)
+					.setUserCoverImage(CoverImg)
+					.build();
+			intent.putExtra(NewProfileActivity.USER, userProfile);
+//			intent.putExtra("UserID",senderUserId);
+//			intent.putExtra("UserDisplayName",UserName);
+//			intent.putExtra("UserPic",profileimageUrl);
+//			intent.putExtra("UserCoverImage",CoverImg);
 			startActivity(intent);
 		}
 	}

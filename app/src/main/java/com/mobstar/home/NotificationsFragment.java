@@ -27,8 +27,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobstar.ProfileActivity;
 import com.mobstar.R;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.inbox.GroupMessageDetail;
 import com.mobstar.inbox.MessageDetail;
 import com.mobstar.pojo.NotificationPojo;
@@ -179,9 +180,14 @@ public class NotificationsFragment extends Fragment {
 					}
 				}
 				else{
-					Intent intent=new Intent(mContext,ProfileActivity.class);
-					intent.putExtra("EntryId",arrNotificationPojos.get(position).getEntryId());
-					startActivityForResult(intent,101);
+					Intent intent=new Intent(mContext, NewProfileActivity.class);
+					final UserProfile userProfile = UserProfile.newBuilder()
+							.setEntryId(arrNotificationPojos.get(position).getEntryId())
+							.build();
+					intent.putExtra(NewProfileActivity.USER, userProfile);
+					intent.putExtra(NewProfileActivity.IS_NOTIFICATION, true);
+//					intent.putExtra("EntryId",arrNotificationPojos.get(position).getEntryId());
+					startActivityForResult(intent, 101);
 				}
 				
 				
