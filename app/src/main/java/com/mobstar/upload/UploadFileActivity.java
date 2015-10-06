@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.RequestParams;
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.home.split.SplitActivity;
@@ -55,31 +56,25 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class UploadFileActivity extends Activity {
+public class UploadFileActivity extends Activity implements OnClickListener {
 
     private static final String LOG_TAG = UploadFileActivity.class.getName();
-    ArrayList<String> arrayTags = new ArrayList<String>();
-	Context mContext;
-
-	TagListAdapter tagListAdapter;
-	ListView listTags;
-
-	EditText editTitle, editTag,editAge,editHeight;
-	TextView textTitleHint,textAgeHint,textHeightHint;
-	ImageView btnAddTag;
-
-	Typeface typefaceBtn;
-	Button btnBack, btnFinish;
-
-	String sType, sFile1, sFile2;
-
-	SharedPreferences preferences;
-
-	String categoryId,subCat="";
+    private ArrayList<String> arrayTags = new ArrayList<String>();
+	private TagListAdapter tagListAdapter;
+	private ListView listTags;
+	private EditText editTitle, editTag,editAge,editHeight;
+	private TextView textTitleHint,textAgeHint,textHeightHint;
+	private ImageView btnAddTag;
+	private Typeface typefaceBtn;
+	private Button btnBack, btnFinish;
+	private String sType, sFile1, sFile2;
+	private SharedPreferences preferences;
+	private String categoryId,subCat="";
 	boolean IsFinish=false;
-	LinearLayout llParent;
+	private LinearLayout llParent;
 	boolean isModelType=false;
 	private Spinner spAge,spHeight;
 	private List<String> list;
@@ -88,44 +83,46 @@ public class UploadFileActivity extends Activity {
 	int posHeight=0,posAge=0;
     private EntryPojo parentSplitEntry;
 
-
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_upload_file);
 
-		mContext = UploadFileActivity.this;
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-
-			sType = extras.getString("type");
-			sFile1 = extras.getString("file1");
-			if (extras.containsKey("file2")) {
-				sFile2 = extras.getString("file2");
-			}
-
-			if(extras.containsKey("categoryId")) {
-				categoryId=extras.getString("categoryId");
-			}
-			if(extras.containsKey("subCat")){
-				subCat=extras.getString("subCat");
-			}
-            if(extras.containsKey(SplitActivity.ENTRY_SPLIT)){
-                parentSplitEntry=(EntryPojo) extras.getSerializable(SplitActivity.ENTRY_SPLIT);
-            }
-		}
+		getBundleExtra();
 
 		Log.d("mobstar","upload category type is=>"+categoryId);
 		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
 
-		InitControls();
+		initControls();
 
 		Utility.SendDataToGA("UploadFile Screen", UploadFileActivity.this);
 
 	}
 
-	void InitControls() {
+	private void getBundleExtra(){
+		final Bundle extras = getIntent().getExtras();
+		if (extras == null)
+			return;
+
+		sType = extras.getString("type");
+		sFile1 = extras.getString("file1");
+		if (extras.containsKey("file2")) {
+			sFile2 = extras.getString("file2");
+		}
+
+		if(extras.containsKey("categoryId")) {
+			categoryId=extras.getString("categoryId");
+		}
+		if(extras.containsKey("subCat")){
+			subCat=extras.getString("subCat");
+		}
+		if(extras.containsKey(SplitActivity.ENTRY_SPLIT)){
+			parentSplitEntry=(EntryPojo) extras.getSerializable(SplitActivity.ENTRY_SPLIT);
+		}
+	}
+
+	private void initControls() {
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 		listTags = (ListView) findViewById(R.id.listTags);
@@ -323,74 +320,77 @@ public class UploadFileActivity extends Activity {
 
 		btnBack = (Button) findViewById(R.id.btnBack);
 		btnBack.setTypeface(typefaceBtn);
-		btnBack.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				setResult(Activity.RESULT_CANCELED);
-				onBackPressed();
-			}
-		});
+		btnBack.setOnClickListener(this);
 
 		btnFinish = (Button) findViewById(R.id.btnFinish);
 		btnFinish.setTypeface(typefaceBtn);
-		btnFinish.setOnClickListener(new OnClickListener() {
+		btnFinish.setOnClickListener(this);
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if(!IsFinish){
-					IsFinish=true;
-//					Log.d("mobstar","IsFinish===>");
-					hideKeyboard();
+	}
 
-					if (editTitle.getText().toString().trim().length() == 0) {
-						editTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-						textTitleHint.setText(getString(R.string.enter_title));
-						textTitleHint.setVisibility(View.VISIBLE);
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnFinish:
+				finishUpload();
+				break;
+			case R.id.btnBack:
+				setResult(Activity.RESULT_CANCELED);
+				onBackPressed();
+				break;
+		}
+	}
 
-					}
-					else if(isModelType){
-						if (posAge==0) {
-							editAge.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-							textAgeHint.setText(getString(R.string.select_age));
-							textAgeHint.setVisibility(View.VISIBLE);
 
-						}
-						else if (posHeight==0) {
-							editHeight.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-							textHeightHint.setText(getString(R.string.select_height));
-							textHeightHint.setVisibility(View.VISIBLE);
-						}
-						else {
-							Utility.ShowProgressDialog(mContext, getString(R.string.uploading));
+	private void finishUpload(){
+		if(!IsFinish){
+//			IsFinish = true;
+			hideKeyboard();
 
-							if (Utility.isNetworkAvailable(mContext)) {
-								new UploadImage().execute(Constant.SERVER_URL + Constant.ENTRY);
-							} else {
-								Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-								Utility.HideDialog(mContext);
-							}
-						}
-					}
-					else {
+			if (editTitle.getText().toString().trim().length() == 0) {
+				editTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
+				textTitleHint.setText(getString(R.string.enter_title));
+				textTitleHint.setVisibility(View.VISIBLE);
 
-						Utility.ShowProgressDialog(mContext, getString(R.string.uploading));
+			}
+			else if(isModelType){
+				if (posAge==0) {
+					editAge.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
+					textAgeHint.setText(getString(R.string.select_age));
+					textAgeHint.setVisibility(View.VISIBLE);
 
-						if (Utility.isNetworkAvailable(mContext)) {
-							new UploadImage().execute(Constant.SERVER_URL + Constant.ENTRY);
-						} else {
+				}
+				else if (posHeight==0) {
+					editHeight.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
+					textHeightHint.setText(getString(R.string.select_height));
+					textHeightHint.setVisibility(View.VISIBLE);
+				}
+				else {
+					Utility.ShowProgressDialog(this, getString(R.string.uploading));
 
-							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-							Utility.HideDialog(mContext);
-						}
+					if (Utility.isNetworkAvailable(this)) {
+						IsFinish = true;
+						new UploadImage().execute(Constant.SERVER_URL + Constant.ENTRY);
+					} else {
+						Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+						Utility.HideDialog(this);
 					}
 				}
-				
 			}
-		});
+			else {
 
+				Utility.ShowProgressDialog(this, getString(R.string.uploading));
+
+				if (Utility.isNetworkAvailable(this)) {
+					IsFinish = true;
+					new UploadImage().execute(Constant.SERVER_URL + Constant.ENTRY);
+				} else {
+
+					Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+					Utility.HideDialog(this);
+				}
+			}
+		}
 	}
 
 	private class UploadImage extends AsyncTask<String, Integer, String> {
@@ -508,12 +508,12 @@ public class UploadFileActivity extends Activity {
 		protected void onPostExecute(String jsonString) {
 			Log.v(LOG_TAG, "Upload Response " + jsonString);
 
-			Utility.HideDialog(mContext);
+			Utility.HideDialog(UploadFileActivity.this);
 
 			try {
 
 				Intent intent = new Intent("upload_successful");
-				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+				LocalBroadcastManager.getInstance(UploadFileActivity.this).sendBroadcast(intent);
 
 				JSONObject jsonObject = new JSONObject(jsonString);
 
@@ -544,7 +544,7 @@ public class UploadFileActivity extends Activity {
 		private LayoutInflater inflater = null;
 
 		public TagListAdapter() {
-			inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			inflater = (LayoutInflater) UploadFileActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		}
 
@@ -587,8 +587,14 @@ public class UploadFileActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-		super.onBackPressed();
-		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		try {
+			super.onBackPressed();
+			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		}
+		catch (NullPointerException e){
+			e.printStackTrace();
+		}
+
 	}
 	
 	private void hideKeyboard() {   
