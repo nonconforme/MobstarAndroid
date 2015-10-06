@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -58,7 +59,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     private FrameLayout flVideoPreviewContainer;
     private FrameLayout flVerticalLeft, flVerticalRight;
     private LinearLayout llParalelVideoPosition;
-    private ImageView btnRecord;
+    private ImageButton btnRecord;
     private int currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
     private boolean isFrontCameraAvailable = false;
     private boolean isRecording = false;
@@ -93,7 +94,6 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     private int surfaceHeight;
     private Rect cropRect;
 
-    private long buttonDelay;
     private boolean isRecordStopped = false;
     private boolean isPrepareRecord = false;
 
@@ -173,7 +173,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     }
 
     private void initializeCamera() {
-        if (flCameraPreviewContaner.getHeight() == 0) {
+        if (flCameraPreviewContaner.getMeasuredHeight() == 0) {
             initializeCameraPostDelay();
             return;
         }
@@ -204,6 +204,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             mCameraPreview.setLayoutParams(layoutParams);
             flCameraPreviewContaner.addView(mCameraPreview);
             setPreviewSize();
+            btnRecord.setEnabled(true);
         }
     }
 
@@ -211,6 +212,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
         ivVideoPreview.setImageBitmap(imageVideoPreview);
         textRecordSecond.setVisibility(View.GONE);
         textRecordSecond.setText(currentCount + "");
+        btnRecord.setEnabled(false);
         btnRecord.setOnClickListener(this);
     }
 
@@ -218,29 +220,21 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnRecord:
-//                if (resolveClick()) {
-                    if (textureView.getSurfaceTexture() == null || flCameraPreviewContaner.getHeight() == 0)
+                    if (textureView.getSurfaceTexture() == null || flCameraPreviewContaner.getMeasuredHeight() == 0)
                         return;
                     Surface surface = new Surface(textureView.getSurfaceTexture());
+                if (isRecording) {
+                    mCameraPreview.stopRecord();
+                }
+                else
                     startRecord(surface);
-//                }
                 break;
         }
     }
 
-    private boolean resolveClick(){
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - buttonDelay >= BUTTON_CLICK_DELAY) {
-            return true;
-        }
-        buttonDelay = currentTime;
-        return false;
-    }
-
     private void findView(View inflatedView) {
-        btnRecord = (ImageView) inflatedView.findViewById(R.id.btnRecord);
+        btnRecord = (ImageButton) inflatedView.findViewById(R.id.btnRecord);
         textRecordSecond = (TextView) inflatedView.findViewById(R.id.textRecordSecond);
-        btnRecord = (ImageView) inflatedView.findViewById(R.id.btnRecord);
         flVerticalLeft = (FrameLayout) inflatedView.findViewById(R.id.verticalLeft);
         flVerticalRight = (FrameLayout) inflatedView.findViewById(R.id.verticalRight);
         llParalelVideoPosition = (LinearLayout) inflatedView.findViewById(R.id.llParalelVideoPosition);
@@ -248,7 +242,6 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
     private void createRecordPreview(){
         flCameraPreviewContaner = new FrameLayout(splitActivity);
-
         flVideoPreviewContainer = new FrameLayout(splitActivity);
         ivVideoPreview = new ImageView(splitActivity);
         ivVideoPreview.setAdjustViewBounds(true);
@@ -264,12 +257,9 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
 
     private void startRecord(final Surface surface) {
-        if (isRecording) {
-            mCameraPreview.stopRecord();
-            return;
-        }
         if (isPrepareRecord)
             return;
+        btnRecord.setEnabled(false);
 //        new Thread() {
 //            public void run() {
                 try {
@@ -295,6 +285,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                         });
                     }
                 } catch (Exception e) {
+                    btnRecord.setEnabled(true);
                     isPrepareRecord = false;
                     e.printStackTrace();
                 }
@@ -434,14 +425,14 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                 case ORIGIN_LEFT:
                     cropRect.left = 0;
                     cropRect.right = optimalVideoSize.width;
-                    int invisibleCameraFrameVertical = ((surfaceWidth - flCameraPreviewContaner.getWidth()) / 2) * optimalVideoSize.height / surfaceWidth;
+                    int invisibleCameraFrameVertical = ((surfaceWidth - flCameraPreviewContaner.getMeasuredWidth()) / 2) * optimalVideoSize.height / surfaceWidth;
                     cropRect.top = invisibleCameraFrameVertical;
                     cropRect.bottom = optimalVideoSize.height - invisibleCameraFrameVertical;
                     break;
                 default:
                     cropRect.top = 0;
                     cropRect.bottom = optimalVideoSize.height;
-                    int invisibleCameraFrameHorizontal = ((surfaceHeight - flCameraPreviewContaner.getHeight()) / 2) * optimalVideoSize.width / surfaceHeight;
+                    int invisibleCameraFrameHorizontal = ((surfaceHeight - flCameraPreviewContaner.getMeasuredHeight()) / 2) * optimalVideoSize.width / surfaceHeight;
                     cropRect.left = invisibleCameraFrameHorizontal;
                     cropRect.right = optimalVideoSize.width - invisibleCameraFrameHorizontal;
                     break;
@@ -459,6 +450,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                     mMediaRecorder.start();
                 }
                 catch (RuntimeException e){
+                    ivVideoPreview.setVisibility(VISIBLE);
                     e.printStackTrace();
                     isPrepareRecord = false;
                     isRecording = false;
@@ -470,6 +462,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
                 recordTimer.start();
                 mediaPlayer.start();
+                enableRecordButtonPostDelay();
 
             } else {
                 // prepare didn't work, release the camera
@@ -481,6 +474,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
         private void stopRecord(){
             if (isRecordStopped)
                 return;
+            btnRecord.setEnabled(false);
             isRecordStopped = true;
             // stop recording and release camera
             try {
@@ -496,54 +490,6 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
             startCropAndRotationCameraVideo();
         }
-
-//        private void recordVideo() {
-//
-//            if (isRecording) {
-//                // stop recording and release camera
-//                try {
-//                    mMediaRecorder.stop();
-//                    mediaPlayer.stop();// stop the recording
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                isRecording = false;
-//                releaseMediaRecorder(); // release the MediaRecorder object
-//                mCamera.lock(); // take camera access back from MediaRecorder
-//                releaseCamera();
-//
-//                startCropAndRotationCameraVideo();
-//
-//            } else {
-//                // initialize video camera
-//                if (prepareVideoRecorder()) {
-//                    // Camera is available and unlocked, MediaRecorder is
-//                    // prepared,
-//                    // now you can start recording
-//                    isRecording = true;
-//                    ivVideoPreview.setVisibility(GONE);
-//                    try {
-//                        mMediaRecorder.start();
-//                    }
-//                    catch (RuntimeException e){
-//                        e.printStackTrace();
-//                        isRecording = false;
-//                        return;
-//                    }
-//
-////                    layoutCameraOption.setVisibility(View.GONE);
-//                    textRecordSecond.setVisibility(View.VISIBLE);
-//
-//                    recordTimer.start();
-//                    mediaPlayer.start();
-//
-//                } else {
-//                    // prepare didn't work, release the camera
-//                    releaseMediaRecorder();
-//                    // inform user
-//                }
-//            }
-//        }
 
         void setCamera(Camera camera) {
             mCamera = camera;
@@ -727,9 +673,20 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
         return (result);
     }
 
-    void setPreviewSize() {
-        int width = flCameraPreviewContaner.getWidth();
-        int height = flCameraPreviewContaner.getHeight();
+    private void enableRecordButtonPostDelay(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                btnRecord.setEnabled(true);
+            }
+        }, 750);
+
+    }
+
+    private void setPreviewSize() {
+        int width = flCameraPreviewContaner.getMeasuredWidth();
+        int height = flCameraPreviewContaner.getMeasuredHeight();
 
         optimalVideoSize = getOptimalPreviewSize(supportedVideoSizes, width, height);
         Log.d("tagSize", "setPreviewSize = " + "width = " + optimalVideoSize.width + " height = " + optimalVideoSize.height);
@@ -772,6 +729,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             recordTimer.cancel();
         }
     }
+
     private void releaseCamera() {
         if (mCamera != null) {
             mCamera.release(); // release the camera for other applications
