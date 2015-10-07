@@ -221,22 +221,25 @@
 
             <Button
                 android:id="@+id/btnBack"
-                android:layout_width="@dimen/signup_btn_width"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/signup_btn_height"
                 android:background="@drawable/gray_btn_bg_state_normal"
                 android:text="@string/back"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/signup_btn_text" />
+                android:textSize="@dimen/signup_btn_text"
+                android:layout_weight="1"
+                android:layout_marginRight="10dp" />
 
             <Button
                 android:id="@+id/btnFinish"
-                android:layout_width="@dimen/signup_btn_width"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/signup_btn_height"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:background="@drawable/yellow_btn_bg_state_normal"
                 android:text="@string/finish"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/signup_btn_text" />
+                android:textSize="@dimen/signup_btn_text"
+                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 
