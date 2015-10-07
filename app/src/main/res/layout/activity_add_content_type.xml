@@ -5,9 +5,6 @@
     android:clickable="false"
     android:background="@color/background_transparent"
     android:orientation="vertical">
-    <ImageButton
-        android:id="@+id/btnClose"
-        style="@style/BtnClose" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -24,7 +24,6 @@ import com.mobstar.utils.Utility;
 
 public class AddContentTypeActivity extends Activity implements OnClickListener{
 
-	private ImageButton btnClose;
 	private Context mContext;
 	private CustomTextviewBold btnBack, btnImage, btnMovieClip;
 	private Typeface typefaceBtn;
@@ -73,14 +72,12 @@ public class AddContentTypeActivity extends Activity implements OnClickListener{
 		btnMovieClip = (CustomTextviewBold) findViewById(R.id.btnMovieClip);
 		btnMovieClip.setOnClickListener(this);
 
-		btnClose = (ImageButton) findViewById(R.id.btnClose);
-		btnClose.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View view) {
 		// TODO Auto-generated method stub
-		if (view.equals(btnBack) || view.equals(btnClose)) {
+		if (view.equals(btnBack)) {
 			onBackPressed();
 			
 		} else if (view.equals(btnImage)) {
