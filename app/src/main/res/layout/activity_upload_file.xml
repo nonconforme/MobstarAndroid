@@ -1,9 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/splash_bg"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/splash_bg"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,14 +40,13 @@
         <EditText
             android:id="@+id/editTitle"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/signup_edittext_padding"
+            android:minHeight="30dp"
             android:background="@drawable/edittext_rounded_bg"
             android:ems="10"
             android:hint="@string/enter_title"
             android:inputType="textMultiLine|textShortMessage"
-            android:paddingLeft="@dimen/signup_edittext_padding"
-            android:paddingRight="@dimen/signup_edittext_padding"
-            android:singleLine="true"
             android:textSize="@dimen/signup_edittext" >
         </EditText>
 
@@ -88,15 +86,14 @@
             <EditText
                 android:id="@+id/editAge"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/signup_edittext_padding"
+                android:minHeight="30dp"
                 android:background="@drawable/edittext_rounded_bg"
                 android:ems="10"
                 android:hint="@string/select_age"
                 android:inputType="textMultiLine|textShortMessage"
-                android:paddingLeft="@dimen/signup_edittext_padding"
-                android:paddingRight="@dimen/signup_edittext_padding"
-                android:singleLine="true"
-                android:textSize="@dimen/signup_edittext" 
+                android:textSize="@dimen/signup_edittext"
                 android:focusable="false">
             </EditText>
 
@@ -135,14 +132,13 @@
             <EditText
                 android:id="@+id/editHeight"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/signup_edittext_padding"
+                android:minHeight="30dp"
                 android:background="@drawable/edittext_rounded_bg"
                 android:ems="10"
                 android:hint="@string/select_height"
                 android:inputType="textMultiLine|textShortMessage"
-                android:paddingLeft="@dimen/signup_edittext_padding"
-                android:paddingRight="@dimen/signup_edittext_padding"
-                android:singleLine="true"
                 android:textSize="@dimen/signup_edittext"
                 android:focusable="false" >
             </EditText>
@@ -180,23 +176,22 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/edittext_rounded_bg"
             android:orientation="horizontal" >
 
             <EditText
                 android:id="@+id/editTag"
                 android:layout_width="0dp"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/signup_edittext_padding"
+                android:minHeight="30dp"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:ems="10"
                 android:hint="@string/enter_tags"
                 android:inputType="textMultiLine|textShortMessage"
-                android:paddingLeft="@dimen/signup_edittext_padding"
-                android:paddingRight="@dimen/signup_edittext_padding"
-                android:singleLine="true"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/signup_edittext" >
             </EditText>
