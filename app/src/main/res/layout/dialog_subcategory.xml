@@ -30,14 +30,15 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
             android:adjustViewBounds="true"
             android:maxHeight="50dp"
             android:maxWidth="50dp"
-            android:src="@drawable/ic_ab_done"
-            android:visibility="visible" />
+            android:src="@drawable/btn_male_fashion"
+            android:visibility="visible"
+            android:padding="10dp" />
 
         <com.mobstar.custom.CustomTextviewBold
             android:layout_width="wrap_content"
@@ -48,7 +49,8 @@
             android:text="@string/male"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/white_color"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:longClickable="true" />
 
         <com.mobstar.custom.CustomTextviewBold
             android:layout_width="wrap_content"
@@ -74,14 +76,14 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
             android:adjustViewBounds="true"
             android:maxHeight="50dp"
             android:maxWidth="50dp"
-            android:src="@drawable/ic_ab_done"
-            android:visibility="visible" />
+            android:src="@drawable/btn_female_fashion"
+            android:padding="10dp" />
 
         <com.mobstar.custom.CustomTextviewBold
             android:layout_width="wrap_content"
@@ -117,14 +119,15 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
             android:adjustViewBounds="true"
             android:maxHeight="50dp"
             android:maxWidth="50dp"
-            android:src="@drawable/ic_ab_done"
-            android:visibility="visible" />
+            android:src="@drawable/btn_curve"
+            android:visibility="visible"
+            android:padding="10dp" />
 
         <com.mobstar.custom.CustomTextviewBold
             android:layout_width="match_parent"
