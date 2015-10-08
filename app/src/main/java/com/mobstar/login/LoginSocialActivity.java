@@ -304,9 +304,12 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 									try {
 										SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 										pref.edit().putBoolean("isSocialLogin",true).commit();
-										new FBLoginCall(user.getId(), user.getName(), user.getProperty("email").toString(), user.getName(), user.getBirthday(), user.getProperty(
-												"gender").toString(), user.getFirstName()).start();
-									} catch (Exception e) {
+                                        FbAccount fbAccount = new FbAccount(user);
+//										new FBLoginCall(user.getId(), user.getName(), user.getProperty("email").toString(), user.getName(), user.getBirthday(), user.getProperty(
+//												"gender").toString(), user.getFirstName()).start();
+                                        new FBLoginCall(fbAccount.id, fbAccount.name, fbAccount.email, fbAccount.name,
+                                                fbAccount.birthday, fbAccount.gender, fbAccount.firstName).start();
+                                    } catch (Exception e) {
 										// TODO: handle exception
 										e.printStackTrace();
 										Toast.makeText(mContext, getString(R.string.error_while_login_with_facebook), Toast.LENGTH_SHORT).show();

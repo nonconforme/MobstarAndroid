@@ -2,6 +2,7 @@ package com.mobstar.home.split.ffmpeg;
 
 import android.graphics.Rect;
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 
 import com.mobstar.home.split.position_variants.PositionVariant;
 
@@ -16,9 +17,9 @@ public class FFCommandCreator {
                 .append("ffmpeg -y -i ")
                 .append(fileInPath)
                 .append(" -strict experimental -vf crop=")
-                .append(rect.right - rect.left - 1)
+                .append(rect.width() - 1)
                 .append(":")
-                .append(rect.bottom - rect.top - 1)
+                .append(rect.height()- 1)
                 .append(":")
                 .append(rect.left)
                 .append(":")
@@ -40,8 +41,6 @@ public class FFCommandCreator {
 
     public static String getMergeVideoCommandString(String pathLeft, String pathRight, String pathResult, boolean isHeadphonesOn, PositionVariant positionVariant) {
 
-        String firstVideoPath = pathLeft;
-        String secondVideoPath = pathRight;
         String videoMergeCommand = "";
         String audioMixCommand = "";
         switch (positionVariant){
@@ -52,15 +51,10 @@ public class FFCommandCreator {
                 videoMergeCommand  = "[0:v:0]pad=iw*2:ih[bg];[bg][1:v:0]overlay=w";
                 break;
             case ORIGIN_RIGHT_TOP:
-//                videoMergeCommand = "[0:v:0]pad=0:main_h/2;[bg][1:v:0]overlay=w";
-//                videoMergeCommand = "[0:v:0]pad=iw*2:ih*2[bg];[bg][1:v:0]overlay=0:0";
-//                videoMergeCommand = "[0:v:0]overlay=0:main_w/2:0";
-                videoMergeCommand = "[0:v:0]pad=iw*2:ih[bg];[1:v:0]overlay=w:150";
+                videoMergeCommand = "[bg][1:v:0]overlay=w;[0:v:1]scale=iw*2:ih*2[bg]";
                 break;
             case ORIGIN_FULLSCREEN:
-//                videoMergeCommand = "[0:v:0]pad=0:main_h/2;[bg][1:v:0]overlay=w";
-//                videoMergeCommand = "[1:v:0]overlay=main_w/2:0";
-                videoMergeCommand = "[0:v:0]pad=iw*2:ih[bg];[1:v:0]overlay=w:150";
+                videoMergeCommand = "[bg][0:v:1]overlay=w;[1:v:0]scale=iw*2:ih*2[bg]";
                 break;
             case ORIGIN_TOP:
                 videoMergeCommand = "[bg][0:v:0]overlay=0:main_h/2;[1:v:0]pad=iw:ih*2[bg]";
@@ -75,25 +69,11 @@ public class FFCommandCreator {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
                 .append("ffmpeg -y -i ")
-                .append(firstVideoPath)
+                .append(pathLeft)
                 .append(" -i ")
-                .append(secondVideoPath)
+                .append(pathRight)
                 .append(" -strict experimental -filter_complex ")
                 .append(videoMergeCommand)
-//                        оригінал справа, з камери - зліва
-//                .append("[0:v:0]pad=iw*2:ih[bg];")
-//                .append("[bg][1:v:0]overlay=w")
-//                        оригінал справа знизу на пів екрана б з камери - зліва
-//                .append("pad=iw*2:ih[bg];")
-//                .append("overlay=w:150")
-
-//                .append("[0:v]setpts=PTS-STARTPTS, pad=iw*2:ih[bg];")
-//                .append("[1:v]setpts=PTS-STARTPTS[fg];")
-//                .append("[bg][fg]overlay=w")
-
-//                .append("[0:v]pad=iw*2:ih[bg];")
-//                .append("[1:v][bg][fg]overlay=w")
-
                 .append(audioMixCommand)
                 .append(" -s 308x308 -r 30 -b 15496k -vcodec mpeg4 -shortest ")
                 .append(pathResult);
@@ -110,7 +90,7 @@ public class FFCommandCreator {
                 outSize = "153x306";
                 break;
             case ORIGIN_RIGHT_TOP:
-                outSize = "100x100";
+                outSize = "153x153";
                 break;
             case ORIGIN_FULLSCREEN:
                 outSize = "306x306";

@@ -121,16 +121,18 @@
             <!--android:contentDescription="@string/app_name"-->
             <!--android:src="@drawable/sqaure_frame" />-->
 
-        <ImageView
+        <ImageButton
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:id="@+id/btnRecord"
+            android:background="?android:selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_record_button_split_video"
             android:layout_gravity="center_horizontal|bottom"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/btn_record" />
+            android:src="@drawable/btn_record"
+            android:clickable="true" />
     </FrameLayout>
 
 

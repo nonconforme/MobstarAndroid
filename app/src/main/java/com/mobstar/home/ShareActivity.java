@@ -69,73 +69,72 @@ public class ShareActivity extends Activity implements OnClickListener {
 	private boolean isTalent=false;
 	private String UserName,UserImg;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_share);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_share);
+        ShareText = getResources().getString(R.string.share_text) + " ";
+        TwitterShareText = getResources().getString(R.string.twitter_share_text) + " ";
 
-		// StrictMode.ThreadPolicy policy = new
-		// StrictMode.ThreadPolicy.Builder().permitAll().build();
-		// StrictMode.setThreadPolicy(policy);
+        // StrictMode.ThreadPolicy policy = new
+        // StrictMode.ThreadPolicy.Builder().permitAll().build();
+        // StrictMode.setThreadPolicy(policy);
 
-		mContext = ShareActivity.this;
+        mContext = ShareActivity.this;
 
-		Bundle bundle=getIntent().getExtras();
-		if(bundle!=null){
-			isTalent=bundle.getBoolean("isTalent");
-			if(isTalent){
-				UserName=bundle.getString("UserName");
-				UserImg=bundle.getString("UserImg");
-				if(UserImg!=null && UserImg.length()>0){
-					 mDownloader = new ImageDownloader(UserImg
-			                    , getParent(), bitmap, new ImageLoaderListener() {
-			                @Override
-			                public void onImageDownloaded(Bitmap bmp) {
-			                    bitmap = bmp;
-			       
-			                    if(Utility.isNetworkAvailable(mContext)) {
-			                    	 pngUri =saveImageToSD();
-			                    }
-			                    else {
-			                    	Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-								}
-			                  
-			                }
-			                });
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            isTalent = bundle.getBoolean("isTalent");
+            if (isTalent) {
+                UserName = bundle.getString("UserName");
+                UserImg = bundle.getString("UserImg");
+                if (UserImg != null && UserImg.length() > 0) {
+                    mDownloader = new ImageDownloader(UserImg
+                            , getParent(), bitmap, new ImageLoaderListener() {
+                        @Override
+                        public void onImageDownloaded(Bitmap bmp) {
+                            bitmap = bmp;
+
+                            if (Utility.isNetworkAvailable(mContext)) {
+                                pngUri = saveImageToSD();
+                            } else {
+                                Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
 
 			            /*--- we need to call execute() since nothing will happen otherwise ---*/
-			            mDownloader.execute();
-				}
-				
-			}
-			else {
-				entryPojo = (EntryPojo) getIntent().getSerializableExtra("entry");
-			}
-		}
+                    mDownloader.execute();
+                }
+
+            } else {
+                entryPojo = (EntryPojo) getIntent().getSerializableExtra("entry");
+            }
+        }
 
 
+        Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
 
-		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+        Session session = Session.getActiveSession();
 
-		Session session = Session.getActiveSession();
+        if (session == null) {
+            if (savedInstanceState != null) {
+                session = Session.restoreSession(mContext, null, statusCallback, savedInstanceState);
+            }
+            if (session == null) {
+                session = new Session(mContext);
+            }
+            Session.setActiveSession(session);
+        }
 
-		if (session == null) {
-			if (savedInstanceState != null) {
-				session = Session.restoreSession(mContext, null, statusCallback, savedInstanceState);
-			}
-			if (session == null) {
-				session = new Session(mContext);
-			}
-			Session.setActiveSession(session);
-		}
+        InitControls();
 
-		InitControls();
+        Utility.SendDataToGA("Share Screen", ShareActivity.this);
+    }
 
-		Utility.SendDataToGA("Share Screen", ShareActivity.this);
-	}
-
-	void InitControls() {
+    void InitControls() {
 
 		btnClose = (ImageButton) findViewById(R.id.btnClose);
 		btnClose.setOnClickListener(this);
@@ -144,199 +143,188 @@ public class ShareActivity extends Activity implements OnClickListener {
 		textTime = (TextView) findViewById(R.id.textTime);
 		textDescription = (TextView) findViewById(R.id.textDescription);
 
-		//		ShareText += "\n" + "http://www.mobstar.com/android";
+        //		ShareText += "\n" + "http://www.mobstar.com/android";
 
-		if(!isTalent){
-			Utility.ShowProgressDialog(mContext, getString(R.string.generating_shorten_link));
+        if (!isTalent) {
+            Utility.ShowProgressDialog(mContext, getString(R.string.generating_shorten_link));
 
-			new Thread(new Runnable() {
+            new Thread(new Runnable() {
 
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					Url url = null;
-					//		 if (entryPojo.getType().equals("image")) {
-					//		 url = as("niravspaceo",
-					//		 "R_5e9eb981a6e34baea49713adbff50779").call(shorten(entryPojo.getImageLink()));
-					//		 } else if (entryPojo.getType().equals("audio")) {
-					//		 url = as("niravspaceo",
-					//		 "R_5e9eb981a6e34baea49713adbff50779").call(shorten(entryPojo.getAudioLink()));
-					//		 } else if (entryPojo.getType().equals("video")) {
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    Url url = null;
+                    //		 if (entryPojo.getType().equals("image")) {
+                    //		 url = as("niravspaceo",
+                    //		 "R_5e9eb981a6e34baea49713adbff50779").call(shorten(entryPojo.getImageLink()));
+                    //		 } else if (entryPojo.getType().equals("audio")) {
+                    //		 url = as("niravspaceo",
+                    //		 "R_5e9eb981a6e34baea49713adbff50779").call(shorten(entryPojo.getAudioLink()));
+                    //		 } else if (entryPojo.getType().equals("video")) {
 
-					//		 http://dev.spaceotechnologies.com/projects/redirect/iphone/
-					//		 http://www.mobstar.com/android
-					url = as("niravspaceo",
-							"R_5e9eb981a6e34baea49713adbff50779").call(shorten("http://share.mobstar.com/info.php?id="+entryPojo.getID()));
-					//		 }
+                    //		 http://dev.spaceotechnologies.com/projects/redirect/iphone/
+                    //		 http://www.mobstar.com/android
+                    url = as("niravspaceo",
+                            "R_5e9eb981a6e34baea49713adbff50779").call(shorten("http://share.mobstar.com/info.php?id=" + entryPojo.getID()));
+                    //		 }
 
-					ShortURL= url.getShortUrl();
-					ShareText=ShareText+ShortURL;
-					Utility.HideDialog(mContext);
-				}
-			}).start();
+                    ShortURL = url.getShortUrl();
+                    ShareText = ShareText + ShortURL;
+                    Utility.HideDialog(mContext);
+                }
+            }).start();
 
-			textUserName.setText(entryPojo.getName());
-			textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
-			textTime.setText(entryPojo.getCreated());
+            textUserName.setText(entryPojo.getName());
+            textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
+            textTime.setText(entryPojo.getCreated());
 
-			imgUserPic = (ImageView) findViewById(R.id.imgUserPic);
+            imgUserPic = (ImageView) findViewById(R.id.imgUserPic);
 
-			if (entryPojo.getProfileImage().equals("")) {
-				imgUserPic.setImageResource(R.drawable.ic_pic_small);
-			} else {
-				imgUserPic.setImageResource(R.drawable.ic_pic_small);
+            if (entryPojo.getProfileImage().equals("")) {
+                imgUserPic.setImageResource(R.drawable.ic_pic_small);
+            } else {
+                imgUserPic.setImageResource(R.drawable.ic_pic_small);
 
-				Picasso.with(mContext).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop().placeholder(R.drawable.ic_pic_small)
-				.error(R.drawable.ic_pic_small).transform(new RoundedTransformation(Utility.dpToPx(mContext, 45), 0)).into(imgUserPic);
+                Picasso.with(mContext).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop().placeholder(R.drawable.ic_pic_small)
+                        .error(R.drawable.ic_pic_small).transform(new RoundedTransformation(Utility.dpToPx(mContext, 45), 0)).into(imgUserPic);
 
-			}
-		}
-		else {
-			ShortURL=UserName;
-			ShareText="#mobstar "+UserName;
-			textUserName.setText(UserName);
-			textTime.setVisibility(View.GONE);
-			textDescription.setVisibility(View.GONE);
-		}
+            }
+        } else {
+            ShortURL = UserName;
+            ShareText = "#mobstar " + UserName;
+            textUserName.setText(UserName);
+            textTime.setVisibility(View.GONE);
+            textDescription.setVisibility(View.GONE);
+        }
 
 
-		btnTweet = (TextView) findViewById(R.id.btnTweet);
-		btnTweet.setOnClickListener(new OnClickListener() {
+        btnTweet = (TextView) findViewById(R.id.btnTweet);
+        btnTweet.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View view) {
-				TwitterShareText=TwitterShareText+ShortURL;
-				if(isTalent && picFile!=null){
-					
-					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+            @Override
+            public void onClick(View view) {
+                TwitterShareText = TwitterShareText + ShortURL;
+                if (isTalent && picFile != null) {
 
-					boolean authOnly = false;
-					ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly,TwitterShareText,picFile);
-					mTweet.setOnCompleteListener(new OnCompleteListener() {
+                    Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
-						@Override
-						public void onComplete(final String action) {
+                    boolean authOnly = false;
+                    ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly, TwitterShareText, picFile);
+                    mTweet.setOnCompleteListener(new OnCompleteListener() {
 
-							if (action.equals("Success")) {
+                        @Override
+                        public void onComplete(final String action) {
 
-								Utility.HideDialog(mContext);
+                            if (action.equals("Success")) {
+
+                                Utility.HideDialog(mContext);
                                 AdWordsManager.getInstance().sendSharedEntryEvent();
 
-							} else {
-								Utility.HideDialog(mContext);
-							}
+                            } else {
+                                Utility.HideDialog(mContext);
+                            }
 
-						}
-					});
-					mTweet.send();
-				}
-				else {
-					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+                        }
+                    });
+                    mTweet.send();
+                } else {
+                    Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
-					boolean authOnly = false;
-					ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly, TwitterShareText,null);
-					mTweet.setOnCompleteListener(new OnCompleteListener() {
+                    boolean authOnly = false;
+                    ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly, TwitterShareText, null);
+                    mTweet.setOnCompleteListener(new OnCompleteListener() {
 
-						@Override
-						public void onComplete(final String action) {
-							// TODO Auto-generated method stub
+                        @Override
+                        public void onComplete(final String action) {
+                            // TODO Auto-generated method stub
 
-							if (action.equals("Success")) {
+                            if (action.equals("Success")) {
 
-								Utility.HideDialog(mContext);
+                                Utility.HideDialog(mContext);
                                 AdWordsManager.getInstance().sendSharedEntryEvent();
 
-							} else {
-								Utility.HideDialog(mContext);
-							}
+                            } else {
+                                Utility.HideDialog(mContext);
+                            }
 
-						}
-					});
-					mTweet.send();	
-				}
-				
-			}
-		});
+                        }
+                    });
+                    mTweet.send();
+                }
 
-		btnSendToFriend = (TextView) findViewById(R.id.btnSendToFriend);
-		btnSendToFriend.setOnClickListener(new OnClickListener() {
+            }
+        });
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if(isTalent){
-					Intent i = new Intent(Intent.ACTION_SEND);
-					i.setType("message/rfc822");
-					i.putExtra(Intent.EXTRA_SUBJECT, "Mobstar");
-					i.putExtra(Intent.EXTRA_TEXT, ShareText);
-					if(pngUri!=null){
-						i.putExtra(Intent.EXTRA_STREAM, pngUri);
-					}
-					try {
-						startActivity(Intent.createChooser(i, "Send mail..."));
+        btnSendToFriend = (TextView) findViewById(R.id.btnSendToFriend);
+        btnSendToFriend.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if (isTalent) {
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("message/rfc822");
+                    i.putExtra(Intent.EXTRA_SUBJECT, "Mobstar");
+                    i.putExtra(Intent.EXTRA_TEXT, ShareText);
+                    if (pngUri != null) {
+                        i.putExtra(Intent.EXTRA_STREAM, pngUri);
+                    }
+                    try {
+                        startActivity(Intent.createChooser(i, "Send mail..."));
                         AdWordsManager.getInstance().sendSharedEntryEvent();
-					} catch (android.content.ActivityNotFoundException ex) {
-						Toast.makeText(ShareActivity.this, getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
-					}
-				}
-				else {
-					Intent i = new Intent(Intent.ACTION_SEND);
-					i.setType("message/rfc822");
-					i.putExtra(Intent.EXTRA_SUBJECT, "Mobstar");
-					i.putExtra(Intent.EXTRA_TEXT, ShareText);
-					try {
-						startActivity(Intent.createChooser(i, "Send mail..."));
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(ShareActivity.this, getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Intent i = new Intent(Intent.ACTION_SEND);
+                    i.setType("message/rfc822");
+                    i.putExtra(Intent.EXTRA_SUBJECT, "Mobstar");
+                    i.putExtra(Intent.EXTRA_TEXT, ShareText);
+                    try {
+                        startActivity(Intent.createChooser(i, "Send mail..."));
                         AdWordsManager.getInstance().sendSharedEntryEvent();
-					} catch (android.content.ActivityNotFoundException ex) {
-						Toast.makeText(ShareActivity.this,  getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
-					}
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        Toast.makeText(ShareActivity.this, getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
+                    }
 
-				}
+                }
 
-			}
-		});
+            }
+        });
 
-		btnAddToGPlus = (TextView) findViewById(R.id.btnAddToGPlus);
-		btnAddToGPlus.setOnClickListener(new OnClickListener() {
+        btnAddToGPlus = (TextView) findViewById(R.id.btnAddToGPlus);
+        btnAddToGPlus.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if(isTalent && pngUri!=null){
-					Intent shareIntent = ShareCompat.IntentBuilder.from(ShareActivity.this)
-					         .setText(ShareText)
-					         .setType("image/jpeg")
-					         .setStream(pngUri)
-					         .getIntent()
-					         .setPackage("com.google.android.apps.plus");
-					startActivityForResult(shareIntent, 0);
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if (isTalent && pngUri != null) {
+                    Intent shareIntent = ShareCompat.IntentBuilder.from(ShareActivity.this)
+                            .setText(ShareText)
+                            .setType("image/jpeg")
+                            .setStream(pngUri)
+                            .getIntent()
+                            .setPackage("com.google.android.apps.plus");
+                    startActivityForResult(shareIntent, 0);
                     AdWordsManager.getInstance().sendSharedEntryEvent();
-				}
-				else {
-					Intent shareIntent = new PlusShare.Builder(ShareActivity.this).setType("text/plain")
-							.setText(ShareText + "\n#mobstar").getIntent();
-					startActivityForResult(shareIntent, 0);
+                } else {
+                    Intent shareIntent = new PlusShare.Builder(ShareActivity.this).setType("text/plain")
+                            .setText(ShareText + "\n#mobstar").getIntent();
+                    startActivityForResult(shareIntent, 0);
                     AdWordsManager.getInstance().sendSharedEntryEvent();
-				}
-				
-				
-				
-			}
-		});
+                }
 
-		btnFBPost = (TextView) findViewById(R.id.btnFBPost);
-		btnFBPost.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Utility.ShowProgressDialog(mContext,  getString(R.string.uploading_your_post) + "...");
+            }
+        });
 
-				onClickLogin();
-			}
-		});
-	}
+        btnFBPost = (TextView) findViewById(R.id.btnFBPost);
+        btnFBPost.setOnClickListener(new OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Utility.ShowProgressDialog(mContext, getString(R.string.uploading_your_post) + "...");
 	private void onClickLogin() {
 		Session session = Session.getActiveSession();
 		if (!session.isOpened() && !session.isClosed()) {
@@ -355,219 +343,230 @@ public class ShareActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private class SessionStatusCallback implements Session.StatusCallback {
-		@Override
-		public void call(Session session, SessionState state, Exception exception) {
+                onClickLogin();
+            }
+        });
+    }
 
-			if (exception != null) {
+    private void onClickLogin() {
+        Session session = Session.getActiveSession();
+        if (!session.isOpened() && !session.isClosed()) {
+            session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
+        } else {
+            Session.openActiveSession(this, true, statusCallback);
+        }
+    }
 
-				exception.printStackTrace();
-				new AlertDialog.Builder(mContext).setTitle(R.string.app_name).setMessage(exception.getMessage()).setPositiveButton("OK", null).show();
+    private class SessionStatusCallback implements Session.StatusCallback {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
 
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						Utility.HideDialog(mContext);
-						return;
-					}
-				});
-			} else {
+            if (exception != null) {
 
-				if (session.isOpened()) {
+                exception.printStackTrace();
+                new AlertDialog.Builder(mContext).setTitle(R.string.app_name).setMessage(exception.getMessage()).setPositiveButton("OK", null).show();
 
-					List<String> permissions = session.getPermissions();
-					if (!isSubsetOf(PERMISSIONS, permissions)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utility.HideDialog(mContext);
+                        return;
+                    }
+                });
+            } else {
 
-						Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest((Activity) mContext, PERMISSIONS);
-						session.requestNewPublishPermissions(newPermissionsRequest);
-						return;
-					}
+                if (session.isOpened()) {
 
-					if (session.getPermissions().contains("publish_actions")) {
-						runOnUiThread(new Runnable() {
+                    List<String> permissions = session.getPermissions();
+                    if (!isSubsetOf(PERMISSIONS, permissions)) {
 
-							@Override
-							public void run() {
-								Bitmap bitmap=null;	
-								if(isTalent){
-									bitmap=Utility.getBitmapFromURL(UserImg);
-								}
-								else {
-									if(entryPojo.getType().equalsIgnoreCase("image")){
-										bitmap=Utility.getBitmapFromURL(entryPojo.getImageLink());
-									}
-									else if(entryPojo.getType().equalsIgnoreCase("audio")){
-										bitmap=Utility.getBitmapFromURL(entryPojo.getImageLink());
-									}
-									else if(entryPojo.getType().equalsIgnoreCase("video")){
-										bitmap=Utility.getBitmapFromURL(entryPojo.getVideoThumb());
-									}
-								}
-								
-								if(bitmap!=null) {
-									Request request = Request.newUploadPhotoRequest(Session.getActiveSession(),bitmap, new Request.Callback() {
+                        Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest((Activity) mContext, PERMISSIONS);
+                        session.requestNewPublishPermissions(newPermissionsRequest);
+                        return;
+                    }
 
-										@Override
-										public void onCompleted(final Response response) {
-											runOnUiThread(new Runnable() {
+                    if (session.getPermissions().contains("publish_actions")) {
+                        runOnUiThread(new Runnable() {
 
-												@Override
-												public void run() {
-													Utility.HideDialog(mContext);
-												}
-											});
+                            @Override
+                            public void run() {
+                                Bitmap bitmap = null;
+                                if (isTalent) {
+                                    bitmap = Utility.getBitmapFromURL(UserImg);
+                                } else {
+                                    if (entryPojo.getType().equalsIgnoreCase("image")) {
+                                        bitmap = Utility.getBitmapFromURL(entryPojo.getImageLink());
+                                    } else if (entryPojo.getType().equalsIgnoreCase("audio")) {
+                                        bitmap = Utility.getBitmapFromURL(entryPojo.getImageLink());
+                                    } else if (entryPojo.getType().equalsIgnoreCase("video")) {
+                                        bitmap = Utility.getBitmapFromURL(entryPojo.getVideoThumb());
+                                    }
+                                }
 
-											FacebookRequestError error = response.getError();
-											if (error != null) {
+                                if (bitmap != null) {
+                                    Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
 
-												new AlertDialog.Builder(mContext).setTitle(R.string.app_name).setMessage(error.getErrorMessage()).setPositiveButton("OK", null).show();
-											} else {
+                                        @Override
+                                        public void onCompleted(final Response response) {
+                                            runOnUiThread(new Runnable() {
 
-												new AlertDialog.Builder(mContext).setTitle(R.string.app_name)
-														.setMessage(getString(R.string.post_successfully_shared_on_your_wall)).setPositiveButton("OK", null).show();
+                                                @Override
+                                                public void run() {
+                                                    Utility.HideDialog(mContext);
+                                                }
+                                            });
+
+                                            FacebookRequestError error = response.getError();
+                                            if (error != null) {
+
+                                                new AlertDialog.Builder(mContext).setTitle(R.string.app_name).setMessage(error.getErrorMessage()).setPositiveButton("OK", null).show();
+                                            } else {
+
+                                                new AlertDialog.Builder(mContext).setTitle(R.string.app_name)
+                                                        .setMessage(getString(R.string.post_successfully_shared_on_your_wall)).setPositiveButton("OK", null).show();
                                                 AdWordsManager.getInstance().sendSharedEntryEvent();
-											}
+                                            }
 
-										}
-									});
-									Bundle parameters = request.getParameters(); // <-- THIS IS IMPORTANT
-									parameters.putString("name",ShareText);//also try key message
-									request.setParameters(parameters);
+                                        }
+                                    });
+                                    Bundle parameters = request.getParameters(); // <-- THIS IS IMPORTANT
+                                    parameters.putString("name", ShareText);//also try key message
+                                    request.setParameters(parameters);
 
-									request.executeAsync();
-								}
-							}
-						});
+                                    request.executeAsync();
+                                }
+                            }
+                        });
 
-					}
-				}
-			}
-		}
-	}
+                    }
+                }
+            }
+        }
+    }
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		Session.getActiveSession().addCallback(statusCallback);
-	}
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Session.getActiveSession().addCallback(statusCallback);
+    }
 
-	private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
-		for (String string : subset) {
-			if (!superset.contains(string)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
+        for (String string : subset) {
+            if (!superset.contains(string)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	@Override
-	public void onBackPressed() {
-		// TODO Auto-generated method stub
-		super.onBackPressed();
-		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-	}
+    @Override
+    public void onBackPressed() {
+        // TODO Auto-generated method stub
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
 
-		Session session = Session.getActiveSession();
-		Session.saveSession(session, outState);
-	}
+        Session session = Session.getActiveSession();
+        Session.saveSession(session, outState);
+    }
 
-	@Override
-	protected void onStop() {
-		super.onStop();
+    @Override
+    protected void onStop() {
+        super.onStop();
 
-		Session.getActiveSession().removeCallback(statusCallback);
-	}
+        Session.getActiveSession().removeCallback(statusCallback);
+    }
 
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
 
-		super.onDestroy();
+        super.onDestroy();
 
-		Session session = Session.getActiveSession();
-		if (!session.isClosed()) {
-			session.closeAndClearTokenInformation();
-		}
+        Session session = Session.getActiveSession();
+        if (!session.isClosed()) {
+            session.closeAndClearTokenInformation();
+        }
 
-	}
-
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
-		super.onActivityResult(requestCode, resultCode, data);
-	}
+    }
 
 
-	public void showToast(final String message) {
-		if (!isFinishing()) {
-			runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-				}
-			});
-		}
-	}
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
-	public void showError(final String message) {
 
-		if (!isFinishing()) {
-			runOnUiThread(new Runnable() {
+    public void showToast(final String message) {
+        if (!isFinishing()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
 
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-					Utility.HideDialog(mContext);
-				}
-			});
-		}
+    public void showError(final String message) {
 
-	}
+        if (!isFinishing()) {
+            runOnUiThread(new Runnable() {
 
-	
-	private Uri saveImageToSD() {
-	    /*--- this method will save your downloaded image to SD card ---*/
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                    Utility.HideDialog(mContext);
+                }
+            });
+        }
 
-	    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    }
+
+
+    private Uri saveImageToSD() {
+        /*--- this method will save your downloaded image to SD card ---*/
+
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 	    /*--- you can select your preferred CompressFormat and quality. 
 	     * I'm going to use JPEG and 100% quality ---*/
-	    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 	    /*--- create a new file on SD card ---*/
-	    picFile = new File(Environment.getExternalStorageDirectory()
-	            + File.separator + "myDownloadedImage.png");
+        picFile = new File(Environment.getExternalStorageDirectory()
+                + File.separator + "myDownloadedImage.png");
 //	    infoLog("file path"+file.getAbsolutePath().toString());
-	    try {
-	    	picFile.createNewFile();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
+        try {
+            picFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	    /*--- create a new FileOutputStream and write bytes to file ---*/
-	    try {
-	        fos = new FileOutputStream(picFile);
-	    } catch (FileNotFoundException e) {
-	        e.printStackTrace();
-	    }
-	    try {
-	        fos.write(bytes.toByteArray());
-	        fos.close();
+        try {
+            fos = new FileOutputStream(picFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            fos.write(bytes.toByteArray());
+            fos.close();
 //	        Toast.makeText(this, "Image saved", Toast.LENGTH_SHORT).show();
-	        if (!picFile.exists())
-	        	picFile.mkdirs();
-           
-//           File pngFile = new File(file, "jetsam.png");
-         //Save file encoded as PNG
-          pngUri = Uri.fromFile(picFile);
-	        return pngUri;
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    }
-		return null;
+            if (!picFile.exists())
+                picFile.mkdirs();
 
-	}
+//           File pngFile = new File(file, "jetsam.png");
+            //Save file encoded as PNG
+            pngUri = Uri.fromFile(picFile);
+            return pngUri;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 }

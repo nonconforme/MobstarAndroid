@@ -23,4 +23,12 @@ public class Api {
 
     }
 
+    public static final void getUserRequest(final Context context, final String userId, final ConnectCallback callback){
+        RestClient.getInstance(context).getRequest(Constant.USER + userId + Constant.PROFILE, null, callback);
+    }
+
+    public static final void getMyUserProfile(final Context context, final ConnectCallback callback){
+        RestClient.getInstance(context).getRequest(Constant.USER_MY_PROFILE, null, callback);
+    }
+
 }

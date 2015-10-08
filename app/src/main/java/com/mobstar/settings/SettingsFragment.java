@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,7 +21,8 @@ import com.mobstar.utils.Utility;
 
 public class SettingsFragment extends Fragment implements OnClickListener {
 
-	private Context mContext;
+    private static final String LINK_PRIVACY_POLICE = "http://www.mobstar.com/privacy-policy/";
+    private Context mContext;
 	private TextView textSettings;
 	private SharedPreferences preferences;
 	private boolean isSocial;
@@ -129,7 +129,7 @@ public class SettingsFragment extends Fragment implements OnClickListener {
 //				startActivity(intent);
 //				getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://mobstar.com/privacy"));
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(LINK_PRIVACY_POLICE));
 				startActivity(browserIntent);
 
 			}

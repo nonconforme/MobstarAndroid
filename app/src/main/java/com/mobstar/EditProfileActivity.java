@@ -60,24 +60,19 @@ import com.squareup.picasso.Picasso;
 
 public class EditProfileActivity extends Activity {
 
-	Context mContext;
-	TextView textEditProfile;
-
+	private Context mContext;
+	private TextView textEditProfile;
 //	String[] arrayChangePicture = { getString(R.string.take_from_camera), getString(R.string.choose_from_library)};
-	Uri tempUri;
-
-	ImageView imgProfilePic, imgCoverImage, imgTagLine,imgAddContent;
-
-	String ProfilePicPath;
-	String CoverImagePath;
-
-	boolean isProfilePicClicked = false;
-	SharedPreferences preferences;
-
-	int temp = 0;
-
-	int IMG_PICKER_SELECT=29;
-	int VIDEO_PICKER_SELECT=31;
+	private Uri tempUri;
+	private ImageView imgProfilePic, imgCoverImage, imgTagLine,imgAddContent;
+	private String ProfilePicPath;
+	private String CoverImagePath;
+	private boolean isProfilePicClicked = false;
+	private SharedPreferences preferences;
+	private int temp = 0;
+	private int IMG_PICKER_SELECT=29;
+	private int VIDEO_PICKER_SELECT=31;
+	private boolean isChangeImage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +88,13 @@ public class EditProfileActivity extends Activity {
 		InitControls();
 
 		Utility.SendDataToGA("EditProfile Screen", EditProfileActivity.this);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (isChangeImage)
+			setResult(RESULT_OK);
+		super.onBackPressed();
 	}
 
 	void InitControls() {
@@ -657,7 +659,7 @@ public class EditProfileActivity extends Activity {
 		protected void onPostExecute(String jsonString) {
 			//			Log.v(Constant.TAG, "Upload Response " + jsonString);
 			Utility.HideDialog(mContext);
-
+			isChangeImage = true;
 			try {
 
 				JSONObject jsonObject = new JSONObject(jsonString);
