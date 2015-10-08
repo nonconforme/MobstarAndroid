@@ -373,6 +373,9 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
 
+    <string name="wrong_name">Choose from list</string>
+    <string name="share_text">Hey, check out this entry on MobStar: </string>
+    <string name="twitter_share_text">Hey, check out this entry on @officialmobstar: </string>
 
 </resources>
 

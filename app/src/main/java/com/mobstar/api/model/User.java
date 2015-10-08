@@ -17,7 +17,7 @@ public class User extends BaseResponse {
     private boolean facebook;
     private Google google;
 
-    public int getUserContinentId(){
+    public int getUserContinentId   (){
         return userContinentId;
     }
 

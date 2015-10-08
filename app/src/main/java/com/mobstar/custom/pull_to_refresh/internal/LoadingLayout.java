@@ -198,7 +198,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 				return mInnerLayout.getWidth();
 			case VERTICAL:
 			default:
-				return 100;
+				return getContext().getResources().getDimensionPixelSize(R.dimen.heigth_progress_bar);
 		}
 	}
 

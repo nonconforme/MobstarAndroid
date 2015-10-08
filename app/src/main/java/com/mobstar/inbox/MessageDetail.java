@@ -538,7 +538,7 @@ public class MessageDetail extends Activity implements OnClickListener{
 		}
 	}
 
-	Handler handlerGroup = new Handler() {
+	private Handler handlerGroup = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -553,9 +553,15 @@ public class MessageDetail extends Activity implements OnClickListener{
 					imgUserPic.setImageResource(R.drawable.ic_pic_small);
 				} else {
 					imgUserPic.setImageResource(R.drawable.ic_pic_small);
-
-					Picasso.with(mContext).load(arrParticipants.get(0).getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop()
-					.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(imgUserPic);
+					if (arrParticipants.get(0).getProfileImage() != null && !arrParticipants.get(0).getProfileImage().equals(""))
+						Picasso
+								.with(mContext)
+								.load(arrParticipants.get(0).getProfileImage())
+								.resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45))
+								.centerCrop()
+								.placeholder(R.drawable.ic_pic_small)
+								.error(R.drawable.ic_pic_small)
+								.into(imgUserPic);
 
 				}
 			} else {

@@ -158,6 +158,12 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
         }
     }
 
+    public void setUserProfile(final UserProfile userProfile){
+        user = userProfile;
+        ((ProfileEntryAdapter)entryAdapter).setUserProfile(userProfile);
+        entryAdapter.notifyDataSetChanged();
+    }
+
     @Override
     protected void refreshEntryList() {
         super.refreshEntryList();

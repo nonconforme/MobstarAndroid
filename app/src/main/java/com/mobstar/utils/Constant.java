@@ -101,6 +101,12 @@ public class Constant {
 	public static String WHO_TO_FOLLOW= "user/follow";
 	
 	public static String GET_PROFILE= "user/";
+
+	public static final String USER = "/user/";
+
+	public static final String PROFILE = "/profile/";
+
+	public static final String USER_MY_PROFILE = "/user/me/profile/";
 	
 	public static String GET_ENTRY= "entry/";
 	

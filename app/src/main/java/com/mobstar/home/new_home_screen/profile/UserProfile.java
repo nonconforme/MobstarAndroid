@@ -1,11 +1,16 @@
 package com.mobstar.home.new_home_screen.profile;
 
+import com.mobstar.api.responce.BaseResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 /**
  * Created by lipcha on 23.09.15.
  */
-public class UserProfile implements Serializable {
+public class UserProfile extends BaseResponse implements Serializable {
 
     private String userDisplayName = "";
     private boolean isProfile;
@@ -18,7 +23,52 @@ public class UserProfile implements Serializable {
     private String entryId = "";
     private String userFan = "";
 
+    private String rank = "";
+    private String bio;
+    private String email;
+    private int fans;
+    private int votes;
+    private String userFullName;
+
     private UserProfile() {
+    }
+
+    @Override
+    public void configure(JSONObject jsonObject) throws JSONException {
+
+        if (!jsonObject.has("user"))
+            return;
+        final JSONObject jsonUser = jsonObject.getJSONObject("user");
+
+        if (jsonUser.has("usergroup")){
+
+        }
+        if (jsonUser.has("id"))
+            userId = jsonUser.getString("id");
+        if (jsonUser.has("tagLine"))
+            userTagline = jsonUser.getString("tagLine");
+        if (jsonUser.has("rank"))
+            rank = jsonUser.getString("rank");
+        if (jsonUser.has("profileImage"))
+            userPic = jsonUser.getString("profileImage");
+        if (jsonUser.has("bio"))
+            bio = jsonUser.getString("bio");
+        if (jsonUser.has("profileCover"))
+            userCoverImage = jsonUser.getString("profileCover");
+        if (jsonUser.has("email"))
+            email = jsonUser.getString("email");
+        if (jsonUser.has("fans"))
+            fans = jsonUser.getInt("fans");
+        if (jsonUser.has("votes"))
+            votes = jsonUser.getInt("votes");
+        if (jsonUser.has("userName"))
+            userName = jsonUser.getString("userName");
+        if (jsonUser.has("fullName"))
+            userFullName = jsonUser.getString("fullName");
+        if (jsonUser.has("displayName"))
+            userDisplayName = jsonUser.getString("displayName");
+
+
     }
 
     public void setUserDisplayName(String userDisplayName) {
