@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,9 +14,11 @@ import android.widget.TextView;
 import com.mobstar.BaseActivity;
 import com.mobstar.EditProfileActivity;
 import com.mobstar.R;
+import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.StarCall;
 import com.mobstar.api.responce.StarResponse;
+import com.mobstar.api.responce.UserProfileResponse;
 import com.mobstar.upload.MessageActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -26,7 +29,7 @@ import com.squareup.picasso.Picasso;
  */
 public class NewProfileActivity extends BaseActivity implements View.OnClickListener {
 
-//    public static final String USER = "user";
+    public static final int REFRESH_USER = 23;
     public static final String USER = "user";
     public static final String IS_NOTIFICATION = "is notification";
 
@@ -146,7 +149,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         final Intent intent = new Intent(this, EditProfileActivity.class);
         intent.putExtra("UserID", user.getUserId());
         intent.putExtra("UserName", user.getUserName());
-        startActivity(intent);
+        startActivityForResult(intent, REFRESH_USER);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
@@ -219,5 +222,35 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     public void onBackPressed() {
         setResult(101);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK)
+            return;
+        switch (requestCode){
+            case REFRESH_USER:
+                getUserRequest();
+                break;
+        }
+    }
+
+    private void getUserRequest(){
+        Utility.ShowProgressDialog(this, getString(R.string.loading));
+        Api.getMyUserProfile(this, new ConnectCallback<UserProfileResponse>() {
+
+            @Override
+            public void onSuccess(UserProfileResponse object) {
+                Utility.HideDialog(NewProfileActivity.this);
+                if (profileFragment != null && object != null && object.getUserProfile().size() != 0)
+                    profileFragment.setUserProfile(object.getUserProfile().get(0));
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Utility.HideDialog(NewProfileActivity.this);
+            }
+        });
     }
 }
