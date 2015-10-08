@@ -146,4 +146,11 @@
         android:textStyle="bold"
         android:textSize="16dp" />
 
+    <ImageButton
+        android:id="@+id/btnClose"
+        style="@style/BtnClose"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

@@ -9,6 +9,10 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     tools:context=".help.ReportAbuseActivity" >
+    <ImageButton
+        android:id="@+id/btnClose"
+        style="@style/BtnClose"/>
+
 
     <com.mobstar.custom.CustomTextviewBold
         android:layout_width="match_parent"

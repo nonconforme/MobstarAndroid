@@ -1,55 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:background="@color/background_transparent"
-    android:gravity="center"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:background="@color/background_transparent">
 
-    <com.mobstar.custom.CustomTextviewBold
+    <ImageButton
+        android:id="@+id/btnClose"
+        style="@style/BtnClose"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="30dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:singleLine="false"
-        android:text="@string/i_want_to"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white_color"
-        android:textSize="18sp"
-         />
+        android:orientation="vertical"
+        android:padding="20dp">
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:id="@+id/btnEnterMobstar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="@dimen/scale_20"
-        android:contentDescription="@string/app_name"
-        android:text="@string/enter_mobstar"
-        android:drawableLeft="@drawable/icn_btn_enter_mabstar"
-        style="@style/BaseButton.Yellow"/>
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:singleLine="false"
+            android:text="@string/i_want_to"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/white_color"
+            android:textSize="18sp"
+            />
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:id="@+id/btnUploadProfile"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/upload_to_profile"
-        android:drawableLeft="@drawable/icn_btn_upload_from_phone"
-        style="@style/BaseButton.Yellow"/>
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/btnEnterMobstar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_big_btn_height"
+            android:layout_marginTop="@dimen/scale_20"
+            android:contentDescription="@string/app_name"
+            android:text="@string/enter_mobstar"
+            android:drawableLeft="@drawable/icn_btn_enter_mabstar"
+            style="@style/BaseButton.Yellow"/>
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:id="@+id/btnNewMessage"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/new_msg"
-        android:drawableLeft="@drawable/icn_btn_new_message"
-        style="@style/BaseButton.Yellow"/>
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/btnUploadProfile"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_big_btn_height"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/app_name"
+            android:text="@string/upload_to_profile"
+            android:drawableLeft="@drawable/icn_btn_upload_from_phone"
+            style="@style/BaseButton.Yellow"/>
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/btnNewMessage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_big_btn_height"
+            android:layout_marginTop="20dp"
+            android:contentDescription="@string/app_name"
+            android:text="@string/new_msg"
+            android:drawableLeft="@drawable/icn_btn_new_message"
+            style="@style/BaseButton.Yellow"/>
+
+    </LinearLayout>
 
 </LinearLayout>

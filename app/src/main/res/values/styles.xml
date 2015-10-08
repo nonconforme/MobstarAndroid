@@ -137,4 +137,13 @@
         <item name="android:button">@drawable/custom_checkbox</item>
     </style>
 
+    <style name="BtnClose">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:src">@drawable/btn_close</item>
+        <item name="android:padding">@dimen/scale_15</item>
+        <item name="android:layout_gravity">right|top</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

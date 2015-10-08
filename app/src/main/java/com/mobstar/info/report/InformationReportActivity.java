@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-public class InformationReportActivity extends Activity {
+public class InformationReportActivity extends Activity implements OnClickListener {
 
 	private Context mContext;
 
@@ -36,6 +37,7 @@ public class InformationReportActivity extends Activity {
 	private TextView textUserName, textTime, textDescription;
 	private String sErrorMessage,UserID;
 	private SharedPreferences preferences;
+	private ImageButton btnClose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,8 @@ public class InformationReportActivity extends Activity {
 	}
 
 	void InitControls() {
-
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
 		textUserName = (TextView) findViewById(R.id.textUserName);
 		textTime = (TextView) findViewById(R.id.textTime);
 		textDescription = (TextView) findViewById(R.id.textDescription);
@@ -176,7 +179,16 @@ public class InformationReportActivity extends Activity {
 		super.onBackPressed();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
-	
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnClose:
+				onBackPressed();
+				break;
+		}
+	}
+
 	// added by khyati
 	class DeleteEntryCall extends Thread {
 

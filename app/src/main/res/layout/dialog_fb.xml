@@ -5,54 +5,68 @@
     android:layout_gravity="center"
     android:background="@color/background_transparent"
     android:orientation="vertical" >
-    <LinearLayout
+    <ImageButton
+        android:id="@+id/btnClose"
+        style="@style/BtnClose"/>
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/icn_allow_fb" />
-
-        <com.mobstar.custom.CustomTextview
-            android:layout_marginTop="@dimen/scale_20"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="18sp"
-            android:textColor="@color/white_color"
-            android:text="@string/mobstar_would_like_to_access_your_facebook_account"/>
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="50dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/icn_allow_fb" />
 
-    </LinearLayout>
+                <com.mobstar.custom.CustomTextview
+                    android:layout_marginTop="@dimen/scale_20"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textColor="@color/white_color"
+                    android:text="@string/mobstar_would_like_to_access_your_facebook_account"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:gravity="center" >
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/btnDeny"
-            android:layout_width="@dimen/signup_btn_width"
-            android:layout_height="@dimen/signup_btn_height"
-            android:background="@drawable/gray_btn"
-            android:text="@string/deny"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/signup_btn_text" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:gravity="center" >
 
-        <Button
-            android:id="@+id/btnAllow"
-            android:layout_width="@dimen/signup_btn_width"
-            android:layout_height="@dimen/signup_btn_height"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/gray_btn"
-            android:text="@string/allow"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/signup_btn_text" />
-    </LinearLayout>
+                <Button
+                    android:id="@+id/btnDeny"
+                    android:layout_width="@dimen/signup_btn_width"
+                    android:layout_height="@dimen/signup_btn_height"
+                    android:background="@drawable/gray_btn"
+                    android:text="@string/deny"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/signup_btn_text" />
+
+                <Button
+                    android:id="@+id/btnAllow"
+                    android:layout_width="@dimen/signup_btn_width"
+                    android:layout_height="@dimen/signup_btn_height"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/gray_btn"
+                    android:text="@string/allow"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/signup_btn_text" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
