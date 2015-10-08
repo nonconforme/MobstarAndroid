@@ -15,6 +15,8 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,17 +28,16 @@ import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
-public class StatisticsActivity extends Activity {
-	Context mContext;
+public class StatisticsActivity extends Activity implements View.OnClickListener {
 
-	ProgressWheel progressWheel;
-	int count = 0;
-
-	EntryPojo entryPojo;
-
-	TextView textUserName, textTime, textDescription, textUpvotes, textDownvotes, textRank, textPositiveCount;
-	ImageView imgUserPic;
-	int positive_count = 0;
+	private Context mContext;
+	private ProgressWheel progressWheel;
+	private int count = 0;
+	private EntryPojo entryPojo;
+	private TextView textUserName, textTime, textDescription, textUpvotes, textDownvotes, textRank, textPositiveCount;
+	private ImageView imgUserPic;
+	private int positive_count = 0;
+	private ImageButton btnClose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,8 @@ public class StatisticsActivity extends Activity {
 	}
 
 	void InitControls() {
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
 
 		textUserName = (TextView) findViewById(R.id.textUserName);
 		textTime = (TextView) findViewById(R.id.textTime);
@@ -156,5 +159,14 @@ public class StatisticsActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnClose:
+				onBackPressed();
+				break;
+		}
 	}
 }

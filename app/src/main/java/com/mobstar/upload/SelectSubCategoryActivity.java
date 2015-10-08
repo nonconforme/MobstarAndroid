@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.mobstar.R;
@@ -17,13 +18,14 @@ import com.mobstar.utils.Utility;
 
 public class SelectSubCategoryActivity extends Activity implements OnClickListener {
 
-	Context mContext;
+	private Context mContext;
 	//	ImageView btnMusic;
-	String sErrorMessage="";
-	ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
-	SharedPreferences preferences;
-	LinearLayout llMale,llFemale,llCurve;
-	String categoryId;
+	private String sErrorMessage="";
+	private ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
+	private SharedPreferences preferences;
+	private LinearLayout llMale,llFemale,llCurve;
+	private String categoryId;
+	private ImageButton btnClose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +47,12 @@ public class SelectSubCategoryActivity extends Activity implements OnClickListen
 	}
 
 	void InitControls() {
-
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
 		llMale=(LinearLayout)findViewById(R.id.llMale);
 		llFemale=(LinearLayout)findViewById(R.id.llFemale);
 		llCurve=(LinearLayout)findViewById(R.id.llCurve);
-		
+
+		btnClose.setOnClickListener(this);
 		llMale.setOnClickListener(this);
 		llFemale.setOnClickListener(this);
 		llCurve.setOnClickListener(this);
@@ -83,6 +86,8 @@ public class SelectSubCategoryActivity extends Activity implements OnClickListen
 			startActivity(intent);
 			finish();
 			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		}else if (view.equals(btnClose)){
+			onBackPressed();
 		}
 	}
 

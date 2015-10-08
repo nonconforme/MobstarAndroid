@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.mobstar.R;
@@ -14,15 +15,13 @@ import com.mobstar.info.report.InformationDetailActivity;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Utility;
 
-public class MyEntriesInformationActivity extends Activity {
+public class MyEntriesInformationActivity extends Activity implements OnClickListener {
 
-	Context mContext;
-
-	CustomTextviewBold btnEditInformation, btnEntryInformation, btnDeleteEntry;
-
-	EntryPojo entryPojo;
-
-	TextView textUserName, textTime, textDescription;
+	private Context mContext;
+	private CustomTextviewBold btnEditInformation, btnEntryInformation, btnDeleteEntry;
+	private EntryPojo entryPojo;
+	private TextView textUserName, textTime, textDescription;
+	private ImageButton btnClose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +41,9 @@ public class MyEntriesInformationActivity extends Activity {
 
 	void InitControls() {
 
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
+
 		textUserName = (TextView) findViewById(R.id.textUserName);
 		textTime = (TextView) findViewById(R.id.textTime);
 		textDescription = (TextView) findViewById(R.id.textDescription);
@@ -51,48 +53,55 @@ public class MyEntriesInformationActivity extends Activity {
 		textTime.setText(entryPojo.getCreated());
 
 		btnEditInformation = (CustomTextviewBold) findViewById(R.id.btnEditInformation);
-		btnEditInformation.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(mContext, EditInformationActivity.class);
-				intent.putExtra("entry", entryPojo);
-				startActivity(intent);
-				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-				onBackPressed();
-
-			}
-		});
+		btnEditInformation.setOnClickListener(this);
 
 		btnEntryInformation = (CustomTextviewBold) findViewById(R.id.btnEntryInformation);
-		btnEntryInformation.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(mContext, InformationDetailActivity.class);
-				intent.putExtra("entry", entryPojo);
-				startActivity(intent);
-				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-				onBackPressed();
-
-			}
-		});
+		btnEntryInformation.setOnClickListener(this);
 
 		btnDeleteEntry = (CustomTextviewBold) findViewById(R.id.btnDeleteEntry);
-		btnDeleteEntry.setOnClickListener(new OnClickListener() {
+		btnDeleteEntry.setOnClickListener(this);
+	}
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(mContext, DeleteEntryActivity.class);
-				intent.putExtra("entry", entryPojo);
-				startActivity(intent);
-				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnClose:
 				onBackPressed();
+				break;
+			case R.id.btnEditInformation:
+				startEditInformationActivity();
+				break;
+			case R.id.btnEntryInformation:
+				startInformationDetailActivity();
+				break;
+			case R.id.btnDeleteEntry:
+				startDeleteEntryActivity();
+				break;
+		}
+	}
 
-			}
-		});
+	private void startEditInformationActivity(){
+		final Intent intent = new Intent(mContext, EditInformationActivity.class);
+		intent.putExtra("entry", entryPojo);
+		startActivity(intent);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		onBackPressed();
+	}
+
+	private void startInformationDetailActivity(){
+		final Intent intent = new Intent(mContext, InformationDetailActivity.class);
+		intent.putExtra("entry", entryPojo);
+		startActivity(intent);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		onBackPressed();
+	}
+
+	private void startDeleteEntryActivity(){
+		final Intent intent = new Intent(mContext, DeleteEntryActivity.class);
+		intent.putExtra("entry", entryPojo);
+		startActivity(intent);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		onBackPressed();
 	}
 
 	@Override
@@ -101,5 +110,4 @@ public class MyEntriesInformationActivity extends Activity {
 		super.onBackPressed();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
-
 }

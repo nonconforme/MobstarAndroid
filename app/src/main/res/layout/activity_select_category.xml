@@ -7,12 +7,14 @@
     android:background="@color/background_transparent"
     android:gravity="center"
     android:orientation="vertical" >
+    <ImageButton
+        android:id="@+id/btnClose"
+        style="@style/BtnClose"/>
 
     <com.mobstar.custom.CustomTextviewBold
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:layout_marginTop="30dp"
         android:gravity="center"
         android:singleLine="false"
         android:text="@string/select_category"

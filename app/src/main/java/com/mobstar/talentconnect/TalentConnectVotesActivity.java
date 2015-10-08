@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,20 +23,14 @@ import com.mobstar.utils.Utility;
 
 public class TalentConnectVotesActivity extends FragmentActivity {
 
-	Context mContext;
-
-	SharedPreferences preferences;
-
-	TextView textMyVotes;
-	TextView textAllEntries;
-
-	ImageView imgMyVotes;
-
-	boolean isYesVotes = true;
-
+	private Context mContext;
+	private SharedPreferences preferences;
+	private TextView textMyVotes;
+	private TextView textAllEntries;
+	private ImageView imgMyVotes;
+	private boolean isYesVotes = true;
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
-
 	boolean isDataLoaded = false;
 
 	@Override
@@ -114,12 +109,20 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 
 	void MyVoteDialog() {
 
-		CustomTextviewBold btnYesVotes, btnNotVotes;
-
+		final CustomTextviewBold btnYesVotes, btnNotVotes;
+		final ImageButton btnClose;
 		final Dialog dialog = new Dialog(mContext, R.style.DialogTheme);
 		dialog.setContentView(R.layout.dialog_my_votes);
 		dialog.setCancelable(true);
+		btnClose = (ImageButton) dialog.findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
 		btnYesVotes = (CustomTextviewBold) dialog.findViewById(R.id.btnYesVotes);
+
 		btnYesVotes.setOnClickListener(new OnClickListener() {
 
 			@Override

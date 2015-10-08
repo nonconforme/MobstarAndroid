@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 
 import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
@@ -15,6 +16,7 @@ public class SelectUploadTypeActivity extends Activity implements OnClickListene
 	
 	private CustomTextviewBold btnEnterMobstar,btnUploadProfile,btnNewMessage;
 	private Context mContext;
+	private ImageButton btnClose;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,8 @@ public class SelectUploadTypeActivity extends Activity implements OnClickListene
 	}
 
 	private void initControlls() {
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
 		btnEnterMobstar=(CustomTextviewBold)findViewById(R.id.btnEnterMobstar);
 		btnEnterMobstar.setOnClickListener(this);
 		btnUploadProfile=(CustomTextviewBold)findViewById(R.id.btnUploadProfile);
@@ -68,6 +72,9 @@ public class SelectUploadTypeActivity extends Activity implements OnClickListene
 //
 //			// show it
 //			alertDialog.show();
+		}else if (v.equals(btnClose)){
+			finish();
+			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		}
 		
 	}
