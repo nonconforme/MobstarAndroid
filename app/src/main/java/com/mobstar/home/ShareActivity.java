@@ -325,27 +325,18 @@ public class ShareActivity extends Activity implements OnClickListener {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Utility.ShowProgressDialog(mContext, getString(R.string.uploading_your_post) + "...");
-	private void onClickLogin() {
-		Session session = Session.getActiveSession();
-		if (!session.isOpened() && !session.isClosed()) {
-			session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
-		} else {
-			Session.openActiveSession(this, true, statusCallback);
-		}
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()){
-			case R.id.btnClose:
-				onBackPressed();
-				break;
-		}
-	}
-
                 onClickLogin();
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnClose:
+                onBackPressed();
+                break;
+        }
     }
 
     private void onClickLogin() {
