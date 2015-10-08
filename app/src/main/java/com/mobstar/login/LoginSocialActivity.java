@@ -251,7 +251,13 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 	}
 
 	private void onFBLogin() {
-		Session session = Session.getActiveSession();
+        Session session = Session.getActiveSession();
+        session.closeAndClearTokenInformation();
+        session.removeCallback(statusCallback);
+
+
+        Session.setActiveSession(new Session(mContext));
+		session = Session.getActiveSession();
 
 		if (!session.isOpened() && !session.isClosed()) {
 			session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
