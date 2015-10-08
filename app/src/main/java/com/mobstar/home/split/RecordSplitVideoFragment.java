@@ -32,6 +32,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.mobstar.R;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
 import com.mobstar.home.split.ffmpeg.FFCommandCreator;
@@ -273,6 +274,12 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
                     @Override
                     public void onPrepared(final MediaPlayer mediaPlayer) {
                         mCameraPreview.startRecord();
+                    }
+                });
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        mCameraPreview.stopRecord();
                     }
                 });
             }
