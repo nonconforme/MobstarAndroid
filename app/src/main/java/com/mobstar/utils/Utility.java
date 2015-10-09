@@ -61,7 +61,26 @@ public class Utility {
 	private static boolean isSpinning=false;
 
 	public static final String getCurrentDirectory(final Context context) {
+		if (isExternalStorageReadable() && isExternalStorageWritable())
+			return Environment.getExternalStorageDirectory().getPath() + "/Android/data/" + context.getPackageName() + "/";
 		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + "/Android/data/" + context.getPackageName() + "/";
+	}
+
+	public static boolean isExternalStorageWritable() {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isExternalStorageReadable() {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state) ||
+				Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			return true;
+		}
+		return false;
 	}
 
 	public static void ShareLink(Context mContext, String link) {
