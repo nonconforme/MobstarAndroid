@@ -22,7 +22,9 @@ import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.StarCall;
+import com.mobstar.api.responce.BaseResponse;
 import com.mobstar.api.responce.StarResponse;
+import com.mobstar.api.responce.VoteResponse;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
@@ -548,7 +550,18 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         final HashMap<String, String> params = new HashMap<>();
         params.put("entry", entryPojo.getID());
         params.put("type", "up");
-        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
+        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, new ConnectCallback<VoteResponse>() {
+
+            @Override
+            public void onSuccess(VoteResponse object) {
+
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
         AdWordsManager.getInstance().sendEngagementEvent();
     }
 
