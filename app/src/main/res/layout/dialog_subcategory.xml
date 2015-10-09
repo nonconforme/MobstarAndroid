@@ -6,136 +6,149 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:singleLine="false"
-        android:text="@string/select_sub_category"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white_color"
-        android:textSize="18sp" />
+    <ImageButton
+        android:id="@+id/btnClose"
+        style="@style/BtnClose"/>
 
-    <LinearLayout
-        android:id="@+id/llMale"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/category_button_height"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/oval_yellow_button_background"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:adjustViewBounds="true"
-            android:maxHeight="50dp"
-            android:maxWidth="50dp"
-            android:src="@drawable/ic_ab_done"
-            android:visibility="visible" />
-
-        <com.mobstar.custom.CustomTextviewBold
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:singleLine="true"
-            android:text="@string/male"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white_color"
-            android:textSize="22sp" />
-
-        <com.mobstar.custom.CustomTextviewBold
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:singleLine="true"
-            android:text="@string/fashion"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/white_color"
-            android:textSize="15sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/llFemale"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/category_button_height"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/oval_yellow_button_background"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:adjustViewBounds="true"
-            android:maxHeight="50dp"
-            android:maxWidth="50dp"
-            android:src="@drawable/ic_ab_done"
-            android:visibility="visible" />
-
-        <com.mobstar.custom.CustomTextviewBold
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:singleLine="true"
-            android:text="@string/female"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white_color"
-            android:textSize="22sp" />
-
-        <com.mobstar.custom.CustomTextviewBold
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:singleLine="true"
-            android:text="@string/fashion"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/white_color"
-            android:textSize="15sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/llCurve"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/category_button_height"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/oval_yellow_button_background" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:adjustViewBounds="true"
-            android:maxHeight="50dp"
-            android:maxWidth="50dp"
-            android:src="@drawable/ic_ab_done"
-            android:visibility="visible" />
-
-        <com.mobstar.custom.CustomTextviewBold
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:singleLine="true"
-            android:text="@string/curve"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white_color"
-            android:textSize="22sp" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.mobstar.custom.CustomTextviewBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:singleLine="false"
+                android:text="@string/select_sub_category"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_color"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/llMale"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/category_button_height"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/oval_yellow_button_background"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="50dp"
+                    android:maxWidth="50dp"
+                    android:src="@drawable/btn_male_fashion"
+                    android:visibility="visible"
+                    android:padding="10dp" />
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true"
+                    android:text="@string/male"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white_color"
+                    android:textSize="22sp" />
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:singleLine="true"
+                    android:text="@string/fashion"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/white_color"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llFemale"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/category_button_height"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/oval_yellow_button_background"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="50dp"
+                    android:maxWidth="50dp"
+                    android:src="@drawable/btn_female_fashion"
+                    android:visibility="visible"
+                    android:padding="10dp" />
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true"
+                    android:text="@string/female"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white_color"
+                    android:textSize="22sp" />
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:singleLine="true"
+                    android:text="@string/fashion"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/white_color"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llCurve"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/category_button_height"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/oval_yellow_button_background" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="50dp"
+                    android:maxWidth="50dp"
+                    android:src="@drawable/btn_curve"
+                    android:visibility="visible"
+                    android:padding="10dp" />
+
+                <com.mobstar.custom.CustomTextviewBold
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true"
+                    android:text="@string/curve"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/white_color"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+        </LinearLayout>
 
 </LinearLayout>

@@ -39,24 +39,18 @@ import java.util.ArrayList;
 
 public class CommentActivity extends Activity {
 
-	Context mContext;
-
-	TextView textComment;
-	TextView textNoData;
-
-	EditText editComment;
-	Typeface typeface;
-	ImageView btnSend;
-
-	SharedPreferences preferences;
-
-	ListView listComment;
-	CommentListAdapter commentListAdapter;
-
-	String EntryID,UserID;
-
-	ArrayList<CommentPojo> arrCommentpPojos = new ArrayList<CommentPojo>();
-	ArrayList<String> arrSelectionCommentedID = new ArrayList<String>();
+	private Context mContext;
+	private TextView textComment;
+	private TextView textNoData;
+	private EditText editComment;
+	private Typeface typeface;
+	private ImageView btnSend;
+	private SharedPreferences preferences;
+	private ListView listComment;
+	private CommentListAdapter commentListAdapter;
+	private String EntryID,UserID;
+	private ArrayList<CommentPojo> arrCommentpPojos = new ArrayList<CommentPojo>();
+	private ArrayList<String> arrSelectionCommentedID = new ArrayList<String>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +60,12 @@ public class CommentActivity extends Activity {
 		mContext = CommentActivity.this;
 		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
 
-		Bundle extras = getIntent().getExtras();
+		final Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			EntryID = extras.getString("entry_id");
 		}
 		
-		UserID=preferences.getString("userid", "0");
+		UserID = preferences.getString("userid", "0");
 		InitControls();
 
 		Utility.SendDataToGA("Comment Screen", CommentActivity.this);

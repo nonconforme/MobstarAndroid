@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,19 +23,15 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 
-public class DeleteEntryActivity extends Activity {
+public class DeleteEntryActivity extends Activity implements OnClickListener {
 
-	Context mContext;
-
-	EntryPojo entryPojo;
-
-	TextView textUserName, textTime, textDescription;
-
-	ImageView btnDeleteNo,btnDeleteYes;
-	
-	SharedPreferences preferences;
-	
-	String sErrorMessage;
+	private Context mContext;
+	private EntryPojo entryPojo;
+	private TextView textUserName, textTime, textDescription;
+	private ImageView btnDeleteNo,btnDeleteYes;
+	private SharedPreferences preferences;
+	private String sErrorMessage;
+	private ImageButton btnClose;
 
 	
 	@Override
@@ -66,17 +63,13 @@ public class DeleteEntryActivity extends Activity {
 		
 		
 		btnDeleteNo=(ImageView)findViewById(R.id.btnDeleteNo);
-		btnDeleteNo.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View view) {
-				onBackPressed();
-			}
-		});
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
+		btnDeleteNo.setOnClickListener(this);
 		
 		btnDeleteYes=(ImageView)findViewById(R.id.btnDeleteYes);
 		btnDeleteYes.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View view) {
 				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
@@ -95,12 +88,22 @@ public class DeleteEntryActivity extends Activity {
 	}
 
 	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnClose:
+			case R.id.btnDeleteNo:
+				onBackPressed();
+				break;
+		}
+	}
+
+	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
-	
+
 	// added by khyati
 		class DeleteEntryCall extends Thread {
 

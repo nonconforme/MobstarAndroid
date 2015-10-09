@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,14 +35,15 @@ import com.squareup.picasso.Picasso;
 
 public class SelectCategoryActivity extends Activity implements OnClickListener {
 
-	Context mContext;
+	private Context mContext;
 
 	//	ImageView btnMusic;
-	ListView listSelectCategory;
-	String sErrorMessage="";
-	ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
-	CategoryAdapter categoryAdapter;
-	SharedPreferences preferences;
+	private ListView listSelectCategory;
+	private String sErrorMessage="";
+	private ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
+	private CategoryAdapter categoryAdapter;
+	private SharedPreferences preferences;
+	private ImageButton btnClose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,8 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 	}
 
 	void InitControls() {
-
+		btnClose = (ImageButton) findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(this);
 		listSelectCategory = (ListView) findViewById(R.id.listSelectCategory);
 
 		//		btnMusic.setOnClickListener(this);
@@ -76,6 +79,11 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 
 	@Override
 	public void onClick(View view) {
+		switch (view.getId()){
+			case R.id.btnClose:
+				onBackPressed();
+				break;
+		}
 		// TODO Auto-generated method stub
 		//		if (view.equals(btnMusic)) {
 		//			Intent intent = new Intent(mContext, SelectMediaTypeActivity.class);

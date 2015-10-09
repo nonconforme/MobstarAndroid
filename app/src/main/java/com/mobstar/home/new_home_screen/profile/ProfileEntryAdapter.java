@@ -28,14 +28,14 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     public static final int PROFILE_VIEW_TYPE = 5;
     public static final int NO_DATA_VIEW_TYPE = 6;
 
-    private UserProfile userData;
+    private UserProfile user;
     private int page = UPDATES_PAGE;
     private ProfileStickyHeaderItem stickyHeaderItem;
 
 
     public ProfileEntryAdapter(BaseActivity activity, UserProfile _userdata) {
         super(activity);
-        userData = _userdata;
+        user = _userdata;
         page = UPDATES_PAGE;
 
     }
@@ -79,7 +79,7 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewItem, int position) {
         if (position == 0)
-            ((ProfileHeaderItem)viewItem).init(baseActivity, userData);
+            ((ProfileHeaderItem)viewItem).init(baseActivity, user);
         else{
             switch (page){
                 case UPDATES_PAGE:
@@ -92,7 +92,7 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
                     }
                     break;
                 case PROFILE_PAGE:
-                    ((ProfileItem)viewItem).init(baseActivity, userData.getUserPic(), userData.getUserName());
+                    ((ProfileItem)viewItem).init(baseActivity, user.getUserPic(), user.getUserName());
                     break;
             }
         }
@@ -148,6 +148,10 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     public void onFollowEntry(String uId, String isMyStar) {
         super.onFollowEntry(uId, isMyStar);
         ((NewProfileActivity)baseActivity).setIsMyStar(isMyStar);
+    }
+
+    public void setUserProfile(UserProfile userProfile) {
+        user = userProfile;
     }
 }
 

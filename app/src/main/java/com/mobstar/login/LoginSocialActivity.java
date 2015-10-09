@@ -13,6 +13,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -55,19 +56,18 @@ import java.util.List;
 
 public class LoginSocialActivity extends Activity implements OnClickListener {
 
-	Context mContext;
+	private Context mContext;
 
-	LinearLayout btnGetStarted, btnSignIn;
+	private LinearLayout btnGetStarted, btnSignIn;
 	private CustomTextview btnLoginFB,  btnLoginTwitter, btnLoginGoogle;
 	private CustomTextviewBold btnCountinueWOSignin;
-
 	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 	private static final List<String> READ_PERMISSIONS = Arrays.asList("email","public_profile");
 
-	String sUserID = "", sToken = "", sUserFullName = "", sUserName = "", sUserDisplayName = "";
-	String sErrorMessage = "";
-	String ProfileImage = "", ProfileCover = "", UserTagLine = "",UserBio = "";
-	ImageTwitter mTweet;
+	private String sUserID = "", sToken = "", sUserFullName = "", sUserName = "", sUserDisplayName = "";
+	private String sErrorMessage = "";
+	private String ProfileImage = "", ProfileCover = "", UserTagLine = "",UserBio = "";
+	private ImageTwitter mTweet;
 
 	// Google plus sign in
 	String mEmail;
@@ -141,10 +141,18 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			finish();
 		} else if (btnLoginFB.equals(view)) {
 
-			Button btnDeny, btnAllow;
+			final Button btnDeny, btnAllow;
+			final ImageButton btnClose;
 
 			final Dialog dialog = new Dialog(LoginSocialActivity.this, R.style.DialogTheme);
 			dialog.setContentView(R.layout.dialog_fb);
+			btnClose = (ImageButton) dialog.findViewById(R.id.btnClose);
+			btnClose.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
 			btnAllow = (Button) dialog.findViewById(R.id.btnAllow);
 			btnAllow.setOnClickListener(new OnClickListener() {
 
@@ -251,7 +259,13 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 	}
 
 	private void onFBLogin() {
-		Session session = Session.getActiveSession();
+        Session session = Session.getActiveSession();
+        session.closeAndClearTokenInformation();
+        session.removeCallback(statusCallback);
+
+
+        Session.setActiveSession(new Session(mContext));
+		session = Session.getActiveSession();
 
 		if (!session.isOpened() && !session.isClosed()) {
 			session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
@@ -296,9 +310,12 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 									try {
 										SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 										pref.edit().putBoolean("isSocialLogin",true).commit();
-										new FBLoginCall(user.getId(), user.getName(), user.getProperty("email").toString(), user.getName(), user.getBirthday(), user.getProperty(
-												"gender").toString(), user.getFirstName()).start();
-									} catch (Exception e) {
+                                        FbAccount fbAccount = new FbAccount(user);
+//										new FBLoginCall(user.getId(), user.getName(), user.getProperty("email").toString(), user.getName(), user.getBirthday(), user.getProperty(
+//												"gender").toString(), user.getFirstName()).start();
+                                        new FBLoginCall(fbAccount.id, fbAccount.name, fbAccount.email, fbAccount.name,
+                                                fbAccount.birthday, fbAccount.gender, fbAccount.firstName).start();
+                                    } catch (Exception e) {
 										// TODO: handle exception
 										e.printStackTrace();
 										Toast.makeText(mContext, getString(R.string.error_while_login_with_facebook), Toast.LENGTH_SHORT).show();

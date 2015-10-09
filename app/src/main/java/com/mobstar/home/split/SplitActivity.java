@@ -39,13 +39,11 @@ public class SplitActivity extends Activity implements DownloadFileManager.Downl
         if (getIntent() != null)
             entry = (EntryPojo) getIntent().getSerializableExtra(ENTRY_SPLIT);
         if (videoFilePath == null) {
-//            setDefaultFilePath();
             downloadVideo();
         }
 
         if (savedInstanceState == null)
             replaceTopNavigationFragment(new PositionVariantsFragment());
-//             replaceTopNavigationFragment(new RecordSplitVideoFragment());
     }
 
 
@@ -108,46 +106,6 @@ public class SplitActivity extends Activity implements DownloadFileManager.Downl
     public void downloadVideo() {
         DownloadFileManager downloadFileManager = new DownloadFileManager(this, this);
         downloadFileManager.downloadFile(entry.getVideoLink(), 0);
-//        final String sFileName = Utility.GetFileNameFromURl(entry.getVideoLink());
-//        final String filePath = Utility.getCurrentDirectory(this);
-//        try {
-//            final File file = new File(filePath + sFileName);
-//
-//            if (file != null && !file.exists()) {
-//
-//                if (Utility.isNetworkAvailable(this)) {
-//                    AsyncHttpClient client = new AsyncHttpClient();
-//                    final int DEFAULT_TIMEOUT = 60 * 1000;
-//
-//                    client.setTimeout(DEFAULT_TIMEOUT);
-//                    client.get(entry.getVideoLink(), new FileAsyncHttpResponseHandler(file) {
-//
-//                        @Override
-//                        public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
-////										Log.d("mobstar","Download fail video=>"+arrEntryPojos.get(position).getVideoLink());
-//                            if (onDownloadFileCompletedListener != null)
-//                                onDownloadFileCompletedListener.onFailed();
-//
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(int arg0, Header[] arg1, File file) {
-//                            videoFilePath = filePath + sFileName;
-//                            if (onDownloadFileCompletedListener != null)
-//                                onDownloadFileCompletedListener.onCompleted(videoFilePath);
-//                        }
-//
-//                    });
-//                } else {
-//                    Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-//                }
-//            } else {
-//                videoFilePath = filePath + sFileName;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
     }
 
     @Override

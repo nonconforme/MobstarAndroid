@@ -18,10 +18,10 @@ public class Constant {
 //	public static String API_KEY = "fjwiofrnxhr892305hje93nf834m63lr93l5u3ntrhj4k";
 	public static String API_KEY = "2_xPvd11Vjj1PfgYZ5C5fIWIosTmR4ADEgVIXsXp95";
 
-	public static String SERVER_URL = "http://api.mobstar.com/";
+//	public static String SERVER_URL = "http://api.mobstar.com/";
 //	public static String SERVER_URL = "http://192.168.88.250:1080/";
 //	public static String SERVER_URL = "http://134.249.164.53:1080/";
-//	public static String SERVER_URL = "http://api-mobstar.test.thinkmobiles.com/";
+	public static String SERVER_URL = "http://api-mobstar.test.thinkmobiles.com/";
 //	public static String SERVER_URL = "http://192.168.1.32/project/mobstarapi/public/index.php/";
 	
 	public static String SIGNUP = "user/";
@@ -101,6 +101,12 @@ public class Constant {
 	public static String WHO_TO_FOLLOW= "user/follow";
 	
 	public static String GET_PROFILE= "user/";
+
+	public static final String USER = "/user/";
+
+	public static final String PROFILE = "/profile/";
+
+	public static final String USER_MY_PROFILE = "/user/me/profile/";
 	
 	public static String GET_ENTRY= "entry/";
 	

@@ -17,6 +17,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
+import android.hardware.Camera;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -25,6 +27,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -58,7 +61,26 @@ public class Utility {
 	private static boolean isSpinning=false;
 
 	public static final String getCurrentDirectory(final Context context) {
+		if (isExternalStorageReadable() && isExternalStorageWritable())
+			return Environment.getExternalStorageDirectory().getPath() + "/Android/data/" + context.getPackageName() + "/";
 		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + "/Android/data/" + context.getPackageName() + "/";
+	}
+
+	public static boolean isExternalStorageWritable() {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isExternalStorageReadable() {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state) ||
+				Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			return true;
+		}
+		return false;
 	}
 
 	public static void ShareLink(Context mContext, String link) {
@@ -799,13 +821,6 @@ public class Utility {
 			}
 		}
 		return null;
-	}
-
-	public static int convertDpToPixel(float dp, Context context){
-		Resources resources = context.getResources();
-		DisplayMetrics metrics = resources.getDisplayMetrics();
-		float px = dp * (metrics.densityDpi / 160f);
-		return (int) px;
 	}
 
 

@@ -6,131 +6,148 @@
     android:background="@color/background_transparent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp" >
+    <ImageButton
+        android:id="@+id/btnClose"
+        style="@style/BtnClose"/>
 
-        <ImageView
-            android:id="@+id/imgUserPic"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginLeft="5dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_pic_small" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp" >
 
-                <com.mobstar.custom.CustomTextviewBold
-                    android:id="@+id/textUserName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:singleLine="false"
-                    android:text="@string/temp_uname"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/white_color"
-                    android:textSize="18sp" />
+                <ImageView
+                    android:id="@+id/imgUserPic"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="5dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_pic_small" />
 
-                <com.mobstar.custom.CustomTextview
-                    android:id="@+id/textTime"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="right"
-                    android:text="@string/temp_time"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/white_color"
-                    android:textSize="@dimen/entry_time_text" />
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <com.mobstar.custom.CustomTextviewBold
+                            android:id="@+id/textUserName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:singleLine="false"
+                            android:text="@string/temp_uname"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/white_color"
+                            android:textSize="18sp" />
+
+                        <com.mobstar.custom.CustomTextview
+                            android:id="@+id/textTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:gravity="right"
+                            android:text="@string/temp_time"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/white_color"
+                            android:textSize="@dimen/entry_time_text" />
+                    </LinearLayout>
+
+                    <com.mobstar.custom.CustomTextview
+                        android:id="@+id/textDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
+                        android:text="@string/temp_description"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white_color"
+                        android:textSize="@dimen/description_text" />
+                </LinearLayout>
             </LinearLayout>
 
-            <com.mobstar.custom.CustomTextview
-                android:id="@+id/textDescription"
+            <com.mobstar.custom.CustomTextviewBold
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="5dp"
-                android:text="@string/temp_description"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:singleLine="false"
+                android:text="@string/share_this"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/white_color"
-                android:textSize="@dimen/description_text" />
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/btnSendToFriend"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/app_name"
+                android:text="@string/send_to_friend"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableLeft="@drawable/icn_btn_new_message"
+                style="@style/BaseButton.Gray.NoBold"/>
+
+            <TextView
+                android:id="@+id/btnFBPost"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/app_name"
+                android:text="@string/post_to_facebook"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableLeft="@drawable/icn_fb"
+                style="@style/BaseButton.Gray.NoBold"/>
+
+            <TextView
+                android:id="@+id/btnAddToGPlus"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/app_name"
+                android:text="@string/add_to_google"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableLeft="@drawable/icn_btn_add_to_gplus"
+                style="@style/BaseButton.Gray.NoBold"/>
+
+
+            <TextView
+                android:id="@+id/btnTweet"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/app_name"
+                android:text="@string/tweet_about_this"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableLeft="@drawable/icn_twtr"
+                style="@style/BaseButton.Gray.NoBold"/>
         </LinearLayout>
-    </LinearLayout>
-
-    <com.mobstar.custom.CustomTextviewBold
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:singleLine="false"
-        android:text="@string/share_this"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white_color"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/btnSendToFriend"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="10dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/send_to_friend"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/icn_btn_new_message"
-        style="@style/BaseButton.Gray.NoBold"/>
-
-    <TextView
-        android:id="@+id/btnFBPost"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="10dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/post_to_facebook"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/icn_fb"
-        style="@style/BaseButton.Gray.NoBold"/>
-
-    <TextView
-        android:id="@+id/btnAddToGPlus"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="10dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/add_to_google"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/icn_btn_add_to_gplus"
-        style="@style/BaseButton.Gray.NoBold"/>
+    </ScrollView>
 
 
-    <TextView
-        android:id="@+id/btnTweet"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="10dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/tweet_about_this"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:drawableLeft="@drawable/icn_twtr"
-        style="@style/BaseButton.Gray.NoBold"/>
 
 </LinearLayout>

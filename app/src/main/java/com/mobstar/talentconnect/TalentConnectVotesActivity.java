@@ -6,37 +6,35 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
 
 import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.utils.Utility;
 
-public class TalentConnectVotesActivity extends FragmentActivity {
+public class TalentConnectVotesActivity extends BaseActivity implements OnClickListener {
 
-	Context mContext;
+	private static final String VIDEO_LIST_FRAGMENT = "VideoListFragment";
 
-	SharedPreferences preferences;
-
-	TextView textMyVotes;
-	TextView textAllEntries;
-
-	ImageView imgMyVotes;
-
-	boolean isYesVotes = true;
-
+	private Context mContext;
+	private SharedPreferences preferences;
+	private TextView textMyVotes;
+	private TextView textAllEntries;
+	private ImageView imgMyVotes;
+	private boolean isYesVotes = true;
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
-
 	boolean isDataLoaded = false;
+	private TextView btnBack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +51,12 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 
 		Utility.SendDataToGA("TalentConnect Vote Screen", TalentConnectVotesActivity.this);
 
-		InitControls();
+		initControls();
 	}
 
-	void InitControls() {
+	void initControls() {
+		btnBack = (TextView) findViewById(R.id.btnBack);
+		btnBack.setOnClickListener(this);
 
 		textAllEntries = (TextView) findViewById(R.id.textAllEntries);
 		textAllEntries.setOnClickListener(new OnClickListener() {
@@ -93,15 +93,23 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 		}
 	}
 
-	void GetData(String VoteType) {
+	void GetData(String voteType) {
 
-		HomeVideoListBaseFragment videoListFragment = new HomeVideoListBaseFragment();
-		Bundle extras = new Bundle();
-		extras.putBoolean("isVoteAPI", true);
-		extras.putString("VoteType", VoteType);
-		videoListFragment.setArguments(extras);
-		replaceFragment(videoListFragment, "VideoListFragment");
+		HomeVideoListBaseFragment videoListFragment = getVideoListFragment();
+		if (videoListFragment != null){
+			videoListFragment.resetBundleExtra();
+			videoListFragment.setIsVoteApi(true);
+			videoListFragment.setVoteType(voteType);
+			videoListFragment.resetAndLoadFirstPage();
+		}else {
+			videoListFragment = new HomeVideoListBaseFragment();
+			final Bundle extras = new Bundle();
+			extras.putBoolean(HomeVideoListBaseFragment.IS_VOTE_API, true);
+			extras.putString(HomeVideoListBaseFragment.VOTE_TYPE, voteType);
+			videoListFragment.setArguments(extras);
+			replaceFragment(videoListFragment, VIDEO_LIST_FRAGMENT);
 
+		}
 		isDataLoaded = true;
 	}
 
@@ -112,14 +120,26 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 		mFragmentTransaction.commitAllowingStateLoss();
 	}
 
+	private HomeVideoListBaseFragment getVideoListFragment(){
+		return (HomeVideoListBaseFragment) mFragmentManager.findFragmentByTag(VIDEO_LIST_FRAGMENT);
+	}
+
 	void MyVoteDialog() {
 
-		CustomTextviewBold btnYesVotes, btnNotVotes;
-
+		final CustomTextviewBold btnYesVotes, btnNotVotes;
+		final ImageButton btnClose;
 		final Dialog dialog = new Dialog(mContext, R.style.DialogTheme);
 		dialog.setContentView(R.layout.dialog_my_votes);
 		dialog.setCancelable(true);
+		btnClose = (ImageButton) dialog.findViewById(R.id.btnClose);
+		btnClose.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
 		btnYesVotes = (CustomTextviewBold) dialog.findViewById(R.id.btnYesVotes);
+
 		btnYesVotes.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -161,7 +181,14 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-
 	}
 
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnBack:
+				onBackPressed();
+				break;
+		}
+	}
 }
