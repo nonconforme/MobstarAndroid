@@ -1,10 +1,5 @@
 package com.mobstar.upload;
 
-import java.io.File;
-
-import cz.msebera.android.httpclient.Header;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +9,9 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.TextureView.SurfaceTextureListener;
@@ -25,11 +20,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
@@ -38,9 +33,16 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 
+import org.json.JSONObject;
+
+import java.io.File;
+
+import cz.msebera.android.httpclient.Header;
+
 public class GuidelinesActivity extends Activity implements OnClickListener{
-	
-	private String sErrorMessage;
+
+    private static final String LOG_TAG = GuidelinesActivity.class.getName();
+    private String sErrorMessage;
 	Context mContext;
 	SharedPreferences preferences;
 	
@@ -291,6 +293,7 @@ public class GuidelinesActivity extends Activity implements OnClickListener{
 					@Override
 					public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
 						// TODO Auto-generated method stub
+                        Log.d(LOG_TAG,"AsyncHttpClient.onFailure.arg2="+arg2.getMessage());
 
 					}
 
@@ -322,35 +325,6 @@ public class GuidelinesActivity extends Activity implements OnClickListener{
 
 				});
 
-				// Ion.with(mContext).load(videoURL).write(file).setCallback(new
-				// FutureCallback<File>() {
-				// @Override
-				// public void onCompleted(Exception e, File file) {
-				// if (file != null && e == null) {
-				//
-				// btnPausePlay.setImageResource(R.drawable.btn_pause);
-				// btnPausePlay.setSelected(false);
-				//
-				// progressbar.setVisibility(View.GONE);
-				//
-				// imageFrame.setImageResource(R.drawable.video_placeholder);
-				// textureView.setVisibility(View.GONE);
-				// imageFrame.setVisibility(View.VISIBLE);
-				//
-				// imageFrame.setImageResource(R.drawable.video_placeholder);
-				// textureView.setVisibility(View.VISIBLE);
-				//
-				// textureView.setSurfaceTextureListener(surfaceTextureListener);
-				// if (textureView.isAvailable()) {
-				// surfaceTextureListener.onSurfaceTextureAvailable(textureView.getSurfaceTexture(),
-				// textureView.getWidth(), textureView.getHeight());
-				// }
-				//
-				// imageFrame.setVisibility(View.GONE);
-				// }
-				//
-				// }
-				// });
 			} else {
 
 				btnPausePlay.setImageResource(R.drawable.btn_pause);
@@ -394,8 +368,7 @@ public class GuidelinesActivity extends Activity implements OnClickListener{
 					// Environment.getExternalStorageDirectory() +
 					// "/.mobstar/" + sFileName);
 
-					String path = Environment.getExternalStorageDirectory().getPath()
-							+ "/Android/data/" + mContext.getPackageName() +"/";
+                    String path = Utility.getCurrentDirectory(mContext);
 					
 //					File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
 					
