@@ -40,6 +40,20 @@ public class EntriesResponse extends BaseResponse {
                 }
 
             }
+        }else if (jsonObject.has("votes")){
+            final JSONArray entryJsonArray = jsonObject.getJSONArray("votes");
+            for (int i = 0; i < entryJsonArray.length(); i++){
+                final JSONObject entry = entryJsonArray.getJSONObject(i);
+                if (entry.has("vote")){
+                    final JSONObject vote = entry.getJSONObject("vote");
+                    if (vote.has("entry")){
+                        final EntryPojo entryPojo = new EntryPojo();
+                        entryPojo.configure(vote.getJSONObject("entry"));
+                        arrEntry.add(entryPojo);
+                    }
+                }
+
+            }
         }
 
         if (jsonObject.has("next"))

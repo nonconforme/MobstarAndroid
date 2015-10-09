@@ -27,6 +27,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         layoutInflater = LayoutInflater.from(baseActivity);
     }
 
+    public void clearArrayEntry(){
+        arrEntryes.clear();
+        notifyDataSetChanged();
+    }
+
     public void setArrEntryes(final ArrayList<EntryPojo> _arrEntryes){
         arrEntryes.clear();
         arrEntryes.addAll(_arrEntryes);
