@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -22,7 +21,9 @@ import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.utils.Utility;
 
-public class TalentConnectVotesActivity extends FragmentActivity {
+public class TalentConnectVotesActivity extends BaseActivity implements OnClickListener {
+
+	private static final String VIDEO_LIST_FRAGMENT = "VideoListFragment";
 
 	private Context mContext;
 	private SharedPreferences preferences;
@@ -33,6 +34,7 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
 	boolean isDataLoaded = false;
+	private TextView btnBack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,12 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 
 		Utility.SendDataToGA("TalentConnect Vote Screen", TalentConnectVotesActivity.this);
 
-		InitControls();
+		initControls();
 	}
 
-	void InitControls() {
+	void initControls() {
+		btnBack = (TextView) findViewById(R.id.btnBack);
+		btnBack.setOnClickListener(this);
 
 		textAllEntries = (TextView) findViewById(R.id.textAllEntries);
 		textAllEntries.setOnClickListener(new OnClickListener() {
@@ -89,15 +93,23 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 		}
 	}
 
-	void GetData(String VoteType) {
+	void GetData(String voteType) {
 
-		HomeVideoListBaseFragment videoListFragment = new HomeVideoListBaseFragment();
-		Bundle extras = new Bundle();
-		extras.putBoolean("isVoteAPI", true);
-		extras.putString("VoteType", VoteType);
-		videoListFragment.setArguments(extras);
-		replaceFragment(videoListFragment, "VideoListFragment");
+		HomeVideoListBaseFragment videoListFragment = getVideoListFragment();
+		if (videoListFragment != null){
+			videoListFragment.resetBundleExtra();
+			videoListFragment.setIsVoteApi(true);
+			videoListFragment.setVoteType(voteType);
+			videoListFragment.resetAndLoadFirstPage();
+		}else {
+			videoListFragment = new HomeVideoListBaseFragment();
+			final Bundle extras = new Bundle();
+			extras.putBoolean(HomeVideoListBaseFragment.IS_VOTE_API, true);
+			extras.putString(HomeVideoListBaseFragment.VOTE_TYPE, voteType);
+			videoListFragment.setArguments(extras);
+			replaceFragment(videoListFragment, VIDEO_LIST_FRAGMENT);
 
+		}
 		isDataLoaded = true;
 	}
 
@@ -106,6 +118,10 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 		mFragmentTransaction = mFragmentManager.beginTransaction();
 		mFragmentTransaction.replace(R.id.childFragmentContent, mFragment, fragmentName);
 		mFragmentTransaction.commitAllowingStateLoss();
+	}
+
+	private HomeVideoListBaseFragment getVideoListFragment(){
+		return (HomeVideoListBaseFragment) mFragmentManager.findFragmentByTag(VIDEO_LIST_FRAGMENT);
 	}
 
 	void MyVoteDialog() {
@@ -165,7 +181,14 @@ public class TalentConnectVotesActivity extends FragmentActivity {
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-
 	}
 
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnBack:
+				onBackPressed();
+				break;
+		}
+	}
 }

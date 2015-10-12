@@ -171,7 +171,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
         textCommentCount.setText(entryPojo.getTotalComments());
         textUserName.setText(entryPojo.getUserDisplayName());
-        textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
+        if (entryPojo.getDescription() != null)
+            textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
 
         textTime.setText(entryPojo.getCreated());
         textViews.setText(entryPojo.getTotalViews());

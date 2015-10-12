@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobstar"
-    android:versionCode="22"
-    android:versionName="2.2" >
+    android:versionCode="24"
+    android:versionName="2.4" >
 
     <!--<uses-sdk-->
         <!--android:minSdkVersion="14"-->
@@ -311,7 +311,8 @@
         </activity>
         <activity
             android:name=".talentconnect.TalentConnectVotesActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
 
         <activity android:name=".home.split.SplitActivity"
