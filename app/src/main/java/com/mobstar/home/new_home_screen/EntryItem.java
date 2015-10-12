@@ -185,9 +185,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             if (entryPojo.getIsMyStar() != null) {
                 if (!entryPojo.getIsMyStar().equalsIgnoreCase("0")) {
                     btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.yellow_btn));
+                    btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.white_color));
                     btnFollow.setText(baseActivity.getString(R.string.following));
                 } else {
                     btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.selector_oval_button));
+                    btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.comment_color));
                     btnFollow.setText(baseActivity.getString(R.string.follow));
                 }
             }
