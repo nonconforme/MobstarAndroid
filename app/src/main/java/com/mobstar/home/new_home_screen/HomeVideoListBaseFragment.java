@@ -135,6 +135,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onSuccess(EntriesResponse object) {
+                if (getActivity() == null)
+                    return;
                 if (pageNo == 1) {
                     entryAdapter.setArrEntryes(object.getArrEntry());
                     endlessRecyclerOnScrollListener.reset();
@@ -152,6 +154,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onFailure(String error) {
+                if(getActivity() == null)
+                    return;
                 Log.d(LOG_TAG,"http request get:getEntryRequest.onFailure.error="+error);
                 endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
@@ -177,6 +181,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         handler.postDelayed(
                 new Runnable() {
                     public void run() {
+                        if(entryAdapter.getArrEntries().size() == 0)
+                            return;
                         switch (entryAdapter.getEntry(0).getType()) {
                             case "audio":
                                 downloadFileManager.downloadFile(entryAdapter.getEntry(0).getAudioLink(), 0);

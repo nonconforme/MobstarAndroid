@@ -144,9 +144,14 @@ public class Utility {
 	public static void HideDialog(Context mContext) {
 		if (mContext == null || dialog == null)
 			return;
-		if (!((Activity) mContext).isFinishing() && dialog.isShowing()) {
-			dialog.dismiss();
+		try {
+		if (!((Activity) mContext).isFinishing() && dialog.isShowing())
+				dialog.dismiss();
 		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 
 	public static final int MEDIA_TYPE_IMAGE = 1;

@@ -489,14 +489,6 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 .setUserTagline(entryPojo.getTagline())
                 .build();
         intent.putExtra(NewProfileActivity.USER, userProfile);
-//        intent.putExtra("UserID", entryPojo.getUserID());
-//        intent.putExtra("UserName", entryPojo.getUserName());
-//        intent.putExtra("UserDisplayName", entryPojo.getUserDisplayName());
-//        intent.putExtra("UserPic", entryPojo.getProfileImage());
-//        intent.putExtra("UserCoverImage", entryPojo.getProfileCover());
-//        intent.putExtra("IsMyStar", entryPojo.getIsMyStar());
-//        intent.putExtra("UserTagline", entryPojo.getTagline());
-//        intent.putExtra(NewProfileActivity.USER, userProfile);
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
