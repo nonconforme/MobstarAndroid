@@ -383,5 +383,7 @@
     <string name="share_text">Hey, check out this entry on MobStar: </string>
     <string name="twitter_share_text">Hey, check out this entry on @officialmobstar: </string>
 
+    <string name="to_direct_message_a_user_you_both_need_to_follow_each_other">To Direct message a user you both need to follow each other</string>
+
 
 </resources>
