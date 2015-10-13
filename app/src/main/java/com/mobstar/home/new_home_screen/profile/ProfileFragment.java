@@ -54,7 +54,7 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
         params.put("page", Integer.toString(pageNo));
         textNoData.setVisibility(View.GONE);
         if (isNotification)
-            getEntry(Constant.GET_ENTRY + user.getEntryId(),null,1);
+            getEntry(Constant.GET_ENTRY + user.getEntryId() + Constant.INFO,null,1);
         else
             getEntry(Constant.MIX_ENTRY, params, pageNo);
     }
