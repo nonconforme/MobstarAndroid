@@ -25,6 +25,7 @@ import com.mobstar.custom.pull_to_refresh.PullToRefreshRecyclerView;
 import com.mobstar.custom.recycler_view.EndlessRecyclerOnScrollListener;
 import com.mobstar.custom.recycler_view.OnEndAnimationListener;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
+import com.mobstar.home.HomeFragment;
 import com.mobstar.player.PlayerManager;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -152,7 +153,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onFailure(String error) {
-                Log.d(LOG_TAG,"http request get:getEntryRequest.onFailure.error="+error);
+                Log.d(LOG_TAG, "http request get:getEntryRequest.onFailure.error=" + error);
                 endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());
@@ -288,7 +289,15 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
     @Override
     public void onRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+        tryHideNewEntry();
         getEntryRequest(1);
+    }
+
+    private void tryHideNewEntry() {
+        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.frag_content);
+        if (homeFragment!=null) {
+            homeFragment.tryHideNewEntry();
+        }
     }
 
     protected void getArgs() {

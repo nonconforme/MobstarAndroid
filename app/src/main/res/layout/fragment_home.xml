@@ -72,14 +72,17 @@
             android:layout_height="match_parent" />
 
         <com.mobstar.custom.CustomTextviewBold
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
             android:id="@+id/new_entry_field"
-            android:layout_width="match_parent"
+            android:drawableRight="@drawable/arrow_up"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/yellow_color_dark"
-            android:text="Upload new enties"
-            android:textSize="@dimen/login_social_text"
+            android:background="@drawable/oval_yellow_button_background"
+            android:text="@string/new_entries"
+            android:textSize="@dimen/posted_hedText_size"
             android:gravity="center"
-            android:padding="8dp"
+            android:paddingLeft="15dp"
             android:textColor="@color/white_color"
             android:visibility="gone"/>
     </RelativeLayout>

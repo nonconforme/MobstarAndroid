@@ -300,6 +300,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
                             GetData("latest");
                             textLatestPopular.setText(getString(R.string.latest));
                             isLatest = true;
+                            tryHideNewEntry();
                         }
                     });
                 }
@@ -318,6 +319,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
                             GetData("popular");
                             isLatest = false;
                             textLatestPopular.setText(getString(R.string.popular));
+                            tryHideNewEntry();
                         }
                     });
                 }
@@ -392,10 +394,8 @@ public class HomeFragment extends Fragment implements OnClickListener {
             case R.id.new_entry_field:
 
                 GetData("latest");
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_out_to_top);
-                animation.setDuration(1000);
-                vNewEntry.startAnimation(animation);
-                vNewEntry.setVisibility(View.GONE);
+                tryHideNewEntry();
+
                 break;
         }
     }
@@ -497,6 +497,15 @@ public class HomeFragment extends Fragment implements OnClickListener {
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mNewEntryReceiver);
+    }
+
+    public void tryHideNewEntry() {
+        if (vNewEntry.getVisibility()==View.VISIBLE) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_out_to_top);
+            animation.setDuration(1000);
+            vNewEntry.startAnimation(animation);
+            vNewEntry.setVisibility(View.GONE);
+        }
     }
 
     class CategoryCall extends Thread {
