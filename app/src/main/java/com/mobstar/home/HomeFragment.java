@@ -54,17 +54,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
     private static final String LOG_TAG = HomeFragment.class.getName();
     private Context mContext;
-
-	SharedPreferences preferences;
-
-	TextView textLatestPopular;
-	TextView textAllEntries;
-
-	boolean isLatest = true;
-
+	private SharedPreferences preferences;
+	private TextView textLatestPopular;
+	private TextView textAllEntries;
+	private boolean isLatest = true;
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
-
 	private boolean isDataLoaded = false;
 	private String deepLinkedId="";
 	private String sErrorMessage="";
