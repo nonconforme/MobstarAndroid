@@ -21,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -53,6 +55,7 @@ import java.util.HashMap;
 public class HomeFragment extends Fragment implements OnClickListener {
 
     private static final String LOG_TAG = HomeFragment.class.getName();
+    public static final String NEW_ENTY_ACTION = "new entry";
     private Context mContext;
 
 	SharedPreferences preferences;
@@ -70,10 +73,10 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private String sErrorMessage="";
 	private ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
     private ImageView vCategoryButton;
-    private int[] choosenContinents = {1,3,4};
     private ProgressDialog progressDialog;
     private ArrayList<Integer> listChoosenContinents;
     private ArrayList<Integer> listChoosenCategories;
+    private TextView vNewEntry;
 
 
     @Override
@@ -117,6 +120,20 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		return view;
 	}
 
+    private BroadcastReceiver mNewEntryReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(LOG_TAG,"mNewEntryReceiver");
+            if (vNewEntry.getVisibility() == View.GONE && isLatest) {
+                vNewEntry.setVisibility(View.VISIBLE);
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_in_from_top);
+                animation.setDuration(1000);
+                vNewEntry.startAnimation(animation);
+            }
+        }
+    };
+
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -149,6 +166,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
         vCategoryButton = (ImageView) view.findViewById(R.id.btn_continents_home);
         vCategoryButton.setOnClickListener(this);
+
+        vNewEntry = (TextView) view.findViewById(R.id.new_entry_field);
+        vNewEntry.setOnClickListener(this);
 
 
 		if (!isDataLoaded) {
@@ -369,6 +389,14 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
                 continentDialog.show();
                 break;
+            case R.id.new_entry_field:
+
+                GetData("latest");
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_out_to_top);
+                animation.setDuration(1000);
+                vNewEntry.startAnimation(animation);
+                vNewEntry.setVisibility(View.GONE);
+                break;
         }
     }
 
@@ -459,7 +487,19 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 	}
 
-	class CategoryCall extends Thread {
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mNewEntryReceiver, new IntentFilter(NEW_ENTY_ACTION));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mNewEntryReceiver);
+    }
+
+    class CategoryCall extends Thread {
 
 		@Override
 		public void run() {

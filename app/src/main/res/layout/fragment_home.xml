@@ -60,9 +60,30 @@
              />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/childFragmentContent"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+
+        <FrameLayout
+            android:id="@+id/childFragmentContent"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:id="@+id/new_entry_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/yellow_color_dark"
+            android:text="Upload new enties"
+            android:textSize="@dimen/login_social_text"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textColor="@color/white_color"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+
 
 </LinearLayout>
