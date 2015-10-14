@@ -12,6 +12,8 @@ import com.mobstar.R;
  */
 public class PullToRefreshRecyclerView extends PullToRefreshBase<RecyclerView> {
 
+    private boolean isEnablePullToRefresh = true;
+
     public PullToRefreshRecyclerView(Context context) {
         super(context);
     }
@@ -26,6 +28,10 @@ public class PullToRefreshRecyclerView extends PullToRefreshBase<RecyclerView> {
 
     public PullToRefreshRecyclerView(Context context, Mode mode, AnimationStyle style) {
         super(context, mode, style);
+    }
+
+    public void setEnablePullToRefresh(final boolean isEnable){
+        isEnablePullToRefresh = isEnable;
     }
 
     @Override
@@ -43,6 +49,8 @@ public class PullToRefreshRecyclerView extends PullToRefreshBase<RecyclerView> {
 
     @Override
     protected boolean isReadyForPullStart() {
+        if (!isEnablePullToRefresh)
+            return false;
         if (mRefreshableView.getChildCount() <= 0)
             return true;
         int firstVisiblePosition = mRefreshableView.getChildAdapterPosition(mRefreshableView.getChildAt(0));

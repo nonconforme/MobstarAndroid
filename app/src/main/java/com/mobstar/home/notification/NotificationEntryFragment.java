@@ -38,6 +38,16 @@ public class NotificationEntryFragment extends VideoListBaseFragment {
     }
 
     @Override
+    public boolean getEnablePulToRefreshAction() {
+        return true;
+    }
+
+    @Override
+    public boolean getEnableSwipeCardAction() {
+        return false;
+    }
+
+    @Override
     protected void getEntryRequest(int pageNo) {
         final HashMap<String, String> params = new HashMap<>();
         if (user != null && user.getUserId() != null)

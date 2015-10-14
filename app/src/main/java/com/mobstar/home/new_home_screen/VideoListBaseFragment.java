@@ -34,7 +34,7 @@ import java.util.HashMap;
 /**
  * Created by lipcha on 14.09.15.
  */
-public class VideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>, DownloadFileManager.DownloadCallback, OnEndAnimationListener {
+public class VideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>, DownloadFileManager.DownloadCallback, OnEndAnimationListener, SwipeRefreshAction {
 
     public static final String IS_SEARCH_API     = "isSearchAPI";
     public static final String SEARCH_TERM       = "searchTerm";
@@ -78,10 +78,12 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View inflatedView = inflater.inflate(R.layout.home_video_list_base_fragment, container, false);
         findViews(inflatedView);
+        pullToRefreshRecyclerView.setEnablePullToRefresh(getEnablePulToRefreshAction());
         preferences = getActivity().getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
         getArgs();
         Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
         createEntryList();
+        entryAdapter.setEnableSwipeAction(getEnableSwipeCardAction());
         getEntryRequest(1);
         return inflatedView;
     }
@@ -89,6 +91,16 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     private void findViews(final View inflatedView) {
         textNoData = (TextView) inflatedView.findViewById(R.id.textNoData);
         pullToRefreshRecyclerView = (PullToRefreshRecyclerView) inflatedView.findViewById(R.id.pullToRefreshRecyclerView);
+    }
+
+    // override this method for enable/disable swipe action
+    public boolean getEnableSwipeCardAction(){
+        return true;
+    }
+
+    // override this method for enable/disable pull to refresh action
+    public boolean getEnablePulToRefreshAction(){
+        return true;
     }
 
     protected void getEntryRequest(final int pageNo) {
