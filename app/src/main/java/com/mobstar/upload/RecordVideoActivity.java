@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.utils.CameraUtility;
 import com.mobstar.utils.Utility;
 
 import java.io.IOException;
@@ -32,70 +33,54 @@ import java.util.List;
 
 public class RecordVideoActivity extends Activity {
 
-	Context mContext;
-
+	private Context mContext;
 	private Camera mCamera;
 	private CameraPreview mPreview;
 	private TextView tvFlash;
 	private LinearLayout btnFlash;
-	ImageView btnRecord, ivFlash, btnChangeCamera;
-
-	boolean isFlashOn = false;
-	int currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
-	boolean isFrontCameraAvailable = false;
-
+	private ImageView btnRecord, ivFlash, btnChangeCamera;
+	private boolean isFlashOn = false;
+	private int currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+	private boolean isFrontCameraAvailable = false;
 	private boolean isRecording = false;
-
 	private MediaRecorder mMediaRecorder;
-
-	LinearLayout layoutCameraOption;
-	TextView textRecordSecond;
-
-	int currentCount = 15;
-	CountDownTimer recordTimer;
-
-	String sFilepath;
-
-	int desiredwidth = 480;
-	int desiredheight = 720;
-	
-	List<Size> videosizes;
-
+	private LinearLayout layoutCameraOption;
+	private TextView textRecordSecond;
+	private int currentCount = 15;
+	private CountDownTimer recordTimer;
+	private String sFilepath;
+	private int desiredwidth = 480;
+	private int desiredheight = 720;
+	private List<Size> videosizes;
 	private final int cMaxRecordDurationInMs = 30099;
-
 	private final long cMaxFileSizeInBytes = 8000000;
-	
 	private final long cMaxFileSizeInBytesProfile = 52428800; //50MB
-
-	String categoryId,subCat;
+	private String categoryId,subCat;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		WindowManager.LayoutParams lp = this.getWindow().getAttributes();
+		final WindowManager.LayoutParams lp = this.getWindow().getAttributes();
 		lp.screenBrightness = 1.0f;
 		this.getWindow().setAttributes(lp);
-
 		setContentView(R.layout.activity_record_video);
-
 		mContext = RecordVideoActivity.this;
-
-		Bundle b=getIntent().getExtras();
-		if(b!=null) {
-			if(b.containsKey("categoryId")) {
-				categoryId=b.getString("categoryId");
-				subCat=b.getString("subCat");
-			}
-		}
-
-		InitControls();
-
+		getArgs();
+		initControls();
 		Utility.SendDataToGA("RecordVideo Screen", RecordVideoActivity.this);
-
 	}
 
-	void InitControls() {
+	private void getArgs(){
+		final Bundle args = getIntent().getExtras();
+		if(args != null) {
+			if(args.containsKey("categoryId")) {
+				categoryId = args.getString("categoryId");
+				subCat = args.getString("subCat");
+			}
+		}
+	}
+
+	private void initControls() {
 
 		layoutCameraOption = (LinearLayout) findViewById(R.id.layoutCameraOption);
 		layoutCameraOption.setVisibility(View.VISIBLE);
@@ -117,7 +102,7 @@ public class RecordVideoActivity extends Activity {
 
 					currentCount = 0;
 
-					mPreview.RecordVideo();
+					mPreview.recordVideo();
 					textRecordSecond.setText("0");
 
 				} else if ((millisUntilFinished / 1000) != 18) {
@@ -126,9 +111,7 @@ public class RecordVideoActivity extends Activity {
 						currentCount--;
 						textRecordSecond.setText(currentCount + "");
 					}
-
 				}
-
 			}
 
 			@Override
@@ -152,7 +135,7 @@ public class RecordVideoActivity extends Activity {
 			}
 
 			// Create an instance of Camera
-			mCamera = getCameraInstance(currentCameraId);
+			mCamera = CameraUtility.getCameraInstance(currentCameraId);
 
 			// Create our Preview view and set it as the content of our
 			// activity.
@@ -166,7 +149,7 @@ public class RecordVideoActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					// get an image from the camera
-					mPreview.RecordVideo();
+					mPreview.recordVideo();
 
 				}
 			});
@@ -203,7 +186,7 @@ public class RecordVideoActivity extends Activity {
 							tvFlash.setText(getString(R.string.on));
 						}
 
-						mPreview.OnOffFlash(isFlashOn);
+						mPreview.onOffFlash(isFlashOn);
 					}
 
 				}
@@ -211,9 +194,8 @@ public class RecordVideoActivity extends Activity {
 		}
 	}
 
-	void onCameraChange() {
+	private void onCameraChange() {
 		try {
-
 			mCamera.stopPreview();
 			mCamera.release(); // release the camera for other
 			// applications
@@ -229,13 +211,13 @@ public class RecordVideoActivity extends Activity {
 			// Create an instance of Camera
 
 
-			mCamera = getCameraInstance(currentCameraId);
+			mCamera = CameraUtility.getCameraInstance(currentCameraId);
 
 			mPreview.setCamera(mCamera);
 
 			mCamera.setPreviewDisplay(mPreview.mHolder);
 			mCamera.startPreview();
-			setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
+			CameraUtility.setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
 
 
 
@@ -243,33 +225,6 @@ public class RecordVideoActivity extends Activity {
 			e.printStackTrace();
 			// ignore: tried to stop a non-existent preview
 		}
-	}
-
-	public Camera getCameraInstance(int currentCameraId) {
-		Camera c = null;
-		try {
-			c = Camera.open(currentCameraId); // attempt to get a Camera
-			Parameters params = c.getParameters();
-
-			List<String> flashModes = params.getSupportedFlashModes();
-
-			if (flashModes != null && flashModes.size() > 0) {
-				// set the focus mode
-				params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-			}
-
-			params.set("orientation", "portrait");
-			params.setRotation(90);
-
-			videosizes = params.getSupportedVideoSizes();
-
-			c.setParameters(params); // instance
-
-		} catch (Exception e) {
-			// Camera is not available (in use or does not exist)
-			e.printStackTrace();
-		}
-		return c; // returns null if camera is unavailable
 	}
 
 	private boolean checkCameraHardware(Context context) {
@@ -291,10 +246,9 @@ public class RecordVideoActivity extends Activity {
 
 		}
 
-		void OnOffFlash(boolean isFlashOn) {
+		private void onOffFlash(boolean isFlashOn) {
 
-			Camera.Parameters parameters = mCamera.getParameters();
-
+			final Camera.Parameters parameters = mCamera.getParameters();
 			if (!isFlashOn) {
 				parameters.setFlashMode(Parameters.FLASH_MODE_OFF);
 				mCamera.setParameters(parameters);
@@ -302,11 +256,11 @@ public class RecordVideoActivity extends Activity {
 				parameters.setFlashMode(Parameters.FLASH_MODE_TORCH);
 				mCamera.setParameters(parameters);
 			}
-
 		}
 
 		private boolean prepareVideoRecorder() {
-
+			if (mCamera == null)
+				return false;
 			try {
 				mCamera.stopPreview();
 				mCamera.setPreviewDisplay(null);
@@ -328,7 +282,7 @@ public class RecordVideoActivity extends Activity {
 
 			// // Step 3: Set a CamcorderProfile (requires API Level 8 or
 			// higher)
-			CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
+			final CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
 			if (videosizes != null) {
 				Size optimalVideoSize = getOptimalPreviewSize(videosizes, desiredwidth, desiredheight);
 				profile.videoFrameWidth = optimalVideoSize.width;
@@ -384,9 +338,9 @@ public class RecordVideoActivity extends Activity {
 			return true;
 		}
 
-		void RecordVideo() {
+		private void recordVideo() {
 
-			//			Log.v(Constant.TAG, "RecordVideo " + isRecording);
+			//			Log.v(Constant.TAG, "recordVideo " + isRecording);
 
 			if (isRecording) {
 				// stop recording and release camera
@@ -398,23 +352,14 @@ public class RecordVideoActivity extends Activity {
 				}
 
 				releaseMediaRecorder(); // release the MediaRecorder object
-
-				mCamera.lock(); // take camera access back from MediaRecorder
+				if (mCamera != null)
+					mCamera.lock(); // take camera access back from MediaRecorder
 
 				releaseCamera();
 
 				isRecording = false;
 
-				Intent intent = new Intent(mContext, ApproveVideoActivity.class);
-				intent.putExtra("video_path", sFilepath);
-				intent.putExtra("categoryId",categoryId);
-				if(subCat!=null && subCat.length()>0){
-					intent.putExtra("subCat",subCat);	  
-				}
-				startActivity(intent);
-				finish();
-				overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-				//onBackPressed();
+				startApproveVideoActivity();
 
 			} else {
 				// initialize video camera
@@ -438,7 +383,7 @@ public class RecordVideoActivity extends Activity {
 			}
 		}
 
-		void setCamera(Camera camera) {
+		private void setCamera(Camera camera) {
 			mCamera = camera;
 			// Install a SurfaceHolder.Callback so we get notified when the
 			// underlying surface is created and destroyed.
@@ -454,7 +399,7 @@ public class RecordVideoActivity extends Activity {
 			try {
 				mCamera.setPreviewDisplay(holder);
 				mCamera.startPreview();
-				setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
+				CameraUtility.setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
 			} catch (Exception e) {
 				//				Log.d(Constant.TAG, "Error setting camera preview: " + e.getMessage());
 			}
@@ -478,7 +423,7 @@ public class RecordVideoActivity extends Activity {
 					mCamera.stopPreview();
 
 					Camera.Parameters parameters = mCamera.getParameters();
-					Camera.Size size = getBestPreviewSize(width, height, parameters);
+					Camera.Size size = getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), width, height);
 
 					if (size != null) {
 						parameters.setPreviewSize(size.width, size.height);
@@ -493,7 +438,7 @@ public class RecordVideoActivity extends Activity {
 					} else {
 
 					}
-					setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
+					CameraUtility.setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
 
 					mCamera.setParameters(parameters);
 				}
@@ -510,65 +455,6 @@ public class RecordVideoActivity extends Activity {
 				//				Log.d(Constant.TAG, "Error starting camera preview: " + e.getMessage());
 			}
 		}
-	}
-
-	public void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
-
-		CameraInfo info = new android.hardware.Camera.CameraInfo();
-
-		Camera.getCameraInfo(cameraId, info);
-
-		int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-
-		int degrees = 0;
-
-		switch (rotation) {
-		case Surface.ROTATION_0:
-			//			Log.d("mobstar","ROTATION_0");
-			degrees = 0;
-			break;
-		case Surface.ROTATION_90:
-			//			Log.d("mobstar","ROTATION_90");
-			degrees = 90;
-			break;
-		case Surface.ROTATION_180:
-			//			Log.d("mobstar","ROTATION_180");
-			degrees = 180;
-			break;
-		case Surface.ROTATION_270:
-			//			Log.d("mobstar","ROTATION_270");
-			degrees = 270;
-			break;
-		}
-
-		int result;
-		if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-			result = (info.orientation + degrees) % 360;
-			result = (360 - result) % 360; // compensate the mirror
-		} else { // back-facing
-			result = (info.orientation - degrees + 360) % 360;
-		}
-
-		camera.setDisplayOrientation(result);
-	}
-
-	private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
-		Camera.Size result = null;
-		for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
-
-			if (size.width <= width && size.height <= height) {
-				if (result == null) {
-					result = size;
-				} else {
-					int resultArea = result.width * result.height;
-					int newArea = size.width * size.height;
-					if (newArea > resultArea) {
-						result = size;
-					}
-				}
-			}
-		}
-		return (result);
 	}
 
 	private Size getOptimalPreviewSize(List<Size> sizes, int width, int height) {
@@ -622,6 +508,18 @@ public class RecordVideoActivity extends Activity {
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+
+	private void startApproveVideoActivity(){
+		final Intent intent = new Intent(mContext, ApproveVideoActivity.class);
+		intent.putExtra("video_path", sFilepath);
+		intent.putExtra("categoryId", categoryId);
+		if(subCat != null && subCat.length() > 0){
+			intent.putExtra("subCat", subCat);
+		}
+		startActivity(intent);
+		finish();
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 }
