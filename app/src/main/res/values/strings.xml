@@ -383,6 +383,7 @@
     <string name="share_text">Hey, check out this entry on MobStar: </string>
     <string name="twitter_share_text">Hey, check out this entry on @officialmobstar: </string>
     <string name="new_entries">NEW ENTRIES</string>
+    <string name="categories_home_fragment">CATEGORIES</string>
 
 
 </resources>
