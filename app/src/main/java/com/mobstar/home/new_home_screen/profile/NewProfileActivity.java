@@ -76,7 +76,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
 
         if (user.getUserId().equals(preferences.getString("userid", "0"))) {
             btnEdit.setVisibility(View.VISIBLE);
-            imgFollow.setVisibility(View.INVISIBLE);
+            imgFollow.setVisibility(View.GONE);
             imgMsg.setVisibility(View.GONE);
         } else if (user.getIsMyStar() != null && !user.getIsMyStar().equalsIgnoreCase("0")) {
             btnEdit.setVisibility(View.GONE);
