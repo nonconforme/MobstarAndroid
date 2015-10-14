@@ -105,8 +105,7 @@ public class GcmIntentService extends IntentService {
 					}
 
                     if (!badgeCount.isEmpty()) {
-                        Utility.setBadgeSamsung(getApplicationContext(), Integer.parseInt(badgeCount));
-                        Utility.setBadgeSony(getApplicationContext(), Integer.parseInt(badgeCount));
+                        Utility.setBadge(getApplicationContext(), Integer.parseInt(badgeCount));
                     }
 				}
 

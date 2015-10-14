@@ -162,9 +162,10 @@ public class NotificationsFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				
-//				new NotificationMarkRead(arrNotificationPojos.get(position).getNotificationID()).start();
+//				new NotificationMarkRead(arrNotifiascationPojos.get(position).getNotificationID()).start();
 				
 				new MessageRead(arrNotificationPojos.get(position).getEntryId()).start();
+                Utility.clearBadge(mContext.getApplicationContext());
 				
 				if(arrNotificationPojos.get(position).getNotificationType().equalsIgnoreCase(MESSAGE_TYPE)){
 					if(arrNotificationPojos.get(position).getMessageGroup().equalsIgnoreCase("1")){
