@@ -245,6 +245,11 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity
+            android:name=".home.notification.NotificationEntryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
             android:name=".settings.ChangePasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme"

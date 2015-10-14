@@ -13,7 +13,7 @@ import com.mobstar.api.DownloadFileManager;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.custom.recycler_view.sticky_recycler_view.StickyHeadersTouchListener;
 import com.mobstar.home.new_home_screen.EntryItem;
-import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
+import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.player.PlayerManager;
 import com.mobstar.utils.Constant;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 /**
  * Created by lipcha on 22.09.15.
  */
-public class ProfileFragment extends HomeVideoListBaseFragment implements EntryItem.OnChangeEntryListener {
+public class ProfileFragment extends VideoListBaseFragment implements EntryItem.OnChangeEntryListener {
 
 
     private UserProfile user;
