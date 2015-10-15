@@ -35,7 +35,7 @@ import java.util.HashMap;
 /**
  * Created by lipcha on 14.09.15.
  */
-public class HomeVideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>, DownloadFileManager.DownloadCallback, OnEndAnimationListener {
+public class VideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>, DownloadFileManager.DownloadCallback, OnEndAnimationListener, SwipeRefreshAction {
 
     public static final String IS_SEARCH_API     = "isSearchAPI";
     public static final String SEARCH_TERM       = "searchTerm";
@@ -47,7 +47,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     public static final String LATEST_OR_POPULAR = "latestORPopular";
     public static final String CATEGORY_ID       = "categoryId";
     public static final String IS_ENTRY_IPI      = "isEntryAPI";
-    private static final String LOG_TAG = HomeVideoListBaseFragment.class.getName();
+    private static final String LOG_TAG = VideoListBaseFragment.class.getName();
 
     private boolean isSearchAPI, isMobitAPI, isVoteAPI, isEntryIdAPI, isEntryAPI;
     private String searchTerm, deeplinkEntryId, latestORPopular, CategoryId, voteType;
@@ -59,8 +59,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     protected PullToRefreshRecyclerView pullToRefreshRecyclerView;
     protected DownloadFileManager downloadFileManager;
 
-    public static HomeVideoListBaseFragment newInstance(final boolean isEntryIdAPI, final String deepLinkedId, final String sLatestPopular, final String categoryId, boolean isEntryAPI) {
-        final HomeVideoListBaseFragment baseFragment = new HomeVideoListBaseFragment();
+    public static VideoListBaseFragment newInstance(final boolean isEntryIdAPI, final String deepLinkedId, final String sLatestPopular, final String categoryId, boolean isEntryAPI) {
+        final VideoListBaseFragment baseFragment = new VideoListBaseFragment();
         final Bundle args = new Bundle();
         args.putBoolean(IS_ENTRY_ID_API, isEntryIdAPI);
         args.putBoolean(IS_ENTRY_IPI, isEntryAPI);
@@ -79,10 +79,12 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View inflatedView = inflater.inflate(R.layout.home_video_list_base_fragment, container, false);
         findViews(inflatedView);
+        pullToRefreshRecyclerView.setEnablePullToRefresh(getEnablePulToRefreshAction());
         preferences = getActivity().getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
         getArgs();
         Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
         createEntryList();
+        entryAdapter.setEnableSwipeAction(getEnableSwipeCardAction());
         getEntryRequest(1);
         return inflatedView;
     }
@@ -90,6 +92,16 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     private void findViews(final View inflatedView) {
         textNoData = (TextView) inflatedView.findViewById(R.id.textNoData);
         pullToRefreshRecyclerView = (PullToRefreshRecyclerView) inflatedView.findViewById(R.id.pullToRefreshRecyclerView);
+    }
+
+    // override this method for enable/disable swipe action
+    public boolean getEnableSwipeCardAction(){
+        return true;
+    }
+
+    // override this method for enable/disable pull to refresh action
+    public boolean getEnablePulToRefreshAction(){
+        return true;
     }
 
     protected void getEntryRequest(final int pageNo) {
@@ -153,7 +165,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onFailure(String error) {
-                Log.d(LOG_TAG,"http request get:getEntryRequest.onFailure.error="+error);
+                Log.d(LOG_TAG, "http request get:getEntryRequest.onFailure.error=" + error);
                 endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());

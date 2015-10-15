@@ -1,7 +1,5 @@
 package com.mobstar.home;
 
-import java.net.URLEncoder;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,7 +16,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
 
 import com.mobstar.R;
-import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
+import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.utils.Utility;
 
 public class SearchFragment extends Fragment {
@@ -58,11 +56,11 @@ public class SearchFragment extends Fragment {
 				Fragment f = mFragmentManager.findFragmentById(R.id.frag_content);
 				if (!(f instanceof HomeFragment)) {
 //					SearchListFragment videoListFragment = new SearchListFragment();
-					HomeVideoListBaseFragment videoListFragment = new HomeVideoListBaseFragment();
-					Bundle extras = new Bundle();
-					extras.putBoolean(HomeVideoListBaseFragment.IS_SEARCH_API, true);
-					extras.putString(HomeVideoListBaseFragment.SEARCH_TERM, SearchText);
-					extras.putString(HomeVideoListBaseFragment.LATEST_OR_POPULAR, "latest");
+					final VideoListBaseFragment videoListFragment = new VideoListBaseFragment();
+					final Bundle extras = new Bundle();
+					extras.putBoolean(VideoListBaseFragment.IS_SEARCH_API, true);
+					extras.putString(VideoListBaseFragment.SEARCH_TERM, SearchText);
+					extras.putString(VideoListBaseFragment.LATEST_OR_POPULAR, "latest");
 					videoListFragment.setArguments(extras);
 					replaceFragment(videoListFragment, "SearchListFragment");
 					
