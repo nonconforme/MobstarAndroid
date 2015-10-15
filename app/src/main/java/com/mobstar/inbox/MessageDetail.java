@@ -1,8 +1,10 @@
 package com.mobstar.inbox;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -26,6 +28,10 @@ import android.widget.Toast;
 
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
+import com.mobstar.api.Api;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.responce.BaseResponse;
+import com.mobstar.api.responce.MessageListResponse;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.MessageThreadPojo;
@@ -43,7 +49,11 @@ import java.util.ArrayList;
 
 public class MessageDetail extends Activity implements OnClickListener{
 
-	Context mContext;
+    public static final String NEW_MESSAGE_ACTION = "new messsage action";
+    public static final String THREAD_ID_KEY = "threadId";
+    private static final String LOG_TAG = MessageDetail.class.getName();
+    private static boolean isActive = false;
+    Context mContext;
 	private SharedPreferences preferences;
 	private TextView textFans,textNoData;
 	private EditText editMessage;
@@ -60,15 +70,30 @@ public class MessageDetail extends Activity implements OnClickListener{
 	private ArrayList<ParticipantsPojo> arrParticipants;
 	private boolean isRefresh=false,FromNotification=false;
 	private LinearLayout llAdView;
+    private BroadcastReceiver mNewMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            messagesReaded();
+            updateMessageList(false);
+//            Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+//            if (Utility.isNetworkAvailable(mContext)) {
+//                new GetMessageThreadCall().start();
+//
+//            } else {
+//                Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//                Utility.HideDialog(mContext);
+//            }
+        }
+    };
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fans);
 
 		Bundle bundle=getIntent().getExtras();
 		if(bundle!=null){
-			threadId=bundle.getString("threadId");
+			threadId=bundle.getString(THREAD_ID_KEY);
 			profileimageUrl=bundle.getString("imageUrl");
 			UserName=bundle.getString("UserName");
 			senderUserId=bundle.getString("UserId");
@@ -85,7 +110,8 @@ public class MessageDetail extends Activity implements OnClickListener{
 		initControlls();
 		
 		if(FromNotification){
-			new MessageRead(threadId).start();
+            messagesReaded();
+//			new MessageRead(threadId).start();
 		}
 		
 		if(profileimageUrl== null || profileimageUrl.equalsIgnoreCase("")){
@@ -106,14 +132,15 @@ public class MessageDetail extends Activity implements OnClickListener{
 		messageAdapter=new MessagesAdapter();
 		listUser.setAdapter(messageAdapter);
 		if(threadId!=null && threadId.length()>0){
-			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-			if (Utility.isNetworkAvailable(mContext)) {
-				new GetMessageThreadCall().start();
-
-			} else {
-				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-				Utility.HideDialog(mContext);
-			}
+            updateMessageList(true);
+//			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+//			if (Utility.isNetworkAvailable(mContext)) {
+//				new GetMessageThreadCall().start();
+//
+//			} else {
+//				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//				Utility.HideDialog(mContext);
+//			}
 
 		}
 		LocalBroadcastManager.getInstance(MessageDetail.this).sendBroadcast(
@@ -122,7 +149,21 @@ public class MessageDetail extends Activity implements OnClickListener{
 				);
 	}
 
-	private void initControlls() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isActive=true;
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(mNewMessageReceiver, new IntentFilter(NEW_MESSAGE_ACTION));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isActive=false;
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mNewMessageReceiver);
+    }
+
+    private void initControlls() {
 		textNoData=(TextView)findViewById(R.id.textNoData);
 		textNoData.setVisibility(View.INVISIBLE);
 		textFans=(TextView)findViewById(R.id.textFans);
@@ -192,6 +233,26 @@ public class MessageDetail extends Activity implements OnClickListener{
 			startActivity(intent);
 		}
 	}
+
+    private void updateMessageList(boolean isShowProgress) {
+        if (isShowProgress) Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+        Api.getMessageList(mContext, threadId, new ConnectCallback<MessageListResponse>() {
+            @Override
+            public void onSuccess(MessageListResponse object) {
+                Log.d(LOG_TAG,"updateMessageList.onSuccess");
+                arrMessages = object.getArrMessages();
+                messageAdapter.notifyDataSetChanged();
+                listUser.setSelection(arrMessages.size() - 1);
+                Utility.HideDialog(mContext);
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.d(LOG_TAG,"updateMessageList.onFailure.error="+error);
+                Utility.HideDialog(mContext);
+        }
+        });
+    }
 	
 
 	class GetMessageThreadCall extends Thread {
@@ -352,18 +413,18 @@ public class MessageDetail extends Activity implements OnClickListener{
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(editMessage.getWindowToken(), 0);
 				arrMessages.clear();
-				
-			
-			
-				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-				if (Utility.isNetworkAvailable(mContext)) {
-					new GetMessageThreadCall().start();
 
-				} else {
 
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-					Utility.HideDialog(mContext);
-				}
+                updateMessageList(false);
+//				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+//				if (Utility.isNetworkAvailable(mContext)) {
+//					new GetMessageThreadCall().start();
+//
+//				} else {
+//
+//					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//					Utility.HideDialog(mContext);
+//				}
 			} else {
 
 			}
@@ -575,7 +636,21 @@ public class MessageDetail extends Activity implements OnClickListener{
 		intent.putExtra("isRefresh", isRefresh);
 		setResult(101,intent);
 		finish();
-	};
+	}
+
+    private void messagesReaded() {
+        Api.sendRequestMessageThreadReaded(mContext, threadId, new ConnectCallback<BaseResponse>() {
+            @Override
+            public void onSuccess(BaseResponse object) {
+                Log.d(LOG_TAG, "messagesReaded.onSuccess");
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.d(LOG_TAG, "messagesReaded.onFailure.error=" + error);
+            }
+        });
+    }
 	
 	class MessageRead extends Thread {
 
@@ -594,6 +669,7 @@ public class MessageDetail extends Activity implements OnClickListener{
 			Log.v(Constant.TAG, "MessagesRead Call response " + response);
 
 			if (response != null) {
+//{"message":"Thread read successfully."}
 
 //				try {
 //
@@ -638,4 +714,7 @@ public class MessageDetail extends Activity implements OnClickListener{
 		}
 	};
 
+    public static boolean isActive() {
+        return isActive;
+    }
 }

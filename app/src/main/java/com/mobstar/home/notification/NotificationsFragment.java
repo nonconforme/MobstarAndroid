@@ -170,7 +170,7 @@ public class NotificationsFragment extends Fragment {
 					}
 					else{
 						final Intent intent = new Intent(mContext, MessageDetail.class);
-						intent.putExtra("threadId",arrNotificationPojos.get(position).getEntryId());
+						intent.putExtra(MessageDetail.THREAD_ID_KEY,arrNotificationPojos.get(position).getEntryId());
 						intent.putExtra("UserName",arrNotificationPojos.get(position).getEntryName());
 						startActivityForResult(intent, 101);
 					}

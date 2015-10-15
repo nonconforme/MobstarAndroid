@@ -168,6 +168,7 @@ public class Constant {
     public static final String STAR_VALUE = "star";
     public static final String USER_ID_VALUE = "userId";
     public static final String ENTRY_ID_VALUE = "entryId";
+    public static final String THREAD_ID_VALUE = "threadId";
 
     public static final String USER_CATEGORIES_FILTERS = "settings/categoryFilter";
 

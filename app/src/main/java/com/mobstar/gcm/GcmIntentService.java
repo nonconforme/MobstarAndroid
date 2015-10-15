@@ -59,12 +59,14 @@ public class GcmIntentService extends IntentService {
 				if(extras.containsKey("Type")){
 					String badgeCount="";
                     badgeCount=extras.getString("badge","");
+                    boolean isShowBadge=true;
 
                     Log.d(LOG_TAG, "Type=" + extras.getString("Type"));
                     Log.d(LOG_TAG, "extras=" + extras.toString());
                     Log.d(LOG_TAG, "badge=" + badgeCount);
 
 					if(extras.getString("Type").toString().equalsIgnoreCase("Message")){
+                        isShowBadge=false;
 						String messageGroup=extras.getString("messageGroup");
 						String threadId=extras.getString("entry_id");
 						String message=extras.getString("message").toString();
@@ -104,7 +106,7 @@ public class GcmIntentService extends IntentService {
 						}
 					}
 
-                    if (!badgeCount.isEmpty()) {
+                    if (!badgeCount.isEmpty() && isShowBadge) {
                         Utility.setBadgeSamsung(getApplicationContext(), Integer.parseInt(badgeCount));
                         Utility.setBadgeSony(getApplicationContext(), Integer.parseInt(badgeCount));
                     }
@@ -142,29 +144,36 @@ public class GcmIntentService extends IntentService {
 		Intent intent = new Intent("GetNotificationCount");
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-		mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (MessageDetail.isActive()) {
+            Intent messageIntent = new Intent(MessageDetail.NEW_MESSAGE_ACTION);
+            messageIntent.putExtra(MessageDetail.THREAD_ID_KEY,threadId);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
+        } else {
 
-		PendingIntent contentIntent = null;
 
-		if(messageGroup.equalsIgnoreCase("0")){
-			Intent i=new Intent(this,MessageDetail.class);
-			i.putExtra("threadId",threadId);
-			i.putExtra("UserName",name);
-			i.putExtra("FromNotification",true);
-			contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
-		}
-		else{
-			Intent i=new Intent(this,GroupMessageDetail.class);
-			i.putExtra("threadId",threadId);
-			i.putExtra("FromNotification",true);
-			contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
-		}
-		NotificationCompat.Builder mBuilder =getNotificationBuilder();
-        mBuilder.setContentTitle(getString(R.string.mobstar_notification))
-				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
-		mBuilder.setAutoCancel(true);
-		mBuilder.setContentIntent(contentIntent);
-		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+            mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+            PendingIntent contentIntent = null;
+
+            if (messageGroup.equalsIgnoreCase("0")) {
+                Intent i = new Intent(this, MessageDetail.class);
+                i.putExtra(MessageDetail.THREAD_ID_KEY, threadId);
+                i.putExtra("UserName", name);
+                i.putExtra("FromNotification", true);
+                contentIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+            } else {
+                Intent i = new Intent(this, GroupMessageDetail.class);
+                i.putExtra("threadId", threadId);
+                i.putExtra("FromNotification", true);
+                contentIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+            }
+            NotificationCompat.Builder mBuilder = getNotificationBuilder();
+            mBuilder.setContentTitle(getString(R.string.mobstar_notification))
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
+            mBuilder.setAutoCancel(true);
+            mBuilder.setContentIntent(contentIntent);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        }
 	}
 
 	private void sendNotification(String msg,String entryId) {
