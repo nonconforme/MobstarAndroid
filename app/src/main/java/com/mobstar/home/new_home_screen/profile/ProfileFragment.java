@@ -167,7 +167,7 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
     @Override
     protected void refreshEntryList() {
         super.refreshEntryList();
-        if (entryAdapter.getArrEntries().size() > 0)
+        if (entryAdapter.getArrEntries().size() > 0 && getActivity() != null)
             ((NewProfileActivity) getActivity()).setIAmStar(entryAdapter.getEntry(0).getIAmStar());
     }
 
