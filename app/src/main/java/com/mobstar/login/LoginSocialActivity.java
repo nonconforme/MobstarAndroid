@@ -100,6 +100,10 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			}
 			Session.setActiveSession(session);
 		}
+        session = Session.getActiveSession();
+        session.closeAndClearTokenInformation();
+        session.removeCallback(statusCallback);
+        Session.setActiveSession(session);
 
 		Utility.SendDataToGA("LgoinSocial Screen", LoginSocialActivity.this);
 
@@ -148,11 +152,11 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			dialog.setContentView(R.layout.dialog_fb);
 			btnClose = (ImageButton) dialog.findViewById(R.id.btnClose);
 			btnClose.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
 			btnAllow = (Button) dialog.findViewById(R.id.btnAllow);
 			btnAllow.setOnClickListener(new OnClickListener() {
 
