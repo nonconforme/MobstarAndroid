@@ -41,6 +41,7 @@ public class SwipeCardView extends FrameLayout {
     private int mGravity;
     private boolean mDragging;
     private OnSwipeDismissListener onSwipeDismissListener;
+    private boolean isEnableSwipeAction = true;
 
 
     private View swipeLeftViewIndicator;
@@ -71,6 +72,10 @@ public class SwipeCardView extends FrameLayout {
         this.mTouchSlop = viewConfiguration.getScaledTouchSlop();
         this.mGestureDetector = new GestureDetector(this.getContext(), new GestureListener());
 
+    }
+
+    public void setEnableSwipeAction(boolean isEnable){
+        isEnableSwipeAction = isEnable;
     }
 
     private void initFromXml(AttributeSet attr) {
@@ -195,7 +200,7 @@ public class SwipeCardView extends FrameLayout {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        if(this.mTopView == null) {
+        if(this.mTopView == null || !isEnableSwipeAction) {
             return false;
         } else if(this.mGestureDetector.onTouchEvent(event)) {
             return true;

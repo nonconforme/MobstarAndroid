@@ -26,6 +26,7 @@ import com.mobstar.custom.recycler_view.EndlessRecyclerOnScrollListener;
 import com.mobstar.custom.recycler_view.OnEndAnimationListener;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.player.PlayerManager;
+import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
@@ -34,7 +35,7 @@ import java.util.HashMap;
 /**
  * Created by lipcha on 14.09.15.
  */
-public class HomeVideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>, DownloadFileManager.DownloadCallback, OnEndAnimationListener {
+public class VideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>, DownloadFileManager.DownloadCallback, OnEndAnimationListener, SwipeRefreshAction {
 
     public static final String IS_SEARCH_API     = "isSearchAPI";
     public static final String SEARCH_TERM       = "searchTerm";
@@ -46,7 +47,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     public static final String LATEST_OR_POPULAR = "latestORPopular";
     public static final String CATEGORY_ID       = "categoryId";
     public static final String IS_ENTRY_IPI      = "isEntryAPI";
-    private static final String LOG_TAG = HomeVideoListBaseFragment.class.getName();
+    private static final String LOG_TAG = VideoListBaseFragment.class.getName();
 
     private boolean isSearchAPI, isMobitAPI, isVoteAPI, isEntryIdAPI, isEntryAPI;
     private String searchTerm, deeplinkEntryId, latestORPopular, CategoryId, voteType;
@@ -58,8 +59,8 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     protected PullToRefreshRecyclerView pullToRefreshRecyclerView;
     protected DownloadFileManager downloadFileManager;
 
-    public static HomeVideoListBaseFragment newInstance(final boolean isEntryIdAPI, final String deepLinkedId, final String sLatestPopular, final String categoryId, boolean isEntryAPI) {
-        final HomeVideoListBaseFragment baseFragment = new HomeVideoListBaseFragment();
+    public static VideoListBaseFragment newInstance(final boolean isEntryIdAPI, final String deepLinkedId, final String sLatestPopular, final String categoryId, boolean isEntryAPI) {
+        final VideoListBaseFragment baseFragment = new VideoListBaseFragment();
         final Bundle args = new Bundle();
         args.putBoolean(IS_ENTRY_ID_API, isEntryIdAPI);
         args.putBoolean(IS_ENTRY_IPI, isEntryAPI);
@@ -78,10 +79,12 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View inflatedView = inflater.inflate(R.layout.home_video_list_base_fragment, container, false);
         findViews(inflatedView);
+        pullToRefreshRecyclerView.setEnablePullToRefresh(getEnablePulToRefreshAction());
         preferences = getActivity().getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
         getArgs();
         Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
         createEntryList();
+        entryAdapter.setEnableSwipeAction(getEnableSwipeCardAction());
         getEntryRequest(1);
         return inflatedView;
     }
@@ -89,6 +92,16 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     private void findViews(final View inflatedView) {
         textNoData = (TextView) inflatedView.findViewById(R.id.textNoData);
         pullToRefreshRecyclerView = (PullToRefreshRecyclerView) inflatedView.findViewById(R.id.pullToRefreshRecyclerView);
+    }
+
+    // override this method for enable/disable swipe action
+    public boolean getEnableSwipeCardAction(){
+        return true;
+    }
+
+    // override this method for enable/disable pull to refresh action
+    public boolean getEnablePulToRefreshAction(){
+        return true;
     }
 
     protected void getEntryRequest(final int pageNo) {
@@ -152,7 +165,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
 
             @Override
             public void onFailure(String error) {
-                Log.d(LOG_TAG,"http request get:getEntryRequest.onFailure.error="+error);
+                Log.d(LOG_TAG, "http request get:getEntryRequest.onFailure.error=" + error);
                 endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());
@@ -171,18 +184,21 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     private void downloadFirstFile() {
-        if (entryAdapter.getItemCount() == 0 || entryAdapter.getEntry(0).getType() == null)
+        if (entryAdapter.getItemCount() == 0 || entryAdapter.getEntry(0) == null || entryAdapter.getEntry(0).getType() == null)
             return;
         Handler handler = new Handler();
         handler.postDelayed(
                 new Runnable() {
                     public void run() {
-                        switch (entryAdapter.getEntry(0).getType()) {
+                        final EntryPojo entryPojo = entryAdapter.getEntry(0);
+                        if (entryPojo == null)
+                            return;
+                        switch (entryPojo.getType()) {
                             case "audio":
-                                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getAudioLink(), 0);
+                                downloadFileManager.downloadFile(entryPojo.getAudioLink(), 0);
                                 break;
                             case "video":
-                                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getVideoLink(), 0);
+                                downloadFileManager.downloadFile(entryPojo.getVideoLink(), 0);
                                 break;
                         }
                     }
@@ -214,7 +230,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener() {
         @Override
         public void onLoadMore(int currentPage) {
-            Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
+            Utility.ShowProgressDialog(getContext().getApplicationContext(), getContext().getApplicationContext().getString(R.string.loading));
             getEntryRequest(currentPage);
         }
 
@@ -261,27 +277,31 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     protected void cancelDownloadFile(int cancelPosition) {
-        if (cancelPosition == -1 || cancelPosition >= entryAdapter.getItemCount() || entryAdapter.getEntry(cancelPosition).getType() == null)
+        if(cancelPosition == -1 || cancelPosition >= entryAdapter.getItemCount())
             return;
-        switch (entryAdapter.getEntry(cancelPosition).getType()) {
+        final EntryPojo entryPojo = entryAdapter.getEntry(cancelPosition);
+        if (entryPojo == null || entryPojo.getType() == null)
+            return;
+        switch (entryPojo.getType()) {
             case "audio":
-                downloadFileManager.cancelFile(entryAdapter.getEntry(cancelPosition).getAudioLink());
+                downloadFileManager.cancelFile(entryPojo.getAudioLink());
                 break;
             case "video":
-                downloadFileManager.cancelFile(entryAdapter.getEntry(cancelPosition).getVideoLink());
+                downloadFileManager.cancelFile(entryPojo.getVideoLink());
                 break;
         }
     }
 
     protected void downloadFile(int currentPosition) {
-        if (entryAdapter.getEntry(currentPosition) == null || entryAdapter.getEntry(currentPosition).getType() == null)
+        final EntryPojo entryPojo = entryAdapter.getEntry(currentPosition);
+        if (entryPojo == null || entryPojo.getType() == null)
             return;
-        switch (entryAdapter.getEntry(currentPosition).getType()) {
+        switch (entryPojo.getType()) {
             case "audio":
-                downloadFileManager.downloadFile(entryAdapter.getEntry(currentPosition).getAudioLink(), currentPosition);
+                downloadFileManager.downloadFile(entryPojo.getAudioLink(), currentPosition);
                 break;
             case "video":
-                downloadFileManager.downloadFile(entryAdapter.getEntry(currentPosition).getVideoLink(), currentPosition);
+                downloadFileManager.downloadFile(entryPojo.getVideoLink(), currentPosition);
                 break;
         }
     }

@@ -81,9 +81,13 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private LinearLayout llItemUser;
     private boolean isRemoveItemAfterVotingNo = true;
 
-    public EntryItem(View itemView) {
+    private boolean isEnableSwipeAction = true;
+
+    public EntryItem(View itemView, boolean isEnableSwipe) {
         super(itemView);
+        isEnableSwipeAction = isEnableSwipe;
         findView(itemView);
+
     }
 
     public int getPos() {
@@ -130,6 +134,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         baseActivity = _activity;
         position = _position;
         swipeCardView.resetTopView();
+        swipeCardView.setEnableSwipeAction(isEnableSwipeAction);
         onChangeEntryListener = _onChangeEntryListener;
         if (entryPojo.getCategory() != null && entryPojo.getCategory().equalsIgnoreCase("onlyprofile")){
             setupUserViews();

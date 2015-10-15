@@ -19,12 +19,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     protected LayoutInflater layoutInflater;
     protected BaseActivity baseActivity;
     protected ArrayList<EntryItem> itemsList;
+    protected boolean isEnableSwipeAction = true;
 
     public RecyclerViewAdapter(final BaseActivity activity) {
         this.arrEntryes = new ArrayList<>();
         baseActivity = activity;
         itemsList = new ArrayList<>();
         layoutInflater = LayoutInflater.from(baseActivity);
+    }
+
+    public void setEnableSwipeAction(final boolean isEnable){
+        isEnableSwipeAction = isEnable;
     }
 
     public void clearArrayEntry(){
@@ -45,10 +50,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public EntryPojo getEntry(int position){
-        if (position > arrEntryes.size())
+        if (position != -1 || position < arrEntryes.size())
+            return arrEntryes.get(position);
+        if (position == arrEntryes.size())
             return arrEntryes.get(arrEntryes.size() - 1);
-        return arrEntryes.get(position);
+        else return null;
     }
+
     public ArrayList<EntryPojo> getArrEntries(){
         return arrEntryes;
     }
@@ -56,7 +64,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         final View inflatedView = layoutInflater.inflate(R.layout.row_item_entry, viewGroup, false);
-        final EntryItem entryItem = new EntryItem(inflatedView);
+        final EntryItem entryItem = new EntryItem(inflatedView, isEnableSwipeAction);
         itemsList.add(entryItem);
         return entryItem;
     }

@@ -35,7 +35,7 @@ import com.mobstar.api.RestClient;
 import com.mobstar.api.responce.CategoriesFilterResponse;
 import com.mobstar.api.responce.ContinentFilterResponse;
 import com.mobstar.custom.CustomTextviewBold;
-import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
+import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -181,7 +181,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //			extras.putString("deepLinkedId",deepLinkedId);
 //			extras.putString("LatestORPopular", sLatestPopular);
 //			videoListFragment.setArguments(extras);
-			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, deepLinkedId, sLatestPopular, null, false);
+			VideoListBaseFragment videoListFragment = VideoListBaseFragment.newInstance(true, deepLinkedId, sLatestPopular, null, false);
 			replaceFragment(videoListFragment, "VideoListFragment");
 		}
 		else {
@@ -190,7 +190,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //			extras.putBoolean("isEntryAPI", true);
 //			extras.putString("LatestORPopular", sLatestPopular);
 //			videoListFragment.setArguments(extras);
-			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, sLatestPopular, null, true);
+			VideoListBaseFragment videoListFragment = VideoListBaseFragment.newInstance(false, null, sLatestPopular, null, true);
 			replaceFragment(videoListFragment, "VideoListFragment");	
 		}
 		isDataLoaded = true;
@@ -446,7 +446,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //        extras.putBoolean("isEntryAPI", true);
 //        extras.putString("LatestORPopular", "latest");
 //        videoListFragment.setArguments(extras);
-		HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, "latest", null, true);
+		VideoListBaseFragment videoListFragment = VideoListBaseFragment.newInstance(false, null, "latest", null, true);
         replaceFragment(videoListFragment, "VideoListFragment");
     }
 
