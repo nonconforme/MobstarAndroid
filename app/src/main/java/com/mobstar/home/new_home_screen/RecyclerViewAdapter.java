@@ -50,10 +50,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public EntryPojo getEntry(int position){
-        if (position > arrEntryes.size())
+        if (position != -1 || position < arrEntryes.size())
+            return arrEntryes.get(position);
+        if (position == arrEntryes.size())
             return arrEntryes.get(arrEntryes.size() - 1);
-        return arrEntryes.get(position);
+        else return null;
     }
+
     public ArrayList<EntryPojo> getArrEntries(){
         return arrEntryes;
     }
