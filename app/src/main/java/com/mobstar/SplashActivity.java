@@ -63,7 +63,6 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		registerNetworkConnectReceiver();
 		String android_id = Secure.getString(this.getContentResolver(),
 				Secure.ANDROID_ID);
 		String device_id=android_id;
@@ -212,6 +211,12 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 		startActivity(intent);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		registerNetworkConnectReceiver();
+	}
+
 	private void registerNetworkConnectReceiver(){
 		final IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(NetworkChangeReceiver.CONNECTIVITY_CHANGE);
@@ -244,10 +249,16 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	protected void onPause() {
+		super.onPause();
 		unregisteredNetworkConnectReceiver();
 	}
+
+//	@Override
+//	protected void onDestroy() {
+//		super.onDestroy();
+//		unregisteredNetworkConnectReceiver();
+//	}
 
 	private void registerInBackground() {
 		new GCMRegistrationCall().start();

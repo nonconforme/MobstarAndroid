@@ -109,6 +109,8 @@ public class Constant {
 	public static final String USER_MY_PROFILE = "/user/me/profile/";
 	
 	public static String GET_ENTRY= "entry/";
+
+	public static final String INFO = "/info/";
 	
 	public static String GET_CATEGORY= "category";
 
