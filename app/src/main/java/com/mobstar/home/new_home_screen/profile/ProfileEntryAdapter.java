@@ -71,7 +71,7 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
         }
 
         final View inflatedView = layoutInflater.inflate(R.layout.row_item_entry, viewGroup, false);
-        final EntryItem entryItem = new EntryItem(inflatedView);
+        final EntryItem entryItem = new EntryItem(inflatedView, true);
         itemsList.add(entryItem);
         return entryItem;
     }

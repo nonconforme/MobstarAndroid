@@ -83,9 +83,13 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private LinearLayout llItemUser;
     private boolean isRemoveItemAfterVotingNo = true;
 
-    public EntryItem(View itemView) {
+    private boolean isEnableSwipeAction = true;
+
+    public EntryItem(View itemView, boolean isEnableSwipe) {
         super(itemView);
+        isEnableSwipeAction = isEnableSwipe;
         findView(itemView);
+
     }
 
     public int getPos() {
@@ -132,6 +136,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         baseActivity = _activity;
         position = _position;
         swipeCardView.resetTopView();
+        swipeCardView.setEnableSwipeAction(isEnableSwipeAction);
         onChangeEntryListener = _onChangeEntryListener;
         if (entryPojo.getCategory() != null && entryPojo.getCategory().equalsIgnoreCase("onlyprofile")){
             setupUserViews();
@@ -192,9 +197,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             if (entryPojo.getIsMyStar() != null) {
                 if (!entryPojo.getIsMyStar().equalsIgnoreCase("0")) {
                     btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.yellow_btn));
+                    btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.white_color));
                     btnFollow.setText(baseActivity.getString(R.string.following));
                 } else {
                     btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.selector_oval_button));
+                    btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.comment_color));
                     btnFollow.setText(baseActivity.getString(R.string.follow));
                 }
             }
@@ -267,7 +274,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void setupImage() {
-        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1")) {
+        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1") && entryPojo.getIsMyStar() != null && entryPojo.getIsMyStar().equalsIgnoreCase("1")) {
             Picasso.with(baseActivity).load(R.drawable.msg_act_btn).into(imgMsg);
         } else {
             Picasso.with(baseActivity).load(R.drawable.msg_btn).into(imgMsg);
@@ -510,13 +517,29 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void startMessageActivity() {
-        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1")) {
+        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1") && entryPojo.getIsMyStar() != null && entryPojo.getIsMyStar().equalsIgnoreCase("1")) {
             //following
             final Intent intent = new Intent(baseActivity, MessageActivity.class);
             intent.putExtra("recipent", entryPojo.getUserID());
             intent.putExtra("isDisableCompose", true);
             startActivity(intent);
-        }
+        }else startMessageErrorDialog();
+    }
+
+    private void startMessageErrorDialog(){
+        final Dialog dialog = new Dialog(baseActivity, R.style.DialogAnimationTheme);
+        dialog.setContentView(R.layout.message_error_dialog);
+        dialog.show();
+
+        final Timer timer = new Timer();
+        final TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        };
+        timer.schedule(task, 3000);
     }
 
     private void startActivity(final Intent intent) {

@@ -1,4 +1,4 @@
-package com.mobstar.home;
+package com.mobstar.home.notification;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
-import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.inbox.GroupMessageDetail;
 import com.mobstar.inbox.MessageDetail;
@@ -45,18 +44,15 @@ import java.util.ArrayList;
 
 public class NotificationsFragment extends Fragment {
 
-	Context mContext;
-	TextView textNotification;
-	TextView textNoData;
-
-	SharedPreferences preferences;
-
-	ListView listNotification;
-	NotificationListAdapter notificationListAdapter;
+	private Context mContext;
+	private TextView textNotification;
+	private TextView textNoData;
+	private SharedPreferences preferences;
+	private ListView listNotification;
+	private NotificationListAdapter notificationListAdapter;
 	public String sErrorMessage;
-
-	ArrayList<NotificationPojo> arrNotificationPojos = new ArrayList<NotificationPojo>();
-	ArrayList<String> arrSelectionNotificationID = new ArrayList<String>();
+	private ArrayList<NotificationPojo> arrNotificationPojos = new ArrayList<NotificationPojo>();
+	private ArrayList<String> arrSelectionNotificationID = new ArrayList<String>();
 	private String NotificationId="";
 	private String MESSAGE_TYPE="Message";	
 
@@ -168,24 +164,24 @@ public class NotificationsFragment extends Fragment {
 				
 				if(arrNotificationPojos.get(position).getNotificationType().equalsIgnoreCase(MESSAGE_TYPE)){
 					if(arrNotificationPojos.get(position).getMessageGroup().equalsIgnoreCase("1")){
-						Intent intent=new Intent(mContext,GroupMessageDetail.class);
+						final Intent intent = new Intent(mContext, GroupMessageDetail.class);
 						intent.putExtra("threadId",arrNotificationPojos.get(position).getEntryId());
-						startActivityForResult(intent,101);
+						startActivityForResult(intent, 101);
 					}
 					else{
-						Intent intent=new Intent(mContext,MessageDetail.class);
+						final Intent intent = new Intent(mContext, MessageDetail.class);
 						intent.putExtra("threadId",arrNotificationPojos.get(position).getEntryId());
 						intent.putExtra("UserName",arrNotificationPojos.get(position).getEntryName());
-						startActivityForResult(intent,101);
+						startActivityForResult(intent, 101);
 					}
 				}
 				else{
-					Intent intent=new Intent(mContext, NewProfileActivity.class);
+					final Intent intent = new Intent(mContext, NotificationEntryActivity.class);
 					final UserProfile userProfile = UserProfile.newBuilder()
 							.setEntryId(arrNotificationPojos.get(position).getEntryId())
 							.build();
-					intent.putExtra(NewProfileActivity.USER, userProfile);
-					intent.putExtra(NewProfileActivity.IS_NOTIFICATION, true);
+					intent.putExtra(NotificationEntryActivity.USER, userProfile);
+					intent.putExtra(NotificationEntryActivity.IS_NOTIFICATION, true);
 //					intent.putExtra("EntryId",arrNotificationPojos.get(position).getEntryId());
 					startActivityForResult(intent, 101);
 				}

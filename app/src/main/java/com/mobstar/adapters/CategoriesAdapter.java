@@ -24,7 +24,6 @@ public class CategoriesAdapter extends BaseAdapter {
     private final ArrayList<CategoryPojo> allCategories;
     private final Context context;
     private final int size;
-    private final int titleSize;
 
     public CategoriesAdapter(Context context,ArrayList<CategoryPojo> allCategories, ArrayList<Integer> choosenCategories) {
         this.context = context;
@@ -36,7 +35,6 @@ public class CategoriesAdapter extends BaseAdapter {
         }
 
         size = context.getResources().getDimensionPixelOffset(R.dimen.ic_size_category);
-        titleSize = context.getResources().getDimensionPixelOffset(R.dimen.title_size_category);
         Log.d(LOG_TAG,"allCategories.size="+allCategories.size());
         Log.d(LOG_TAG,"choosenCategories.size="+this.choosenCategories.size());
     }
@@ -77,72 +75,79 @@ public class CategoriesAdapter extends BaseAdapter {
     }
 
     private void setData(final ViewHolder viewHolder, final int position) {
-        CheckableView checkableView =  viewHolder.checkableView;
-        checkableView.getTvTitle().setTextSize(titleSize);
-        if (position==0){
-            checkableView.setVisibleChecked(false);
-            checkableView.getTvTitle().setTextColor(context.getResources().getColor(android.R.color.black));
-            checkableView.setTitle(context.getResources().getString(R.string.all));
-//            checkableView.setOnlyCheck(true);
-            checkableView.setIsVisibleShadow(false);
-            checkableView.getIvLeftImage().getLayoutParams().height= ViewGroup.LayoutParams.WRAP_CONTENT;
-            checkableView.getIvLeftImage().getLayoutParams().width= ViewGroup.LayoutParams.WRAP_CONTENT;
-            Picasso.with(context).load(R.drawable.icn_btn_all)
-                    .into(checkableView.getIvLeftImage());
-//            checkableView.setLeftImageDrawable(context.getResources().getDrawable(R.drawable.icn_btn_all));
-            checkableView.setMainBackground(context.getResources().getDrawable(R.drawable.oval_white_button_background));
-            checkableView.setOnCheckedChangeListener(null);
-            checkableView.setCustomOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    allChoose();
-                    Log.d(LOG_TAG, "click on ALL");
-                    notifyDataSetChanged();
-                }
-            });
-
+        final CheckableView checkableView =  viewHolder.checkableView;
+        if (position == 0){
+         setupAllCategoryItem(checkableView);
         }
         else {
-            final CategoryPojo categoryObj=allCategories.get(position-1);
-            if (categoryObj.getCategoryName() != null && categoryObj.getCategoryName().length() > 0) {
-
-                checkableView.setTitle(categoryObj.getCategoryName());
-            }
-            checkableView.getIvLeftImage().getLayoutParams().height= size;
-            checkableView.getIvLeftImage().getLayoutParams().width= size;
-            if (categoryObj.getCategoryDescription() != null && categoryObj.getCategoryDescription().length() > 0) {
-                Picasso.with(context).load(categoryObj.getCategoryDescription())
-                        .placeholder(R.drawable.ic_pic_small)
-                        .into(checkableView.getIvLeftImage());
-            } else {
-                Picasso.with(context).load(R.drawable.ic_pic_small)
-                        .into(checkableView.getIvLeftImage());
-            }
-            //set background
-            if(!categoryObj.getCategoryActive()){
-                checkableView.setVisibleChecked(false);
-                checkableView.setMainBackground(context.getResources().getDrawable(R.drawable.btn_coming_soon));
-                checkableView.setIsVisibleShadow(false);
-                checkableView.setCustomOnClickListener(null);
-            }
-            else {
-                checkableView.setOnlyCheck(choosenCategories.contains(Integer.parseInt(categoryObj.getID())));
-                checkableView.setMainBackground(context.getResources().getDrawable(R.drawable.yellow_btn));
-                checkableView.setOnCheckedChangeListener(new CheckableView.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChange(CheckableView _view, boolean _checked) {
-                        if (choosenCategories.contains(Integer.parseInt(categoryObj.getID()))) {
-                            choosenCategories.remove((Integer)Integer.parseInt(categoryObj.getID()));
-                        } else {
-                            choosenCategories.add(Integer.parseInt(categoryObj.getID()));
-                        }
-                        Log.d(LOG_TAG, "position=" + categoryObj.getID());
-                        Log.d(LOG_TAG, "choosenContinents.size()=" + choosenCategories.size());
-                    }
-                });
-            }
+           setupCategorieItems(checkableView, position);
         }
     }
+
+    private void setupAllCategoryItem(final CheckableView checkableView){
+        checkableView.setVisibleChecked(false);
+        checkableView.getTvTitle().setTextColor(context.getResources().getColor(android.R.color.black));
+        checkableView.setTitle(context.getResources().getString(R.string.all));
+        checkableView.setIsVisibleShadow(false);
+        checkableView.getIvLeftImage().getLayoutParams().height= ViewGroup.LayoutParams.WRAP_CONTENT;
+        checkableView.getIvLeftImage().getLayoutParams().width= ViewGroup.LayoutParams.WRAP_CONTENT;
+        Picasso.with(context).load(R.drawable.icn_btn_all)
+                .into(checkableView.getIvLeftImage());
+        checkableView.setMainBackground(context.getResources().getDrawable(R.drawable.oval_white_button_background));
+        checkableView.setOnCheckedChangeListener(null);
+        checkableView.setCustomOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                allChoose();
+                Log.d(LOG_TAG, "click on ALL");
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void setupCategorieItems(final CheckableView checkableView, final int position){
+        checkableView.getTvTitle().setTextColor(context.getResources().getColor(R.color.white_color));
+        final CategoryPojo categoryObj = allCategories.get(position - 1);
+        if (categoryObj.getCategoryName() != null && categoryObj.getCategoryName().length() > 0) {
+
+            checkableView.setTitle(categoryObj.getCategoryName());
+        }
+        checkableView.getIvLeftImage().getLayoutParams().height= size;
+        checkableView.getIvLeftImage().getLayoutParams().width= size;
+        if (categoryObj.getCategoryDescription() != null && categoryObj.getCategoryDescription().length() > 0) {
+            Picasso.with(context).load(categoryObj.getCategoryDescription())
+                    .placeholder(R.drawable.ic_pic_small)
+                    .into(checkableView.getIvLeftImage());
+        } else {
+            Picasso.with(context).load(R.drawable.ic_pic_small)
+                    .into(checkableView.getIvLeftImage());
+        }
+        //set background
+        if(!categoryObj.getCategoryActive()){
+            checkableView.setVisibleChecked(false);
+            checkableView.setMainBackground(context.getResources().getDrawable(R.drawable.btn_coming_soon));
+            checkableView.setIsVisibleShadow(false);
+            checkableView.setCustomOnClickListener(null);
+        }
+        else {
+            checkableView.setOnlyCheck(choosenCategories.contains(Integer.parseInt(categoryObj.getID())));
+            checkableView.setMainBackground(context.getResources().getDrawable(R.drawable.yellow_btn));
+            checkableView.setOnCheckedChangeListener(new CheckableView.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChange(CheckableView _view, boolean _checked) {
+                    if (choosenCategories.contains(Integer.parseInt(categoryObj.getID()))) {
+                        choosenCategories.remove((Integer)Integer.parseInt(categoryObj.getID()));
+                    } else {
+                        choosenCategories.add(Integer.parseInt(categoryObj.getID()));
+                    }
+                    Log.d(LOG_TAG, "position=" + categoryObj.getID());
+                    Log.d(LOG_TAG, "choosenContinents.size()=" + choosenCategories.size());
+                }
+            });
+        }
+    }
+
+
 
     private void allChoose() {
         choosenCategories.clear();
