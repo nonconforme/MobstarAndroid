@@ -90,6 +90,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
+    @Override
+    public void onChangeEntry(EntryPojo entryPojo) {
+        if (entryPojo == null)
+            return;
+        for (int i = 0; i < itemsList.size(); i ++){
+            if (itemsList.get(i).getEntryPojo().getID().equalsIgnoreCase(entryPojo.getID()))
+                itemsList.get(i).refreshEntry(entryPojo);
+        }
+
+        for(int i = 0; i < arrEntryes.size(); i ++){
+            if (arrEntryes.get(i).getID().equalsIgnoreCase(entryPojo.getID()))
+                arrEntryes.set(i, entryPojo);
+        }
+    }
+
     public EntryItem getEntryAtPosition(int position){
         for (int i = 0; i < itemsList.size(); i ++){
             if (itemsList.get(i).getPos() == position)

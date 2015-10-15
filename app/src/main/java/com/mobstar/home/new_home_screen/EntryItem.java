@@ -163,7 +163,12 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         }
     }
 
-    private void setupEntryViews() {
+    public void refreshEntry(final EntryPojo _entryPojo){
+        entryPojo = _entryPojo;
+        setupEntryViews();
+    }
+
+    public void setupEntryViews() {
         llItemUser.setVisibility(View.GONE);
         llItemEntry.setVisibility(View.VISIBLE);
         swipeCardView.setSwipeLeftViewIndicator(votingNo);
@@ -547,7 +552,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
             @Override
             public void onSuccess(VoteResponse object) {
-
+                if (object.getArrEntry() != null & object.getArrEntry().size() > 0 && onChangeEntryListener != null){
+                    onChangeEntryListener.onChangeEntry(object.getArrEntry().get(0));
+                }
             }
 
             @Override
@@ -601,6 +608,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         void onRemoveEntry(int position);
 
         void onFollowEntry(String uId, String isMyStar);
+
+        void onChangeEntry(final EntryPojo entryPojo);
     }
 
     public EntryPojo getEntryPojo() {

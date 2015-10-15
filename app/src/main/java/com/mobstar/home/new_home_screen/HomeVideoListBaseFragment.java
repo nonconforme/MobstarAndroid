@@ -255,7 +255,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         if (topVisiblePosition == position) {
             final EntryItem entryItem = entryAdapter.getEntryAtPosition(position);
             if (entryItem != null) {
-                PlayerManager.getInstance().init(getActivity(), entryItem, filePath);
+                PlayerManager.getInstance().init(getActivity(), entryItem, filePath, entryAdapter);
                 PlayerManager.getInstance().tryToPlayNew();
             }
         }
@@ -378,6 +378,5 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         entryAdapter.clearArrayEntry();
         Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
     }
-
 
 }
