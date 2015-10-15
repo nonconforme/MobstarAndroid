@@ -214,7 +214,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener() {
         @Override
         public void onLoadMore(int currentPage) {
-            Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
+            Utility.ShowProgressDialog(getContext().getApplicationContext(), getContext().getApplicationContext().getString(R.string.loading));
             getEntryRequest(currentPage);
         }
 
