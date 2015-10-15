@@ -1,6 +1,7 @@
 package com.mobstar.home.new_home_screen.profile;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,6 +24,9 @@ import com.mobstar.upload.MessageActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by lipcha on 21.09.15.
@@ -72,7 +76,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
 
         if (user.getUserId().equals(preferences.getString("userid", "0"))) {
             btnEdit.setVisibility(View.VISIBLE);
-            imgFollow.setVisibility(View.INVISIBLE);
+            imgFollow.setVisibility(View.GONE);
             imgMsg.setVisibility(View.GONE);
         } else if (user.getIsMyStar() != null && !user.getIsMyStar().equalsIgnoreCase("0")) {
             btnEdit.setVisibility(View.GONE);
@@ -88,7 +92,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
             imgMsg.setVisibility(View.VISIBLE);
         }
 
-        if(iAmStar != null && iAmStar.length() > 0 && iAmStar.equalsIgnoreCase("1")){
+        if(iAmStar != null && iAmStar.length() > 0 && iAmStar.equalsIgnoreCase("1") && user.getIsMyStar().equalsIgnoreCase("1") ){
             Picasso.with(this).load(R.drawable.msg_act_btn).into(imgMsg);
         }
         else{
@@ -117,9 +121,9 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
                 startEditProfileActivity();
                 break;
             case R.id.imgMsg:
-                if (iAmStar != null && iAmStar.length() > 0 && iAmStar.equalsIgnoreCase("1")) {
+                if (iAmStar != null && iAmStar.length() > 0 && iAmStar.equalsIgnoreCase("1") && user.getIsMyStar().equalsIgnoreCase("1")) {
                     startMessageActivity();
-                }
+                }else startMessageErrorDialog();
                 break;
         }
     }
@@ -134,8 +138,24 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         intent.putExtra("recipent", user.getUserId());
         intent.putExtra("isDisableCompose", true);
         startActivity(intent);
-
     }
+
+    private void startMessageErrorDialog(){
+        final Dialog dialog = new Dialog(this, R.style.DialogAnimationTheme);
+        dialog.setContentView(R.layout.message_error_dialog);
+        dialog.show();
+
+        final Timer timer = new Timer();
+        final TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        };
+        timer.schedule(task, 3000);
+    }
+
 
     protected void addProfileListFragment(){
         final FragmentManager fragmentManager = getSupportFragmentManager();
