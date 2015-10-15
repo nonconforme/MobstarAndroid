@@ -29,9 +29,11 @@ import com.squareup.picasso.Picasso;
  */
 public class NewProfileActivity extends BaseActivity implements View.OnClickListener {
 
-    public static final int REFRESH_USER = 23;
-    public static final String USER = "user";
-    public static final String IS_NOTIFICATION = "is notification";
+    public static final int REFRESH_USER        = 23;
+    public static final String USER             = "user";
+    public static final String IS_ENTRY_ID_API  = "is_entry_id_api";
+    public static final String ID               = "id";
+    public static final String IS_NOTIFICATION  = "is notification";
 
     private SharedPreferences preferences;
     protected TextView textUserName;
@@ -53,7 +55,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         setupViews();
         setListeners();
         addProfileListFragment();
-        if (user.getUserId().equals(preferences.getString("userid", "0"))) {
+        if (user != null && user.getUserId().equals(preferences.getString("userid", "0"))) {
             Utility.SendDataToGA("UserProfile Screen", NewProfileActivity.this);
         } else {
             Utility.SendDataToGA("OtherProfile Screen", NewProfileActivity.this);
@@ -208,7 +210,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         });
     }
 
-    private void getBundleData(){
+    protected void getBundleData(){
         final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.containsKey(USER))

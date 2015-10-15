@@ -6,12 +6,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.mobstar.R;
+import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.new_home_screen.profile.UserProfile;
 
 /**
  * Created by lipcha on 13.10.15.
  */
-public class NotificationEntryActivity extends NewProfileActivity {
+public class SingleEntryActivity extends NewProfileActivity {
+
+    private boolean isEntryIdAPI = false;
+    private String id;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,7 +27,7 @@ public class NotificationEntryActivity extends NewProfileActivity {
     protected void addProfileListFragment() {
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        profileFragment = NotificationEntryFragment.getInstance(user, isNotification);
+        profileFragment = SingleEntryFragment.getInstance(user, isNotification, isEntryIdAPI, id);
         fragmentTransaction.replace(R.id.fragmentContainer, profileFragment);
         fragmentTransaction.commit();
     }
@@ -53,5 +58,17 @@ public class NotificationEntryActivity extends NewProfileActivity {
     public void onBackPressed() {
         setResult(101);
         finish();
+    }
+
+    @Override
+    protected void getBundleData() {
+        super.getBundleData();
+        final Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey(IS_ENTRY_ID_API))
+                isEntryIdAPI = extras.getBoolean(IS_ENTRY_ID_API);
+            if (extras.containsKey(ID))
+                id = extras.getString(ID);
+        }
     }
 }

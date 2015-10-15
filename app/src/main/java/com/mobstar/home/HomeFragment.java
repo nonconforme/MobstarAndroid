@@ -183,6 +183,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //			videoListFragment.setArguments(extras);
 			VideoListBaseFragment videoListFragment = VideoListBaseFragment.newInstance(true, deepLinkedId, sLatestPopular, null, false);
 			replaceFragment(videoListFragment, "VideoListFragment");
+            deepLinkedId = null;
 		}
 		else {
 //			VideoListFragment videoListFragment = new VideoListFragment();
