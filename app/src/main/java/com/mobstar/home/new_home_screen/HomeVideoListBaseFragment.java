@@ -26,6 +26,7 @@ import com.mobstar.custom.recycler_view.EndlessRecyclerOnScrollListener;
 import com.mobstar.custom.recycler_view.OnEndAnimationListener;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.player.PlayerManager;
+import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
@@ -171,20 +172,21 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     private void downloadFirstFile() {
-        if (entryAdapter.getItemCount() == 0 || entryAdapter.getEntry(0).getType() == null)
+        if (entryAdapter.getItemCount() == 0 || entryAdapter.getEntry(0) == null || entryAdapter.getEntry(0).getType() == null)
             return;
         Handler handler = new Handler();
         handler.postDelayed(
                 new Runnable() {
                     public void run() {
-                        if(entryAdapter.getItemCount() == 0)
+                        final EntryPojo entryPojo = entryAdapter.getEntry(0);
+                        if (entryPojo == null)
                             return;
-                        switch (entryAdapter.getEntry(0).getType()) {
+                        switch (entryPojo.getType()) {
                             case "audio":
-                                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getAudioLink(), 0);
+                                downloadFileManager.downloadFile(entryPojo.getAudioLink(), 0);
                                 break;
                             case "video":
-                                downloadFileManager.downloadFile(entryAdapter.getEntry(0).getVideoLink(), 0);
+                                downloadFileManager.downloadFile(entryPojo.getVideoLink(), 0);
                                 break;
                         }
                     }
@@ -263,27 +265,31 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
     }
 
     protected void cancelDownloadFile(int cancelPosition) {
-        if (cancelPosition == -1 || cancelPosition >= entryAdapter.getItemCount() || entryAdapter.getEntry(cancelPosition).getType() == null)
+        if(cancelPosition == -1 || cancelPosition >= entryAdapter.getItemCount())
             return;
-        switch (entryAdapter.getEntry(cancelPosition).getType()) {
+        final EntryPojo entryPojo = entryAdapter.getEntry(cancelPosition);
+        if (entryPojo == null || entryPojo.getType() == null)
+            return;
+        switch (entryPojo.getType()) {
             case "audio":
-                downloadFileManager.cancelFile(entryAdapter.getEntry(cancelPosition).getAudioLink());
+                downloadFileManager.cancelFile(entryPojo.getAudioLink());
                 break;
             case "video":
-                downloadFileManager.cancelFile(entryAdapter.getEntry(cancelPosition).getVideoLink());
+                downloadFileManager.cancelFile(entryPojo.getVideoLink());
                 break;
         }
     }
 
     protected void downloadFile(int currentPosition) {
-        if (entryAdapter.getEntry(currentPosition) == null || entryAdapter.getEntry(currentPosition).getType() == null)
+        final EntryPojo entryPojo = entryAdapter.getEntry(currentPosition);
+        if (entryPojo == null || entryPojo.getType() == null)
             return;
-        switch (entryAdapter.getEntry(currentPosition).getType()) {
+        switch (entryPojo.getType()) {
             case "audio":
-                downloadFileManager.downloadFile(entryAdapter.getEntry(currentPosition).getAudioLink(), currentPosition);
+                downloadFileManager.downloadFile(entryPojo.getAudioLink(), currentPosition);
                 break;
             case "video":
-                downloadFileManager.downloadFile(entryAdapter.getEntry(currentPosition).getVideoLink(), currentPosition);
+                downloadFileManager.downloadFile(entryPojo.getVideoLink(), currentPosition);
                 break;
         }
     }
