@@ -428,6 +428,7 @@
         <activity
             android:name=".inbox.MessageDetail"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/DialogTheme" >
         </activity>
         <activity

@@ -37,4 +37,8 @@ public class Api {
         RestClient.getInstance(context).postRequest(Constant.MESSAGE_READ, params, callback);
     }
 
+    public static final void getChatList(final Context context, final ConnectCallback callback){
+        RestClient.getInstance(context).getRequest(Constant.GET_MESSAGE , null, callback);
+    }
+
 }

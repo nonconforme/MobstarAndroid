@@ -26,6 +26,7 @@ import com.mobstar.utils.Utility;
 public class GcmIntentService extends IntentService {
 
     private static final String LOG_TAG = GcmIntentService.class.getName();
+    public static final String NEW_MESSAGE_ACTION = "new messsage action";
     public static int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
@@ -144,12 +145,10 @@ public class GcmIntentService extends IntentService {
 		Intent intent = new Intent("GetNotificationCount");
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-        if (MessageDetail.isActive()) {
-            Intent messageIntent = new Intent(MessageDetail.NEW_MESSAGE_ACTION);
-            messageIntent.putExtra(MessageDetail.THREAD_ID_KEY,threadId);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-        } else {
-
+        Intent messageIntent = new Intent(NEW_MESSAGE_ACTION);
+        messageIntent.putExtra(MessageDetail.THREAD_ID_KEY,threadId);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
+        if (!MessageDetail.isActive()) {
 
             mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 

@@ -32,6 +32,7 @@ import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.responce.BaseResponse;
 import com.mobstar.api.responce.MessageListResponse;
+import com.mobstar.gcm.GcmIntentService;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.MessageThreadPojo;
@@ -49,7 +50,7 @@ import java.util.ArrayList;
 
 public class MessageDetail extends Activity implements OnClickListener{
 
-    public static final String NEW_MESSAGE_ACTION = "new messsage action";
+
     public static final String THREAD_ID_KEY = "threadId";
     private static final String LOG_TAG = MessageDetail.class.getName();
     private static boolean isActive = false;
@@ -153,7 +154,7 @@ public class MessageDetail extends Activity implements OnClickListener{
     protected void onResume() {
         super.onResume();
         isActive=true;
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mNewMessageReceiver, new IntentFilter(NEW_MESSAGE_ACTION));
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(mNewMessageReceiver, new IntentFilter(GcmIntentService.NEW_MESSAGE_ACTION));
     }
 
     @Override

@@ -1,10 +1,5 @@
 package com.mobstar.inbox;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,6 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.api.Api;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.responce.ChatListResponse;
+import com.mobstar.gcm.GcmIntentService;
 import com.mobstar.pojo.MessagePojo;
 import com.mobstar.pojo.ParticipantsPojo;
 import com.mobstar.upload.MessageComposeActivity;
@@ -44,9 +43,15 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class InboxFragment extends Fragment {
 
-	Context mContext;
+    private static final String LOG_TAG = InboxFragment.class.getName();
+    Context mContext;
 	private SharedPreferences preferences;
 	TextView textNoData;
 	ListView listUser;
@@ -55,8 +60,14 @@ public class InboxFragment extends Fragment {
 	private String sErrorMessage,UserID;
 	ArrayList<String> arrSelectionThreadID = new ArrayList<String>();
 	private ImageView btnAdd;
+    private BroadcastReceiver mNewMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateChatList(false);
+        }
+    };
 
-	@Override
+    @Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_inbox, container, false);
 
@@ -73,6 +84,17 @@ public class InboxFragment extends Fragment {
 		return view;
 	}
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(mNewMessageReceiver, new IntentFilter(GcmIntentService.NEW_MESSAGE_ACTION));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mNewMessageReceiver);
+    }
 	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -142,76 +164,76 @@ public class InboxFragment extends Fragment {
 
 		listUser.setMultiChoiceModeListener(new MultiChoiceModeListener() {
 
-			@Override
-			public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
-				// TODO Auto-generated method stub
-				switch (item.getItemId()) {
-				case R.id.menu_delete:
-					Log.d("mobstar","List size"+arrMessage.size());
-					//					do {
-					//						arrSelectionCommentedID.remove(0);
-					//						Log.d("mobstar","size is"+arrSelectionCommentedID.size());
-					////						Log.d("mobstar","delete array is"+arrSelectionCommentedID.get(0));
-					//					} while (arrSelectionCommentedID.size()!=0);
-					if(arrSelectionThreadID.size()>0){
-						DeleteThread();	
-					}
+            @Override
+            public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
+                // TODO Auto-generated method stub
+                switch (item.getItemId()) {
+                    case R.id.menu_delete:
+                        Log.d("mobstar", "List size" + arrMessage.size());
+                        //					do {
+                        //						arrSelectionCommentedID.remove(0);
+                        //						Log.d("mobstar","size is"+arrSelectionCommentedID.size());
+                        ////						Log.d("mobstar","delete array is"+arrSelectionCommentedID.get(0));
+                        //					} while (arrSelectionCommentedID.size()!=0);
+                        if (arrSelectionThreadID.size() > 0) {
+                            DeleteThread();
+                        }
 
-					mode.finish(); // Action picked, so close the CAB
-					return true;
-				default:
-					return false;
-				}
-			}
+                        mode.finish(); // Action picked, so close the CAB
+                        return true;
+                    default:
+                        return false;
+                }
+            }
 
-			@Override
-			public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
-				// TODO Auto-generated method stub
-				MenuInflater inflater = mode.getMenuInflater();
-				inflater.inflate(R.menu.context_menu, menu);
+            @Override
+            public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
+                // TODO Auto-generated method stub
+                MenuInflater inflater = mode.getMenuInflater();
+                inflater.inflate(R.menu.context_menu, menu);
 
-				return true;
-			}
+                return true;
+            }
 
-			@Override
-			public void onDestroyActionMode(android.view.ActionMode arg0) {
-				// TODO Auto-generated method stub
+            @Override
+            public void onDestroyActionMode(android.view.ActionMode arg0) {
+                // TODO Auto-generated method stub
 
-			}
+            }
 
-			@Override
-			public boolean onPrepareActionMode(android.view.ActionMode arg0, Menu arg1) {
-				// TODO Auto-generated method stub
-				return false;
-			}
+            @Override
+            public boolean onPrepareActionMode(android.view.ActionMode arg0, Menu arg1) {
+                // TODO Auto-generated method stub
+                return false;
+            }
 
-			@Override
-			public void onItemCheckedStateChanged(android.view.ActionMode arg0, int position, long arg2, boolean arg3) {
-				// TODO Auto-generated method stub
-				final int checkedCount = listUser.getCheckedItemCount();
-				// Set the CAB title according to total checked items
-				arg0.setTitle(checkedCount + " " + getString(R.string.selected));
-				if(arrSelectionThreadID.contains(arrMessage.get(position).getThreadId()+"")){
-					arrSelectionThreadID.remove(arrMessage.get(position).getThreadId() + "");
-				} else if(arrMessage.get(position).getUserId().equalsIgnoreCase(UserID)){
-					arrSelectionThreadID.add(arrMessage.get(position).getThreadId());
-				}
+            @Override
+            public void onItemCheckedStateChanged(android.view.ActionMode arg0, int position, long arg2, boolean arg3) {
+                // TODO Auto-generated method stub
+                final int checkedCount = listUser.getCheckedItemCount();
+                // Set the CAB title according to total checked items
+                arg0.setTitle(checkedCount + " " + getString(R.string.selected));
+                if (arrSelectionThreadID.contains(arrMessage.get(position).getThreadId() + "")) {
+                    arrSelectionThreadID.remove(arrMessage.get(position).getThreadId() + "");
+                } else if (arrMessage.get(position).getUserId().equalsIgnoreCase(UserID)) {
+                    arrSelectionThreadID.add(arrMessage.get(position).getThreadId());
+                }
 
-			}
-		});
+            }
+        });
 
 		msgAdapter = new MessageAdapter();
 		listUser.setAdapter(msgAdapter);
 
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-
-		if (Utility.isNetworkAvailable(mContext)) {
-			new MessageCall().start();
-		} else {
-
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-			Utility.HideDialog(mContext);
-		}
+        updateChatList(true);
+//		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+//		if (Utility.isNetworkAvailable(mContext)) {
+//			new MessageCall().start();
+//		} else {
+//
+//			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//			Utility.HideDialog(mContext);
+//		}
 
 		listUser.setOnItemClickListener(new OnItemClickListener() {
 
@@ -240,7 +262,37 @@ public class InboxFragment extends Fragment {
 
 	}
 
-	void DeleteThread() {
+    private void updateChatList(boolean isShowProgress) {
+        if (isShowProgress) Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+
+        Api.getChatList(mContext, new ConnectCallback<ChatListResponse>() {
+            @Override
+            public void onSuccess(ChatListResponse object) {
+                Log.d(LOG_TAG,"updateChatList.onSuccess");
+                Utility.HideDialog(mContext);
+
+                arrMessage = object.getArrMessage();
+
+                if (arrMessage.size() == 0) {
+                    textNoData.setVisibility(View.VISIBLE);
+                } else {
+                    //				Collections.reverse(arrMessage);
+                    textNoData.setVisibility(View.GONE);
+                }
+
+                    msgAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Log.d(LOG_TAG,"updateChatList.onFailure.error="+error);
+                Utility.HideDialog(mContext);
+            }
+        });
+
+    }
+
+    void DeleteThread() {
 		sErrorMessage = "";
 		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
@@ -664,15 +716,16 @@ public class InboxFragment extends Fragment {
 				if(data!=null && data.getExtras().containsKey("isRefresh")){
 					boolean isRefresh=data.getBooleanExtra("isRefresh",false);
 					if(isRefresh){
-						Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-
-						if (Utility.isNetworkAvailable(mContext)) {
-							new MessageCall().start();
-						} else {
-
-							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-							Utility.HideDialog(mContext);
-						}
+                        updateChatList(true);
+//						Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+//
+//						if (Utility.isNetworkAvailable(mContext)) {
+//							new MessageCall().start();
+//						} else {
+//
+//							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//							Utility.HideDialog(mContext);
+//						}
 					}
 				}
 				
