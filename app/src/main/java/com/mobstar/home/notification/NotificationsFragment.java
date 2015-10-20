@@ -176,12 +176,12 @@ public class NotificationsFragment extends Fragment {
 					}
 				}
 				else{
-					final Intent intent = new Intent(mContext, NotificationEntryActivity.class);
+					final Intent intent = new Intent(mContext, SingleEntryActivity.class);
 					final UserProfile userProfile = UserProfile.newBuilder()
 							.setEntryId(arrNotificationPojos.get(position).getEntryId())
 							.build();
-					intent.putExtra(NotificationEntryActivity.USER, userProfile);
-					intent.putExtra(NotificationEntryActivity.IS_NOTIFICATION, true);
+					intent.putExtra(SingleEntryActivity.USER, userProfile);
+					intent.putExtra(SingleEntryActivity.IS_NOTIFICATION, true);
 //					intent.putExtra("EntryId",arrNotificationPojos.get(position).getEntryId());
 					startActivityForResult(intent, 101);
 				}

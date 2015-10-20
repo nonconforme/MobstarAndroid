@@ -3,7 +3,6 @@ package com.mobstar.api;
 import android.content.Context;
 
 import com.mobstar.utils.Constant;
-
 import java.util.HashMap;
 
 /**

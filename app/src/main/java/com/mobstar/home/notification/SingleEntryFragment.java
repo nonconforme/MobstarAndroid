@@ -13,16 +13,22 @@ import java.util.HashMap;
 /**
  * Created by lipcha on 13.10.15.
  */
-public class NotificationEntryFragment extends VideoListBaseFragment {
+public class SingleEntryFragment extends VideoListBaseFragment {
 
     private UserProfile user;
     private boolean isNotification = false;
+    private boolean isEntryIdAPI = false;
+    private String id;
 
-    public static final NotificationEntryFragment getInstance(final UserProfile userData, final boolean isNotification){
-        final NotificationEntryFragment profileFragment = new NotificationEntryFragment();
+    public static final SingleEntryFragment getInstance(final UserProfile userData, final boolean isNotification, boolean isEntryIdAPI, String id){
+        final SingleEntryFragment profileFragment = new SingleEntryFragment();
         final Bundle args = new Bundle();
-        args.putSerializable(NewProfileActivity.USER, userData);
+        if (userData != null)
+            args.putSerializable(NewProfileActivity.USER, userData);
         args.putBoolean(NewProfileActivity.IS_NOTIFICATION, isNotification);
+        args.putBoolean(IS_ENTRY_ID_API, isEntryIdAPI);
+        if (id != null)
+            args.putString(ID, id);
         profileFragment.setArguments(args);
         return profileFragment;
     }
@@ -34,6 +40,10 @@ public class NotificationEntryFragment extends VideoListBaseFragment {
             user = (UserProfile) args.getSerializable(NewProfileActivity.USER);
         if (args.containsKey(NewProfileActivity.IS_NOTIFICATION))
             isNotification = args.getBoolean(NewProfileActivity.IS_NOTIFICATION);
+        if (args.containsKey(IS_ENTRY_ID_API))
+            isEntryIdAPI = args.getBoolean(IS_ENTRY_ID_API);
+        if (args.containsKey(ID))
+            id = args.getString(ID);
 
     }
 
@@ -50,14 +60,19 @@ public class NotificationEntryFragment extends VideoListBaseFragment {
     @Override
     protected void getEntryRequest(int pageNo) {
         final HashMap<String, String> params = new HashMap<>();
-        if (user != null && user.getUserId() != null)
-            params.put("user", user.getUserId());
-        params.put("page", Integer.toString(pageNo));
+
         textNoData.setVisibility(View.GONE);
-        if (isNotification)
-            getEntry(Constant.GET_ENTRY + user.getEntryId() + Constant.INFO, null, 1);
-        else
+        if (isNotification || isEntryIdAPI) {
+            if (isEntryIdAPI)
+                getEntry(Constant.GET_ENTRY + id, null, 1);
+            else
+                getEntry(Constant.GET_ENTRY + user.getEntryId() + Constant.INFO, null, 1);
+        }
+        else if (user != null && user.getUserId() != null) {
+            params.put("user", user.getUserId());
+            params.put("page", Integer.toString(pageNo));
             getEntry(Constant.MIX_ENTRY, params, pageNo);
+        }
     }
 
 }

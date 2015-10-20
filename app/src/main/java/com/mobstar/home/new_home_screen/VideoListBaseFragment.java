@@ -1,6 +1,7 @@
 package com.mobstar.home.new_home_screen;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,8 @@ import com.mobstar.custom.pull_to_refresh.PullToRefreshRecyclerView;
 import com.mobstar.custom.recycler_view.EndlessRecyclerOnScrollListener;
 import com.mobstar.custom.recycler_view.OnEndAnimationListener;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.notification.SingleEntryActivity;
 import com.mobstar.player.PlayerManager;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
@@ -37,6 +40,7 @@ import java.util.HashMap;
  */
 public class VideoListBaseFragment extends Fragment implements PullToRefreshBase.OnRefreshListener<RecyclerView>, DownloadFileManager.DownloadCallback, OnEndAnimationListener, SwipeRefreshAction {
 
+    public static final String ID                = "id";
     public static final String IS_SEARCH_API     = "isSearchAPI";
     public static final String SEARCH_TERM       = "searchTerm";
     public static final String IS_MOBIT_API      = "isMobitAPI";
@@ -109,8 +113,12 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
         final HashMap<String, String> params = new HashMap<>();
         String url = Constant.GET_ENTRY;
         if (isEntryIdAPI) {
-            if (deeplinkEntryId != null)
-                url = url + deeplinkEntryId;
+            startSingleViewActivity();
+            isEntryIdAPI = false;
+            isEntryAPI = true;
+            params.put("excludeVotes", "true");
+            params.put("orderBy", "latest");
+            params.put("page", Integer.toString(pageNo));
         } else if (isSearchAPI) {
             url = Constant.SEARCH_ENTRY;
             params.put("term", searchTerm);
@@ -148,6 +156,8 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
 
             @Override
             public void onSuccess(EntriesResponse object) {
+                if (getActivity() == null)
+                    return;
                 if (pageNo == 1) {
                     entryAdapter.setArrEntryes(object.getArrEntry());
                     endlessRecyclerOnScrollListener.reset();
@@ -165,12 +175,21 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
 
             @Override
             public void onFailure(String error) {
-                Log.d(LOG_TAG, "http request get:getEntryRequest.onFailure.error=" + error);
+                if(getActivity() == null)
+                    return;
+                Log.d(LOG_TAG,"http request get:getEntryRequest.onFailure.error="+error);
                 endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());
             }
         });
+    }
+
+    private void startSingleViewActivity(){
+        final Intent intent = new Intent(getActivity(), SingleEntryActivity.class);
+        intent.putExtra(SingleEntryActivity.IS_ENTRY_ID_API, true);
+        intent.putExtra(SingleEntryActivity.ID, deeplinkEntryId);
+        startActivity(intent);
     }
 
     private void setNoEntriesMessage(){
@@ -230,7 +249,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener() {
         @Override
         public void onLoadMore(int currentPage) {
-            Utility.ShowProgressDialog(getContext().getApplicationContext(), getContext().getApplicationContext().getString(R.string.loading));
+            Utility.ShowProgressDialog(getActivity(), getContext().getApplicationContext().getString(R.string.loading));
             getEntryRequest(currentPage);
         }
 
@@ -265,7 +284,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
         if (topVisiblePosition == position) {
             final EntryItem entryItem = entryAdapter.getEntryAtPosition(position);
             if (entryItem != null) {
-                PlayerManager.getInstance().init(getActivity(), entryItem, filePath);
+                PlayerManager.getInstance().init(getActivity(), entryItem, filePath, entryAdapter);
                 PlayerManager.getInstance().tryToPlayNew();
             }
         }

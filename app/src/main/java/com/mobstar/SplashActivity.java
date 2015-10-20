@@ -43,12 +43,12 @@ import java.util.TimerTask;
 public class SplashActivity extends Activity implements OnNetworkChangeListener {
 
     private static final String IS_FIRST_OPEN_PREFERENCE = "is first open";
-    Timer timer;
-	Context mContext;
+    private Timer timer;
+	private Context mContext;
 
-	GoogleCloudMessaging gcm;
-	String regid;
-	String deepLinkedId;
+	private GoogleCloudMessaging gcm;
+	private String regid;
+	private String deepLinkedId;
 	private String show_system_notification="",defaultNotificationTitle="",defaultNotificationImage="",description="";
 	private NetworkChangeReceiver mNetworkChangeReceiver;
 	private Toast mToast;
@@ -56,7 +56,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 	private HomeInfoCall homeInfoCall;
 
 	private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-	SharedPreferences preferences;
+	private SharedPreferences preferences;
 	private String sErrorMessage;
 
 	@Override
@@ -75,35 +75,15 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 			StrictMode.setThreadPolicy(tp);
 		}
 
-		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
+		preferences = getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
 
         if (preferences.getBoolean(IS_FIRST_OPEN_PREFERENCE, true)) {
             preferences.edit().putBoolean(IS_FIRST_OPEN_PREFERENCE, false).apply();
             AdWordsManager.getInstance().sendFirstOpenEvent();
         }
 
+		parseIntent();
 
-
-		//Added by khyati for deeplinking
-		Intent intent = getIntent();
-		if(intent!=null) {
-			String action = intent.getAction();
-			Uri data = intent.getData();
-			if(data!=null) {
-				Log.d("mobstar","uri==>"+data.toString());
-				deepLinkedId=data.getQueryParameter("id");
-				if(deepLinkedId!=null){
-					Log.d("mobstar","id==>"+deepLinkedId);
-					//				    		SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-					//							pref.edit().putString("deepLinkedId",deepLinkedId).commit();
-
-				}
-
-			}
-
-		}
-
-		preferences = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 		if (preferences.getBoolean("isLogin", false)) {
 
 			if(deepLinkedId!=null) {
@@ -138,35 +118,36 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 					Intent i = new Intent(mContext,LoginSocialActivity.class);
 					startActivity(i);
 					finish();
-
-
-
-					//added by khyati
-					/*Log.d("mobstar","isVerifyMobileCode"+pref.getBoolean("isVerifyMobileCode", false));
-					if (pref.getBoolean("isLogin", false) && pref.getBoolean("isVerifyMobileCode", false)) {
-						Intent intent = new Intent(mContext,HomeActivity.class);
-						startActivity(intent);
-					}
-					else if(pref.getBoolean("isLogin", false) && !pref.getBoolean("isVerifyMobileCode", false)){
-						Intent intent = new Intent(mContext,VerifyMobileNoActivity.class);
-						startActivity(intent);
-					}
-					else {
-						Intent intent = new Intent(mContext,LoginSocialActivity.class);
-						startActivity(intent);
-					}
-					finish();*/
 				}
 			};
 			timer.schedule(task, 3000);
 		}
 
-
-
-
-
 		Utility.SendDataToGA("Splash Screen", SplashActivity.this);
 
+		registerGoogleCloudMessaging();
+
+	}
+
+	private void parseIntent(){
+		Intent intent = getIntent();
+		if(intent != null) {
+			String action = intent.getAction();
+			Uri data = intent.getData();
+			if(data != null) {
+				Log.d("mobstar","uri==>" + data.toString());
+				deepLinkedId = data.getQueryParameter("id");
+				if(deepLinkedId != null){
+					Log.d("mobstar","id==>"+deepLinkedId);
+					//				    		SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
+					//							pref.edit().putString("deepLinkedId",deepLinkedId).commit();
+				}
+			}
+
+		}
+	}
+
+	private void registerGoogleCloudMessaging(){
 		// GCM Push Notification
 		if (checkPlayServices()) {
 			gcm = GoogleCloudMessaging.getInstance(this);
@@ -176,7 +157,6 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 				registerInBackground();
 			}
 		}
-
 	}
 
 	private void getUserAccountRequest(){
@@ -209,6 +189,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 		final Intent intent = new Intent(mContext, HomeActivity.class);
 		intent.putExtra("deepLinkedId", deepLinkedId);
 		startActivity(intent);
+		finish();
 	}
 
 	@Override
@@ -362,19 +343,23 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 
 			if (msg.what == 1) {
 				if(show_system_notification!=null && show_system_notification.equalsIgnoreCase("TRUE")){
-					Intent i=new Intent(mContext,HomeInformationActivity.class);
-					i.putExtra("title",defaultNotificationTitle);
-					i.putExtra("img",defaultNotificationImage);
-					i.putExtra("des",description);
-					startActivity(i);
-					finish();
-
+				startHomeInformationActivity();
 				}
 			} else {
 				OkayAlertDialog(sErrorMessage);
 			}
 		}
 	};
+
+	private void startHomeInformationActivity(){
+		Intent intent = new Intent(mContext, HomeInformationActivity.class);
+		intent.putExtra("title", defaultNotificationTitle);
+		intent.putExtra("img", defaultNotificationImage);
+		intent.putExtra("des", description);
+		startActivity(intent);
+		finish();
+
+	}
 
 	class BadgeRead extends Thread {
 
@@ -410,7 +395,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 
 
 
-	Handler handlerBadge= new Handler() {
+	private Handler handlerBadge= new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
