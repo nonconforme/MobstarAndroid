@@ -171,15 +171,16 @@ public class MessageDetail extends Activity implements OnClickListener{
 		textFans.setText(UserName.toUpperCase());
 		textFans.setOnClickListener(this);
 
-		editMessage=(EditText)findViewById(R.id.editMessage);
 		typeface = Typeface.createFromAsset(mContext.getAssets(), "GOTHAM-LIGHT.TTF");
 		editMessage = (EditText) findViewById(R.id.editMessage);
 		editMessage.setTypeface(typeface);
-		editMessage.setHint(getString(R.string.replay_to) + " "+UserName);
+		editMessage.setHint(getString(R.string.replay_to) + " " + UserName);
 
 		btnSend=(ImageView)findViewById(R.id.btnSend);
 		btnSend.setOnClickListener(this);
 		listUser=(ListView)findViewById(R.id.listUser);
+        listUser.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+        listUser.setStackFromBottom(true);
 		
 		flImgHeader=(FrameLayout)findViewById(R.id.flImgHeader);
 		flImgHeader.setVisibility(View.VISIBLE);

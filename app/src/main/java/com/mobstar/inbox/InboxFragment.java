@@ -88,7 +88,9 @@ public class InboxFragment extends Fragment {
     public void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(mContext).registerReceiver(mNewMessageReceiver, new IntentFilter(GcmIntentService.NEW_MESSAGE_ACTION));
+        updateChatList(true);
     }
+
 
     @Override
     public void onPause() {
@@ -223,9 +225,8 @@ public class InboxFragment extends Fragment {
         });
 
 		msgAdapter = new MessageAdapter();
-		listUser.setAdapter(msgAdapter);
+        listUser.setAdapter(msgAdapter);
 
-        updateChatList(true);
 //		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 //		if (Utility.isNetworkAvailable(mContext)) {
 //			new MessageCall().start();
