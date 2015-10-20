@@ -175,12 +175,13 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    private void onClickFollow(){
-        if (!user.getIsMyStar().equalsIgnoreCase("0")) {
-            deleteStarRequest();
-        } else {
-           addStarRequest();
-        }
+    private void onClickFollow() {
+        if (user != null)
+            if (!user.getIsMyStar().equalsIgnoreCase("0")) {
+                deleteStarRequest();
+            } else {
+                addStarRequest();
+            }
     }
 
     public void setIsMyStar(final String star){
