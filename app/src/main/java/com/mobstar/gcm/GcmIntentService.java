@@ -18,6 +18,7 @@ import com.mobstar.R;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
+import com.mobstar.home.notification.SingleEntryActivity;
 import com.mobstar.inbox.GroupMessageDetail;
 import com.mobstar.inbox.MessageDetail;
 import com.mobstar.utils.Constant;
@@ -175,7 +176,7 @@ public class GcmIntentService extends IntentService {
 		mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
 		PendingIntent contentIntent = null;
-		Intent i=new Intent(this, NewProfileActivity.class);
+		Intent i=new Intent(this, SingleEntryActivity.class);
 		final UserProfile userProfile = UserProfile.newBuilder()
 				.setEntryId(entryId)
 				.build();
