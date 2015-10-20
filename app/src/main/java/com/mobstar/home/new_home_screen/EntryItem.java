@@ -22,7 +22,9 @@ import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.StarCall;
+import com.mobstar.api.responce.BaseResponse;
 import com.mobstar.api.responce.StarResponse;
+import com.mobstar.api.responce.VoteResponse;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
@@ -166,7 +168,12 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         }
     }
 
-    private void setupEntryViews() {
+    public void refreshEntry(final EntryPojo _entryPojo){
+        entryPojo = _entryPojo;
+        setupEntryViews();
+    }
+
+    public void setupEntryViews() {
         llItemUser.setVisibility(View.GONE);
         llItemEntry.setVisibility(View.VISIBLE);
         swipeCardView.setSwipeLeftViewIndicator(votingNo);
@@ -494,14 +501,6 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 .setUserTagline(entryPojo.getTagline())
                 .build();
         intent.putExtra(NewProfileActivity.USER, userProfile);
-//        intent.putExtra("UserID", entryPojo.getUserID());
-//        intent.putExtra("UserName", entryPojo.getUserName());
-//        intent.putExtra("UserDisplayName", entryPojo.getUserDisplayName());
-//        intent.putExtra("UserPic", entryPojo.getProfileImage());
-//        intent.putExtra("UserCoverImage", entryPojo.getProfileCover());
-//        intent.putExtra("IsMyStar", entryPojo.getIsMyStar());
-//        intent.putExtra("UserTagline", entryPojo.getTagline());
-//        intent.putExtra(NewProfileActivity.USER, userProfile);
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
@@ -572,7 +571,20 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         final HashMap<String, String> params = new HashMap<>();
         params.put("entry", entryPojo.getID());
         params.put("type", "up");
-        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
+        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, new ConnectCallback<VoteResponse>() {
+
+            @Override
+            public void onSuccess(VoteResponse object) {
+                if (object.getArrEntry() != null & object.getArrEntry().size() > 0 && onChangeEntryListener != null){
+                    onChangeEntryListener.onChangeEntry(object.getArrEntry().get(0));
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
         AdWordsManager.getInstance().sendEngagementEvent();
     }
 
@@ -619,6 +631,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         void onRemoveEntry(int position);
 
         void onFollowEntry(String uId, String isMyStar);
+
+        void onChangeEntry(final EntryPojo entryPojo);
     }
 
     public EntryPojo getEntryPojo() {

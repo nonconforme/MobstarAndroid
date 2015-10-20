@@ -15,6 +15,7 @@ import com.mobstar.custom.recycler_view.sticky_recycler_view.StickyHeadersTouchL
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.player.PlayerManager;
+import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -179,5 +180,10 @@ public class ProfileFragment extends VideoListBaseFragment implements EntryItem.
     @Override
     public void onFollowEntry(String uId, String isMyStar) {
         entryAdapter.onFollowEntry(uId, isMyStar);
+    }
+
+    @Override
+    public void onChangeEntry(EntryPojo entryPojo) {
+
     }
 }

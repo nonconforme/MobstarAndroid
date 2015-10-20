@@ -156,6 +156,8 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
 
             @Override
             public void onSuccess(EntriesResponse object) {
+                if (getActivity() == null)
+                    return;
                 if (pageNo == 1) {
                     entryAdapter.setArrEntryes(object.getArrEntry());
                     endlessRecyclerOnScrollListener.reset();
@@ -173,7 +175,9 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
 
             @Override
             public void onFailure(String error) {
-                Log.d(LOG_TAG, "http request get:getEntryRequest.onFailure.error=" + error);
+                if(getActivity() == null)
+                    return;
+                Log.d(LOG_TAG,"http request get:getEntryRequest.onFailure.error="+error);
                 endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());
@@ -280,7 +284,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
         if (topVisiblePosition == position) {
             final EntryItem entryItem = entryAdapter.getEntryAtPosition(position);
             if (entryItem != null) {
-                PlayerManager.getInstance().init(getActivity(), entryItem, filePath);
+                PlayerManager.getInstance().init(getActivity(), entryItem, filePath, entryAdapter);
                 PlayerManager.getInstance().tryToPlayNew();
             }
         }
