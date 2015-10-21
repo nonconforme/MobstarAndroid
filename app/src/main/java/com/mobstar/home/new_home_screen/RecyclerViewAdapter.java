@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.pojo.EntryPojo;
@@ -50,10 +51,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public EntryPojo getEntry(int position){
-        if (position != -1 || position < arrEntryes.size())
-            return arrEntryes.get(position);
         if (position == arrEntryes.size())
             return arrEntryes.get(arrEntryes.size() - 1);
+        if (position != -1 || position < arrEntryes.size())
+            return arrEntryes.get(position);
         else return null;
     }
 
