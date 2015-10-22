@@ -27,6 +27,8 @@
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
     <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <permission
         android:name="com.mobstar.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -208,7 +210,8 @@
         </activity>
         <activity
             android:name=".upload.RecordVideoActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
         </activity>
         <activity
             android:name=".upload.UploadFileActivity"
