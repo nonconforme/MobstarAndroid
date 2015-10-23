@@ -12,14 +12,12 @@ import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.mobstar.custom.CustomTextviewBold;
-import com.mobstar.upload.RecordVideoActivity;
 import com.mobstar.upload.SelectProfileContentType;
 import com.mobstar.upload.TakePictureActivity;
 import com.mobstar.upload.UploadFileActivity;
+import com.mobstar.upload.rewrite._RecordVideoActivity;
 import com.mobstar.utils.Utility;
 
 public class AddContentTypeActivity extends Activity implements OnClickListener{
@@ -101,7 +99,7 @@ public class AddContentTypeActivity extends Activity implements OnClickListener{
 				startActivityForResult(intent,VIDEO_PICKER_SELECT);
 			}
 			else {
-				Intent intent = new Intent(mContext, RecordVideoActivity.class);
+				Intent intent = new Intent(mContext, _RecordVideoActivity.class);
 				intent.putExtra("categoryId",categoryId);
 				startActivity(intent);
 				finish();

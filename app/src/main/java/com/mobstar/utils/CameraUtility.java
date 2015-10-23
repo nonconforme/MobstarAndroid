@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.util.Log;
 import android.view.Surface;
 
 import com.mobstar.home.split.position_variants.PositionVariant;
@@ -15,6 +14,12 @@ import java.util.List;
  * Created by lipcha on 06.10.15.
  */
 public class CameraUtility {
+
+    public static final int ORIENTETION_NO = -1;
+    public static final int ORIENTATION_UP = 1;
+    public static final int ORIENTATION_RIGHT = 2;
+    public static final int ORIENTATION_LEFT = 3;
+    public static final int ORIENTATION_DOWN = 4;
 
     public static Camera getCameraInstance(int currentCameraId) {
         Camera c = null;
@@ -128,4 +133,16 @@ public class CameraUtility {
         }
     }
 
+    public static int getOrientation(float angle) {
+        int result=ORIENTETION_NO;
+        if (-45<angle && angle < 45) //up
+          result = ORIENTATION_UP;
+        else if (45<angle && angle < 135) //right
+            result = ORIENTATION_RIGHT;
+        else if (-45>angle && angle > -135) //left
+            result = ORIENTATION_LEFT;
+        else if (-135 > angle || angle > 135) //down
+            result = ORIENTATION_DOWN;
+        return result;
+    }
 }

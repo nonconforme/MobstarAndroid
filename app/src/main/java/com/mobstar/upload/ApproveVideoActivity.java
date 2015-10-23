@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import com.mobstar.R;
 import com.mobstar.home.split.SplitActivity;
 import com.mobstar.pojo.EntryPojo;
+import com.mobstar.upload.rewrite._RecordVideoActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
@@ -97,8 +98,8 @@ public class ApproveVideoActivity extends Activity {
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 
-		imageFrame = (ImageView) findViewById(R.id.imageFrame);
-		imageFrame.setVisibility(View.GONE);
+//		imageFrame = (ImageView) findViewById(R.id.imageFrame);
+//		imageFrame.setVisibility(View.GONE);
 
 		// try {
 		// MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -255,7 +256,7 @@ public class ApproveVideoActivity extends Activity {
 			intent.putExtra(SplitActivity.ENTRY_SPLIT, entry);
 		}
 		else {
-			intent = new Intent(mContext, RecordVideoActivity.class);
+			intent = new Intent(mContext, _RecordVideoActivity.class);
 			intent.putExtra("categoryId", categoryId);
 			if (subCat != null && subCat.length() > 0) {
 				intent.putExtra("subCat", subCat);
