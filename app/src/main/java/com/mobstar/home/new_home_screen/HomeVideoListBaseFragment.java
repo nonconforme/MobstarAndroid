@@ -382,5 +382,7 @@ public class HomeVideoListBaseFragment extends Fragment implements PullToRefresh
         Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
     }
 
-
+    public RecyclerViewAdapter getEntryAdapter() {
+        return entryAdapter;
+    }
 }

@@ -24,10 +24,12 @@ import com.mobstar.inbox.MessageDetail;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
+import java.util.ArrayList;
+
 public class GcmIntentService extends IntentService {
 
     private static final String LOG_TAG = GcmIntentService.class.getName();
-    private static final String NEW_ENTRY_COUNT = "new entry count";
+    public static final String NEW_ENTRY_PUSH = "new entry push";
     public static int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
@@ -83,8 +85,13 @@ public class GcmIntentService extends IntentService {
 							sendNotification(message,entryId);
 						}
 					}
-                    else if(extras.getString("Type","").equals("newEntry")){
-                        sendNewEntrys(0);
+                    else if(extras.getString("Type").equals("newEntry")){
+                        if (extras.containsKey("Entries")){
+                            String jsonArrayEnry = extras.getString("Entries");
+                            ArrayList<NewEntryPush> newEntryPushs = NewEntryPush.getList(jsonArrayEnry);
+                            if (!newEntryPushs.isEmpty()) sendNewEntrys(newEntryPushs);
+                        }
+
                     }
                     else if(extras.getString("Type").toString().equalsIgnoreCase("splitScreen")){
                         if (extras.containsKey("usedEntryName")&&extras.containsKey("creatorName")&&extras.containsKey("createdEntryId")) {
@@ -122,9 +129,9 @@ public class GcmIntentService extends IntentService {
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
 
-    private void sendNewEntrys(int count) {
+    private void sendNewEntrys(ArrayList<NewEntryPush> newEntryPushs) {
         Intent intent = new Intent(HomeFragment.NEW_ENTY_ACTION);
-//        intent.putExtra(NEW_ENTRY_COUNT, count);
+        intent.putExtra(NEW_ENTRY_PUSH, newEntryPushs);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

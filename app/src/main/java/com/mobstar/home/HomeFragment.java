@@ -37,10 +37,14 @@ import com.mobstar.api.RestClient;
 import com.mobstar.api.responce.CategoriesFilterResponse;
 import com.mobstar.api.responce.ContinentFilterResponse;
 import com.mobstar.custom.CustomTextviewBold;
+import com.mobstar.gcm.GcmIntentService;
+import com.mobstar.gcm.NewEntryPush;
 import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 import com.mobstar.pojo.CategoryPojo;
+import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
+import com.mobstar.utils.TimeUtility;
 import com.mobstar.utils.Utility;
 
 import org.json.JSONArray;
@@ -124,23 +128,58 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(LOG_TAG,"mNewEntryReceiver");
-            if (vNewEntry.getVisibility() == View.GONE && isLatest) {
-                vNewEntry.setVisibility(View.VISIBLE);
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_in_from_top);
-                animation.setDuration(1000);
-                vNewEntry.startAnimation(animation);
-            }
+            Log.d(LOG_TAG, "mNewEntryReceiver");
+            ArrayList<NewEntryPush> newEntryPushs = (ArrayList<NewEntryPush>) intent.getSerializableExtra(GcmIntentService.NEW_ENTRY_PUSH);
+            showNewEntryButton(newEntryPushs);
+
         }
     };
 
-	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private void showNewEntryButton(ArrayList<NewEntryPush> newEntryPushs) {
+        if (!isLatest)
+            return;
+        boolean canShow = false;
+        for (NewEntryPush newEntryPush : newEntryPushs) {
+            if (listChoosenContinents.contains(newEntryPush.getContinent()) || listChoosenContinents.isEmpty())
+                if (listChoosenCategories.contains(newEntryPush.getCategory()) || listChoosenCategories.isEmpty()) {
+                    HomeVideoListBaseFragment homeVideoListBaseFragment = (HomeVideoListBaseFragment) mFragmentManager.findFragmentById(R.id.childFragmentContent);
+                    if (homeVideoListBaseFragment != null) {
+                        ArrayList<EntryPojo> entryPojos = homeVideoListBaseFragment.getEntryAdapter().getArrEntries();
+                        if (!entryPojos.isEmpty()) {
+                            long timeExistEntry = TimeUtility.getTimeInMillis(entryPojos.get(0).getCreatedString());
+                            long timeNewEntry = newEntryPush.getTimeUpload();
+                            int idExistEntry = Integer.parseInt(entryPojos.get(0).getID());
+                            int idNewEntry = newEntryPush.getId();
+                            if ((timeNewEntry > timeExistEntry) && (idNewEntry > idExistEntry)) {
+                                canShow = true;
+                                break;
+                            }
+                        } else {
+                            canShow = true;
+                            break;
+                        }
+                    }
+
+                    newEntryPush.getTimeUpload();
+                }
+
+
+        }
+        if (vNewEntry.getVisibility() == View.GONE && isLatest && canShow) {
+            vNewEntry.setVisibility(View.VISIBLE);
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_in_from_top);
+            animation.setDuration(1000);
+            vNewEntry.startAnimation(animation);
+        }
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// Get extra data included in the Intent
 
 //			Log.v(Constant.TAG, "upload_successful mReceiver");
-			GetData("latest");
+            GetData("latest");
 		}
 	};
 
@@ -414,7 +453,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
             public void onSuccess(CategoriesFilterResponse filterResponse) {
                 Log.d(LOG_TAG, "CategoriesFilterResponse=" + filterResponse.getChoosenCategories().size());
                 hideProgress();
-                if (filterResponse.hasError()){
+                if (filterResponse.hasError()) {
                     Log.d(LOG_TAG, "categoryDialog.onSuccess.error=" + filterResponse.getError());
 //                                    okayAlertDialog(object.getError());
                 } else {
