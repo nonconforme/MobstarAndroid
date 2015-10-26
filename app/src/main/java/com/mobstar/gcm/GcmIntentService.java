@@ -86,8 +86,8 @@ public class GcmIntentService extends IntentService {
 						}
 					}
                     else if(extras.getString("Type").equals("newEntry")){
-                        if (extras.containsKey("Entries")){
-                            String jsonArrayEnry = extras.getString("Entries");
+                        if (extras.containsKey("entries")){
+                            String jsonArrayEnry = extras.getString("entries");
                             ArrayList<NewEntryPush> newEntryPushs = NewEntryPush.getList(jsonArrayEnry);
                             if (!newEntryPushs.isEmpty()) sendNewEntrys(newEntryPushs);
                         }

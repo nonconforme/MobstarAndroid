@@ -81,6 +81,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
     private ArrayList<Integer> listChoosenContinents;
     private ArrayList<Integer> listChoosenCategories;
     private TextView vNewEntry;
+    private int mUserId;
 
 
     @Override
@@ -109,7 +110,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		mFragmentManager = getChildFragmentManager();
 
 		preferences = getActivity().getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
-
+        mUserId = Integer.parseInt(preferences.getString("userid", "0"));
 
 		// Ion.getDefault(mContext).configure().setLogging("Ion", Log.DEBUG);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter("upload_successful"));
@@ -140,28 +141,29 @@ public class HomeFragment extends Fragment implements OnClickListener {
             return;
         boolean canShow = false;
         for (NewEntryPush newEntryPush : newEntryPushs) {
-            if (listChoosenContinents.contains(newEntryPush.getContinent()) || listChoosenContinents.isEmpty())
-                if (listChoosenCategories.contains(newEntryPush.getCategory()) || listChoosenCategories.isEmpty()) {
-                    HomeVideoListBaseFragment homeVideoListBaseFragment = (HomeVideoListBaseFragment) mFragmentManager.findFragmentById(R.id.childFragmentContent);
-                    if (homeVideoListBaseFragment != null) {
-                        ArrayList<EntryPojo> entryPojos = homeVideoListBaseFragment.getEntryAdapter().getArrEntries();
-                        if (!entryPojos.isEmpty()) {
-                            long timeExistEntry = TimeUtility.getTimeInMillis(entryPojos.get(0).getCreatedString());
-                            long timeNewEntry = newEntryPush.getTimeUpload();
-                            int idExistEntry = Integer.parseInt(entryPojos.get(0).getID());
-                            int idNewEntry = newEntryPush.getId();
-                            if ((timeNewEntry > timeExistEntry) && (idNewEntry > idExistEntry)) {
+            if (newEntryPush.getUserId() != mUserId)
+                if (listChoosenContinents.contains(newEntryPush.getContinent()) || listChoosenContinents.isEmpty())
+                    if (listChoosenCategories.contains(newEntryPush.getCategory()) || listChoosenCategories.isEmpty()) {
+                        HomeVideoListBaseFragment homeVideoListBaseFragment = (HomeVideoListBaseFragment) mFragmentManager.findFragmentById(R.id.childFragmentContent);
+                        if (homeVideoListBaseFragment != null) {
+                            ArrayList<EntryPojo> entryPojos = homeVideoListBaseFragment.getEntryAdapter().getArrEntries();
+                            if (!entryPojos.isEmpty()) {
+                                long timeExistEntry = TimeUtility.getTimeInMillis(entryPojos.get(0).getCreatedString());
+                                long timeNewEntry = newEntryPush.getTimeUpload();
+                                int idExistEntry = Integer.parseInt(entryPojos.get(0).getID());
+                                int idNewEntry = newEntryPush.getId();
+                                if ((timeNewEntry > timeExistEntry) && (idNewEntry > idExistEntry)) {
+                                    canShow = true;
+                                    break;
+                                }
+                            } else {
                                 canShow = true;
                                 break;
                             }
-                        } else {
-                            canShow = true;
-                            break;
                         }
-                    }
 
-                    newEntryPush.getTimeUpload();
-                }
+                        newEntryPush.getTimeUpload();
+                    }
 
 
         }
