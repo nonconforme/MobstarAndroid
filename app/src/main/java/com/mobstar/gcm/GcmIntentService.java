@@ -110,9 +110,9 @@ public class GcmIntentService extends IntentService {
                         }
                     }
 					else{
-						if(extras.getString("message").toString()!=null) {
+						if(extras.getString("message")!=null) {
                             Log.d(LOG_TAG,"message="+extras.getString("message"));
-							sendNotification(extras.getString("message").toString());
+							sendNotification(extras.getString("message"));
 						}
 					}
 

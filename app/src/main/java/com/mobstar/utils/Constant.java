@@ -16,7 +16,8 @@ public class Constant {
 	public static String TAG = "log_tag";
 
 //	public static String API_KEY = "fjwiofrnxhr892305hje93nf834m63lr93l5u3ntrhj4k";
-	public static String API_KEY = "2_xPvd11Vjj1PfgYZ5C5fIWIosTmR4ADEgVIXsXp95";
+//	public static String API_KEY = "2_xPvd11Vjj1PfgYZ5C5fIWIosTmR4ADEgVIXsXp95";
+	public static String API_KEY = "3_pyZpee2M2qIjLJ5uqqO0Mp65nL4MXwGqBWFxYUWm";
 
 //	public static String SERVER_URL = "http://api.mobstar.com/";
 //	public static String SERVER_URL = "http://192.168.88.250:1080/";
