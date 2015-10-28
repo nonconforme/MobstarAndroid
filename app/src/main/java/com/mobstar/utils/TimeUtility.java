@@ -15,26 +15,11 @@ import java.util.TimeZone;
  */
 public class TimeUtility {
     private static final String LOG_TAG = TimeUtility.class.getName();
-        public static long TIME_LAPSE=0;
+    public static long TIME_LAPSE=0;
 
     public static long getDiffTime(String arg) {
         Calendar today = Calendar.getInstance();
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        Date gmtTime = null;
-
-        try {
-            gmtTime = formatter.parse(arg);// catch exception
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Calendar thatDay = Calendar.getInstance();
-        thatDay.setTime(gmtTime);
-
-        return (today.getTimeInMillis() - (thatDay.getTimeInMillis() + TIME_LAPSE)) / 1000;
+        return (today.getTimeInMillis() - (getTimeInMillis(arg) + TIME_LAPSE)) / 1000;
     }
 
     public void requestServerTime() {
@@ -132,5 +117,23 @@ public class TimeUtility {
         //		}
 
         return TimeInString;
+    }
+
+    public static long getTimeInMillis(String timeString) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date gmtTime = null;
+
+        try {
+            gmtTime = formatter.parse(timeString);// catch exception
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Calendar thatDay = Calendar.getInstance();
+        thatDay.setTime(gmtTime);
+
+        return thatDay.getTimeInMillis();
     }
 }

@@ -3,11 +3,14 @@ package com.mobstar;
 import android.app.Application;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.mobstar.utils.TimeUtility;
 
 import java.util.HashMap;
+
+import io.fabric.sdk.android.Fabric;
 
 
 public class MobstarApplication extends Application{
@@ -18,7 +21,7 @@ public class MobstarApplication extends Application{
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-//		Fabric.with(this, new Crashlytics());
+		Fabric.with(this, new Crashlytics());
         new TimeUtility().requestServerTime();
         AdWordsManager.registerManager(getApplicationContext());
         //upload time--please uncomment instabug and uncaught exception handler

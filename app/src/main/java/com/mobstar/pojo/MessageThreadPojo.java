@@ -90,13 +90,15 @@ public class MessageThreadPojo implements Serializable {
 
     public String getCreated() {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date testDate = null;
-        try {
-            testDate = sdf.parse(messageReceived);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date testDate = new Date();
+//        try {
+//            testDate = sdf.parse(messageReceived);
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//
+        testDate.setTime(TimeUtility.getTimeInMillis(messageReceived)+TimeUtility.TIME_LAPSE);
 
         SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
         String time = formatter.format(testDate);
