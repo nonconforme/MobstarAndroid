@@ -35,6 +35,7 @@ import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.responce.ChatListResponse;
 import com.mobstar.gcm.GcmIntentService;
+import com.mobstar.inbox.newMessagesScreen.MessageDetail;
 import com.mobstar.pojo.MessagePojo;
 import com.mobstar.pojo.ParticipantsPojo;
 import com.mobstar.upload.MessageComposeActivity;
@@ -245,9 +246,10 @@ public class InboxFragment extends Fragment {
 				new MessageRead(arrMessage.get(position).getThreadId()).start();
 
 				if(arrMessage.get(position).getMessageGroup() == 1){
-					Intent intent=new Intent(mContext,GroupMessageDetail.class);
+					Intent intent=new Intent(mContext,MessageDetail.class);
 					intent.putExtra("threadId",arrMessage.get(position).getThreadId());
-					startActivityForResult(intent,101);
+                    intent.putExtra(MessageDetail.IS_GROUP,true);
+					startActivityForResult(intent, 101);
 				}
 				else{
 					Intent intent=new Intent(mContext,MessageDetail.class);

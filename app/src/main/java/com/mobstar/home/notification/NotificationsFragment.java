@@ -29,8 +29,7 @@ import android.widget.Toast;
 
 import com.mobstar.R;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
-import com.mobstar.inbox.GroupMessageDetail;
-import com.mobstar.inbox.MessageDetail;
+import com.mobstar.inbox.newMessagesScreen.MessageDetail;
 import com.mobstar.pojo.NotificationPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
@@ -165,8 +164,9 @@ public class NotificationsFragment extends Fragment {
 				
 				if(arrNotificationPojos.get(position).getNotificationType().equalsIgnoreCase(MESSAGE_TYPE)){
 					if(arrNotificationPojos.get(position).getMessageGroup().equalsIgnoreCase("1")){
-						final Intent intent = new Intent(mContext, GroupMessageDetail.class);
+						final Intent intent = new Intent(mContext, MessageDetail.class);
 						intent.putExtra("threadId",arrNotificationPojos.get(position).getEntryId());
+                        intent.putExtra(MessageDetail.IS_GROUP,true);
 						startActivityForResult(intent, 101);
 					}
 					else{

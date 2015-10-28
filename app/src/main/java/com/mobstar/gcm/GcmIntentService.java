@@ -19,8 +19,7 @@ import com.mobstar.home.HomeActivity;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.home.notification.SingleEntryActivity;
-import com.mobstar.inbox.GroupMessageDetail;
-import com.mobstar.inbox.MessageDetail;
+import com.mobstar.inbox.newMessagesScreen.MessageDetail;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
@@ -71,8 +70,8 @@ public class GcmIntentService extends IntentService {
                         isShowBadge=false;
 						String messageGroup=extras.getString("messageGroup");
 						String threadId=extras.getString("entry_id");
-						String message=extras.getString("message").toString();
-						String userName=extras.getString("diaplayname").toString();
+						String message=extras.getString("message");
+						String userName=extras.getString("diaplayname");
 						if(messageGroup!=null && threadId!=null && message!=null && userName!=null){
 							sendNotification(message,messageGroup,threadId,userName);
 						}
@@ -161,9 +160,10 @@ public class GcmIntentService extends IntentService {
                 i.putExtra("FromNotification", true);
                 contentIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
             } else {
-                Intent i = new Intent(this, GroupMessageDetail.class);
+                Intent i = new Intent(this, MessageDetail.class);
                 i.putExtra("threadId", threadId);
                 i.putExtra("FromNotification", true);
+                i.putExtra(MessageDetail.IS_GROUP,true);
                 contentIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
             }
             NotificationCompat.Builder mBuilder = getNotificationBuilder();
