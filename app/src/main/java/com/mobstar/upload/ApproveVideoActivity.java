@@ -125,10 +125,10 @@ public class ApproveVideoActivity extends Activity {
 		surfaceTextureListener = new CustomSurfaceTextureListener();
 
 		textureView = (TextureView) findViewById(R.id.textureView);
-		if (isSplitVideo){
+//		if (isSplitVideo){
 			final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.texture_view_height));
 			textureView.setLayoutParams(layoutParams);
-		}
+//		}
 //		if (isSplitVideo){
 //			textureView.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
 //					, getResources().getDimensionPixelSize(R.dimen.texture_view_height)));

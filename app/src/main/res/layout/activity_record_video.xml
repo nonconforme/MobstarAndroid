@@ -9,23 +9,37 @@
         android:layout_height="match_parent" >
     </FrameLayout>
 
+
+    <com.mobstar.custom.CustomTextviewBold
+        android:layout_marginTop="@dimen/margin_record_button_split_video"
+        android:id="@+id/textRecordSecond"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:singleLine="false"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white_color"
+        android:textSize="30sp"
+        android:gravity="center"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#88000000"
         android:gravity="center"
         android:orientation="vertical" >
 
-        <com.mobstar.custom.CustomTextviewBold
-            android:id="@+id/textRecordSecond"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:singleLine="false"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/white_color"
-            android:textSize="30sp"
-             />
+        <!--<com.mobstar.custom.CustomTextviewBold-->
+            <!--android:id="@+id/textRecordSecond"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="32dp"-->
+            <!--android:gravity="center"-->
+            <!--android:singleLine="false"-->
+            <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+            <!--android:textColor="@color/white_color"-->
+            <!--android:textSize="30sp"-->
+             <!--/>-->
+
 
         <LinearLayout
             android:id="@+id/layoutCameraOption"

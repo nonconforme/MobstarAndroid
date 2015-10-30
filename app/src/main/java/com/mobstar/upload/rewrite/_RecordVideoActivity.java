@@ -3,12 +3,14 @@ package com.mobstar.upload.rewrite;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.CamcorderProfile;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -28,10 +30,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
+import com.mobstar.home.split.ffmpeg.FFCommandCreator;
+import com.mobstar.home.split.ffmpeg.FFTaskBackground;
 import com.mobstar.upload.ApproveVideoActivity;
 import com.mobstar.utils.CameraUtility;
 import com.mobstar.utils.Utility;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -81,6 +87,7 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
     private Camera.Size optimalVideoSize;
     private boolean isRecordStopped = false;
     private boolean isPrepareRecord = false;
+    private int mOrientetionCamera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,13 +109,20 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
         super.onResume();
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
-        initializeCamera();
+        initializeCameraPostDelay();
 
     }
     @Override
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        releaseMediaRecorder();
         CameraUtility.releaseCamera(mCamera);
     }
 
@@ -175,7 +189,8 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
                         if(mGravity != null && mGeomagnetic != null) {
                             float angle = getDirection();
                             Log.d(LOG_TAG, angle + "");
-                            mCameraPreview.setOrientation(CameraUtility.getOrientation(angle));
+                            mOrientetionCamera = CameraUtility.getOrientation(angle);
+                            mCameraPreview.setOrientation(mOrientetionCamera);
                         }
                         mCameraPreview.startRecord();
                 }
@@ -517,6 +532,7 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
                     resultHint = (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK)?270:90;
                     break;
             }
+            Log.d(LOG_TAG, "resultHint = "+resultHint);
             mMediaRecorder.setOrientationHint(resultHint);
 
         }
@@ -565,60 +581,10 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
             releaseMediaRecorder(); // release the MediaRecorder object
             mCamera.lock(); // take camera access back from MediaRecorder
             CameraUtility.releaseCamera(mCamera);
-
-            startApproveVideoActivity();
+            cropNewVideo();
         }
 
-//        private void recordVideo() {
 //
-//            //			Log.v(Constant.TAG, "recordVideo " + isRecording);
-//
-//            if (isRecording) {
-//                // stop recording and release camera
-//                try{
-//                    mMediaRecorder.stop(); // stop the recording
-//                }
-//                catch(Exception e){
-//                    e.printStackTrace();
-//                }
-//
-//                releaseMediaRecorder(); // release the MediaRecorder object
-//                if (mCamera != null)
-//                    mCamera.lock(); // take camera access back from MediaRecorder
-//
-//                releaseCamera();
-//
-//                isRecording = false;
-//
-//                startApproveVideoActivity();
-//
-//            } else {
-//                // initialize video camera
-//                if (prepareVideoRecorder()) {
-//                    // Camera is available and unlocked, MediaRecorder is
-//                    // prepared,
-//                    // now you can start recording
-//                    try{
-//                        mMediaRecorder.start(); // stop the recording
-//                    }
-//                    catch(Exception e){
-//                        e.printStackTrace();
-//                    }
-//
-//                    layoutCameraOption.setVisibility(View.GONE);
-//                    textRecordSecond.setVisibility(View.VISIBLE);
-//
-//                    recordTimer.start();
-//
-//                    isRecording = true;
-//                } else {
-//                    // prepare didn't work, release the camera
-//                    releaseMediaRecorder();
-//                    // inform user
-//                }
-//            }
-//        }
-
         private void setCamera(Camera camera) {
             mCamera = camera;
             // Install a SurfaceHolder.Callback so we get notified when the
@@ -701,7 +667,64 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
         }
     }
 
+    private void cropNewVideo() {
+        final File file = Utility.getTemporaryMediaFile(this, "cropNewVideo");
+        if (file == null)
+            return;
+        final String fileOutPath = file.toString();
+        final Rect rect = getCropRect();
+        final String complexCommand = FFCommandCreator.getCropAndRotationNewVideoCommand(sFilepath, fileOutPath, rect, mOrientetionCamera);
+        startCropTask(complexCommand, fileOutPath);
 
+    }
+
+    private Rect getCropRect() {
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        mediaMetadataRetriever.setDataSource(sFilepath);
+        String sVideoHeight = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+        String sVideoWidth = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+
+        int iVideoHeight = Integer.parseInt(sVideoHeight);
+        int iVideoWidth = Integer.parseInt(sVideoWidth);
+        Rect originRect = new Rect();
+        if (iVideoHeight>iVideoWidth) {
+            originRect.set(0, (iVideoHeight / 2) - (iVideoWidth / 2), iVideoWidth, (iVideoHeight / 2) + (iVideoWidth / 2));
+        } else {
+            originRect.set((iVideoWidth / 2) - (iVideoHeight / 2), 0, (iVideoWidth / 2) + (iVideoHeight / 2), iVideoHeight);
+        }
+        return originRect;
+    }
+
+    private void startCropTask(final String _stringCommand, final String _fileOutPath){
+        new FFTaskBackground(this, _stringCommand, getString(R.string.crop_title), new AfterDoneBackground() {
+            @Override
+            public void onAfterDone() {
+                if (mOrientetionCamera == CameraUtility.ORIENTATION_RIGHT) {
+                    Utility.removeFile(sFilepath);
+                    sFilepath = _fileOutPath;
+                    final File file = Utility.getTemporaryMediaFile(mContext, "cropNewVideo2");
+                    if (file == null)
+                        return;
+                    final String fileOutPath = file.toString();
+                    final Rect rect = new Rect(0, 0, 306, 306);
+                    final String complexCommand = FFCommandCreator.getCropAndRotationNewVideoCommand(sFilepath, fileOutPath, rect, mOrientetionCamera);
+                    mOrientetionCamera = 0;
+                    startCropTask(complexCommand, fileOutPath);
+                } else {
+                    Utility.removeFile(sFilepath);
+                    sFilepath = _fileOutPath;
+                    startApproveVideoActivity();
+                }
+            }
+
+            @Override
+            public void onCancel() {
+                Utility.removeFile(sFilepath);
+                Utility.removeFile(_fileOutPath);
+                finish();
+            }
+        }).runTranscoding();
+    }
 
     private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {
         Camera.Size result = null;
