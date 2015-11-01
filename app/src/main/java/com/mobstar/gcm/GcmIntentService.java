@@ -69,19 +69,19 @@ public class GcmIntentService extends IntentService {
                     Log.d(LOG_TAG, "extras=" + extras.toString());
                     Log.d(LOG_TAG, "badge=" + badgeCount);
 
-					if(extras.getString("Type").toString().equalsIgnoreCase("Message")){
+					if(extras.getString("Type").equalsIgnoreCase("Message")){
 						String messageGroup=extras.getString("messageGroup");
 						String threadId=extras.getString("entry_id");
-						String message=extras.getString("message").toString();
-						String userName=extras.getString("diaplayname").toString();
+						String message=extras.getString("message");
+						String userName=extras.getString("diaplayname");
 						if(messageGroup!=null && threadId!=null && message!=null && userName!=null){
 							sendNotification(message,messageGroup,threadId,userName);
 						}
 
 					}
-					else if(extras.getString("Type").toString().equalsIgnoreCase("Like")){
-						String message=extras.getString("message").toString();
-						String entryId=extras.getString("entry_id").toString();
+					else if(extras.getString("Type").equalsIgnoreCase("Like")){
+						String message=extras.getString("message");
+						String entryId=extras.getString("entry_id");
 						if(entryId!=null){
 							sendNotification(message,entryId);
 						}
@@ -94,7 +94,7 @@ public class GcmIntentService extends IntentService {
                         }
 
                     }
-                    else if(extras.getString("Type").toString().equalsIgnoreCase("splitScreen")){
+                    else if(extras.getString("Type").equalsIgnoreCase("splitScreen")){
                         if (extras.containsKey("usedEntryName")&&extras.containsKey("creatorName")&&extras.containsKey("createdEntryId")) {
                             String entryName = Utility.unescape_perl_string(extras.getString("usedEntryName"));
                             String userName = extras.getString("creatorName");

@@ -37,10 +37,9 @@ import com.mobstar.api.RestClient;
 import com.mobstar.api.responce.CategoriesFilterResponse;
 import com.mobstar.api.responce.ContinentFilterResponse;
 import com.mobstar.custom.CustomTextviewBold;
-import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.gcm.GcmIntentService;
 import com.mobstar.gcm.NewEntryPush;
-import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
+import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
@@ -53,6 +52,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+//import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 
 
 
@@ -140,9 +141,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
             if (newEntryPush.getUserId() != mUserId)
                 if (listChoosenContinents.contains(newEntryPush.getContinent()) || listChoosenContinents.isEmpty())
                     if (listChoosenCategories.contains(newEntryPush.getCategory()) || listChoosenCategories.isEmpty()) {
-                        HomeVideoListBaseFragment homeVideoListBaseFragment = (HomeVideoListBaseFragment) mFragmentManager.findFragmentById(R.id.childFragmentContent);
-                        if (homeVideoListBaseFragment != null) {
-                            ArrayList<EntryPojo> entryPojos = homeVideoListBaseFragment.getEntryAdapter().getArrEntries();
+                        VideoListBaseFragment videoListBaseFragment = (VideoListBaseFragment) mFragmentManager.findFragmentById(R.id.childFragmentContent);
+                        if (videoListBaseFragment != null) {
+                            ArrayList<EntryPojo> entryPojos = videoListBaseFragment.getEntryAdapter().getArrEntries();
                             if (!entryPojos.isEmpty()) {
                                 long timeExistEntry = TimeUtility.getTimeInMillis(entryPojos.get(0).getCreatedString());
                                 long timeNewEntry = newEntryPush.getTimeUpload();
@@ -186,7 +187,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
 
-		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
 
 	}
 
@@ -207,7 +208,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
         vNewEntry = (TextView) view.findViewById(R.id.new_entry_field);
         vNewEntry.setOnClickListener(this);
 
-		if (!isDataLoaded) {
+        if (!isDataLoaded) {
 			GetData("latest");
 		}
 
@@ -248,8 +249,8 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //			extras.putString("LatestORPopular", sLatestPopular);
 //			videoListFragment.setArguments(extras);
 			VideoListBaseFragment videoListFragment = VideoListBaseFragment.newInstance(false, null, sLatestPopular, null, true);
-			replaceFragment(videoListFragment, "VideoListFragment");	
-		}
+            replaceFragment(videoListFragment, "VideoListFragment");
+        }
 		isDataLoaded = true;
 	}
 
@@ -522,7 +523,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 
-	}
+    }
 
     @Override
     public void onResume() {
