@@ -16,6 +16,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.mobstar.R;
 import com.mobstar.home.HomeActivity;
+import com.mobstar.home.HomeFragment;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.home.notification.SingleEntryActivity;
@@ -24,9 +25,12 @@ import com.mobstar.inbox.MessageDetail;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
+import java.util.ArrayList;
+
 public class GcmIntentService extends IntentService {
 
     private static final String LOG_TAG = GcmIntentService.class.getName();
+    public static final String NEW_ENTRY_PUSH = "new entry push";
     public static int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
@@ -65,24 +69,32 @@ public class GcmIntentService extends IntentService {
                     Log.d(LOG_TAG, "extras=" + extras.toString());
                     Log.d(LOG_TAG, "badge=" + badgeCount);
 
-					if(extras.getString("Type").toString().equalsIgnoreCase("Message")){
+					if(extras.getString("Type").equalsIgnoreCase("Message")){
 						String messageGroup=extras.getString("messageGroup");
 						String threadId=extras.getString("entry_id");
-						String message=extras.getString("message").toString();
-						String userName=extras.getString("diaplayname").toString();
+						String message=extras.getString("message");
+						String userName=extras.getString("diaplayname");
 						if(messageGroup!=null && threadId!=null && message!=null && userName!=null){
 							sendNotification(message,messageGroup,threadId,userName);
 						}
 
 					}
-					else if(extras.getString("Type").toString().equalsIgnoreCase("Like")){
-						String message=extras.getString("message").toString();
-						String entryId=extras.getString("entry_id").toString();
+					else if(extras.getString("Type").equalsIgnoreCase("Like")){
+						String message=extras.getString("message");
+						String entryId=extras.getString("entry_id");
 						if(entryId!=null){
 							sendNotification(message,entryId);
 						}
 					}
-                    else if(extras.getString("Type").toString().equalsIgnoreCase("splitScreen")){
+                    else if(extras.getString("Type").equals("newEntry")){
+                        if (extras.containsKey("entries")){
+                            String jsonArrayEnry = extras.getString("entries");
+                            ArrayList<NewEntryPush> newEntryPushs = NewEntryPush.getList(jsonArrayEnry);
+                            if (!newEntryPushs.isEmpty()) sendNewEntrys(newEntryPushs);
+                        }
+
+                    }
+                    else if(extras.getString("Type").equalsIgnoreCase("splitScreen")){
                         if (extras.containsKey("usedEntryName")&&extras.containsKey("creatorName")&&extras.containsKey("createdEntryId")) {
                             String entryName = Utility.unescape_perl_string(extras.getString("usedEntryName"));
                             String userName = extras.getString("creatorName");
@@ -99,9 +111,9 @@ public class GcmIntentService extends IntentService {
                         }
                     }
 					else{
-						if(extras.getString("message").toString()!=null) {
+						if(extras.getString("message")!=null) {
                             Log.d(LOG_TAG,"message="+extras.getString("message"));
-							sendNotification(extras.getString("message").toString());
+							sendNotification(extras.getString("message"));
 						}
 					}
 
@@ -117,11 +129,15 @@ public class GcmIntentService extends IntentService {
 
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
-	
-	 
+
+    private void sendNewEntrys(ArrayList<NewEntryPush> newEntryPushs) {
+        Intent intent = new Intent(HomeFragment.NEW_ENTY_ACTION);
+        intent.putExtra(NEW_ENTRY_PUSH, newEntryPushs);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
 
 
-	private void sendNotification(String msg) {
+    private void sendNotification(String msg) {
 
 		Intent intent = new Intent("GetNotificationCount");
 		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
@@ -130,12 +146,7 @@ public class GcmIntentService extends IntentService {
 
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, HomeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
-		NotificationCompat.Builder mBuilder = getNotificationBuilder();
-        mBuilder.setContentTitle(getString(R.string.mobstar_notification))
-				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
-		mBuilder.setAutoCancel(true);
-		mBuilder.setContentIntent(contentIntent);
-		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        sendPush(contentIntent,msg);
 	}
 
 	private void sendNotification(String msg,String messageGroup,String threadId,String name) {
@@ -160,12 +171,7 @@ public class GcmIntentService extends IntentService {
 			i.putExtra("FromNotification",true);
 			contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
 		}
-		NotificationCompat.Builder mBuilder =getNotificationBuilder();
-        mBuilder.setContentTitle(getString(R.string.mobstar_notification))
-				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
-		mBuilder.setAutoCancel(true);
-		mBuilder.setContentIntent(contentIntent);
-		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        sendPush(contentIntent,msg);
 	}
 
 	private void sendNotification(String msg,String entryId) {
@@ -183,14 +189,19 @@ public class GcmIntentService extends IntentService {
 //		i.putExtra("EntryId",entryId);
 		i.putExtra(NewProfileActivity.USER, userProfile);
         i.putExtra(NewProfileActivity.IS_NOTIFICATION, true);
+
 		contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
-		NotificationCompat.Builder mBuilder = getNotificationBuilder();
-        mBuilder.setContentTitle(getString(R.string.mobstar_notification))
-				.setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
-		mBuilder.setAutoCancel(true);
-		mBuilder.setContentIntent(contentIntent);
-		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        sendPush(contentIntent,msg);
 	}
+
+    private void sendPush(PendingIntent contentIntent, String msg) {
+        NotificationCompat.Builder mBuilder = getNotificationBuilder();
+        mBuilder.setContentTitle(getString(R.string.mobstar_notification))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
+        mBuilder.setAutoCancel(true);
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
 
     private NotificationCompat.Builder getNotificationBuilder() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
