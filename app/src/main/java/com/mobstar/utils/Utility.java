@@ -12,13 +12,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Point;
-import android.hardware.Camera;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -27,7 +24,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -134,19 +130,27 @@ public class Utility {
 		return activeNetworkInfo != null;
 	}
 
-	public static void ShowProgressDialog(Context mContext, String message) {
+    public static void ShowProgressDialog(Context mContext, String message) {
 
-		dialog = new ProgressDialog(mContext);
-		dialog.setMessage(message);
-		dialog.show();
-	}
+        HideDialog(mContext);
+        if (mContext != null) {
+            dialog = new ProgressDialog(mContext);
+            dialog.setMessage(message);
+            dialog.show();
+        }
+    }
 
 	public static void HideDialog(Context mContext) {
 		if (mContext == null || dialog == null)
 			return;
-		if (!((Activity) mContext).isFinishing() && dialog.isShowing()) {
-			dialog.dismiss();
+		try {
+		if (!((Activity) mContext).isFinishing() && dialog.isShowing())
+				dialog.dismiss();
 		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 
 	public static final int MEDIA_TYPE_IMAGE = 1;

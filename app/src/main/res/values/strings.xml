@@ -385,5 +385,7 @@
     <string name="new_entries">NEW ENTRIES</string>
     <string name="categories_home_fragment">CATEGORIES</string>
 
+    <string name="no_following_error_text">TO DIRECT MESSAGE\nANOTHER USER - YOU\nNEED TO BOTH FOLLOW\nEACH OTHER</string>
+
 
 </resources>

@@ -1,26 +1,5 @@
 package com.mobstar;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -58,6 +37,27 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 public class EditProfileActivity extends Activity {
 
 	private Context mContext;
@@ -72,7 +72,7 @@ public class EditProfileActivity extends Activity {
 	private int temp = 0;
 	private int IMG_PICKER_SELECT=29;
 	private int VIDEO_PICKER_SELECT=31;
-	private boolean isChangeImage;
+	private boolean isChangeImage = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -587,7 +587,7 @@ public class EditProfileActivity extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-
+            isChangeImage = false;
 		}
 
 		@Override

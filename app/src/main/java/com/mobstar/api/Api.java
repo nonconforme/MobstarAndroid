@@ -1,14 +1,8 @@
 package com.mobstar.api;
 
-import android.app.Dialog;
 import android.content.Context;
-
-import com.mobstar.R;
 import com.mobstar.utils.Constant;
-
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Alexandr on 28.09.2015.

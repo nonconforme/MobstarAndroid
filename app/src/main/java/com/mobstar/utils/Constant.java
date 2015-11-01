@@ -4,6 +4,7 @@ package com.mobstar.utils;
 public class Constant {
 
 
+    public static final boolean IS_RELEASE = false;
     //	public static String SENDER_ID = "397816546137";
 	public static String SENDER_ID = "367365382408";
 	
@@ -110,6 +111,8 @@ public class Constant {
 	public static final String USER_MY_PROFILE = "/user/me/profile/";
 	
 	public static String GET_ENTRY= "entry/";
+
+	public static final String INFO = "/info/";
 	
 	public static String GET_CATEGORY= "category";
 

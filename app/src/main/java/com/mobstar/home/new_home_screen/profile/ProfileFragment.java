@@ -13,8 +13,9 @@ import com.mobstar.api.DownloadFileManager;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.custom.recycler_view.sticky_recycler_view.StickyHeadersTouchListener;
 import com.mobstar.home.new_home_screen.EntryItem;
-import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
+import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.player.PlayerManager;
+import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -23,7 +24,7 @@ import java.util.HashMap;
 /**
  * Created by lipcha on 22.09.15.
  */
-public class ProfileFragment extends HomeVideoListBaseFragment implements EntryItem.OnChangeEntryListener {
+public class ProfileFragment extends VideoListBaseFragment implements EntryItem.OnChangeEntryListener {
 
 
     private UserProfile user;
@@ -54,7 +55,7 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
         params.put("page", Integer.toString(pageNo));
         textNoData.setVisibility(View.GONE);
         if (isNotification)
-            getEntry(Constant.GET_ENTRY + user.getEntryId(),null,1);
+            getEntry(Constant.GET_ENTRY + user.getEntryId() + Constant.INFO,null,1);
         else
             getEntry(Constant.MIX_ENTRY, params, pageNo);
     }
@@ -167,7 +168,7 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
     @Override
     protected void refreshEntryList() {
         super.refreshEntryList();
-        if (entryAdapter.getArrEntries().size() > 0)
+        if (entryAdapter.getArrEntries().size() > 0 && getActivity() != null)
             ((NewProfileActivity) getActivity()).setIAmStar(entryAdapter.getEntry(0).getIAmStar());
     }
 
@@ -179,5 +180,10 @@ public class ProfileFragment extends HomeVideoListBaseFragment implements EntryI
     @Override
     public void onFollowEntry(String uId, String isMyStar) {
         entryAdapter.onFollowEntry(uId, isMyStar);
+    }
+
+    @Override
+    public void onChangeEntry(EntryPojo entryPojo) {
+
     }
 }

@@ -26,6 +26,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.BaseResponse;
+import com.mobstar.api.responce.CategoryResponse;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
@@ -39,7 +43,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 
 	//	ImageView btnMusic;
 	private ListView listSelectCategory;
-	private String sErrorMessage="";
+//	private String sErrorMessage="";
 	private ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
 	private CategoryAdapter categoryAdapter;
 	private SharedPreferences preferences;
@@ -58,13 +62,14 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
 
 		listSelectCategory.setAdapter(categoryAdapter);
+		getCategoryRequest();
 
-		if (Utility.isNetworkAvailable(mContext)) {
-			new CategoryCall().start();
-		} else {
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-			Utility.HideDialog(mContext);
-		}
+//		if (Utility.isNetworkAvailable(mContext)) {
+//			new CategoryCall().start();
+//		} else {
+//			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//			Utility.HideDialog(mContext);
+//		}
 
 		Utility.SendDataToGA("SelectCategory Screen", SelectCategoryActivity.this);
 	}
@@ -236,94 +241,25 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 
 	}
 
-	class CategoryCall extends Thread {
+	private void getCategoryRequest(){
+		RestClient.getInstance(this).getRequest(Constant.GET_CATEGORY, null, new ConnectCallback<CategoryResponse>() {
 
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			//			String Query = Constant.SERVER_URL + Constant.GET_CATEGORY+"?mobit=yes";
-
-			String Query = Constant.SERVER_URL + Constant.GET_CATEGORY;
-
-
-//			Log.v(Constant.TAG, "Query " + Query);
-
-			String response = JSONParser.getRequest(Query, preferences.getString("token", null));
-
-			// Log.v(Constant.TAG, "EntryCall response " + response);
-//			Log.d("Response is=>", response);
-
-			try {
-				if (response != null) {
-
-					sErrorMessage = "";
-
-					if (response.trim().equals("[]")) {
-						sErrorMessage = getString(R.string.no_entries_found);
-					}
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (jsonObject.has("categories")) {
-
-						arrCategoryPojos.clear();
-
-						JSONArray jsonArrayCategories;
-						jsonArrayCategories = jsonObject.getJSONArray("categories");
-
-
-						for (int i = 0; i < jsonArrayCategories.length(); i++) {
-
-							JSONObject jsonObj = jsonArrayCategories.getJSONObject(i);
-
-							if (jsonObj.has("category")) {
-								JSONObject jsonObjCategory = jsonObj.getJSONObject("category");
-								CategoryPojo categoryPojo = new CategoryPojo();
-								categoryPojo.setID(jsonObjCategory.getString("id"));
-								categoryPojo.setCategoryActive(jsonObjCategory.getBoolean("categoryActive"));
-								categoryPojo.setCategoryName(jsonObjCategory.getString("categoryName"));
-								categoryPojo.setCategoryDescription(jsonObjCategory.getString("categoryDescription"));
-								arrCategoryPojos.add(categoryPojo);
-							}
-						}
-
-					}
-				}
-
-				if (sErrorMessage != null && !sErrorMessage.equals("")) {
-					handlerCategory.sendEmptyMessage(0);
+			@Override
+			public void onSuccess(CategoryResponse object) {
+				if (object.hasError()) {
+					OkayAlertDialog(object.getError());
 				} else {
-					handlerCategory.sendEmptyMessage(1);
+					arrCategoryPojos = object.getCategoryPojos();
+					categoryAdapter.notifyDataSetChanged();
 				}
-
-			} catch (Exception exception) {
-				exception.printStackTrace();
-				handlerCategory.sendEmptyMessage(0);
 			}
 
-		}
+			@Override
+			public void onFailure(String error) {
+				OkayAlertDialog(error);
+			}
+		});
 	}
-
-	Handler handlerCategory = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			Utility.HideDialog(mContext);
-
-			if (msg.what == 1) {
-				categoryAdapter.notifyDataSetChanged();
-
-			} else {
-				OkayAlertDialog(sErrorMessage);
-
-			}
-		}
-	};
 
 	void OkayAlertDialog(final String msg) {
 

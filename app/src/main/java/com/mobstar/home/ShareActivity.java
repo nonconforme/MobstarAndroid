@@ -61,9 +61,9 @@ public class ShareActivity extends Activity implements OnClickListener {
 	private static Bitmap bitmap;
 	private FileOutputStream fos;
 
-	private String ShareText = "Hey, check out this entry on MobStar:";
+	private String ShareText;
 	private String ShortURL="";
-	private String TwitterShareText="Hey, check out this entry on @officialmobstar:";
+	private String TwitterShareText;
 	private Session.StatusCallback statusCallback = new SessionStatusCallback();
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private boolean isTalent=false;

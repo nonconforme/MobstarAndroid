@@ -36,7 +36,8 @@ public class EntriesResponse extends BaseResponse {
                 if (entry.has("entry")){
                     final EntryPojo entryPojo = new EntryPojo();
                     entryPojo.configure(entry.getJSONObject("entry"));
-                    arrEntry.add(entryPojo);
+                    if (entryPojo.getID() != null)
+                        arrEntry.add(entryPojo);
                 }
 
             }
@@ -49,7 +50,8 @@ public class EntriesResponse extends BaseResponse {
                     if (vote.has("entry")){
                         final EntryPojo entryPojo = new EntryPojo();
                         entryPojo.configure(vote.getJSONObject("entry"));
-                        arrEntry.add(entryPojo);
+                        if (entryPojo.getID() != null)
+                            arrEntry.add(entryPojo);
                     }
                 }
 
