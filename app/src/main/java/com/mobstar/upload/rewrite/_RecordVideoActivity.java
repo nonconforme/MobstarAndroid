@@ -16,9 +16,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -109,22 +107,19 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
         super.onResume();
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
-        initializeCameraPostDelay();
+        initializeCamera();
 
     }
     @Override
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
         releaseMediaRecorder();
+        flCameraPreviewContaner.removeView(mCameraPreview);
+        mCameraPreview.getmHolder().removeCallback(mCameraPreview);
         CameraUtility.releaseCamera(mCamera);
     }
+
 
     private void getArgs(){
         final Bundle args = getIntent().getExtras();
@@ -414,6 +409,10 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
 
         }
 
+        public SurfaceHolder getmHolder() {
+            return mHolder;
+        }
+
         private void onOffFlash(boolean isFlashOn) {
 
             final Camera.Parameters parameters = mCamera.getParameters();
@@ -610,6 +609,8 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
         public void surfaceDestroyed(SurfaceHolder holder) {
             // empty. Take care of releasing the Camera preview in your
             // activity.
+            releaseMediaRecorder();
+            CameraUtility.releaseCamera(mCamera);
         }
 
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -621,36 +622,15 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
 
             // stop preview before making changes
             try {
-                if(mCamera!=null){
+                if (mCamera != null) {
                     mCamera.stopPreview();
 
                     Camera.Parameters parameters = mCamera.getParameters();
-//                    if (optimalVideoSize != null) {
-//                        parameters.setPreviewSize(optimalVideoSize.width, optimalVideoSize.height);
-//                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-//                        mCamera.setParameters(parameters);
-//                        mCamera.startPreview();
-//                    }
-
-                    Camera.Size size = getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), width, height);
-
-                    if (size != null) {
-//                        parameters.setPreviewSize(size.width, size.height);
-                        parameters.setPreviewSize(width, height);
-                        mCamera.setParameters(parameters);
-                        mCamera.startPreview();
-                    }
-
-                    Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-
-                    if (display.getRotation() == Surface.ROTATION_270) {
-                        parameters.setPreviewSize(width, height);
-                    } else {
-
-                    }
+                    parameters.setPreviewSize(width, height);
                     CameraUtility.setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
 
                     mCamera.setParameters(parameters);
+                    mCamera.startPreview();
                 }
 
             } catch (Exception e) {
@@ -726,25 +706,6 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
         }).runTranscoding();
     }
 
-    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {
-        Camera.Size result = null;
-        for (Camera.Size size : sizes) {
-
-            if (size.width <= width && size.height <= height) {
-                if (result == null) {
-                    result = size;
-                } else {
-                    int resultArea = result.width * result.height;
-                    int newArea = size.width * size.height;
-                    if (newArea > resultArea) {
-                        result = size;
-                    }
-                }
-            }
-        }
-        return (result);
-    }
-
     private void releaseMediaRecorder() {
         if (mMediaRecorder != null) {
             mMediaRecorder.reset(); // clear recorder configuration
@@ -756,20 +717,6 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
         if (recordTimer != null) {
             recordTimer.cancel();
         }
-    }
-
-    private void releaseCamera() {
-        if (mCamera != null) {
-            mCamera.release(); // release the camera for other applications
-            mCamera = null;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        releaseMediaRecorder();
-        releaseCamera();
-        super.onDestroy();
     }
 
     @Override
