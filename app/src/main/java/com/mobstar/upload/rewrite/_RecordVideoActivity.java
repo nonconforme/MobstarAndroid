@@ -459,7 +459,7 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
 //            // higher)
 //            final CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
 //            if (supportedVideoSizes != null) {
-//                Camera.Size optimalVideoSize = getOptimalPreviewSize(supportedVideoSizes, desiredwidth, desiredheight);
+//                optimalVideoSize = getOptimalPreviewSize(supportedVideoSizes, desiredheight, desiredwidth);
 //                profile.videoFrameWidth = optimalVideoSize.width;
 //                profile.videoFrameHeight = optimalVideoSize.height;
 //            }
@@ -467,8 +467,8 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
 
             // Log.v(Constant.TAG, "optimalVideoSize width " +
             // optimalVideoSize.width + " height " + optimalVideoSize.height);
-            // mMediaRecorder.setVideoSize(optimalVideoSize.width,
-            // optimalVideoSize.height);
+             mMediaRecorder.setVideoSize(optimalVideoSize.width,
+             optimalVideoSize.height);
 
             mMediaRecorder.setVideoEncodingBitRate(1280000);
             mMediaRecorder.setMaxDuration(C_MAX_RECORD_DURATION_IN_MS);
@@ -619,31 +619,40 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
                 // preview surface does not exist
                 return;
             }
+            desiredwidth = width;
+            desiredheight = height;
+            if (supportedVideoSizes != null) {
+                optimalVideoSize = getOptimalPreviewSize(supportedVideoSizes, desiredheight, desiredwidth);
+            }
 
             // stop preview before making changes
             try {
                 if (mCamera != null) {
                     mCamera.stopPreview();
 
-                    Camera.Parameters parameters = mCamera.getParameters();
-                    parameters.setPreviewSize(width, height);
+                    if (optimalVideoSize!=null) {
+                        Camera.Parameters parameters = mCamera.getParameters();
+                        parameters.setPreviewSize(optimalVideoSize.width, optimalVideoSize.height);
+                        mCamera.setParameters(parameters);
+                    }
                     CameraUtility.setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
 
-                    mCamera.setParameters(parameters);
+
                     mCamera.startPreview();
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
+                try {
+                    mCamera.setPreviewDisplay(mHolder);
+                    mCamera.startPreview();
+
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
             }
 
-            try {
-                mCamera.setPreviewDisplay(mHolder);
-                mCamera.startPreview();
 
-            } catch (Exception e) {
-                //				Log.d(Constant.TAG, "Error starting camera preview: " + e.getMessage());
-            }
         }
     }
 
@@ -735,5 +744,24 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
         startActivity(intent);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+    }
+
+    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {
+        Camera.Size result = null;
+        for (Camera.Size size : sizes) {
+
+            if (size.width <= width && size.height <= height) {
+                if (result == null) {
+                    result = size;
+                } else {
+                    int resultArea = result.width * result.height;
+                    int newArea = size.width * size.height;
+                    if (newArea > resultArea) {
+                        result = size;
+                    }
+                }
+            }
+        }
+        return (result);
     }
 }
