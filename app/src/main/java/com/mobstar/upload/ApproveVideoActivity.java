@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 
 import com.mobstar.R;
 import com.mobstar.home.split.SplitActivity;
+import com.mobstar.home.youtube.VideoData;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -33,35 +34,27 @@ import com.mobstar.utils.Utility;
 import java.io.File;
 
 public class ApproveVideoActivity extends Activity {
+
 	public static final String APPROVE_SPLIT_VIDEO = "approve split video";
 
-	Context mContext;
 
-	String sVideoPath;
-
-	Button btnRetake, btnApprove;
-
-	ImageView btnPausePlay;
-	MediaPlayer mediaPlayer;
-
-	ProgressBar progressMediaPlayer;
-
-	Handler handler = new Handler();
-
-	TextureView textureView;
-
-	ImageView imageFrame;
-
-	CustomSurfaceTextureListener surfaceTextureListener;
-
+	private Context mContext;
+	private String sVideoPath;
+	private Button btnRetake, btnApprove;
+	private ImageView btnPausePlay;
+	private MediaPlayer mediaPlayer;
+	private ProgressBar progressMediaPlayer;
+	private Handler handler = new Handler();
+	private TextureView textureView;
+	private ImageView imageFrame;
+	private CustomSurfaceTextureListener surfaceTextureListener;
 	private int mVideoHeight;
 	private int mVideoWidth;
-
-	Typeface typefaceBtn;
+	private Typeface typefaceBtn;
 	private EntryPojo entry;
-
-	String categoryId,subCat;
+	private String categoryId,subCat;
 	private boolean isSplitVideo = false;
+	private VideoData youTubeVideoData;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,26 +63,30 @@ public class ApproveVideoActivity extends Activity {
 
 		mContext = ApproveVideoActivity.this;
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			sVideoPath = extras.getString("video_path");
-
-			if(extras.containsKey("categoryId")) {
-				categoryId=extras.getString("categoryId");
-				subCat=extras.getString("subCat");
-			}
-
-			if (extras.containsKey(APPROVE_SPLIT_VIDEO))
-				isSplitVideo = true;
-			if (extras.containsKey(Constant.ENTRY))
-			entry = (EntryPojo) extras.getSerializable(Constant.ENTRY);
-		}
+		getBundleExtra();
 
 		calculateVideoSize();
 
 		InitControls();
 		
 		Utility.SendDataToGA("ApproveVideo Screen", ApproveVideoActivity.this);
+	}
+
+	private void getBundleExtra(){
+		final Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			sVideoPath = extras.getString("video_path");
+
+			if(extras.containsKey("categoryId")) {
+				categoryId = extras.getString("categoryId");
+				subCat = extras.getString("subCat");
+			}
+
+			if (extras.containsKey(APPROVE_SPLIT_VIDEO))
+				isSplitVideo = true;
+			if (extras.containsKey(Constant.ENTRY))
+				entry = (EntryPojo) extras.getSerializable(Constant.ENTRY);
+		}
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)

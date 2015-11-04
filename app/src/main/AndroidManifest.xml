@@ -26,6 +26,7 @@
     
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
     <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <permission
         android:name="com.mobstar.permission.C2D_MESSAGE"
@@ -181,6 +182,10 @@
             android:name=".upload.SelectMediaTypeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme" >
+        </activity>
+        <activity android:name=".home.youtube.YouTubeListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"  >
         </activity>
         <activity
             android:name=".upload.TakePictureActivity"

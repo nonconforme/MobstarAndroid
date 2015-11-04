@@ -1,65 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:background="@color/background_transparent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="20dp">
-
-    <com.mobstar.custom.CustomTextviewBold
+    android:background="@color/background_transparent">
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:singleLine="false"
-        android:text="@string/select_media_type"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white_color"
-        android:textSize="18sp"
-         />
+        android:layout_height="wrap_content">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:id="@+id/btnMovieClip"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/movie_clip"
-        android:drawableLeft="@drawable/icn_btn_enter_mabstar"
-        style="@style/BaseButton.Yellow"/>
+            <com.mobstar.custom.CustomTextviewBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:singleLine="false"
+                android:text="@string/select_media_type"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/white_color"
+                android:textSize="18sp"
+                />
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:id="@+id/btnImage"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/take_image"
-        android:drawableLeft="@drawable/icn_btn_image"
-        style="@style/BaseButton.Yellow"/>
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/btnYouTube"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/app_name"
+                android:text="@string/you_tube"
+                android:drawableLeft="@drawable/icn_btn_enter_mabstar"
+                style="@style/BaseButton.Yellow"/>
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:id="@+id/btnAudioClip"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/app_name"
-        style="@style/BaseButton.Yellow"
-        android:drawableLeft="@drawable/icn_btn_audio"
-        android:text="@string/audio_clip"/>
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/btnMovieClip"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/app_name"
+                android:text="@string/movie_clip"
+                android:drawableLeft="@drawable/icn_btn_enter_mabstar"
+                style="@style/BaseButton.Yellow"/>
 
-    <com.mobstar.custom.CustomTextviewBold
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/default_big_btn_height"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/app_name"
-        android:text="@string/back"
-        android:drawableLeft="@drawable/icn_btn_back"
-        style="@style/BaseButton.Gray"/>
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/btnImage"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/app_name"
+                android:text="@string/take_image"
+                android:drawableLeft="@drawable/icn_btn_image"
+                style="@style/BaseButton.Yellow"/>
 
-</LinearLayout>
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/btnAudioClip"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/app_name"
+                style="@style/BaseButton.Yellow"
+                android:drawableLeft="@drawable/icn_btn_audio"
+                android:text="@string/audio_clip"/>
+
+            <com.mobstar.custom.CustomTextviewBold
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/default_big_btn_height"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/app_name"
+                android:text="@string/back"
+                android:drawableLeft="@drawable/icn_btn_back"
+                style="@style/BaseButton.Gray"
+                android:layout_marginBottom="20dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

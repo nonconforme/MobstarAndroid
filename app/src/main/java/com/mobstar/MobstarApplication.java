@@ -1,6 +1,6 @@
 package com.mobstar;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import io.fabric.sdk.android.Fabric;
 
 
-public class MobstarApplication extends Application{
+public class MobstarApplication extends MultiDexApplication {
 
 	private Thread.UncaughtExceptionHandler androidDefaultUEH;
 

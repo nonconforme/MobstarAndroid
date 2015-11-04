@@ -14,13 +14,19 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+
 //apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 21
     buildToolsVersion '23.0.1'
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.mobstar"
         minSdkVersion 15
         targetSdkVersion 21
@@ -68,5 +74,24 @@ dependencies {
         transitive = true;
     }
 
+    compile('com.google.apis:google-api-services-youtube:v3-rev120-1.19.0') {
+        exclude module: 'httpclient' //by artifact name
+        exclude group: 'org.apache.httpcomponents' //by group
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient' //by both name and group
+    }
+
+    compile('com.google.api-client:google-api-client-android:+') {
+        exclude module: 'httpclient' //by artifact name
+        exclude group: 'org.apache.httpcomponents' //by group
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient' //by both name and group
+    }
+    compile('com.google.api-client:google-api-client-gson:+') {
+        exclude module: 'httpclient' //by artifact name
+        exclude group: 'org.apache.httpcomponents' //by group
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient' //by both name and group
+    }
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
+    compile 'com.android.support:multidex:1.0.0'
 
 }
