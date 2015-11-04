@@ -67,6 +67,7 @@ public class InboxFragment extends Fragment {
             updateChatList(false);
         }
     };
+    private long mTimeClick;
 
     @Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -242,7 +243,14 @@ public class InboxFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-				Log.d("mobstar", "thread ID"+arrMessage.get(position).getThreadId());
+                // for exclude double click
+                long timeClickNow = System.currentTimeMillis();
+                if (timeClickNow - mTimeClick < 500) {
+                    return;
+                }
+                mTimeClick = timeClickNow;
+
+                Log.d("mobstar", "thread ID"+arrMessage.get(position).getThreadId());
 				new MessageRead(arrMessage.get(position).getThreadId()).start();
 
 				if(arrMessage.get(position).getMessageGroup() == 1){
@@ -257,8 +265,8 @@ public class InboxFragment extends Fragment {
 					intent.putExtra("UserId",arrMessage.get(position).getUserId());
 					intent.putExtra("imageUrl",arrMessage.get(position).getProfileImage());
 					intent.putExtra("coverImg",arrMessage.get(position).getCoverImage());
-					intent.putExtra("UserName",arrMessage.get(position).getDisplayName());
-					startActivityForResult(intent,101);	
+					intent.putExtra("UserName", arrMessage.get(position).getDisplayName());
+					startActivityForResult(intent, 101);
 				}
 			}
 		});
