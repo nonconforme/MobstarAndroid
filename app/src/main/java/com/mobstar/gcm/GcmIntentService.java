@@ -151,10 +151,10 @@ public class GcmIntentService extends IntentService {
         sendPush(contentIntent, msg);
 	}
 
-	private void sendNotification(String msg,String messageGroup,String threadId,String name) {
+    private void sendNotification(String msg,String messageGroup,String threadId,String name) {
 
-		Intent intent = new Intent("GetNotificationCount");
-		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        Intent intent = new Intent("GetNotificationCount");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         Intent messageIntent = new Intent(NEW_MESSAGE_ACTION);
         messageIntent.putExtra(MessageDetail.THREAD_ID_KEY,threadId);
@@ -180,21 +180,7 @@ public class GcmIntentService extends IntentService {
             }
             sendPush(contentIntent,msg);
         }
-		if(messageGroup.equalsIgnoreCase("0")){
-			Intent i=new Intent(this,MessageDetail.class);
-			i.putExtra("threadId",threadId);
-			i.putExtra("UserName",name);
-			i.putExtra("FromNotification",true);
-			contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
-		}
-		else{
-			Intent i=new Intent(this,GroupMessageDetail.class);
-            i.putExtra("threadId", threadId);
-            i.putExtra("FromNotification",true);
-			contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
-		}
-        sendPush(contentIntent,msg);
-	}
+    }
 
 	private void sendNotification(String msg,String entryId) {
 
@@ -204,7 +190,7 @@ public class GcmIntentService extends IntentService {
 		mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
 		PendingIntent contentIntent = null;
-		Intent i=new Intent(this, SingleEntryActivity.class);
+        Intent i = new Intent(this, SingleEntryActivity.class);
 		final UserProfile userProfile = UserProfile.newBuilder()
 				.setEntryId(entryId)
 				.build();
