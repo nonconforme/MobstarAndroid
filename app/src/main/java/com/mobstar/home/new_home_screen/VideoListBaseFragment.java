@@ -26,13 +26,14 @@ import com.mobstar.custom.pull_to_refresh.PullToRefreshRecyclerView;
 import com.mobstar.custom.recycler_view.EndlessRecyclerOnScrollListener;
 import com.mobstar.custom.recycler_view.OnEndAnimationListener;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
-import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
+import com.mobstar.home.HomeFragment;
 import com.mobstar.home.notification.SingleEntryActivity;
 import com.mobstar.player.PlayerManager;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -158,12 +159,16 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
             public void onSuccess(EntriesResponse object) {
                 if (getActivity() == null)
                     return;
+                ArrayList<EntryPojo> arrEntry = object.getArrEntry();
                 if (pageNo == 1) {
-                    entryAdapter.setArrEntryes(object.getArrEntry());
-                    endlessRecyclerOnScrollListener.reset();
-                    downloadFirstFile();
+                    if (!(!arrEntry.isEmpty() &&
+                            (arrEntry.get(0).getID().isEmpty() || arrEntry.get(0).getID().equals("null")))) {
+                        entryAdapter.setArrEntryes(arrEntry);
+                        endlessRecyclerOnScrollListener.reset();
+                        downloadFirstFile();
+                    }
                 } else {
-                    entryAdapter.addArrEntries(object.getArrEntry());
+                    entryAdapter.addArrEntries(arrEntry);
                 }
                 if (object.hasNextPage())
                     endlessRecyclerOnScrollListener.existNextPage();
@@ -249,7 +254,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     protected EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener() {
         @Override
         public void onLoadMore(int currentPage) {
-            Utility.ShowProgressDialog(getActivity(), getContext().getApplicationContext().getString(R.string.loading));
+            Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
             getEntryRequest(currentPage);
         }
 
@@ -327,7 +332,15 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
 
     @Override
     public void onRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+        tryHideNewEntry();
         getEntryRequest(1);
+    }
+
+    private void tryHideNewEntry() {
+        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.frag_content);
+        if (homeFragment!=null) {
+            homeFragment.tryHideNewEntry();
+        }
     }
 
     protected void getArgs() {
@@ -412,5 +425,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
         Utility.ShowProgressDialog(getActivity(), getString(R.string.loading));
     }
 
-
+    public RecyclerViewAdapter getEntryAdapter() {
+        return entryAdapter;
+    }
 }

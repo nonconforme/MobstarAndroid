@@ -9,9 +9,8 @@ import com.google.android.gms.analytics.Tracker;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.TimeUtility;
 
-import java.util.HashMap;
-
 import io.fabric.sdk.android.Fabric;
+import java.util.HashMap;
 
 
 public class MobstarApplication extends Application{
@@ -27,7 +26,7 @@ public class MobstarApplication extends Application{
             Constant.SERVER_URL="http://api.mobstar.com/";
         } else {
             Constant.SERVER_URL="http://api-mobstar.test.thinkmobiles.com/";
-            Fabric.with(this, new Crashlytics());
+//            Fabric.with(this, new Crashlytics());
         }
         new TimeUtility().requestServerTime();
         AdWordsManager.registerManager(getApplicationContext());

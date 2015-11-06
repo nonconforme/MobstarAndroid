@@ -1,20 +1,9 @@
 package com.mobstar.home;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,11 +15,16 @@ import com.mobstar.custom.RoundedTransformation;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class StatisticsActivity extends Activity implements View.OnClickListener {
 
-	private Context mContext;
+    private static final String LOG_TAG = StatisticsActivity.class.getName();
+    private Context mContext;
 	private ProgressWheel progressWheel;
 	private int count = 0;
 	private EntryPojo entryPojo;
@@ -67,12 +61,18 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 		textRank = (TextView) findViewById(R.id.textRank);
 		textPositiveCount = (TextView) findViewById(R.id.textPositiveCount);
 
-		if (Integer.parseInt(entryPojo.getUpVotesCount()) + Integer.parseInt(entryPojo.getDownvotesCount()) == 0) {
-			positive_count = 0;
-		} else {
-			positive_count = Integer.parseInt(entryPojo.getUpVotesCount()) * 100
-					/ (Integer.parseInt(entryPojo.getUpVotesCount()) + Integer.parseInt(entryPojo.getDownvotesCount()));
-		}
+        try {
+            if (Integer.parseInt(entryPojo.getUpVotesCount()) + Integer.parseInt(entryPojo.getDownvotesCount()) == 0) {
+                positive_count = 0;
+            } else {
+                positive_count = Integer.parseInt(entryPojo.getUpVotesCount()) * 100
+                        / (Integer.parseInt(entryPojo.getUpVotesCount()) + Integer.parseInt(entryPojo.getDownvotesCount()));
+            }
+        }
+        catch (NumberFormatException e) {
+            e.printStackTrace();
+            Log.d(LOG_TAG,e.toString());
+        }
 
 		textUserName.setText(entryPojo.getName());
 		textDescription.setText(StringEscapeUtils.unescapeJava(entryPojo.getDescription()));
