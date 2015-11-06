@@ -825,5 +825,10 @@ public class Utility {
 		return null;
 	}
 
+    public static void removeFile(String filePath){
+        final File file = new File(filePath);
+        file.delete();
+    }
+
 
 }

@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 
 import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
+import com.mobstar.upload.rewrite._RecordVideoActivity;
 import com.mobstar.utils.Utility;
 
 public class SelectMediaTypeActivity extends Activity implements OnClickListener {
@@ -92,7 +93,7 @@ public class SelectMediaTypeActivity extends Activity implements OnClickListener
 			finish();
 			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		} else if (btnMovieClip.equals(view)) {
-			Intent intent = new Intent(mContext, RecordVideoActivity.class);
+			Intent intent = new Intent(mContext, _RecordVideoActivity.class);
 			intent.putExtra("categoryId",categoryId);
 			if(subCat!=null){
 				intent.putExtra("subCat",subCat);	

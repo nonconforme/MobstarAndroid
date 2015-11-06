@@ -2,9 +2,9 @@ package com.mobstar.home.split.ffmpeg;
 
 import android.graphics.Rect;
 import android.media.MediaMetadataRetriever;
-import android.util.Log;
 
 import com.mobstar.home.split.position_variants.PositionVariant;
+import com.mobstar.utils.CameraUtility;
 
 /**
  * Created by vasia on 01.09.15.
@@ -38,6 +38,38 @@ public class FFCommandCreator {
         final String complexCommand = stringBuilder.toString();
         return complexCommand;
     }
+    public static String getCropAndRotationNewVideoCommand(final String fileInPath, final String fileOutPath, final Rect rect, final int orientetion){
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append("ffmpeg -y -i ")
+                .append(fileInPath)
+                .append(" -strict experimental -vf crop=")
+                .append(rect.width() - 1)
+                .append(":")
+                .append(rect.height()- 1)
+                .append(":")
+                .append(rect.left)
+                .append(":")
+                .append(rect.top);
+        final int rotation = getVideoRotation(fileInPath);
+        if (orientetion== CameraUtility.ORIENTATION_RIGHT) {
+            stringBuilder
+                    .append(",transpose=1");
+        } else
+        if (rotation != 0){
+            stringBuilder
+                    .append(",transpose=")
+                    .append(rotation);
+        }
+        stringBuilder
+                .append(" -s ")
+                .append("306x306")
+                .append(" -metadata:s:v rotate=0 -vcodec mpeg4 ")
+                .append(fileOutPath);
+        final String complexCommand = stringBuilder.toString();
+        return complexCommand;
+    }
+
 
     public static String getMergeVideoCommandString(String pathLeft, String pathRight, String pathResult, boolean isHeadphonesOn, PositionVariant positionVariant) {
 
