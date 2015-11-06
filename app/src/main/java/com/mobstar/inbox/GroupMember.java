@@ -1,10 +1,5 @@
 package com.mobstar.inbox;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,10 +15,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.mobstar.R;
+import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.ParticipantsPojo;
@@ -32,11 +28,16 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-public class GroupMember extends Activity{
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+public class GroupMember extends Activity implements View.OnClickListener {
 
 	Context mContext;
 	private SharedPreferences preferences;
-	private ListView listUser;
+	private PullToRefreshListView listUser;
 	private TextView textNoData,textTalentPool;
 	private String sErrorMessage="",threadId;
 	private ArrayList<ParticipantsPojo> arrParticipants;
@@ -93,7 +94,10 @@ public class GroupMember extends Activity{
 	void initControlls(){
 		textTalentPool=(TextView)findViewById(R.id.textTalentPool);
 		textTalentPool.setText(getString(R.string.group_member));
-		listUser=(ListView) findViewById(R.id.listUser);
+        textTalentPool.setOnClickListener(this);
+		listUser=(PullToRefreshListView) findViewById(R.id.listUser);
+        listUser.setPadding(0, 0, 0, 0);
+        listUser.disablePullToRefresh();
 		textNoData=(TextView) findViewById(R.id.textNoData);
 		textNoData.setVisibility(View.GONE);
 		arrParticipants=new ArrayList<ParticipantsPojo>();
@@ -101,7 +105,14 @@ public class GroupMember extends Activity{
 		listUser.setAdapter(memberAdapter);
 	}
 
-	class GroupMemberCall extends Thread {
+    @Override
+    public void onClick(View v) {
+        if (textTalentPool.equals(v)) {
+            onBackPressed();
+        }
+    }
+
+    class GroupMemberCall extends Thread {
 
 		private String threadId;
 		

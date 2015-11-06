@@ -15,7 +15,7 @@ import java.util.TimeZone;
  */
 public class TimeUtility {
     private static final String LOG_TAG = TimeUtility.class.getName();
-        public static long TIME_LAPSE=0;
+    public static long TIME_LAPSE=0;
 
     public static long getDiffTime(String arg) {
         Calendar today = Calendar.getInstance();

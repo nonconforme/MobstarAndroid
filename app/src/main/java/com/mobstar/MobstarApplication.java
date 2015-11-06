@@ -9,9 +9,8 @@ import com.google.android.gms.analytics.Tracker;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.TimeUtility;
 
-import java.util.HashMap;
-
 import io.fabric.sdk.android.Fabric;
+import java.util.HashMap;
 
 
 public class MobstarApplication extends Application{
