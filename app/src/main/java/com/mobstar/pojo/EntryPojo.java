@@ -1,18 +1,14 @@
 package com.mobstar.pojo;
 
 import com.mobstar.api.responce.BaseResponse;
-import com.mobstar.utils.Utility;
+import com.mobstar.utils.TimeUtility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class EntryPojo extends BaseResponse implements Serializable {
 
@@ -96,34 +92,39 @@ public class EntryPojo extends BaseResponse implements Serializable {
 	}
 
 	public String getCreated() {
+        String tempDate = TimeUtility.getStringTime(TimeUtility.getDiffTime(Created));
+        return tempDate + "";
 
-		String tempDate = null;
-		Calendar today = Calendar.getInstance();
-
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		Date gmtTime = null;
-
-		try {
-			gmtTime = formatter.parse(Created);// catch exception
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		if (gmtTime != null) {
-			Calendar thatDay = Calendar.getInstance();
-			thatDay.setTime(gmtTime);
-
-
-			long diff = (today.getTimeInMillis() - thatDay.getTimeInMillis()) / 1000;
-
-
-			tempDate = Utility.GetStringTime(diff);
-		}
-		return tempDate + "";
+//		String tempDate = null;
+//		Calendar today = Calendar.getInstance();
+//
+//		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//		Date gmtTime = null;
+//
+//		try {
+//			gmtTime = formatter.parse(Created);// catch exception
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		if (gmtTime != null) {
+//			Calendar thatDay = Calendar.getInstance();
+//			thatDay.setTime(gmtTime);
+//
+//
+//			long diff = (today.getTimeInMillis() - thatDay.getTimeInMillis()) / 1000;
+//
+//
+//			tempDate = Utility.GetStringTime(diff);
+//		}
+//		return tempDate + "";
 	}
+
+    public String getCreatedString () {
+        return Created;
+    }
 
 	public void setCreated(String created) {
 		Created = created;

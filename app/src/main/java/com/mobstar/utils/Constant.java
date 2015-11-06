@@ -4,6 +4,7 @@ package com.mobstar.utils;
 public class Constant {
 
 
+    public static final boolean IS_RELEASE = false;
     //	public static String SENDER_ID = "397816546137";
 	public static String SENDER_ID = "367365382408";
 	
@@ -169,6 +170,9 @@ public class Constant {
     public static final String STAR_VALUE = "star";
     public static final String USER_ID_VALUE = "userId";
     public static final String ENTRY_ID_VALUE = "entryId";
+    public static final String THREAD_ID_VALUE = "threadId";
+    public static final String THREAD_VALUE = "thread";
+    public static final String MESSAGE_VALUE = "message";
 
     public static final String USER_CATEGORIES_FILTERS = "settings/categoryFilter";
 
