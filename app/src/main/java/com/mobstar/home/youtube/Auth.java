@@ -8,7 +8,7 @@ import com.google.api.services.youtube.YouTubeScopes;
 
 public class Auth {
     // Register an API key here: https://console.developers.google.com
-    public static final String KEY = "AIzaSyAyokwWF1S0ryzrpggSRKvX8rMv0l0Ml1M";
+    public static final String KEY = "AIzaSyDHcFZOwG7Nx57NnPWNgDpr53u1hPr6Tos";
 
     public static final String[] SCOPES = {Scopes.PROFILE, YouTubeScopes.YOUTUBE};
 }

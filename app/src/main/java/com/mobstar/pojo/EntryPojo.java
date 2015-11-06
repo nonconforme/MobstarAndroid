@@ -464,11 +464,25 @@ public class EntryPojo extends BaseResponse implements Serializable {
 				} else if (getType().equalsIgnoreCase("video")) {
 					setVideoLink(jsonObjFile.getString("filePath"));
 					setFiletype(jsonObjFile.getString("fileType"));
+				}else if (getType().equalsIgnoreCase("video_youtube")){
+					parseYouTubeVideo(jsonObjFile);
 				}
 			}
 
 			// arrEntryPojos.add(entryPojo);
 //			arrEntryPojosParent.add(entryPojo);
 		}
+	}
+
+	private void parseYouTubeVideo(final JSONObject jsonObject) throws JSONException {
+		if (jsonObject.has("fileType") && jsonObject.has("filePath")){
+			if(jsonObject.getString("fileType").equalsIgnoreCase("video_youtube")){
+				setVideoLink(jsonObject.getString("filePath"));
+			}
+			if(jsonObject.getString("fileType").equalsIgnoreCase("jpg")){
+				setVideoThumb(jsonObject.getString("filePath"));
+			}
+		}
+
 	}
 }

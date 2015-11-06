@@ -183,7 +183,7 @@ public class ProgressWheelPercentage extends View {
 	    
 	    barColor = a.getColor(R.styleable.ProgressWheelPercentage_barColor, barColor);
 	    
-	    barLength = (int) a.getDimension(R.styleable.ProgressWheelPercentage_barLength, barLength);
+	    barLength = (int) a.getDimension(R.styleable.ProgressWheelPercentage_pw_barLength, barLength);
 	    
 	    textSize = (int) a.getDimension(R.styleable.ProgressWheelPercentage_textSize, textSize);
 	    

@@ -2,6 +2,7 @@ package com.mobstar.home.new_home_screen;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.SurfaceTexture;
@@ -15,7 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.mobstar.AdWordsManager;
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
@@ -32,6 +38,7 @@ import com.mobstar.home.StatisticsActivity;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.home.split.SplitActivity;
+import com.mobstar.home.youtube.Auth;
 import com.mobstar.info.report.InformationReportActivity;
 import com.mobstar.player.PlayerManager;
 import com.mobstar.pojo.EntryPojo;
@@ -44,6 +51,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 /**
  * Created by lipcha on 14.09.15.
@@ -68,7 +76,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private ImageView imgMsg, ivIndicator;
     private SwipeCardView swipeCardView;
     private CardView cardView;
-
+    private FrameLayout youTubePlayerContainer;
     private View votingYes;
     private View votingNo;
 
@@ -82,14 +90,14 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private LinearLayout llItemEntry;
     private LinearLayout llItemUser;
     private boolean isRemoveItemAfterVotingNo = true;
-
+    private String itemId;
     private boolean isEnableSwipeAction = true;
 
     public EntryItem(View itemView, boolean isEnableSwipe) {
         super(itemView);
         isEnableSwipeAction = isEnableSwipe;
         findView(itemView);
-
+        itemId = UUID.randomUUID().toString();
     }
 
     public int getPos() {
@@ -122,12 +130,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         votingYes = convertView.findViewById(R.id.voting_yes);
         cardView = (CardView) convertView.findViewById(R.id.cardView);
         containerPlayer = (FrameLayout) convertView.findViewById(R.id.conteiner_player);
-
+        youTubePlayerContainer = (FrameLayout) convertView.findViewById(R.id.container);
         llItemEntry = (LinearLayout) convertView.findViewById(R.id.llRowEntry);
         llItemUser = (LinearLayout) convertView.findViewById(R.id.llItemUser);
         imgUserItemPic = (ImageView) convertView.findViewById(R.id.imgUserItemPic);
         tvUserItemName = (TextView) convertView.findViewById(R.id.textUserItemName);
-
 
     }
 
@@ -303,6 +310,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             case "video":
                 setVideoContentType();
                 break;
+            case "video_youtube":
+
+                break;
         }
     }
 
@@ -373,6 +383,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imgPlaceHolder.setImageResource(R.drawable.video_placeholder);
         imageFrame.setVisibility(View.GONE);
 
+        loadVideoThumb();
+    }
+
+    private void loadVideoThumb(){
         Picasso.with(baseActivity).load(entryPojo.getVideoThumb())
                 .placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(imageFrame, new Callback() {
             @Override
@@ -575,7 +589,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
             @Override
             public void onSuccess(VoteResponse object) {
-                if (object.getArrEntry() != null & object.getArrEntry().size() > 0 && onChangeEntryListener != null){
+                if (object.getArrEntry() != null & object.getArrEntry().size() > 0 && onChangeEntryListener != null) {
                     onChangeEntryListener.onChangeEntry(object.getArrEntry().get(0));
                 }
             }
@@ -686,6 +700,9 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         progressbar.setVisibility(View.GONE);
     }
 
+    public FrameLayout getContainerPlayer(){
+        return youTubePlayerContainer;
+    }
 
 //    public FrameLayout getFlPlaceHolder() {
 //        return flPlaceHolder;

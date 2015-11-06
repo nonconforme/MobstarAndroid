@@ -29,6 +29,7 @@ import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.home.HomeFragment;
 import com.mobstar.home.notification.SingleEntryActivity;
 import com.mobstar.player.PlayerManager;
+import com.mobstar.player.YouTubePlayerManager;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -224,6 +225,9 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                             case "video":
                                 downloadFileManager.downloadFile(entryPojo.getVideoLink(), 0);
                                 break;
+                            case "video_youtube":
+                                downloadFile(0);
+                                break;
                         }
                     }
                 }, 500);
@@ -264,7 +268,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
 //                entryAdapter.getEntryAtPosition(oldPosition).hideProgressBar();
             if (entryAdapter.getEntryAtPosition(currentPosition) != null) {
                 final String type = entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType();
-                if (type != null && !type.equals("image"))
+                if (type != null && !type.equals("image") && !type.equals("video_youtube"))
                     entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
             }
             PlayerManager.getInstance().standardizePrevious();
@@ -313,6 +317,9 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
             case "video":
                 downloadFileManager.cancelFile(entryPojo.getVideoLink());
                 break;
+            case "video_youtube":
+                YouTubePlayerManager.getInstance().cancelPlayer((BaseActivity) getActivity());
+                break;
         }
     }
 
@@ -326,6 +333,10 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                 break;
             case "video":
                 downloadFileManager.downloadFile(entryPojo.getVideoLink(), currentPosition);
+                break;
+            case "video_youtube":
+                if (entryAdapter.getEntryAtPosition(currentPosition) != null)
+                    YouTubePlayerManager.getInstance().initialize((BaseActivity)getActivity(), entryPojo.getVideoLink(), entryAdapter.getEntryAtPosition(currentPosition).getContainerPlayer());
                 break;
         }
     }
