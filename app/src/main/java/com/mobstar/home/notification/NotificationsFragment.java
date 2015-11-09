@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobstar.R;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.inbox.newMessagesScreen.MessageDetail;
 import com.mobstar.pojo.NotificationPojo;
@@ -156,44 +157,57 @@ public class NotificationsFragment extends Fragment {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
+
 //				new NotificationMarkRead(arrNotifiascationPojos.get(position).getNotificationID()).start();
-				
+
 				new MessageRead(arrNotificationPojos.get(position).getEntryId()).start();
                 Utility.clearBadge(mContext.getApplicationContext());
-				
+
 				if(arrNotificationPojos.get(position).getNotificationType().equalsIgnoreCase(MESSAGE_TYPE)){
 					if(arrNotificationPojos.get(position).getMessageGroup().equalsIgnoreCase("1")){
 						final Intent intent = new Intent(mContext, MessageDetail.class);
 						intent.putExtra("threadId",arrNotificationPojos.get(position).getEntryId());
                         intent.putExtra(MessageDetail.IS_GROUP,true);
 						startActivityForResult(intent, 101);
-					}
-					else{
+					} else {
 						final Intent intent = new Intent(mContext, MessageDetail.class);
-						intent.putExtra(MessageDetail.THREAD_ID_KEY,arrNotificationPojos.get(position).getEntryId());
-						intent.putExtra("UserName",arrNotificationPojos.get(position).getEntryName());
+						intent.putExtra(MessageDetail.THREAD_ID_KEY, arrNotificationPojos.get(position).getEntryId());
+						intent.putExtra("UserName", arrNotificationPojos.get(position).getEntryName());
 						startActivityForResult(intent, 101);
 					}
+				} else {
+					startProfileActivity(position);
+//					final Intent intent = new Intent(mContext, SingleEntryActivity.class);
+//					final UserProfile userProfile = UserProfile.newBuilder()
+//							.setEntryId(arrNotificationPojos.get(position).getEntryId())
+//							.build();
+//					intent.putExtra(SingleEntryActivity.USER, userProfile);
+//					intent.putExtra(SingleEntryActivity.IS_NOTIFICATION, true);
+////					intent.putExtra("EntryId",arrNotificationPojos.get(position).getEntryId());
+//					startActivityForResult(intent, 101);
 				}
-				else{
-					final Intent intent = new Intent(mContext, SingleEntryActivity.class);
-					final UserProfile userProfile = UserProfile.newBuilder()
-							.setEntryId(arrNotificationPojos.get(position).getEntryId())
-							.build();
-					intent.putExtra(SingleEntryActivity.USER, userProfile);
-					intent.putExtra(SingleEntryActivity.IS_NOTIFICATION, true);
-//					intent.putExtra("EntryId",arrNotificationPojos.get(position).getEntryId());
-					startActivityForResult(intent, 101);
-				}
-				
-				
+
+
 			}
 		});
 
 	}
 
-	void DeleteNotification() {
+	private void startProfileActivity(int position){
+		final Intent intent = new Intent(mContext, NewProfileActivity.class);
+		final NotificationPojo notificationPojo = arrNotificationPojos.get(position);
+		final UserProfile userProfile = UserProfile.newBuilder()
+				.setUserId(notificationPojo.getEntryId())
+				.setUserName(notificationPojo.getEntryName())
+				.setIsMyStar("1")
+				.setUserPic(notificationPojo.getProfileImage())
+				.setUserCoverImage(notificationPojo.getProfileCover())
+				.build();
+		intent.putExtra(NewProfileActivity.USER, userProfile);
+		startActivity(intent);
+	}
+
+	private void DeleteNotification() {
 
 		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
@@ -339,6 +353,10 @@ public class NotificationsFragment extends Fragment {
 								JSONObject jsonEntryObj=jsonObjNotification.getJSONObject("entry");
 								tempNotificationPojo.setEntryId(jsonEntryObj.getString("entry_id"));
 								tempNotificationPojo.setEntryName(jsonEntryObj.getString("entry_name"));
+								if (jsonEntryObj.has("profileImage"))
+									tempNotificationPojo.setProfileImage(jsonEntryObj.getString("profileImage"));
+								if (jsonEntryObj.has("profileCover"))
+									tempNotificationPojo.setProfileCover(jsonEntryObj.getString("profileCover"));
 							}
 							
 							if(jsonObjNotification.has("messageGroup")){
@@ -388,7 +406,7 @@ public class NotificationsFragment extends Fragment {
 
 			if (msg.what == 1) {
 				notificationListAdapter.notifyDataSetChanged();
-				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+				Utility.ShowProgressDialog(NotificationsFragment.this.getActivity(), getString(R.string.loading));
 				if (Utility.isNetworkAvailable(mContext)) {
 					new NotificationReadCall().start();
 				} else {
