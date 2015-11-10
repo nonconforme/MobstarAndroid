@@ -59,9 +59,15 @@ public class GcmIntentService extends IntentService {
 
 				//added khyati temporary commented
 
-
-
-				if(extras.containsKey("Type")){
+				if (extras.containsKey("pushType")) {
+					if (extras.getString("pushType").equals("newEntry")) {
+						if (extras.containsKey("entries")) {
+							String jsonArrayEnry = extras.getString("entries");
+							ArrayList<NewEntryPush> newEntryPushs = NewEntryPush.getList(jsonArrayEnry);
+							if (!newEntryPushs.isEmpty()) sendNewEntrys(newEntryPushs);
+						}
+					}
+				} else if(extras.containsKey("Type")){
 					String badgeCount="";
                     badgeCount=extras.getString("badge","");
 

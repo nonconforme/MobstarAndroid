@@ -329,6 +329,11 @@
             android:theme="@style/DialogTheme">
         </activity>
 
+        <activity android:name=".home.youtube.YouTubePlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseActivityDialogTheme">
+        </activity>
+
         <activity android:name=".geo_filtering.SelectCurrentRegionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme">

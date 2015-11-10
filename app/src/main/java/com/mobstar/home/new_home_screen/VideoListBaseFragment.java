@@ -28,6 +28,7 @@ import com.mobstar.custom.recycler_view.OnEndAnimationListener;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.home.HomeFragment;
 import com.mobstar.home.notification.SingleEntryActivity;
+import com.mobstar.home.youtube.YouTubePlayerActivity;
 import com.mobstar.player.PlayerManager;
 import com.mobstar.player.YouTubePlayerManager;
 import com.mobstar.pojo.EntryPojo;
@@ -181,9 +182,9 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
 
             @Override
             public void onFailure(String error) {
-                if(getActivity() == null)
+                if (getActivity() == null)
                     return;
-                Log.d(LOG_TAG,"http request get:getEntryRequest.onFailure.error="+error);
+                Log.d(LOG_TAG, "http request get:getEntryRequest.onFailure.error=" + error);
                 endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());
@@ -318,7 +319,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                 downloadFileManager.cancelFile(entryPojo.getVideoLink());
                 break;
             case "video_youtube":
-                YouTubePlayerManager.getInstance().cancelPlayer((BaseActivity) getActivity());
+//                YouTubePlayerManager.getInstance().cancelPlayer((BaseActivity) getActivity());
                 break;
         }
     }
@@ -335,8 +336,8 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                 downloadFileManager.downloadFile(entryPojo.getVideoLink(), currentPosition);
                 break;
             case "video_youtube":
-                if (entryAdapter.getEntryAtPosition(currentPosition) != null)
-                    YouTubePlayerManager.getInstance().initialize((BaseActivity)getActivity(), entryPojo.getVideoLink(), entryAdapter.getEntryAtPosition(currentPosition).getContainerPlayer());
+//                if (entryAdapter.getEntryAtPosition(currentPosition) != null)
+//                    YouTubePlayerManager.getInstance().initialize((BaseActivity)getActivity(), entryPojo.getVideoLink(), entryAdapter.getEntryAtPosition(currentPosition).getContainerPlayer());
                 break;
         }
     }
@@ -348,8 +349,14 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     }
 
     private void tryHideNewEntry() {
-        HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.frag_content);
-        if (homeFragment!=null) {
+        HomeFragment homeFragment = null;
+        try {
+            homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.frag_content);
+        }
+        catch (ClassCastException e){
+            e.printStackTrace();
+        }
+        if (homeFragment != null) {
             homeFragment.tryHideNewEntry();
         }
     }
@@ -439,4 +446,21 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     public RecyclerViewAdapter getEntryAdapter() {
         return entryAdapter;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK){
+            switch (requestCode){
+                case YouTubePlayerActivity.REMOVE_ENTRY:
+                    final int removePosition = data.getIntExtra(YouTubePlayerActivity.ENTRY_POSITION, -1);
+                    if (removePosition != -1){
+                        getEntryAdapter().onRemoveEntry(removePosition);
+                    }
+                    break;
+
+            }
+        }
+    }
+
 }

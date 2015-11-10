@@ -29,7 +29,6 @@ public class YouTubePlayerManager implements YouTubePlayer.OnInitializedListener
     private static final String YOUTUBE_FRAGMENT_TAG = "youtube";
 
 
-    private static YouTubePlayerManager playerManager;
     private String videoUrl;
     private FrameLayout playerContainer;
 
@@ -37,9 +36,7 @@ public class YouTubePlayerManager implements YouTubePlayer.OnInitializedListener
     }
 
     public static YouTubePlayerManager getInstance(){
-        if (playerManager == null)
-            playerManager = new YouTubePlayerManager();
-        return playerManager;
+        return new YouTubePlayerManager();
     }
 
     public void initialize(final BaseActivity activity, final String _videoUrl, FrameLayout _playerContainer){

@@ -52,6 +52,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 //import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 
@@ -660,6 +661,18 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		}
 
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
 
 	
 

@@ -325,6 +325,30 @@ public class Utility {
 
 	}
 
+	public static final void disLikeDialog(Activity activity, final Dialog.OnDismissListener onDismissListener){
+		final Dialog dialog = new Dialog(activity, R.style.DialogAnimationTheme);
+		dialog.setContentView(R.layout.dialog_dislike);
+		dialog.show();
+
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					if (onDismissListener != null)
+						onDismissListener.onDismiss(null);
+					dialog.dismiss();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+		};
+		timer.schedule(task, 1000);
+	}
+
 	public static void DisLikeDialog(Activity activity) {
 		final Dialog dialog = new Dialog(activity, R.style.DialogAnimationTheme);
 		dialog.setContentView(R.layout.dialog_dislike);
@@ -336,7 +360,12 @@ public class Utility {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				dialog.dismiss();
+				try {
+					dialog.dismiss();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 		};
 		timer.schedule(task, 1000);
