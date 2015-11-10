@@ -41,7 +41,7 @@ public class Api {
         RestClient.getInstance(context).getRequest(Constant.GET_MESSAGE, null, callback);
     }
 
-    public static final void sendMessageChat(final Context context,String threadId,String message, final ConnectCallback callback) {
+    public static final void sendMessageChat(final Context context,String threadId, String message, final ConnectCallback callback) {
         final HashMap<String, String> params = new HashMap<>();
 //        String[] name = {"thread","message"};
         params.put(Constant.THREAD_VALUE, threadId);
