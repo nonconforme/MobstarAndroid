@@ -7,10 +7,26 @@
         android:id="@+id/btnClose"
         style="@style/BtnClose"/>
 
-    <ListView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/lvYouTubeList"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_height="match_parent">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lvYouTubeList"
+            android:layout_gravity="center_horizontal"/>
 
+        <com.mobstar.custom.CustomTextview
+            android:id="@+id/textNoData"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            android:lineSpacingExtra="5dp"
+            android:text="@string/you_have_no_notifications"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/no_data_text_size" />
+
+    </FrameLayout>
 </LinearLayout>

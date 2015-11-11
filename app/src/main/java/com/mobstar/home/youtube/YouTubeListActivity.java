@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -51,6 +52,7 @@ public class YouTubeListActivity extends Activity implements View.OnClickListene
 
     private ImageButton btnClose;
     private ListView playList;
+    private TextView noDataText;
     private GoogleAccountCredential credential;
     private String mChosenAccountName;
     private String categoryId;
@@ -72,6 +74,7 @@ public class YouTubeListActivity extends Activity implements View.OnClickListene
     private void findViews(){
         btnClose = (ImageButton) findViewById(R.id.btnClose);
         playList = (ListView) findViewById(R.id.lvYouTubeList);
+        noDataText = (TextView) findViewById(R.id.textNoData);
     }
 
     private void setListeners(){
@@ -142,6 +145,7 @@ public class YouTubeListActivity extends Activity implements View.OnClickListene
                         loadData();
                     }
                 }
+                else finish();
                 break;
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode == Activity.RESULT_OK) {
@@ -292,8 +296,12 @@ public class YouTubeListActivity extends Activity implements View.OnClickListene
     }
 
     private void setupPlayList(List<VideoData> videos){
-        final YouTubePlayListAdapter adapter = new YouTubePlayListAdapter(videos, this, this);
-        playList.setAdapter(adapter);
+        if (videos == null || videos.size() == 0)
+            noDataText.setVisibility(View.VISIBLE);
+        else {
+            final YouTubePlayListAdapter adapter = new YouTubePlayListAdapter(videos, this, this);
+            playList.setAdapter(adapter);
+        }
     }
 
     @Override
