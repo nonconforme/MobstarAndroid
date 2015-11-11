@@ -43,12 +43,12 @@ import java.util.List;
 /**
  * Created by Alexandr on 22.10.2015.
  */
-public class _RecordVideoActivity extends Activity implements SensorEventListener {
+public class RecordVideoActivity extends Activity implements SensorEventListener {
 
     public static final int C_MAX_RECORD_DURATION_IN_MS = 30099;
     public static final long C_MAX_FILE_SIZE_IN_BYTES = 8000000;
     public static final long C_MAX_FILE_SIZE_IN_BYTES_PROFILE = 52428800; //50MB
-    private static final String LOG_TAG = _RecordVideoActivity.class.getName();
+    private static final String LOG_TAG = RecordVideoActivity.class.getName();
 
     private Context mContext;
     private Camera mCamera;
@@ -78,6 +78,7 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
     private Sensor magnetometer;
     float[] mGravity;
     float[] mGeomagnetic;
+    private long startRecordTime = 0;
 
     private List<Camera.Size> supportedVideoSizes;
     private CameraPreview mCameraPreview;
@@ -94,10 +95,10 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
         lp.screenBrightness = 1.0f;
         this.getWindow().setAttributes(lp);
         setContentView(R.layout.activity_record_video);
-        mContext = _RecordVideoActivity.this;
+        mContext = RecordVideoActivity.this;
         getArgs();
         initControls();
-        Utility.SendDataToGA("RecordVideo Screen", _RecordVideoActivity.this);
+        Utility.SendDataToGA("RecordVideo Screen", RecordVideoActivity.this);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -177,6 +178,8 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
             @Override
             public void onClick(View v) {
 
+                if (isRecording && startRecordTime + 2000 > System.currentTimeMillis())
+                    return;
                 if (isRecording)
                     mCameraPreview.stopRecord();
                 else {
@@ -187,7 +190,8 @@ public class _RecordVideoActivity extends Activity implements SensorEventListene
                             mOrientetionCamera = CameraUtility.getOrientation(angle);
                             mCameraPreview.setOrientation(mOrientetionCamera);
                         }
-                        mCameraPreview.startRecord();
+                    startRecordTime = System.currentTimeMillis();
+                    mCameraPreview.startRecord();
                 }
 
             }

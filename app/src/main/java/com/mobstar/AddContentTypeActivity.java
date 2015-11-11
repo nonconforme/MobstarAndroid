@@ -17,7 +17,7 @@ import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.upload.SelectProfileContentType;
 import com.mobstar.upload.TakePictureActivity;
 import com.mobstar.upload.UploadFileActivity;
-import com.mobstar.upload.rewrite._RecordVideoActivity;
+import com.mobstar.upload.rewrite.RecordVideoActivity;
 import com.mobstar.utils.Utility;
 
 public class AddContentTypeActivity extends Activity implements OnClickListener{
@@ -99,7 +99,7 @@ public class AddContentTypeActivity extends Activity implements OnClickListener{
 				startActivityForResult(intent,VIDEO_PICKER_SELECT);
 			}
 			else {
-				Intent intent = new Intent(mContext, _RecordVideoActivity.class);
+				Intent intent = new Intent(mContext, RecordVideoActivity.class);
 				intent.putExtra("categoryId",categoryId);
 				startActivity(intent);
 				finish();

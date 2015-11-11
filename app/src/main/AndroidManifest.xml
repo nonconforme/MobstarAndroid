@@ -214,7 +214,7 @@
             android:configChanges="orientation">
         </activity>
         <activity
-            android:name=".upload.rewrite._RecordVideoActivity"
+            android:name=".upload.rewrite.RecordVideoActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
         </activity>
