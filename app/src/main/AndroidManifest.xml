@@ -239,10 +239,10 @@
             android:name=".help.FAQSActivity"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name=".ProfileActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".ProfileActivity"-->
+            <!--android:screenOrientation="portrait" >-->
+        <!--</activity>-->
         <activity
             android:name=".home.new_home_screen.profile.NewProfileActivity"
             android:screenOrientation="portrait"

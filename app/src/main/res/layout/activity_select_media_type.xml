@@ -34,7 +34,7 @@
                 android:layout_marginTop="20dp"
                 android:contentDescription="@string/app_name"
                 android:text="@string/you_tube"
-                android:drawableLeft="@drawable/icn_btn_enter_mabstar"
+                android:drawableLeft="@drawable/icn_youtube_white"
                 style="@style/BaseButton.Yellow"/>
 
             <com.mobstar.custom.CustomTextviewBold

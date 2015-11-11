@@ -2,10 +2,10 @@ package com.mobstar.home.new_home_screen;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.SurfaceTexture;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,19 +16,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerFragment;
-import com.google.android.youtube.player.YouTubePlayerView;
 import com.mobstar.AdWordsManager;
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.StarCall;
-import com.mobstar.api.responce.BaseResponse;
 import com.mobstar.api.responce.StarResponse;
 import com.mobstar.api.responce.VoteResponse;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
@@ -38,7 +31,6 @@ import com.mobstar.home.StatisticsActivity;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.home.split.SplitActivity;
-import com.mobstar.home.youtube.Auth;
 import com.mobstar.home.youtube.YouTubePlayerActivity;
 import com.mobstar.info.report.InformationReportActivity;
 import com.mobstar.player.PlayerManager;
@@ -96,21 +88,19 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private LinearLayout llItemEntry;
     private LinearLayout llItemUser;
     protected boolean isRemoveItemAfterVotingNo = true;
-    private String itemId;
     private boolean isEnableSwipeAction = true;
 
     public EntryItem(View itemView, boolean isEnableSwipe) {
         super(itemView);
         isEnableSwipeAction = isEnableSwipe;
         findView(itemView);
-        itemId = UUID.randomUUID().toString();
     }
 
     public int getPos() {
         return getPosition();
     }
 
-    private void findView(final View convertView) {
+    protected void findView(final View convertView) {
         buttonVideoSplit = (TextView) convertView.findViewById(R.id.splitVideoButton);
         textUserName = (TextView) convertView.findViewById(R.id.textUserName);
         textTime = (TextView) convertView.findViewById(R.id.textTime);
@@ -607,6 +597,16 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 //            onChangeEntryListener.onRemoveEntry(getPos());
     }
 
+    @Override
+    public void onCancelSwipe() {
+
+    }
+
+    @Override
+    public void onStartSwipe() {
+
+    }
+
     private void likeRequest() {
         final HashMap<String, String> params = new HashMap<>();
         params.put("entry", entryPojo.getID());
@@ -727,6 +727,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     public FrameLayout getContainerPlayer(){
+        youTubePlayerContainer.setVisibility(View.VISIBLE);
         return youTubePlayerContainer;
     }
 
