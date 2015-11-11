@@ -46,7 +46,7 @@ import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.StarCall;
+import com.mobstar.api.call.StarCall;
 import com.mobstar.api.responce.BaseResponse;
 import com.mobstar.api.responce.NullResponse;
 import com.mobstar.custom.CustomTextview;

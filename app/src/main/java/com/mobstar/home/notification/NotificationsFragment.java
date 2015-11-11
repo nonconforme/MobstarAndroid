@@ -5,11 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,20 +22,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.call.NotificationCall;
+import com.mobstar.api.responce.NotificationResponse;
+import com.mobstar.api.responce.NullResponse;
+import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.inbox.newMessagesScreen.MessageDetail;
 import com.mobstar.pojo.NotificationPojo;
-import com.mobstar.utils.Constant;
-import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class NotificationsFragment extends Fragment {
@@ -52,8 +46,8 @@ public class NotificationsFragment extends Fragment {
 	public String sErrorMessage;
 	private ArrayList<NotificationPojo> arrNotificationPojos = new ArrayList<NotificationPojo>();
 	private ArrayList<String> arrSelectionNotificationID = new ArrayList<String>();
-	private String NotificationId="";
-	private String MESSAGE_TYPE="Message";	
+	private String notificationId ="";
+	private String MESSAGE_TYPE="Message";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,7 +89,8 @@ public class NotificationsFragment extends Fragment {
 				// TODO Auto-generated method stub
 				switch (item.getItemId()) {
 				case R.id.menu_delete:
-					DeleteNotification();
+					if (arrSelectionNotificationID.size() != 0)
+						deleteNotificatinRequest(arrSelectionNotificationID.get(0));
 					mode.finish(); // Action picked, so close the CAB
 					return true;
 				default:
@@ -145,126 +140,65 @@ public class NotificationsFragment extends Fragment {
 
 		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 
-		if (Utility.isNetworkAvailable(mContext)) {
-			new NotificationCall().start();
-		} else {
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-			Utility.HideDialog(mContext);
-		}
+		getNotificationRequest();
 		
 		listNotification.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
-//				new NotificationMarkRead(arrNotifiascationPojos.get(position).getNotificationID()).start();
-				
-				new MessageRead(arrNotificationPojos.get(position).getEntryId()).start();
-                Utility.clearBadge(mContext.getApplicationContext());
-				
-				if(arrNotificationPojos.get(position).getNotificationType().equalsIgnoreCase(MESSAGE_TYPE)){
-					if(arrNotificationPojos.get(position).getMessageGroup().equalsIgnoreCase("1")){
+
+				Utility.clearBadge(mContext.getApplicationContext());
+
+				if (arrNotificationPojos.get(position).getNotificationType().equalsIgnoreCase(MESSAGE_TYPE)) {
+					messageReadRequest(arrNotificationPojos.get(position).getEntryId());
+					if (arrNotificationPojos.get(position).getMessageGroup().equalsIgnoreCase("1")) {
 						final Intent intent = new Intent(mContext, MessageDetail.class);
-						intent.putExtra("threadId",arrNotificationPojos.get(position).getEntryId());
-                        intent.putExtra(MessageDetail.IS_GROUP,true);
+						intent.putExtra("threadId", arrNotificationPojos.get(position).getEntryId());
+						intent.putExtra(MessageDetail.IS_GROUP, true);
+						startActivityForResult(intent, 101);
+					} else {
+						final Intent intent = new Intent(mContext, MessageDetail.class);
+						intent.putExtra(MessageDetail.THREAD_ID_KEY, arrNotificationPojos.get(position).getEntryId());
+						intent.putExtra("UserName", arrNotificationPojos.get(position).getEntryName());
 						startActivityForResult(intent, 101);
 					}
-					else{
-						final Intent intent = new Intent(mContext, MessageDetail.class);
-						intent.putExtra(MessageDetail.THREAD_ID_KEY,arrNotificationPojos.get(position).getEntryId());
-						intent.putExtra("UserName",arrNotificationPojos.get(position).getEntryName());
-						startActivityForResult(intent, 101);
-					}
-				}
-				else{
+				} else if (!arrNotificationPojos.get(position).getNotificationType().equalsIgnoreCase("Follow")) {
 					final Intent intent = new Intent(mContext, SingleEntryActivity.class);
 					final UserProfile userProfile = UserProfile.newBuilder()
 							.setEntryId(arrNotificationPojos.get(position).getEntryId())
 							.build();
 					intent.putExtra(SingleEntryActivity.USER, userProfile);
 					intent.putExtra(SingleEntryActivity.IS_NOTIFICATION, true);
-//					intent.putExtra("EntryId",arrNotificationPojos.get(position).getEntryId());
 					startActivityForResult(intent, 101);
+				} else {
+					startProfileActivity(position);
 				}
-				
-				
+
+
 			}
 		});
 
 	}
 
-	void DeleteNotification() {
+	private void startProfileActivity(int position){
+		final Intent intent = new Intent(mContext, NewProfileActivity.class);
+		final NotificationPojo notificationPojo = arrNotificationPojos.get(position);
+		final UserProfile userProfile = UserProfile.newBuilder()
+				.setUserId(notificationPojo.getEntryId())
+				.setUserName(notificationPojo.getEntryName())
+				.setIsMyStar("1")
+				.setUserPic(notificationPojo.getProfileImage())
+				.setUserCoverImage(notificationPojo.getProfileCover())
+				.build();
+		intent.putExtra(NewProfileActivity.USER, userProfile);
+		startActivity(intent);
+	}
 
+	private void deleteNotificatinRequest(final String notificationId){
 		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-
-		if (Utility.isNetworkAvailable(mContext)) {
-
-			new DeleteNotificationCall(arrSelectionNotificationID.get(0)).start();
-
-		} else {
-
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-			Utility.HideDialog(mContext);
-		}
-
-	}
-
-	class DeleteNotificationCall extends Thread {
-
-		String NotificationID;
-
-		public DeleteNotificationCall(String NotificationID) {
-			this.NotificationID = NotificationID;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String[] name = { "notification" };
-			String[] value = { NotificationID };
-
-			String response = JSONParser.deleteRequest(Constant.SERVER_URL + Constant.DELETE_NOTIFICATION + NotificationID, name, value, preferences.getString("token", null));
-
-//			Log.v(Constant.TAG, "DeleteNotificationCall response " + response + " NotificationID " + NotificationID);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerDeleteNotification.sendEmptyMessage(0);
-					} else {
-						handlerDeleteNotification.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerDeleteNotification.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerDeleteNotification.sendEmptyMessage(0);
-			}
-
-		}
-	}
-
-	Handler handlerDeleteNotification = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			if (msg.what == 1) {
-
+		NotificationCall.deleteNotificationRequest(getActivity(), notificationId, new ConnectCallback<NullResponse>() {
+			@Override
+			public void onSuccess(NullResponse object) {
 				int tempIndex = -1;
 
 				for (int i = 0; i < arrNotificationPojos.size(); i++) {
@@ -279,212 +213,79 @@ public class NotificationsFragment extends Fragment {
 
 				Intent intent = new Intent("notification_count_changed");
 				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
-				
+
 				if (arrSelectionNotificationID.size() == 0) {
 					Utility.HideDialog(mContext);
 				} else {
-					new DeleteNotificationCall(arrSelectionNotificationID.get(0)).start();
+					deleteNotificatinRequest(arrSelectionNotificationID.get(0));
 				}
-
-			} else {
-				Utility.HideDialog(mContext);
-			}
-		}
-	};
-
-	class NotificationCall extends Thread {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.GET_NOTIFICATION, preferences.getString("token", null));
-
-			 Log.v(Constant.TAG, "NotificationCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (jsonObject.has("notifications")) {
-						arrNotificationPojos.clear();
-
-						JSONArray jsonArrayNotification = jsonObject.getJSONArray("notifications");
-						NotificationId="";
-						for (int i = 0; i < jsonArrayNotification.length(); i++) {
-
-							JSONObject jsonObjNotification = jsonArrayNotification.getJSONObject(i);
-
-							NotificationPojo tempNotificationPojo = new NotificationPojo();
-							
-							if(jsonObjNotification.getString("notificationId")!=null){
-								tempNotificationPojo.setNotificationID(jsonObjNotification.getString("notificationId"));
-								NotificationId=NotificationId+jsonObjNotification.getString("notificationId")+",";	
-								Log.d("mobstar","Notification=>"+NotificationId);
-							}
-							tempNotificationPojo.setNotificationContent(Utility.unescape_perl_string(
-                                    jsonObjNotification.getString("notificationContent")));
-							tempNotificationPojo.setNotificationDate(jsonObjNotification.getString("notificationDate"));
-							tempNotificationPojo.setNotificationType(jsonObjNotification.getString("notificationType"));
-							tempNotificationPojo.setNotificationIcon(jsonObjNotification.getString("notificationIcon"));
-							tempNotificationPojo.setNotificationRead(jsonObjNotification.getString("notificationRead"));
-							
-							if(jsonObjNotification.has("entry")){
-								JSONObject jsonEntryObj=jsonObjNotification.getJSONObject("entry");
-								tempNotificationPojo.setEntryId(jsonEntryObj.getString("entry_id"));
-								tempNotificationPojo.setEntryName(jsonEntryObj.getString("entry_name"));
-							}
-							
-							if(jsonObjNotification.has("messageGroup")){
-								tempNotificationPojo.setMessageGroup(jsonObjNotification.getString("messageGroup"));
-							}
-
-							arrNotificationPojos.add(tempNotificationPojo);
-						}
-						if(NotificationId!=null && NotificationId.length()>0){
-							int pos=NotificationId.lastIndexOf(",");
-							NotificationId=NotificationId.substring(0,pos);
-//							Log.d("mobstar","updated string is=>"+NotificationId);
-						}
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerNotification.sendEmptyMessage(0);
-					} else {
-						handlerNotification.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerNotification.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerNotification.sendEmptyMessage(0);
 			}
 
-		}
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(NotificationsFragment.this.getActivity());
+			}
+		});
 	}
 
-	Handler handlerNotification = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			Utility.HideDialog(mContext);
-			if (arrNotificationPojos.size() == 0) {
-				textNoData.setVisibility(View.VISIBLE);
-			} else {
-				textNoData.setVisibility(View.GONE);
+	private void getNotificationRequest(){
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		com.mobstar.api.call.NotificationCall.notificationRequest(getActivity(), new ConnectCallback<NotificationResponse>() {
+			@Override
+			public void onSuccess(NotificationResponse object) {
+				Utility.HideDialog(getActivity());
+				arrNotificationPojos = object.getArrNotificationPojos();
+				notificationId = object.getNotificationId();
+						prepareNotifivationList();
 			}
 
-			if (msg.what == 1) {
-				notificationListAdapter.notifyDataSetChanged();
-				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-				if (Utility.isNetworkAvailable(mContext)) {
-					new NotificationReadCall().start();
-				} else {
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-					Utility.HideDialog(mContext);
-				}
-			} else {
-
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(getActivity());
 			}
-		}
-	};
-	
-	class NotificationReadCall extends Thread {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String[] name = {"notificationIds"};
-			String[] value = {NotificationId};
-			
-			
-//			Log.d("mobstar","notificationIds"+NotificationId);
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.READ_NOTIFICATION, name, value,preferences.getString("token", null));
-			
-//			 Log.v(Constant.TAG, "NotificationCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-//					if (jsonObject.has("notifications")) {
-//
-//						JSONArray jsonArrayNotification = jsonObject.getJSONArray("notifications");
-//
-//						for (int i = 0; i < jsonArrayNotification.length(); i++) {
-//
-//							JSONObject jsonObjNotification = jsonArrayNotification.getJSONObject(i);
-//
-//							NotificationPojo tempNotificationPojo = new NotificationPojo();
-//
-//							tempNotificationPojo.setNotificationID(jsonObjNotification.getString("notificationId"));
-//							tempNotificationPojo.setNotificationContent(jsonObjNotification.getString("notificationContent"));
-//							tempNotificationPojo.setNotificationDate(jsonObjNotification.getString("notificationDate"));
-//							tempNotificationPojo.setNotificationContent(jsonObjNotification.getString("notificationContent"));
-//							tempNotificationPojo.setNotificationType(jsonObjNotification.getString("notificationType"));
-//
-//							arrNotificationPojos.add(tempNotificationPojo);
-//						}
-//					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerNotificationRead.sendEmptyMessage(0);
-					} else {
-						handlerNotificationRead.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerNotificationRead.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerNotificationRead.sendEmptyMessage(0);
-			}
-
-		}
+		});
 	}
 
-	Handler handlerNotificationRead = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			Utility.HideDialog(mContext);
-			if (arrNotificationPojos.size() == 0) {
-				textNoData.setVisibility(View.VISIBLE);
-			} else {
-				textNoData.setVisibility(View.GONE);
-			}
-
-			if (msg.what == 1) {
-//				notificationListAdapter.notifyDataSetChanged();
-			} else {
+	private void messageReadRequest(final String threadId){
+		NotificationCall.messageReadRequest(getActivity(), threadId, new ConnectCallback<NullResponse>() {
+			@Override
+			public void onSuccess(NullResponse object) {
 
 			}
+
+			@Override
+			public void onFailure(String error) {
+
+			}
+		});
+	}
+
+	private void prepareNotifivationList(){
+		if (arrNotificationPojos.size() == 0) {
+			textNoData.setVisibility(View.VISIBLE);
+		} else {
+			textNoData.setVisibility(View.GONE);
 		}
-	};
+
+		notificationListAdapter.notifyDataSetChanged();
+		notificationReadRequest(notificationId);
+
+	}
+
+	private void notificationReadRequest(final String notificationIds){
+		Utility.ShowProgressDialog(NotificationsFragment.this.getActivity(), getString(R.string.loading));
+		NotificationCall.notificationReadRequest(getActivity(), notificationIds, new ConnectCallback<NullResponse>() {
+			@Override
+			public void onSuccess(NullResponse object) {
+				Utility.HideDialog(NotificationsFragment.this.getActivity());
+			}
+
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(NotificationsFragment.this.getActivity());
+			}
+		});
+	}
 
 	public class NotificationListAdapter extends BaseAdapter {
 
@@ -571,162 +372,12 @@ public class NotificationsFragment extends Fragment {
 		Intent intent = new Intent("notification_count_changed");
 		LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
 	}
-	class NotificationMarkRead extends Thread {
-
-		private String notificationId;
-
-		public NotificationMarkRead(String threadId) {
-			this.notificationId=threadId;
-		}
-
-		@Override
-		public void run() {
-			Log.d("mobstar","thread id =="+notificationId);
-			String[] name={"notificationIds"};
-			String[] value={notificationId};
-			String response=JSONParser.postRequest(Constant.SERVER_URL + Constant.NOTIFICATION_MARK_READ, name, value, preferences.getString("token", null));
-			Log.v(Constant.TAG, "NotificationMarkRead Call response " + response);
-
-			if (response != null) {
-
-				try {
-
-					sErrorMessage = "";
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerRead.sendEmptyMessage(0);
-					} else {
-						handlerRead.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					handlerRead.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerRead.sendEmptyMessage(0);
-			}
-
-		}
-	}
-
-	Handler handlerRead = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			Utility.HideDialog(mContext);
-
-			//			if (arrMessage.size() == 0) {
-			//				textNoData.setVisibility(View.VISIBLE);
-			//			} else {
-			//				Collections.reverse(arrMessage);
-			//				textNoData.setVisibility(View.GONE);
-			//			}
-
-			if (msg.what == 1) {
-				//				int tempIndex = -1;
-				//
-				//				for (int i = 0; i < arrMessage.size(); i++) {
-				//					if (arrSelectionThreadID.get(0).equals(arrMessage.get(i).getThreadId())) {
-				//						tempIndex = i;
-				//						break;
-				//					}
-				//				}
-				//				arrMessage.remove(tempIndex);
-				//				msgAdapter.notifyDataSetChanged();
-				//				arrSelectionThreadID.remove(0);
-				//
-				//				if (arrSelectionThreadID.size() == 0) {
-				//					Utility.HideDialog(mContext);
-				//				} else {
-				//					new MessageDeleteCall(arrSelectionThreadID.get(0)).start();
-				//				}
-			} else {
-			}
-		}
-	};
-	
-	class MessageRead extends Thread {
-
-		private String threadId;
-
-		public MessageRead(String threadId) {
-			this.threadId=threadId;
-		}
-
-		@Override
-		public void run() {
-			Log.d("mobstar","thread id =="+threadId);
-			String[] name={"threadId"};
-			String[] value={threadId};
-			String response=JSONParser.postRequest(Constant.SERVER_URL + Constant.MESSAGE_READ, name, value, preferences.getString("token", null));
-			Log.v(Constant.TAG, "MessagesRead Call response " + response);
-
-			if (response != null) {
-
-				try {
-
-					sErrorMessage = "";
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerMessageRead.sendEmptyMessage(0);
-					} else {
-						handlerMessageRead.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					handlerMessageRead.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerMessageRead.sendEmptyMessage(0);
-			}
-
-		}
-	}
-
-	Handler handlerMessageRead = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			Utility.HideDialog(mContext);
 
 
-			if (msg.what == 1) {
-			} else {
-			}
-		}
-	};
-	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == 101) {
-			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-
-			if (Utility.isNetworkAvailable(mContext)) {
-				new NotificationCall().start();
-			} else {
-				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-				Utility.HideDialog(mContext);
-			}
+			getNotificationRequest();
 		}
 	};
 

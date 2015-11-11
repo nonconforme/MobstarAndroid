@@ -16,7 +16,7 @@ import com.mobstar.EditProfileActivity;
 import com.mobstar.R;
 import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.StarCall;
+import com.mobstar.api.call.StarCall;
 import com.mobstar.api.responce.StarResponse;
 import com.mobstar.api.responce.UserProfileResponse;
 import com.mobstar.home.new_home_screen.VideoListBaseFragment;

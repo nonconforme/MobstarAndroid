@@ -4,7 +4,7 @@ import com.mobstar.utils.TimeUtility;
 
 public class NotificationPojo {
 
-    private String NotificationID, NotificationContent, NotificationDate, IsRead, NotificationType, EntryId, EntryName, NotificationIcon, MessageGroup, notificationRead;
+    private String NotificationID, NotificationContent, NotificationDate, IsRead, NotificationType, EntryId, EntryName, NotificationIcon, MessageGroup, notificationRead, profileImage, profileCover;
 
     public String getNotificationRead() {
         return notificationRead;
@@ -86,5 +86,21 @@ public class NotificationPojo {
 
     public String getEntryId() {
         return EntryId;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getProfileCover() {
+        return profileCover;
+    }
+
+    public void setProfileCover(String profileCover) {
+        this.profileCover = profileCover;
     }
 }

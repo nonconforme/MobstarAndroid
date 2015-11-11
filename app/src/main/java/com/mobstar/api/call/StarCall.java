@@ -1,10 +1,12 @@
-package com.mobstar.api;
+package com.mobstar.api.call;
 
 import android.app.Dialog;
 import android.content.Context;
 
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
 import com.mobstar.utils.Constant;
 
 import java.util.HashMap;

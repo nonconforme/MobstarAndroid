@@ -193,8 +193,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 					if (count > 0) {
 						textNotificationCount.setText(count+"");
 						textNotificationCount.setVisibility(View.VISIBLE);
+						Utility.setBadge(HomeActivity.this, count);
 					} else {
 						textNotificationCount.setVisibility(View.GONE);
+						Utility.clearBadge(HomeActivity.this);
 					}
 				}
 
@@ -689,8 +691,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 			if (NotificationCount > 0) {
 				textNotificationCount.setText(NotificationCount + "");
 				textNotificationCount.setVisibility(View.VISIBLE);
+				Utility.setBadge(HomeActivity.this, NotificationCount);
 			} else {
 				textNotificationCount.setVisibility(View.GONE);
+				Utility.clearBadge(HomeActivity.this);
 			}
 		}
 	};
