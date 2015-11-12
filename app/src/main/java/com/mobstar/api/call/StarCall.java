@@ -20,7 +20,7 @@ public class StarCall {
 
     public static void addStarCall(Context context,String userID, ConnectCallback callback){
         HashMap<String,String> params = new HashMap<>();
-        params.put(Constant.STAR_VALUE,userID);
+        params.put(Constant.STAR_VALUE, userID);
         RestClient.getInstance(context).postRequest(Constant.STAR, params, callback);
         AdWordsManager.getInstance().sendFollowedUserEvent();
     }

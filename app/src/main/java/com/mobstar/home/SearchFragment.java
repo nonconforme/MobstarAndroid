@@ -3,6 +3,7 @@ package com.mobstar.home;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,69 +20,58 @@ import com.mobstar.R;
 import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.utils.Utility;
 
-public class SearchFragment extends Fragment {
+import java.util.List;
+
+public class SearchFragment extends Fragment implements OnClickListener, OnQueryTextListener {
 
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
-
-	SearchView searchView;
+	private TextView textSearch;
+	private SearchView searchView;
+	private Handler handler;
+	private String searchText = "";
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.fragment_search, container, false);
-
+		final View view = inflater.inflate(R.layout.fragment_search, container, false);
 		mFragmentManager = getChildFragmentManager();
-
 		Utility.SendDataToGA("Search Screen", getActivity());
-
 		return view;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onViewCreated(view, savedInstanceState);
+		findViews(view);
+		setupSearch();
+		setListeners();
+		setupInputMode();
+		handler = new Handler();
+	}
 
-		searchView = (SearchView) view.findViewById(R.id.searchView);
+	private void findViews(final View convertView){
+		searchView = (SearchView) convertView.findViewById(R.id.searchView);
+		textSearch = (TextView) convertView.findViewById(R.id.textSearch);
+	}
+
+	private void setListeners(){
+		textSearch.setOnClickListener(this);
+		searchView.setOnQueryTextListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.textSearch:
+				hideKeyboard();
+				getActivity().onBackPressed();
+				break;
+		}
+	}
+
+	private void setupSearch(){
 		searchView.setQueryHint("search");
 		searchView.onActionViewExpanded();
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-
-			@Override
-			public boolean onQueryTextSubmit(String SearchText) {
-//				Log.v(Constant.TAG, "SearchText " + SearchText);
-				searchView.clearFocus();
-
-				Fragment f = mFragmentManager.findFragmentById(R.id.frag_content);
-				if (!(f instanceof HomeFragment)) {
-//					SearchListFragment videoListFragment = new SearchListFragment();
-					final VideoListBaseFragment videoListFragment = new VideoListBaseFragment();
-					final Bundle extras = new Bundle();
-					extras.putBoolean(VideoListBaseFragment.IS_SEARCH_API, true);
-					extras.putString(VideoListBaseFragment.SEARCH_TERM, SearchText);
-					extras.putString(VideoListBaseFragment.LATEST_OR_POPULAR, "latest");
-					videoListFragment.setArguments(extras);
-					replaceFragment(videoListFragment, "SearchListFragment");
-					
-//					VideoListFragment videoListFragment = new VideoListFragment();
-//					Bundle extras = new Bundle();
-//					extras.putBoolean("isSearchAPI", true);
-//					extras.putString("SearchTerm", SearchTerm);
-//					videoListFragment.setArguments(extras);
-//					replaceFragment(videoListFragment, "VideoListFragment");
-				}
-
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String arg0) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
-
 		int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
 		View searchPlate = searchView.findViewById(searchPlateId);
 		if (searchPlate != null) {
@@ -93,18 +83,10 @@ public class SearchFragment extends Fragment {
 				searchText.setHintTextColor(Color.DKGRAY);
 			}
 		}
+	}
 
-		TextView textsearch = (TextView) view.findViewById(R.id.textSearch);
-		textsearch.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				hideKeyboard();
-				getActivity().onBackPressed();
-			}
-		});
-
-		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+	private void setupInputMode(){
+		final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
 	}
 
@@ -114,12 +96,78 @@ public class SearchFragment extends Fragment {
 		mFragmentTransaction.replace(R.id.childFragmentContent, mFragment, fragmentName);
 		mFragmentTransaction.commitAllowingStateLoss();
 	}
+
 	private void hideKeyboard() {   
-	    // Check if no view has focus:
-	    View view = getActivity().getCurrentFocus();
+	    final View view = getActivity().getCurrentFocus();
 	    if (view != null) {
-	        InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+	        final InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 	        inputManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 	    }
+	}
+
+	@Override
+	public boolean onQueryTextSubmit(String query) {
+		searchView.clearFocus();
+
+		Fragment f = mFragmentManager.findFragmentById(R.id.frag_content);
+		if (!(f instanceof HomeFragment)) {
+			final VideoListBaseFragment videoListFragment = new VideoListBaseFragment();
+			final Bundle extras = new Bundle();
+			extras.putBoolean(VideoListBaseFragment.IS_SEARCH_API, true);
+			extras.putString(VideoListBaseFragment.SEARCH_TERM, query);
+			extras.putString(VideoListBaseFragment.LATEST_OR_POPULAR, "latest");
+			videoListFragment.setArguments(extras);
+			replaceFragment(videoListFragment, "SearchListFragment");
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onQueryTextChange(String newText) {
+		searchText = newText.trim();
+		if (searchText.equalsIgnoreCase("")) {
+			removeSearchFragment();
+			return false;
+		}
+		replaceBeginSearchFragmentPostDelay();
+		return false;
+	}
+
+	private void replaceBeginSearchFragmentPostDelay() {
+		handler.removeCallbacks(runnable);
+		handler.postDelayed(runnable, 600);
+	}
+
+	private Runnable runnable = new Runnable() {
+		@Override
+		public void run() {
+			if (searchText.equalsIgnoreCase(""))
+				removeSearchFragment();
+			else
+				replaceBeginSearchFragment();
+		}
+	};
+
+	private void replaceBeginSearchFragment(){
+		final VideoListBaseFragment videoListFragment = new VideoListBaseFragment();
+		final Bundle extras = new Bundle();
+		extras.putBoolean(VideoListBaseFragment.IS_SEARCH_BEGIN_API, true);
+		extras.putString(VideoListBaseFragment.SEARCH_TERM, searchText);
+		extras.putString(VideoListBaseFragment.LATEST_OR_POPULAR, "latest");
+		videoListFragment.setArguments(extras);
+		replaceFragment(videoListFragment, "SearchListFragment");
+	}
+
+	public void removeSearchFragment(){
+		List<Fragment> al = mFragmentManager.getFragments();
+		if (al == null) {
+			return;
+		}
+
+		for (Fragment frag : al) {
+			if (frag == null)
+				continue;
+			mFragmentManager.beginTransaction().remove(frag).commit();
+		}
 	}
 }

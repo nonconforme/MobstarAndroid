@@ -376,6 +376,17 @@ public class EntryPojo extends BaseResponse implements Serializable {
 
 		}
 
+		if (jsonObject.has("userId"))
+			setUserID(jsonObject.getString("userId"));
+		if (jsonObject.has("userName"))
+			setUserName(jsonObject.getString("userName"));
+		if (jsonObject.has("profileImage"))
+			setProfileImage(jsonObject.getString("profileImage"));
+		if (jsonObject.has("profileCover"))
+			setProfileCover(jsonObject.getString("profileCover"));
+
+
+
 		if (jsonObject.has("splitVideoId"))
 			setSplitVideoId(jsonObject.getString("splitVideoId"));
 

@@ -166,6 +166,8 @@ public class Constant {
 
     public static final String USER_CONTINENT_FILTERS = "settings/continentFilter";
 
+	public static final String SEARCH_BEGIN = "search/users/beginsWith/";
+
     //value key
     public static final String STAR_VALUE = "star";
     public static final String USER_ID_VALUE = "userId";
