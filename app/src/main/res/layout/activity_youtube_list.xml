@@ -24,7 +24,7 @@
             android:gravity="center"
             android:visibility="gone"
             android:lineSpacingExtra="5dp"
-            android:text="@string/you_have_no_notifications"
+            android:text="@string/you_have_no_you_tube_video"
             android:textColor="@android:color/white"
             android:textSize="@dimen/no_data_text_size" />
 
