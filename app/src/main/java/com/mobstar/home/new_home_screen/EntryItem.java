@@ -20,7 +20,7 @@ import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.StarCall;
+import com.mobstar.api.call.StarCall;
 import com.mobstar.api.responce.StarResponse;
 import com.mobstar.api.responce.VoteResponse;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
