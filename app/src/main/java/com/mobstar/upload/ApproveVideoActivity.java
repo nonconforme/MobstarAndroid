@@ -28,6 +28,7 @@ import com.mobstar.R;
 import com.mobstar.home.split.SplitActivity;
 import com.mobstar.home.youtube.VideoData;
 import com.mobstar.pojo.EntryPojo;
+import com.mobstar.upload.rewrite.RecordVideoActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
@@ -94,8 +95,8 @@ public class ApproveVideoActivity extends Activity {
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 
-		imageFrame = (ImageView) findViewById(R.id.imageFrame);
-		imageFrame.setVisibility(View.GONE);
+//		imageFrame = (ImageView) findViewById(R.id.imageFrame);
+//		imageFrame.setVisibility(View.GONE);
 
 		// try {
 		// MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -121,10 +122,10 @@ public class ApproveVideoActivity extends Activity {
 		surfaceTextureListener = new CustomSurfaceTextureListener();
 
 		textureView = (TextureView) findViewById(R.id.textureView);
-		if (isSplitVideo){
+//		if (isSplitVideo){
 			final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.texture_view_height));
 			textureView.setLayoutParams(layoutParams);
-		}
+//		}
 //		if (isSplitVideo){
 //			textureView.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
 //					, getResources().getDimensionPixelSize(R.dimen.texture_view_height)));
@@ -294,7 +295,7 @@ public class ApproveVideoActivity extends Activity {
 
 			// Log.v(Constant.TAG, "Play Video onSurfaceTextureAvailable ");
 			Surface surface = new Surface(surfaceTexture);
-			PlayVideo(position, surface);
+			playVideo(position, surface);
 
 		}
 
@@ -319,7 +320,7 @@ public class ApproveVideoActivity extends Activity {
 
 	}
 
-	void PlayVideo(int position, final Surface surface) {
+	private void playVideo(int position, final Surface surface) {
 
 		new Thread() {
 
@@ -330,7 +331,7 @@ public class ApproveVideoActivity extends Activity {
 						mediaPlayer.reset();
 					}
 
-					File file = new File(sVideoPath);
+					final File file = new File(sVideoPath);
 
 					if (file.exists()) {
 						mediaPlayer.setDataSource(sVideoPath);
@@ -357,7 +358,7 @@ public class ApproveVideoActivity extends Activity {
 									public void run() {
 										// TODO Auto-generated method stub
 
-										progressMediaPlayer.setMax(mediaPlayer.getDuration() / 1000);
+										progressMediaPlayer.setMax(mediaPlayer.getDuration() / 50);
 
 									}
 								});
@@ -383,7 +384,7 @@ public class ApproveVideoActivity extends Activity {
 
 				if (mediaPlayer.isPlaying()) {
 
-					progressMediaPlayer.setProgress(mediaPlayer.getCurrentPosition() / 1000);
+					progressMediaPlayer.setProgress(mediaPlayer.getCurrentPosition() / 50);
 
 				}
 			}
@@ -396,7 +397,7 @@ public class ApproveVideoActivity extends Activity {
 					mediaPlayerProgressUpdater();
 				}
 			};
-			handler.postDelayed(notification, 1000);
+			handler.postDelayed(notification, 50);
 		}
 
 	}

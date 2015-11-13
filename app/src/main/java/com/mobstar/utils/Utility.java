@@ -59,17 +59,18 @@ public class Utility {
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 
-	static ProgressDialog dialog;
-	private static boolean isSpinning=false;
+	private static ProgressDialog dialog;
+	private static boolean isSpinning = false;
 
 	public static final String getCurrentDirectory(final Context context) {
 		if (isExternalStorageReadable() && isExternalStorageWritable())
 			return Environment.getExternalStorageDirectory().getPath() + "/Android/data/" + context.getPackageName() + "/";
-		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + "/Android/data/" + context.getPackageName() + "/";
+//		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + "/Android/data/" + context.getPackageName() + "/";
+		return context.getFilesDir().getPath();
 	}
 
 	public static boolean isExternalStorageWritable() {
-		String state = Environment.getExternalStorageState();
+		final String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			return true;
 		}
@@ -77,7 +78,7 @@ public class Utility {
 	}
 
 	public static boolean isExternalStorageReadable() {
-		String state = Environment.getExternalStorageState();
+		final String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state) ||
 				Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
 			return true;
@@ -165,10 +166,9 @@ public class Utility {
 
 	/** Create a File for saving an image or video */
 	public static File getOutputMediaFile(int type,Context mContext) {
-		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
-				+ "/Android/data/" + mContext.getPackageName() +"/";
+		final String path = getCurrentDirectory(mContext);
 		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
-		File mediaStorageDir = new File(path);
+		final File mediaStorageDir = new File(path);
 		// Create the storage directory if it does not exist
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
@@ -177,7 +177,7 @@ public class Utility {
 			}
 		}
 		// Create a media file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		File mediaFile;
 		if (type == MEDIA_TYPE_IMAGE) {
 			mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
@@ -193,10 +193,9 @@ public class Utility {
 	}
 
 	public static File getTemporaryMediaFile(Context mContext, String name) {
-		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
-				+ "/Android/data/" + mContext.getPackageName() +"/";
+		final String path = getCurrentDirectory(mContext);
 		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
-		File mediaStorageDir = new File(path);
+		final File mediaStorageDir = new File(path);
 		// Create the storage directory if it does not exist
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
@@ -205,8 +204,8 @@ public class Utility {
 			}
 		}
 		// Create a media file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		File mediaFile;
+		final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		final File mediaFile;
 			mediaFile = new File(mediaStorageDir.getPath() + File.separator + name + timeStamp + ".mp4");
 
 		return mediaFile;
@@ -226,8 +225,7 @@ public class Utility {
 	@SuppressLint("NewApi")
 	public static String getPath(final Context context, final Uri uri) {
 
-		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
-				+ "/Android/data/" + context.getPackageName() +"/";
+		String path = getCurrentDirectory(context);
 
 		final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
@@ -897,6 +895,11 @@ public class Utility {
 		return message;
 	}
 
+
+    public static void removeFile(String filePath){
+        final File file = new File(filePath);
+        file.delete();
+    }
 
 
 }

@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 
 import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
+import com.mobstar.upload.rewrite.RecordVideoActivity;
 //import com.mobstar.home.youtube.YouTubeListActivity;
 import com.mobstar.home.youtube.YouTubeListActivity;
 import com.mobstar.utils.Utility;

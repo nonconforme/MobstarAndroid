@@ -20,8 +20,7 @@ import com.mobstar.home.HomeFragment;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.home.notification.SingleEntryActivity;
-import com.mobstar.inbox.GroupMessageDetail;
-import com.mobstar.inbox.MessageDetail;
+import com.mobstar.inbox.newMessagesScreen.MessageDetail;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
@@ -31,6 +30,7 @@ public class GcmIntentService extends IntentService {
 
     private static final String LOG_TAG = GcmIntentService.class.getName();
     public static final String NEW_ENTRY_PUSH = "new entry push";
+    public static final String NEW_MESSAGE_ACTION = "new messsage action";
     public static int NOTIFICATION_ID = 1;
 	private NotificationManager mNotificationManager;
 	NotificationCompat.Builder builder;
@@ -70,6 +70,7 @@ public class GcmIntentService extends IntentService {
 				} else if(extras.containsKey("Type")){
 					String badgeCount="";
                     badgeCount=extras.getString("badge","");
+                    boolean isShowBadge=true;
 
                     Log.d(LOG_TAG, "Type=" + extras.getString("Type"));
                     Log.d(LOG_TAG, "extras=" + extras.toString());
@@ -123,9 +124,8 @@ public class GcmIntentService extends IntentService {
 						}
 					}
 
-                    if (!badgeCount.isEmpty()) {
-                        Utility.setBadgeSamsung(getApplicationContext(), Integer.parseInt(badgeCount));
-                        Utility.setBadgeSony(getApplicationContext(), Integer.parseInt(badgeCount));
+                    if (!badgeCount.isEmpty() && isShowBadge) {
+                        Utility.setBadge(getApplicationContext(), Integer.parseInt(badgeCount));
                     }
 				}
 
@@ -135,6 +135,8 @@ public class GcmIntentService extends IntentService {
 
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}
+	
+	 
 
     private void sendNewEntrys(ArrayList<NewEntryPush> newEntryPushs) {
         Intent intent = new Intent(HomeFragment.NEW_ENTY_ACTION);
@@ -152,33 +154,39 @@ public class GcmIntentService extends IntentService {
 
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, HomeActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
-        sendPush(contentIntent,msg);
+        sendPush(contentIntent, msg);
 	}
 
-	private void sendNotification(String msg,String messageGroup,String threadId,String name) {
+    private void sendNotification(String msg,String messageGroup,String threadId,String name) {
 
-		Intent intent = new Intent("GetNotificationCount");
-		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        Intent intent = new Intent("GetNotificationCount");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-		mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        Intent messageIntent = new Intent(NEW_MESSAGE_ACTION);
+        messageIntent.putExtra(MessageDetail.THREAD_ID_KEY,threadId);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
+        if (!MessageDetail.isActive()) {
 
-		PendingIntent contentIntent = null;
+            mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-		if(messageGroup.equalsIgnoreCase("0")){
-			Intent i=new Intent(this,MessageDetail.class);
-			i.putExtra("threadId",threadId);
-			i.putExtra("UserName",name);
-			i.putExtra("FromNotification",true);
-			contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
-		}
-		else{
-			Intent i=new Intent(this,GroupMessageDetail.class);
-			i.putExtra("threadId",threadId);
-			i.putExtra("FromNotification",true);
-			contentIntent = PendingIntent.getActivity(this, 0,i, PendingIntent.FLAG_UPDATE_CURRENT);
-		}
-        sendPush(contentIntent,msg);
-	}
+            PendingIntent contentIntent = null;
+
+            if (messageGroup.equalsIgnoreCase("0")) {
+                Intent i = new Intent(this, MessageDetail.class);
+                i.putExtra(MessageDetail.THREAD_ID_KEY, threadId);
+                i.putExtra("UserName", name);
+                i.putExtra("FromNotification", true);
+                contentIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+            } else {
+                Intent i = new Intent(this, MessageDetail.class);
+                i.putExtra("threadId", threadId);
+                i.putExtra("FromNotification", true);
+                i.putExtra(MessageDetail.IS_GROUP,true);
+                contentIntent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+            }
+            sendPush(contentIntent,msg);
+        }
+    }
 
 	private void sendNotification(String msg,String entryId) {
 
@@ -188,7 +196,7 @@ public class GcmIntentService extends IntentService {
 		mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
 		PendingIntent contentIntent = null;
-		Intent i=new Intent(this, SingleEntryActivity.class);
+        Intent i = new Intent(this, SingleEntryActivity.class);
 		final UserProfile userProfile = UserProfile.newBuilder()
 				.setEntryId(entryId)
 				.build();

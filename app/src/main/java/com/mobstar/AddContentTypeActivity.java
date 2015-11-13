@@ -12,14 +12,12 @@ import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.mobstar.custom.CustomTextviewBold;
-import com.mobstar.upload.RecordVideoActivity;
 import com.mobstar.upload.SelectProfileContentType;
 import com.mobstar.upload.TakePictureActivity;
 import com.mobstar.upload.UploadFileActivity;
+import com.mobstar.upload.rewrite.RecordVideoActivity;
 import com.mobstar.utils.Utility;
 
 public class AddContentTypeActivity extends Activity implements OnClickListener{

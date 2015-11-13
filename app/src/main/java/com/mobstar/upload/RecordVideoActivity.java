@@ -8,10 +8,15 @@ import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -31,7 +36,7 @@ import com.mobstar.utils.Utility;
 import java.io.IOException;
 import java.util.List;
 
-public class RecordVideoActivity extends Activity {
+public class RecordVideoActivity extends Activity implements SensorEventListener {
 
 	private Context mContext;
 	private Camera mCamera;
@@ -56,8 +61,13 @@ public class RecordVideoActivity extends Activity {
 	private final long cMaxFileSizeInBytes = 8000000;
 	private final long cMaxFileSizeInBytesProfile = 52428800; //50MB
 	private String categoryId,subCat;
+    private SensorManager mSensorManager;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    float[] mGravity;
+    float[] mGeomagnetic;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		final WindowManager.LayoutParams lp = this.getWindow().getAttributes();
@@ -68,7 +78,21 @@ public class RecordVideoActivity extends Activity {
 		getArgs();
 		initControls();
 		Utility.SendDataToGA("RecordVideo Screen", RecordVideoActivity.this);
+        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
 
 	private void getArgs(){
 		final Bundle args = getIntent().getExtras();
@@ -148,9 +172,11 @@ public class RecordVideoActivity extends Activity {
 			btnRecord.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// get an image from the camera
-					mPreview.recordVideo();
-
+//                    mPreview.recordVideo();
+                    if(mGravity != null && mGeomagnetic != null) {
+                        float q = getDirection();
+                        Log.d("qwe",q+"");
+                    }
 				}
 			});
 
@@ -237,7 +263,55 @@ public class RecordVideoActivity extends Activity {
 		}
 	}
 
-	public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
+    private float getDirection()
+    {
+
+        float[] temp = new float[9];
+        float[] R = new float[9];
+        //Load rotation matrix into R
+        SensorManager.getRotationMatrix(temp, null,
+                mGravity, mGeomagnetic);
+
+        //Remap to camera's point-of-view
+        SensorManager.remapCoordinateSystem(temp,
+                SensorManager.AXIS_X,
+                SensorManager.AXIS_Z, R);
+
+        //Return the orientation values
+        float[] values = new float[3];
+        SensorManager.getOrientation(R, values);
+
+        //Convert to degrees
+        for (int i=0; i < values.length; i++) {
+            Double degrees = (values[i] * 180) / Math.PI;
+            values[i] = degrees.floatValue();
+        }
+
+        return values[2];
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        switch(event.sensor.getType()) {
+
+            case Sensor.TYPE_ACCELEROMETER:
+                mGravity = event.values.clone();
+                break;
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                mGeomagnetic = event.values.clone();
+                break;
+            default:
+                return;
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
 		private SurfaceHolder mHolder;
 
 		@SuppressWarnings("deprecation")
@@ -367,7 +441,12 @@ public class RecordVideoActivity extends Activity {
 					// Camera is available and unlocked, MediaRecorder is
 					// prepared,
 					// now you can start recording
-					mMediaRecorder.start();
+                    try{
+                        mMediaRecorder.start(); // stop the recording
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
 
 					layoutCameraOption.setVisibility(View.GONE);
 					textRecordSecond.setVisibility(View.VISIBLE);
