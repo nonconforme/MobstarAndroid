@@ -1,4 +1,4 @@
-package com.mobstar.home;
+package com.mobstar.home.search;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -15,9 +15,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
-
 import com.mobstar.R;
-import com.mobstar.home.new_home_screen.VideoListBaseFragment;
+import com.mobstar.home.HomeFragment;
+import com.mobstar.home.search.SearchListFragment;
 import com.mobstar.utils.Utility;
 
 import java.util.List;
@@ -111,11 +111,11 @@ public class SearchFragment extends Fragment implements OnClickListener, OnQuery
 
 		Fragment f = mFragmentManager.findFragmentById(R.id.frag_content);
 		if (!(f instanceof HomeFragment)) {
-			final VideoListBaseFragment videoListFragment = new VideoListBaseFragment();
+			final SearchListFragment videoListFragment = new SearchListFragment();
 			final Bundle extras = new Bundle();
-			extras.putBoolean(VideoListBaseFragment.IS_SEARCH_API, true);
-			extras.putString(VideoListBaseFragment.SEARCH_TERM, query);
-			extras.putString(VideoListBaseFragment.LATEST_OR_POPULAR, "latest");
+			extras.putBoolean(SearchListFragment.IS_SEARCH_API, true);
+			extras.putString(SearchListFragment.SEARCH_TERM, query);
+			extras.putString(SearchListFragment.LATEST_OR_POPULAR, "latest");
 			videoListFragment.setArguments(extras);
 			replaceFragment(videoListFragment, "SearchListFragment");
 		}
@@ -149,11 +149,11 @@ public class SearchFragment extends Fragment implements OnClickListener, OnQuery
 	};
 
 	private void replaceBeginSearchFragment(){
-		final VideoListBaseFragment videoListFragment = new VideoListBaseFragment();
+		final SearchListFragment videoListFragment = new SearchListFragment();
 		final Bundle extras = new Bundle();
-		extras.putBoolean(VideoListBaseFragment.IS_SEARCH_BEGIN_API, true);
-		extras.putString(VideoListBaseFragment.SEARCH_TERM, searchText);
-		extras.putString(VideoListBaseFragment.LATEST_OR_POPULAR, "latest");
+		extras.putBoolean(SearchListFragment.IS_SEARCH_BEGIN_API, true);
+		extras.putString(SearchListFragment.SEARCH_TERM, searchText);
+		extras.putString(SearchListFragment.LATEST_OR_POPULAR, "latest");
 		videoListFragment.setArguments(extras);
 		replaceFragment(videoListFragment, "SearchListFragment");
 	}

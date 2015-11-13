@@ -287,7 +287,16 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
             cancelDownloadFile(oldPosition);
             downloadFile(currentPosition);
         }
+
+        @Override
+        public void onScrolled() {
+            onScrolledList();
+        }
     };
+
+    protected void onScrolledList(){
+
+    }
 
     @Override
     public void onRemoveItemAnimationEnd() {

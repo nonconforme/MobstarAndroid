@@ -104,9 +104,17 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
             currentPage--;
     }
 
+    @Override
+    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+        onScrolled();
+    }
+
     public abstract void onLoadMore(int current_page);
 
     public abstract void onLoadNewFile(int currentPosition, int oldPosition);
+
+    public abstract void onScrolled();
 
     public void setDelFlag(boolean b) {
         delFlag = b;
