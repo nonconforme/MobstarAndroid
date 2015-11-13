@@ -83,7 +83,7 @@ public class ProfileHeaderItem extends RecyclerView.ViewHolder implements View.O
         textFollowers.setVisibility(View.VISIBLE);
         textFollowers.setText(userData.getUserFan() + " " + baseActivity.getString(R.string.followers));
 
-        if (userData.getUserPic().equals("")) {
+        if (userData.getUserPic() != null && userData.getUserPic().equals("")) {
             imgUserPic.setImageResource(R.drawable.profile_pic_new);
         }
         else {

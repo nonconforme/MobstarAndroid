@@ -1,10 +1,12 @@
-package com.mobstar.api;
+package com.mobstar.api.call;
 
 import android.app.Dialog;
 import android.content.Context;
 
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
 import com.mobstar.utils.Constant;
 
 import java.util.HashMap;
@@ -18,7 +20,7 @@ public class StarCall {
 
     public static void addStarCall(Context context,String userID, ConnectCallback callback){
         HashMap<String,String> params = new HashMap<>();
-        params.put(Constant.STAR_VALUE,userID);
+        params.put(Constant.STAR_VALUE, userID);
         RestClient.getInstance(context).postRequest(Constant.STAR, params, callback);
         AdWordsManager.getInstance().sendFollowedUserEvent();
     }

@@ -20,8 +20,8 @@ import com.edmodo.cropper.CropImageView;
 import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.home.split.ffmpeg.AfterDoneBackground;
-import com.mobstar.home.split.ffmpeg.FFTaskBackground;
 import com.mobstar.home.split.ffmpeg.FFCommandCreator;
+import com.mobstar.home.split.ffmpeg.FFTaskBackground;
 import com.mobstar.home.split.position_variants.PositionVariant;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -172,7 +172,7 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener,
 
             @Override
             public void onCancel() {
-                removeFile(_fileOutPath);
+                Utility.removeFile(_fileOutPath);
                 mSplitActivity.setDefaultFilePath();
                 mSplitActivity.finish();
             }
@@ -243,10 +243,10 @@ public class CropVideoFragment extends Fragment implements View.OnClickListener,
         return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
     }
 
-    private void removeFile(String filePath){
-        final File file = new File(filePath);
-        file.delete();
-    }
+//    private void removeFile(String filePath){
+//        final File file = new File(filePath);
+//        file.delete();
+//    }
 
     @Override
     public void onDestroy() {

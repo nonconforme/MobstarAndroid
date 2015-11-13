@@ -18,10 +18,10 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/all_entries"
+            android:text="@string/categories_home_fragment"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
              />
 
         <ImageView
@@ -56,13 +56,38 @@
             android:text="@string/latest"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
              />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/childFragmentContent"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+
+        <FrameLayout
+            android:id="@+id/childFragmentContent"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.mobstar.custom.CustomTextviewBold
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:id="@+id/new_entry_field"
+            android:drawableRight="@drawable/arrow_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/oval_yellow_button_background"
+            android:text="@string/new_entries"
+            android:textSize="@dimen/posted_hedText_size"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/white_color"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+
 
 </LinearLayout>

@@ -26,42 +26,36 @@ import android.widget.ProgressBar;
 
 import com.mobstar.R;
 import com.mobstar.home.split.SplitActivity;
+import com.mobstar.home.youtube.VideoData;
 import com.mobstar.pojo.EntryPojo;
+import com.mobstar.upload.rewrite.RecordVideoActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 
 import java.io.File;
 
 public class ApproveVideoActivity extends Activity {
+
 	public static final String APPROVE_SPLIT_VIDEO = "approve split video";
 
-	Context mContext;
 
-	String sVideoPath;
-
-	Button btnRetake, btnApprove;
-
-	ImageView btnPausePlay;
-	MediaPlayer mediaPlayer;
-
-	ProgressBar progressMediaPlayer;
-
-	Handler handler = new Handler();
-
-	TextureView textureView;
-
-	ImageView imageFrame;
-
-	CustomSurfaceTextureListener surfaceTextureListener;
-
+	private Context mContext;
+	private String sVideoPath;
+	private Button btnRetake, btnApprove;
+	private ImageView btnPausePlay;
+	private MediaPlayer mediaPlayer;
+	private ProgressBar progressMediaPlayer;
+	private Handler handler = new Handler();
+	private TextureView textureView;
+	private ImageView imageFrame;
+	private CustomSurfaceTextureListener surfaceTextureListener;
 	private int mVideoHeight;
 	private int mVideoWidth;
-
-	Typeface typefaceBtn;
+	private Typeface typefaceBtn;
 	private EntryPojo entry;
-
-	String categoryId,subCat;
+	private String categoryId,subCat;
 	private boolean isSplitVideo = false;
+	private VideoData youTubeVideoData;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,20 +64,7 @@ public class ApproveVideoActivity extends Activity {
 
 		mContext = ApproveVideoActivity.this;
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			sVideoPath = extras.getString("video_path");
-
-			if(extras.containsKey("categoryId")) {
-				categoryId=extras.getString("categoryId");
-				subCat=extras.getString("subCat");
-			}
-
-			if (extras.containsKey(APPROVE_SPLIT_VIDEO))
-				isSplitVideo = true;
-			if (extras.containsKey(Constant.ENTRY))
-			entry = (EntryPojo) extras.getSerializable(Constant.ENTRY);
-		}
+		getBundleExtra();
 
 		calculateVideoSize();
 
@@ -92,13 +73,30 @@ public class ApproveVideoActivity extends Activity {
 		Utility.SendDataToGA("ApproveVideo Screen", ApproveVideoActivity.this);
 	}
 
+	private void getBundleExtra(){
+		final Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			sVideoPath = extras.getString("video_path");
+
+			if(extras.containsKey("categoryId")) {
+				categoryId = extras.getString("categoryId");
+				subCat = extras.getString("subCat");
+			}
+
+			if (extras.containsKey(APPROVE_SPLIT_VIDEO))
+				isSplitVideo = true;
+			if (extras.containsKey(Constant.ENTRY))
+				entry = (EntryPojo) extras.getSerializable(Constant.ENTRY);
+		}
+	}
+
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	void InitControls() {
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 
-		imageFrame = (ImageView) findViewById(R.id.imageFrame);
-		imageFrame.setVisibility(View.GONE);
+//		imageFrame = (ImageView) findViewById(R.id.imageFrame);
+//		imageFrame.setVisibility(View.GONE);
 
 		// try {
 		// MediaMetadataRetriever retriever = new MediaMetadataRetriever();
@@ -124,10 +122,10 @@ public class ApproveVideoActivity extends Activity {
 		surfaceTextureListener = new CustomSurfaceTextureListener();
 
 		textureView = (TextureView) findViewById(R.id.textureView);
-		if (isSplitVideo){
+//		if (isSplitVideo){
 			final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.texture_view_height));
 			textureView.setLayoutParams(layoutParams);
-		}
+//		}
 //		if (isSplitVideo){
 //			textureView.setLayoutParams(new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
 //					, getResources().getDimensionPixelSize(R.dimen.texture_view_height)));
@@ -297,7 +295,7 @@ public class ApproveVideoActivity extends Activity {
 
 			// Log.v(Constant.TAG, "Play Video onSurfaceTextureAvailable ");
 			Surface surface = new Surface(surfaceTexture);
-			PlayVideo(position, surface);
+			playVideo(position, surface);
 
 		}
 
@@ -322,7 +320,7 @@ public class ApproveVideoActivity extends Activity {
 
 	}
 
-	void PlayVideo(int position, final Surface surface) {
+	private void playVideo(int position, final Surface surface) {
 
 		new Thread() {
 
@@ -333,7 +331,7 @@ public class ApproveVideoActivity extends Activity {
 						mediaPlayer.reset();
 					}
 
-					File file = new File(sVideoPath);
+					final File file = new File(sVideoPath);
 
 					if (file.exists()) {
 						mediaPlayer.setDataSource(sVideoPath);
@@ -360,7 +358,7 @@ public class ApproveVideoActivity extends Activity {
 									public void run() {
 										// TODO Auto-generated method stub
 
-										progressMediaPlayer.setMax(mediaPlayer.getDuration() / 1000);
+										progressMediaPlayer.setMax(mediaPlayer.getDuration() / 50);
 
 									}
 								});
@@ -386,7 +384,7 @@ public class ApproveVideoActivity extends Activity {
 
 				if (mediaPlayer.isPlaying()) {
 
-					progressMediaPlayer.setProgress(mediaPlayer.getCurrentPosition() / 1000);
+					progressMediaPlayer.setProgress(mediaPlayer.getCurrentPosition() / 50);
 
 				}
 			}
@@ -399,7 +397,7 @@ public class ApproveVideoActivity extends Activity {
 					mediaPlayerProgressUpdater();
 				}
 			};
-			handler.postDelayed(notification, 1000);
+			handler.postDelayed(notification, 50);
 		}
 
 	}

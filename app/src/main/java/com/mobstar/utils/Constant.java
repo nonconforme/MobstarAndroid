@@ -4,6 +4,9 @@ package com.mobstar.utils;
 public class Constant {
 
 
+    public static final boolean IS_RELEASE = true;
+
+	public static final String APP_NAME = "Mobstar";
     //	public static String SENDER_ID = "397816546137";
 	public static String SENDER_ID = "367365382408";
 	
@@ -16,7 +19,9 @@ public class Constant {
 	public static String TAG = "log_tag";
 
 //	public static String API_KEY = "fjwiofrnxhr892305hje93nf834m63lr93l5u3ntrhj4k";
-	public static String API_KEY = "2_xPvd11Vjj1PfgYZ5C5fIWIosTmR4ADEgVIXsXp95";
+//	public static String API_KEY = "2_xPvd11Vjj1PfgYZ5C5fIWIosTmR4ADEgVIXsXp95";
+//	public static String API_KEY = "3_pyZpee2M2qIjLJ5uqqO0Mp65nL4MXwGqBWFxYUWm";
+	public static String API_KEY = "4_XwmvVGSyUPhjxr81MK7GSU24xklvdSRj3cfVzC7u";
 
 	public static String SERVER_URL = "http://api.mobstar.com/";
 //	public static String SERVER_URL = "http://192.168.88.250:1080/";
@@ -109,6 +114,8 @@ public class Constant {
 	public static final String USER_MY_PROFILE = "/user/me/profile/";
 	
 	public static String GET_ENTRY= "entry/";
+
+	public static final String INFO = "/info/";
 	
 	public static String GET_CATEGORY= "category";
 
@@ -162,10 +169,15 @@ public class Constant {
 
     public static final String USER_CONTINENT_FILTERS = "settings/continentFilter";
 
+	public static final String SEARCH_BEGIN = "search/users/beginsWith/";
+
     //value key
     public static final String STAR_VALUE = "star";
     public static final String USER_ID_VALUE = "userId";
     public static final String ENTRY_ID_VALUE = "entryId";
+    public static final String THREAD_ID_VALUE = "threadId";
+    public static final String THREAD_VALUE = "thread";
+    public static final String MESSAGE_VALUE = "message";
 
     public static final String USER_CATEGORIES_FILTERS = "settings/categoryFilter";
 

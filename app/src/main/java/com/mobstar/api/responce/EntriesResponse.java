@@ -36,7 +36,10 @@ public class EntriesResponse extends BaseResponse {
                 if (entry.has("entry")){
                     final EntryPojo entryPojo = new EntryPojo();
                     entryPojo.configure(entry.getJSONObject("entry"));
-                    arrEntry.add(entryPojo);
+                    if(entryPojo.getID() == null)
+                        entryPojo.setID(" ");
+                    if (entryPojo.getID() != null || entryPojo.getCategory().equalsIgnoreCase("onlyprofile"))
+                        arrEntry.add(entryPojo);
                 }
 
             }
@@ -49,10 +52,22 @@ public class EntriesResponse extends BaseResponse {
                     if (vote.has("entry")){
                         final EntryPojo entryPojo = new EntryPojo();
                         entryPojo.configure(vote.getJSONObject("entry"));
-                        arrEntry.add(entryPojo);
+                        if (entryPojo.getID() != null)
+                            arrEntry.add(entryPojo);
                     }
                 }
 
+            }
+        }
+
+        if (jsonObject.has("users")){
+            final JSONArray jsonArray = jsonObject.getJSONArray("users");
+            for (int i = 0; i < jsonArray.length(); i++){
+                final EntryPojo entryPojo = new EntryPojo();
+                entryPojo.configure(jsonArray.getJSONObject(i));
+                entryPojo.setCategory("onlyprofile");
+                entryPojo.setID(" ");
+                arrEntry.add(entryPojo);
             }
         }
 

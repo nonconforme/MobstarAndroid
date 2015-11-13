@@ -18,7 +18,7 @@ import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.custom.CustomTextviewBold;
 
-import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
+import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.utils.Utility;
 
 public class TalentConnectVotesActivity extends BaseActivity implements OnClickListener {
@@ -95,17 +95,17 @@ public class TalentConnectVotesActivity extends BaseActivity implements OnClickL
 
 	void GetData(String voteType) {
 
-		HomeVideoListBaseFragment videoListFragment = getVideoListFragment();
+		VideoListBaseFragment videoListFragment = getVideoListFragment();
 		if (videoListFragment != null){
 			videoListFragment.resetBundleExtra();
 			videoListFragment.setIsVoteApi(true);
 			videoListFragment.setVoteType(voteType);
 			videoListFragment.resetAndLoadFirstPage();
 		}else {
-			videoListFragment = new HomeVideoListBaseFragment();
+			videoListFragment = new VideoListBaseFragment();
 			final Bundle extras = new Bundle();
-			extras.putBoolean(HomeVideoListBaseFragment.IS_VOTE_API, true);
-			extras.putString(HomeVideoListBaseFragment.VOTE_TYPE, voteType);
+			extras.putBoolean(VideoListBaseFragment.IS_VOTE_API, true);
+			extras.putString(VideoListBaseFragment.VOTE_TYPE, voteType);
 			videoListFragment.setArguments(extras);
 			replaceFragment(videoListFragment, VIDEO_LIST_FRAGMENT);
 
@@ -120,8 +120,8 @@ public class TalentConnectVotesActivity extends BaseActivity implements OnClickL
 		mFragmentTransaction.commitAllowingStateLoss();
 	}
 
-	private HomeVideoListBaseFragment getVideoListFragment(){
-		return (HomeVideoListBaseFragment) mFragmentManager.findFragmentByTag(VIDEO_LIST_FRAGMENT);
+	private VideoListBaseFragment getVideoListFragment(){
+		return (VideoListBaseFragment) mFragmentManager.findFragmentByTag(VIDEO_LIST_FRAGMENT);
 	}
 
 	void MyVoteDialog() {

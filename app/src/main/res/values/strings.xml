@@ -134,7 +134,7 @@
     <string name="position">POSITION</string>
     <string name="sort_by">SORT BY:</string>
     <string name="name">NAME</string>
-    <string name="message_fans">MESSAGE FOLLOWRS...</string>
+    <string name="message_fans">MESSAGE FOLLOWERS...</string>
     <string name="all">ALL</string>
     <string name="this_contest">THIS CONTEST</string>
     <string name="top_talents">TOP TALENTS</string>
@@ -382,6 +382,14 @@
     <string name="wrong_name">Choose from list</string>
     <string name="share_text">Hey, check out this entry on MobStar: </string>
     <string name="twitter_share_text">Hey, check out this entry on @officialmobstar: </string>
+    <string name="new_entries">NEW ENTRIES</string>
+    <string name="categories_home_fragment">CATEGORIES</string>
 
+    <string name="no_following_error_text">TO DIRECT MESSAGE\nANOTHER USER - YOU\nNEED TO BOTH FOLLOW\nEACH OTHER</string>
+
+    //v24
+
+    <string name="you_tube">YOUTUBE</string>
+    <string name="you_have_no_you_tube_video">There are no videos on your YouTube account to use yet</string>
 
 </resources>

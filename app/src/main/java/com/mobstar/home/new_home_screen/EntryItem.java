@@ -15,14 +15,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.mobstar.AdWordsManager;
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.StarCall;
+import com.mobstar.api.call.StarCall;
 import com.mobstar.api.responce.StarResponse;
+import com.mobstar.api.responce.VoteResponse;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
@@ -30,6 +30,7 @@ import com.mobstar.home.StatisticsActivity;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.home.split.SplitActivity;
+import com.mobstar.home.youtube.YouTubePlayerActivity;
 import com.mobstar.info.report.InformationReportActivity;
 import com.mobstar.player.PlayerManager;
 import com.mobstar.pojo.EntryPojo;
@@ -48,6 +49,11 @@ import java.util.TimerTask;
  */
 public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickListener, SwipeCardView.OnSwipeDismissListener, TextureView.SurfaceTextureListener {
 
+    private static final String AUDIO_TYPE = "audio";
+    private static final String IMAGE_TYPE = "image";
+    private static final String VIDEO_TYPE = "video";
+    private static final String YOU_TUBE_TYPE = "video_youtube";
+
     private static final String LOG_TAG = EntryItem.class.getName();
     private TextView textUserName, textDescription, textTime, textViews, buttonVideoSplit;
     private ImageView imageFrame;
@@ -64,25 +70,28 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private FrameLayout layoutStatastics;
     private TextView textStatasticCount, tvUserItemName;
     private ImageView imgMsg, ivIndicator;
-    private SwipeCardView swipeCardView;
+    protected SwipeCardView swipeCardView;
     private CardView cardView;
-
+    private FrameLayout youTubePlayerContainer;
     private View votingYes;
     private View votingNo;
 
     private int position;
 
-    private BaseActivity baseActivity;
+    protected BaseActivity baseActivity;
     private EntryPojo entryPojo;
     private SharedPreferences preferences;
-    private OnChangeEntryListener onChangeEntryListener;
+    protected OnChangeEntryListener onChangeEntryListener;
     private FrameLayout containerPlayer;
     private LinearLayout llItemEntry;
     private LinearLayout llItemUser;
-    private boolean isRemoveItemAfterVotingNo = true;
+    protected boolean isRemoveItemAfterVotingNo = true;
+    private boolean isEnableSwipeAction = true;
+    private long previousTime = 0;
 
-    public EntryItem(View itemView) {
+    public EntryItem(View itemView, boolean isEnableSwipe) {
         super(itemView);
+        isEnableSwipeAction = isEnableSwipe;
         findView(itemView);
     }
 
@@ -90,7 +99,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         return getPosition();
     }
 
-    private void findView(final View convertView) {
+    protected void findView(final View convertView) {
         buttonVideoSplit = (TextView) convertView.findViewById(R.id.splitVideoButton);
         textUserName = (TextView) convertView.findViewById(R.id.textUserName);
         textTime = (TextView) convertView.findViewById(R.id.textTime);
@@ -116,12 +125,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         votingYes = convertView.findViewById(R.id.voting_yes);
         cardView = (CardView) convertView.findViewById(R.id.cardView);
         containerPlayer = (FrameLayout) convertView.findViewById(R.id.conteiner_player);
-
+        youTubePlayerContainer = (FrameLayout) convertView.findViewById(R.id.container);
         llItemEntry = (LinearLayout) convertView.findViewById(R.id.llRowEntry);
         llItemUser = (LinearLayout) convertView.findViewById(R.id.llItemUser);
         imgUserItemPic = (ImageView) convertView.findViewById(R.id.imgUserItemPic);
         tvUserItemName = (TextView) convertView.findViewById(R.id.textUserItemName);
-
 
     }
 
@@ -130,6 +138,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         baseActivity = _activity;
         position = _position;
         swipeCardView.resetTopView();
+        swipeCardView.setEnableSwipeAction(isEnableSwipeAction);
         onChangeEntryListener = _onChangeEntryListener;
         if (entryPojo.getCategory() != null && entryPojo.getCategory().equalsIgnoreCase("onlyprofile")){
             setupUserViews();
@@ -161,7 +170,12 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         }
     }
 
-    private void setupEntryViews() {
+    public void refreshEntry(final EntryPojo _entryPojo){
+        entryPojo = _entryPojo;
+        setupEntryViews();
+    }
+
+    public void setupEntryViews() {
         llItemUser.setVisibility(View.GONE);
         llItemEntry.setVisibility(View.VISIBLE);
         swipeCardView.setSwipeLeftViewIndicator(votingNo);
@@ -185,9 +199,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             if (entryPojo.getIsMyStar() != null) {
                 if (!entryPojo.getIsMyStar().equalsIgnoreCase("0")) {
                     btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.yellow_btn));
+                    btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.white_color));
                     btnFollow.setText(baseActivity.getString(R.string.following));
                 } else {
                     btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.selector_oval_button));
+                    btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.comment_color));
                     btnFollow.setText(baseActivity.getString(R.string.follow));
                 }
             }
@@ -251,7 +267,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 startCommentActivity();
                 break;
             case R.id.conteiner_player:
-                PlayerManager.getInstance().tryToPause(position);
+               onClickContainerPlayer();
                 break;
             case R.id.llItemUser:
                 startProfileActivity();
@@ -259,8 +275,14 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         }
     }
 
+    protected void onClickContainerPlayer(){
+        PlayerManager.getInstance().tryToPause(position);
+        if (entryPojo.getType().equalsIgnoreCase(YOU_TUBE_TYPE))
+            startYouTubePlayerActivity();
+    }
+
     private void setupImage() {
-        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1")) {
+        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1") && entryPojo.getIsMyStar() != null && entryPojo.getIsMyStar().equalsIgnoreCase("1")) {
             Picasso.with(baseActivity).load(R.drawable.msg_act_btn).into(imgMsg);
         } else {
             Picasso.with(baseActivity).load(R.drawable.msg_btn).into(imgMsg);
@@ -280,16 +302,26 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     private void initItemContentType() {
         switch (entryPojo.getType()) {
-            case "image":
+            case IMAGE_TYPE:
                 setImageContentType();
                 break;
-            case "audio":
+            case AUDIO_TYPE:
                 setAudioContentType();
                 break;
-            case "video":
+            case VIDEO_TYPE:
                 setVideoContentType();
                 break;
+            case YOU_TUBE_TYPE:
+                setYouTubeContentType();
+                break;
         }
+    }
+
+    protected void setYouTubeContentType(){
+        Picasso.with(baseActivity).load(R.drawable.indicator_video).into(ivIndicator);
+        ivAudioIcon.setImageResource(R.drawable.icn_youtube);
+        ivAudioIcon.setVisibility(View.VISIBLE);
+        loadVideoThumb();
     }
 
     private void setImageContentType() {
@@ -359,6 +391,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imgPlaceHolder.setImageResource(R.drawable.video_placeholder);
         imageFrame.setVisibility(View.GONE);
 
+        loadVideoThumb();
+    }
+
+    private void loadVideoThumb(){
         Picasso.with(baseActivity).load(entryPojo.getVideoThumb())
                 .placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(imageFrame, new Callback() {
             @Override
@@ -487,14 +523,6 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 .setUserTagline(entryPojo.getTagline())
                 .build();
         intent.putExtra(NewProfileActivity.USER, userProfile);
-//        intent.putExtra("UserID", entryPojo.getUserID());
-//        intent.putExtra("UserName", entryPojo.getUserName());
-//        intent.putExtra("UserDisplayName", entryPojo.getUserDisplayName());
-//        intent.putExtra("UserPic", entryPojo.getProfileImage());
-//        intent.putExtra("UserCoverImage", entryPojo.getProfileCover());
-//        intent.putExtra("IsMyStar", entryPojo.getIsMyStar());
-//        intent.putExtra("UserTagline", entryPojo.getTagline());
-//        intent.putExtra(NewProfileActivity.USER, userProfile);
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
@@ -510,14 +538,42 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
+    private void startYouTubePlayerActivity(){
+        if (previousTime + 500 > System.currentTimeMillis()){
+            previousTime = System.currentTimeMillis();
+            return;
+        }
+        previousTime = System.currentTimeMillis();
+        final Intent intent = new Intent(baseActivity, YouTubePlayerActivity.class);
+        intent.putExtra(YouTubePlayerActivity.ENTRY_POJO, entryPojo);
+        intent.putExtra(YouTubePlayerActivity.ENTRY_POSITION, getPos());
+        baseActivity.startActivityForResult(intent, YouTubePlayerActivity.REMOVE_ENTRY);
+    }
+
     private void startMessageActivity() {
-        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1")) {
+        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1") && entryPojo.getIsMyStar() != null && entryPojo.getIsMyStar().equalsIgnoreCase("1")) {
             //following
             final Intent intent = new Intent(baseActivity, MessageActivity.class);
             intent.putExtra("recipent", entryPojo.getUserID());
             intent.putExtra("isDisableCompose", true);
             startActivity(intent);
-        }
+        }else startMessageErrorDialog();
+    }
+
+    private void startMessageErrorDialog(){
+        final Dialog dialog = new Dialog(baseActivity, R.style.DialogAnimationTheme);
+        dialog.setContentView(R.layout.message_error_dialog);
+        dialog.show();
+
+        final Timer timer = new Timer();
+        final TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        };
+        timer.schedule(task, 3000);
     }
 
     private void startActivity(final Intent intent) {
@@ -545,15 +601,38 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 //            onChangeEntryListener.onRemoveEntry(getPos());
     }
 
+    @Override
+    public void onCancelSwipe() {
+
+    }
+
+    @Override
+    public void onStartSwipe() {
+
+    }
+
     private void likeRequest() {
         final HashMap<String, String> params = new HashMap<>();
         params.put("entry", entryPojo.getID());
         params.put("type", "up");
-        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
+        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, new ConnectCallback<VoteResponse>() {
+
+            @Override
+            public void onSuccess(VoteResponse object) {
+                if (object.getArrEntry() != null & object.getArrEntry().size() > 0 && onChangeEntryListener != null) {
+                    onChangeEntryListener.onChangeEntry(object.getArrEntry().get(0));
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
         AdWordsManager.getInstance().sendEngagementEvent();
     }
 
-    private void dislikeRequest() {
+    protected void dislikeRequest() {
         final HashMap<String, String> params = new HashMap<>();
         params.put("entry", entryPojo.getID());
         params.put("type", "down");
@@ -596,6 +675,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         void onRemoveEntry(int position);
 
         void onFollowEntry(String uId, String isMyStar);
+
+        void onChangeEntry(final EntryPojo entryPojo);
     }
 
     public EntryPojo getEntryPojo() {
@@ -649,6 +730,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         progressbar.setVisibility(View.GONE);
     }
 
+    public FrameLayout getContainerPlayer(){
+        youTubePlayerContainer.setVisibility(View.VISIBLE);
+        return youTubePlayerContainer;
+    }
 
 //    public FrameLayout getFlPlaceHolder() {
 //        return flPlaceHolder;

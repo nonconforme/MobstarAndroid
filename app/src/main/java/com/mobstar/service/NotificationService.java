@@ -1,7 +1,5 @@
 package com.mobstar.service;
 
-import org.json.JSONObject;
-
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +11,8 @@ import android.util.Log;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
+
+import org.json.JSONObject;
 
 public class NotificationService extends Service{
 	int NotificationCount = 0;
@@ -92,7 +92,7 @@ public class NotificationService extends Service{
 		public void handleMessage(Message msg) {
 			if (NotificationCount > 0) {
 				Log.d(TAG, "entered DisplayLoggingInfo"+NotificationCount);
-
+                Utility.setBadge(getApplicationContext(), NotificationCount);
 				intent.putExtra("notification_count",NotificationCount);
 				sendBroadcast(intent);
 			} 

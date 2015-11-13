@@ -21,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -35,10 +37,14 @@ import com.mobstar.api.RestClient;
 import com.mobstar.api.responce.CategoriesFilterResponse;
 import com.mobstar.api.responce.ContinentFilterResponse;
 import com.mobstar.custom.CustomTextviewBold;
-import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
+import com.mobstar.gcm.GcmIntentService;
+import com.mobstar.gcm.NewEntryPush;
+import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.pojo.CategoryPojo;
+import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
+import com.mobstar.utils.TimeUtility;
 import com.mobstar.utils.Utility;
 
 import org.json.JSONArray;
@@ -46,6 +52,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+//import com.mobstar.home.new_home_screen.HomeVideoListBaseFragment;
 
 
 
@@ -53,27 +62,24 @@ import java.util.HashMap;
 public class HomeFragment extends Fragment implements OnClickListener {
 
     private static final String LOG_TAG = HomeFragment.class.getName();
+    public static final String NEW_ENTY_ACTION = "new entry";
     private Context mContext;
-
-	SharedPreferences preferences;
-
-	TextView textLatestPopular;
-	TextView textAllEntries;
-
-	boolean isLatest = true;
-
+	private SharedPreferences preferences;
+	private TextView textLatestPopular;
+	private TextView textAllEntries;
+	private boolean isLatest = true;
 	private FragmentManager mFragmentManager;
 	private FragmentTransaction mFragmentTransaction;
-
 	private boolean isDataLoaded = false;
 	private String deepLinkedId="";
 	private String sErrorMessage="";
 	private ArrayList<CategoryPojo> arrCategoryPojos = new ArrayList<CategoryPojo>();
     private ImageView vCategoryButton;
-    private int[] choosenContinents = {1,3,4};
     private ProgressDialog progressDialog;
     private ArrayList<Integer> listChoosenContinents;
     private ArrayList<Integer> listChoosenCategories;
+    private TextView vNewEntry;
+    private int mUserId;
 
 
     @Override
@@ -102,7 +108,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		mFragmentManager = getChildFragmentManager();
 
 		preferences = getActivity().getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
-
+        mUserId = Integer.parseInt(preferences.getString("userid", "0"));
 
 		// Ion.getDefault(mContext).configure().setLogging("Ion", Log.DEBUG);
 		LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, new IntentFilter("upload_successful"));
@@ -117,13 +123,63 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		return view;
 	}
 
-	private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mNewEntryReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(LOG_TAG, "mNewEntryReceiver");
+            ArrayList<NewEntryPush> newEntryPushs = (ArrayList<NewEntryPush>) intent.getSerializableExtra(GcmIntentService.NEW_ENTRY_PUSH);
+            showNewEntryButton(newEntryPushs);
+
+        }
+    };
+
+    private void showNewEntryButton(ArrayList<NewEntryPush> newEntryPushs) {
+        if (!isLatest)
+            return;
+        boolean canShow = false;
+        for (NewEntryPush newEntryPush : newEntryPushs) {
+            if (newEntryPush.getUserId() != mUserId)
+                if (listChoosenContinents.contains(newEntryPush.getContinent()) || listChoosenContinents.isEmpty())
+                    if (listChoosenCategories.contains(newEntryPush.getCategory()) || listChoosenCategories.isEmpty()) {
+                        VideoListBaseFragment videoListBaseFragment = (VideoListBaseFragment) mFragmentManager.findFragmentById(R.id.childFragmentContent);
+                        if (videoListBaseFragment != null) {
+                            ArrayList<EntryPojo> entryPojos = videoListBaseFragment.getEntryAdapter().getArrEntries();
+                            if (!entryPojos.isEmpty()) {
+                                long timeExistEntry = TimeUtility.getTimeInMillis(entryPojos.get(0).getCreatedString());
+                                long timeNewEntry = newEntryPush.getTimeUpload();
+                                int idExistEntry = Integer.parseInt(entryPojos.get(0).getID());
+                                int idNewEntry = newEntryPush.getId();
+                                if ((timeNewEntry > timeExistEntry) && (idNewEntry > idExistEntry)) {
+                                    canShow = true;
+                                    break;
+                                }
+                            } else {
+                                canShow = true;
+                                break;
+                            }
+                        }
+
+                        newEntryPush.getTimeUpload();
+                    }
+
+
+        }
+        if (vNewEntry.getVisibility() == View.GONE && isLatest && canShow) {
+            vNewEntry.setVisibility(View.VISIBLE);
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_in_from_top);
+            animation.setDuration(1000);
+            vNewEntry.startAnimation(animation);
+        }
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// Get extra data included in the Intent
 
 //			Log.v(Constant.TAG, "upload_successful mReceiver");
-			GetData("latest");
+            GetData("latest");
 		}
 	};
 
@@ -132,7 +188,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onDestroyView();
 
-		LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
 
 	}
 
@@ -150,8 +206,10 @@ public class HomeFragment extends Fragment implements OnClickListener {
         vCategoryButton = (ImageView) view.findViewById(R.id.btn_continents_home);
         vCategoryButton.setOnClickListener(this);
 
+        vNewEntry = (TextView) view.findViewById(R.id.new_entry_field);
+        vNewEntry.setOnClickListener(this);
 
-		if (!isDataLoaded) {
+        if (!isDataLoaded) {
 			GetData("latest");
 		}
 
@@ -181,8 +239,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //			extras.putString("deepLinkedId",deepLinkedId);
 //			extras.putString("LatestORPopular", sLatestPopular);
 //			videoListFragment.setArguments(extras);
-			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(true, deepLinkedId, sLatestPopular, null, false);
+			VideoListBaseFragment videoListFragment = VideoListBaseFragment.newInstance(true, deepLinkedId, sLatestPopular, null, false);
 			replaceFragment(videoListFragment, "VideoListFragment");
+            deepLinkedId = null;
 		}
 		else {
 //			VideoListFragment videoListFragment = new VideoListFragment();
@@ -190,9 +249,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //			extras.putBoolean("isEntryAPI", true);
 //			extras.putString("LatestORPopular", sLatestPopular);
 //			videoListFragment.setArguments(extras);
-			HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, sLatestPopular, null, true);
-			replaceFragment(videoListFragment, "VideoListFragment");	
-		}
+			VideoListBaseFragment videoListFragment = VideoListBaseFragment.newInstance(false, null, sLatestPopular, null, true);
+            replaceFragment(videoListFragment, "VideoListFragment");
+        }
 		isDataLoaded = true;
 	}
 
@@ -280,6 +339,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
                             GetData("latest");
                             textLatestPopular.setText(getString(R.string.latest));
                             isLatest = true;
+                            tryHideNewEntry();
                         }
                     });
                 }
@@ -298,6 +358,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
                             GetData("popular");
                             isLatest = false;
                             textLatestPopular.setText(getString(R.string.popular));
+                            tryHideNewEntry();
                         }
                     });
                 }
@@ -369,6 +430,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
                 continentDialog.show();
                 break;
+            case R.id.new_entry_field:
+
+                GetData("latest");
+                tryHideNewEntry();
+
+                break;
         }
     }
 
@@ -386,7 +453,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
             public void onSuccess(CategoriesFilterResponse filterResponse) {
                 Log.d(LOG_TAG, "CategoriesFilterResponse=" + filterResponse.getChoosenCategories().size());
                 hideProgress();
-                if (filterResponse.hasError()){
+                if (filterResponse.hasError()) {
                     Log.d(LOG_TAG, "categoryDialog.onSuccess.error=" + filterResponse.getError());
 //                                    okayAlertDialog(object.getError());
                 } else {
@@ -446,7 +513,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //        extras.putBoolean("isEntryAPI", true);
 //        extras.putString("LatestORPopular", "latest");
 //        videoListFragment.setArguments(extras);
-		HomeVideoListBaseFragment videoListFragment = HomeVideoListBaseFragment.newInstance(false, null, "latest", null, true);
+		VideoListBaseFragment videoListFragment = VideoListBaseFragment.newInstance(false, null, "latest", null, true);
         replaceFragment(videoListFragment, "VideoListFragment");
     }
 
@@ -457,9 +524,30 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 
-	}
+    }
 
-	class CategoryCall extends Thread {
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mNewEntryReceiver, new IntentFilter(NEW_ENTY_ACTION));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mNewEntryReceiver);
+    }
+
+    public void tryHideNewEntry() {
+        if (vNewEntry.getVisibility()==View.VISIBLE) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_out_to_top);
+            animation.setDuration(1000);
+            vNewEntry.startAnimation(animation);
+            vNewEntry.setVisibility(View.GONE);
+        }
+    }
+
+    class CategoryCall extends Thread {
 
 		@Override
 		public void run() {
@@ -573,6 +661,18 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		}
 
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
 
 	
 

@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white_color"
             android:orientation="horizontal"
-            android:visibility="gone" >
+            android:visibility="visible" >
 
             <FrameLayout
                 android:layout_width="55dp"

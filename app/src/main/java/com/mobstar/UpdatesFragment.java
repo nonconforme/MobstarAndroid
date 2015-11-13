@@ -56,7 +56,7 @@
 //import com.loopj.android.http.AsyncHttpClient;
 //import com.loopj.android.http.FileAsyncHttpResponseHandler;
 //import com.mobstar.api.ConnectCallback;
-//import com.mobstar.api.StarCall;
+//import com.mobstar.api.call.StarCall;
 //import com.mobstar.api.responce.NullResponse;
 //import com.mobstar.custom.PullToRefreshListView;
 //import com.mobstar.custom.PullToRefreshListView.OnRefreshListener;

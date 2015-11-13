@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Surface;
 
 import com.mobstar.api.Api;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.responce.CountResponse;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.utils.Constant;
 
@@ -28,6 +30,7 @@ public class PlayerManager {
     private boolean isMediaPlayerError = false;
     private boolean isVideoFile;
     private Surface mWorkingSurface;
+    private EntryItem.OnChangeEntryListener onChangeEntryListener;
 
     public static PlayerManager getInstance() {
         if (instance == null) {
@@ -36,18 +39,32 @@ public class PlayerManager {
         return instance;
     }
 
-    public void init(Context context, EntryItem entryItem, String fileName) {
+    public void init(Context context, EntryItem entryItem, String fileName, final EntryItem.OnChangeEntryListener _onChangeEntryListener) {
 //        standardizePrevious();
         this.mContext = context;
         this.mEntryItem = entryItem;
         isVideoFile = (mEntryItem.getEntryPojo().getType().equals("video"));
         mFilePath = fileName;
+        onChangeEntryListener = _onChangeEntryListener;
     }
 
-    private void sendRequstAddCount() {
+    private void sendRequestAddCount() {
         Log.d(LOG_TAG, "sendRequestAddCount");
         SharedPreferences preferences = mContext.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
-        Api.sendRequestAddCount(mContext, mEntryItem.getEntryPojo().getID(), preferences.getString("userid", "0"), null);
+        Api.sendRequestAddCount(mContext, mEntryItem.getEntryPojo().getID(), preferences.getString("userid", "0"), new ConnectCallback<CountResponse>() {
+
+            @Override
+            public void onSuccess(CountResponse response) {
+                if(response.getArrEntry() != null && response.getArrEntry().size() > 0 && onChangeEntryListener != null){
+                    onChangeEntryListener.onChangeEntry(response.getArrEntry().get(0));
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        });
 
     }
 
@@ -110,7 +127,7 @@ public class PlayerManager {
                     public void onCompletion(MediaPlayer mediaPlayer) {
 //                        Log.v(LOG_TAG,"setOnCompletionListener.onCompletion");
                         if (!isMediaPlayerError) {
-                            sendRequstAddCount();
+                            sendRequestAddCount();
                             mediaPlayer.seekTo(0);
                             mediaPlayer.start();
                         } else {
@@ -188,6 +205,7 @@ public class PlayerManager {
         mContext = null;
         mEntryItem = null;
         mFilePath = null;
+        onChangeEntryListener = null;
     }
 
     public void onlyPausePlayer() {

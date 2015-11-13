@@ -213,15 +213,14 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnRecord:
-                    if (textureView.getSurfaceTexture() == null || flCameraPreviewContaner.getMeasuredHeight() == 0)
-                        return;
-                    Surface surface = new Surface(textureView.getSurfaceTexture());
+                if (textureView.getSurfaceTexture() == null || flCameraPreviewContaner.getMeasuredHeight() == 0)
+                    return;
+                Surface surface = new Surface(textureView.getSurfaceTexture());
                 if (isRecording) {
                     mCameraPreview.stopRecord();
-                }
-                else
+                } else
                     startRecord(surface);
                 break;
         }

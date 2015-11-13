@@ -37,6 +37,8 @@ import com.mobstar.fanconnect.FanConnectHomeFragment;
 import com.mobstar.help.HelpFragment;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
+import com.mobstar.home.notification.NotificationsFragment;
+import com.mobstar.home.search.SearchFragment;
 import com.mobstar.inbox.InboxFragment;
 import com.mobstar.login.LoginSocialActivity;
 import com.mobstar.service.NotificationService;
@@ -192,8 +194,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 					if (count > 0) {
 						textNotificationCount.setText(count+"");
 						textNotificationCount.setVisibility(View.VISIBLE);
+						Utility.setBadge(HomeActivity.this, count);
 					} else {
 						textNotificationCount.setVisibility(View.GONE);
+						Utility.clearBadge(HomeActivity.this);
 					}
 				}
 
@@ -688,8 +692,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 			if (NotificationCount > 0) {
 				textNotificationCount.setText(NotificationCount + "");
 				textNotificationCount.setVisibility(View.VISIBLE);
+				Utility.setBadge(HomeActivity.this, NotificationCount);
 			} else {
 				textNotificationCount.setVisibility(View.GONE);
+				Utility.clearBadge(HomeActivity.this);
 			}
 		}
 	};
@@ -798,11 +804,13 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 	@Override
 	public void onPause() {
 		super.onPause();
-		Log.d("mobstar","OnPause Called");
+		Log.d("mobstar", "OnPause Called");
 	}
 
-
-
-
-
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (homeFragment != null)
+			homeFragment.onActivityResult(requestCode, resultCode, data);
+	}
 }

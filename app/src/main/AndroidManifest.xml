@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobstar"
-    android:versionCode="23"
-    android:versionName="2.3" >
+    android:versionCode="25"
+    android:versionName="2.5" >
 
     <!--<uses-sdk-->
         <!--android:minSdkVersion="14"-->
@@ -27,6 +27,9 @@
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
     <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <uses-library android:name="org.apache.http.legacy" android:required="false" />
     <permission
         android:name="com.mobstar.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -182,6 +185,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme" >
         </activity>
+        <activity android:name=".home.youtube.YouTubeListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"  >
+        </activity>
         <activity
             android:name=".upload.TakePictureActivity"
             android:screenOrientation="portrait" >
@@ -208,7 +215,13 @@
         </activity>
         <activity
             android:name=".upload.RecordVideoActivity"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
+        </activity>
+        <activity
+            android:name=".upload.rewrite.RecordVideoActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation">
         </activity>
         <activity
             android:name=".upload.UploadFileActivity"
@@ -235,12 +248,17 @@
             android:name=".help.FAQSActivity"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name=".ProfileActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".ProfileActivity"-->
+            <!--android:screenOrientation="portrait" >-->
+        <!--</activity>-->
         <activity
             android:name=".home.new_home_screen.profile.NewProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".home.notification.SingleEntryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
@@ -318,6 +336,11 @@
         <activity android:name=".home.split.SplitActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme">
+        </activity>
+
+        <activity android:name=".home.youtube.YouTubePlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseActivityDialogTheme">
         </activity>
 
         <activity android:name=".geo_filtering.SelectCurrentRegionActivity"
@@ -420,14 +443,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme" >
         </activity>
-        <activity
-            android:name=".inbox.MessageDetail"
+        <!--<activity-->
+            <!--android:name=".inbox.MessageDetail"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:windowSoftInputMode="stateHidden|adjustResize"-->
+            <!--android:theme="@style/DialogTheme" >-->
+        <!--</activity>-->
+        <!--<activity-->
+            <!--android:name=".inbox.GroupMessageDetail"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@style/DialogTheme" >-->
+        <!--</activity>-->
+        <activity android:name=".inbox.newMessagesScreen.MessageDetail"
             android:screenOrientation="portrait"
-            android:theme="@style/DialogTheme" >
-        </activity>
-        <activity
-            android:name=".inbox.GroupMessageDetail"
-            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/DialogTheme" >
         </activity>
         <activity

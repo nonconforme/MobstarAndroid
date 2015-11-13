@@ -17,8 +17,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Point;
-import android.hardware.Camera;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -26,14 +24,18 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
-import android.view.Display;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.mobstar.MobstarApplication;
 import com.mobstar.MobstarApplication.TrackerName;
 import com.mobstar.R;
@@ -57,17 +59,18 @@ public class Utility {
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
 
-	static ProgressDialog dialog;
-	private static boolean isSpinning=false;
+	private static ProgressDialog dialog;
+	private static boolean isSpinning = false;
 
 	public static final String getCurrentDirectory(final Context context) {
 		if (isExternalStorageReadable() && isExternalStorageWritable())
 			return Environment.getExternalStorageDirectory().getPath() + "/Android/data/" + context.getPackageName() + "/";
-		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + "/Android/data/" + context.getPackageName() + "/";
+//		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath() + "/Android/data/" + context.getPackageName() + "/";
+		return context.getFilesDir().getPath();
 	}
 
 	public static boolean isExternalStorageWritable() {
-		String state = Environment.getExternalStorageState();
+		final String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			return true;
 		}
@@ -75,7 +78,7 @@ public class Utility {
 	}
 
 	public static boolean isExternalStorageReadable() {
-		String state = Environment.getExternalStorageState();
+		final String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state) ||
 				Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
 			return true;
@@ -134,19 +137,27 @@ public class Utility {
 		return activeNetworkInfo != null;
 	}
 
-	public static void ShowProgressDialog(Context mContext, String message) {
+    public static void ShowProgressDialog(Context mContext, String message) {
 
-		dialog = new ProgressDialog(mContext);
-		dialog.setMessage(message);
-		dialog.show();
-	}
+        HideDialog(mContext);
+        if (mContext != null) {
+            dialog = new ProgressDialog(mContext);
+            dialog.setMessage(message);
+            dialog.show();
+        }
+    }
 
 	public static void HideDialog(Context mContext) {
 		if (mContext == null || dialog == null)
 			return;
-		if (!((Activity) mContext).isFinishing() && dialog.isShowing()) {
-			dialog.dismiss();
+		try {
+		if (!((Activity) mContext).isFinishing() && dialog.isShowing())
+				dialog.dismiss();
 		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 
 	public static final int MEDIA_TYPE_IMAGE = 1;
@@ -155,10 +166,9 @@ public class Utility {
 
 	/** Create a File for saving an image or video */
 	public static File getOutputMediaFile(int type,Context mContext) {
-		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
-				+ "/Android/data/" + mContext.getPackageName() +"/";
+		final String path = getCurrentDirectory(mContext);
 		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
-		File mediaStorageDir = new File(path);
+		final File mediaStorageDir = new File(path);
 		// Create the storage directory if it does not exist
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
@@ -167,7 +177,7 @@ public class Utility {
 			}
 		}
 		// Create a media file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		File mediaFile;
 		if (type == MEDIA_TYPE_IMAGE) {
 			mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
@@ -183,10 +193,9 @@ public class Utility {
 	}
 
 	public static File getTemporaryMediaFile(Context mContext, String name) {
-		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
-				+ "/Android/data/" + mContext.getPackageName() +"/";
+		final String path = getCurrentDirectory(mContext);
 		//		File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), ".mobstar");
-		File mediaStorageDir = new File(path);
+		final File mediaStorageDir = new File(path);
 		// Create the storage directory if it does not exist
 		if (!mediaStorageDir.exists()) {
 			if (!mediaStorageDir.mkdirs()) {
@@ -195,8 +204,8 @@ public class Utility {
 			}
 		}
 		// Create a media file name
-		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		File mediaFile;
+		final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		final File mediaFile;
 			mediaFile = new File(mediaStorageDir.getPath() + File.separator + name + timeStamp + ".mp4");
 
 		return mediaFile;
@@ -216,8 +225,7 @@ public class Utility {
 	@SuppressLint("NewApi")
 	public static String getPath(final Context context, final Uri uri) {
 
-		String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath()
-				+ "/Android/data/" + context.getPackageName() +"/";
+		String path = getCurrentDirectory(context);
 
 		final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
@@ -316,6 +324,30 @@ public class Utility {
 
 	}
 
+	public static final void disLikeDialog(Activity activity, final Dialog.OnDismissListener onDismissListener){
+		final Dialog dialog = new Dialog(activity, R.style.DialogAnimationTheme);
+		dialog.setContentView(R.layout.dialog_dislike);
+		dialog.show();
+
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					if (onDismissListener != null)
+						onDismissListener.onDismiss(null);
+					dialog.dismiss();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+		};
+		timer.schedule(task, 1000);
+	}
+
 	public static void DisLikeDialog(Activity activity) {
 		final Dialog dialog = new Dialog(activity, R.style.DialogAnimationTheme);
 		dialog.setContentView(R.layout.dialog_dislike);
@@ -327,7 +359,12 @@ public class Utility {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				dialog.dismiss();
+				try {
+					dialog.dismiss();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 		};
 		timer.schedule(task, 1000);
@@ -822,6 +859,47 @@ public class Utility {
 		}
 		return null;
 	}
+	public static void logAndShow(Activity activity, String tag, Throwable t) {
+		Log.e(tag, "Error", t);
+		String message = t.getMessage();
+		if (t instanceof GoogleJsonResponseException) {
+			GoogleJsonError details = ((GoogleJsonResponseException) t).getDetails();
+			if (details != null) {
+				message = details.getMessage();
+			}
+		} else if (t.getCause() instanceof GoogleAuthException) {
+			message = ((GoogleAuthException) t.getCause()).getMessage();
+		}
+		showError(activity, message);
+	}
+
+	public static void showError(Activity activity, String message) {
+		String errorMessage = getErrorMessage(activity, message);
+		showErrorInternal(activity, errorMessage);
+	}
+
+	private static void showErrorInternal(final Activity activity, final String errorMessage) {
+		activity.runOnUiThread(new Runnable() {
+			public void run() {
+				Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show();
+			}
+		});
+	}
+
+	private static String getErrorMessage(Activity activity, String message) {
+		Resources resources = activity.getResources();
+		if (message == null) {
+//			return resources.getString(R.string.error);
+			return "";
+		}
+		return message;
+	}
+
+
+    public static void removeFile(String filePath){
+        final File file = new File(filePath);
+        file.delete();
+    }
 
 
 }

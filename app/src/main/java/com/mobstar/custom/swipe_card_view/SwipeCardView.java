@@ -41,6 +41,7 @@ public class SwipeCardView extends FrameLayout {
     private int mGravity;
     private boolean mDragging;
     private OnSwipeDismissListener onSwipeDismissListener;
+    private boolean isEnableSwipeAction = true;
 
 
     private View swipeLeftViewIndicator;
@@ -71,6 +72,10 @@ public class SwipeCardView extends FrameLayout {
         this.mTouchSlop = viewConfiguration.getScaledTouchSlop();
         this.mGestureDetector = new GestureDetector(this.getContext(), new GestureListener());
 
+    }
+
+    public void setEnableSwipeAction(boolean isEnable){
+        isEnableSwipeAction = isEnable;
     }
 
     private void initFromXml(AttributeSet attr) {
@@ -195,7 +200,7 @@ public class SwipeCardView extends FrameLayout {
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        if(this.mTopView == null) {
+        if(this.mTopView == null || !isEnableSwipeAction) {
             return false;
         } else if(this.mGestureDetector.onTouchEvent(event)) {
             return true;
@@ -239,6 +244,8 @@ public class SwipeCardView extends FrameLayout {
                         swipeRightViewIndicator.setVisibility(GONE);
                     if (swipeLeftViewIndicator != null)
                         swipeLeftViewIndicator.setVisibility(GONE);
+                    if (onSwipeDismissListener != null)
+                        onSwipeDismissListener.onCancelSwipe();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     pointerIndex = event.findPointerIndex(this.mActivePointerId);
@@ -261,6 +268,8 @@ public class SwipeCardView extends FrameLayout {
                     this.mLastTouchX = x;
                     this.mLastTouchY = y;
                     final float targetX = mTopView.getX();
+                    if (onSwipeDismissListener != null)
+                        onSwipeDismissListener.onStartSwipe();
                     setVoting(targetX);
 
                 case MotionEvent.ACTION_OUTSIDE:
@@ -409,5 +418,7 @@ public class SwipeCardView extends FrameLayout {
     public interface OnSwipeDismissListener{
         void onSwipeLeft();
         void onSwipeRight();
+        void onCancelSwipe();
+        void onStartSwipe();
     }
 }
