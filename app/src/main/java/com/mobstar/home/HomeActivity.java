@@ -38,6 +38,7 @@ import com.mobstar.help.HelpFragment;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.home.notification.NotificationsFragment;
+import com.mobstar.home.search.SearchFragment;
 import com.mobstar.inbox.InboxFragment;
 import com.mobstar.login.LoginSocialActivity;
 import com.mobstar.service.NotificationService;

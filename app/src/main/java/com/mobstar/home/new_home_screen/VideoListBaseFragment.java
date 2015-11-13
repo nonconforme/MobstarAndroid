@@ -54,10 +54,11 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     public static final String LATEST_OR_POPULAR = "latestORPopular";
     public static final String CATEGORY_ID       = "categoryId";
     public static final String IS_ENTRY_IPI      = "isEntryAPI";
+    public static final String IS_SEARCH_BEGIN_API = "is_search_begin_api";
     private static final String LOG_TAG = VideoListBaseFragment.class.getName();
 
-    private boolean isSearchAPI, isMobitAPI, isVoteAPI, isEntryIdAPI, isEntryAPI;
-    private String searchTerm, deeplinkEntryId, latestORPopular, CategoryId, voteType;
+    private boolean isSearchAPI, isMobitAPI, isVoteAPI, isEntryIdAPI, isEntryAPI, isSearchBeginApi;
+    private String searchTerm, deeplinkEntryId, latestORPopular, categoryId, voteType;
     protected TextView textNoData;
     private SharedPreferences preferences;
 
@@ -124,14 +125,19 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
             params.put("page", Integer.toString(pageNo));
         } else if (isSearchAPI) {
             url = Constant.SEARCH_ENTRY;
+            if (searchTerm.equalsIgnoreCase("")){
+                pullToRefreshRecyclerView.onRefreshComplete();
+                setNoEntriesMessage();
+                return;
+            }
             params.put("term", searchTerm);
             params.put("page", Integer.toString(pageNo));
-            params.put("orderBy", latestORPopular);
+//            params.put("orderBy", latestORPopular);
         } else if (isEntryAPI) {
-            if (CategoryId != null && CategoryId.length() > 0) {
+            if (categoryId != null && categoryId.length() > 0) {
                 params.put("excludeVotes", "true");
                 params.put("orderBy", latestORPopular);
-                params.put("category", CategoryId);
+                params.put("category", categoryId);
                 params.put("page", Integer.toString(pageNo));
             } else {
                 params.put("excludeVotes", "true");
@@ -150,6 +156,14 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                 params.put("user", preferences.getString("userid", "0"));
                 params.put("page", Integer.toString(pageNo));
             }
+        }else if (isSearchBeginApi){
+            if (searchTerm.equalsIgnoreCase("")){
+                pullToRefreshRecyclerView.onRefreshComplete();
+                setNoEntriesMessage();
+                return;
+            }
+            url = Constant.SEARCH_BEGIN + searchTerm;
+            params.put("page", Integer.toString(pageNo));
         }
         getEntry(url, params, pageNo);
     }
@@ -188,6 +202,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                 endlessRecyclerOnScrollListener.onFailedLoading();
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());
+                setNoEntriesMessage();
             }
         });
     }
@@ -227,7 +242,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                                 downloadFileManager.downloadFile(entryPojo.getVideoLink(), 0);
                                 break;
                             case "video_youtube":
-                                downloadFile(0);
+//                                downloadFile(0);
                                 break;
                         }
                     }
@@ -277,7 +292,16 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
             cancelDownloadFile(oldPosition);
             downloadFile(currentPosition);
         }
+
+        @Override
+        public void onScrolled() {
+            onScrolledList();
+        }
     };
+
+    protected void onScrolledList(){
+
+    }
 
     @Override
     public void onRemoveItemAnimationEnd() {
@@ -390,7 +414,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                 }
 
                 if (extras.containsKey(CATEGORY_ID)) {
-                    CategoryId = extras.getString(CATEGORY_ID);
+                    categoryId = extras.getString(CATEGORY_ID);
                 }
             }
             if (extras.containsKey(IS_VOTE_API)) {
@@ -399,6 +423,15 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                 if (extras.containsKey(VOTE_TYPE)) {
                     voteType = extras.getString(VOTE_TYPE);
                 }
+            }
+            if (extras.containsKey(IS_SEARCH_BEGIN_API)){
+                isSearchBeginApi = true;
+                if (extras.containsKey(SEARCH_TERM)) {
+                    searchTerm = extras.getString(SEARCH_TERM);
+                }
+
+                if (extras.containsKey(LATEST_OR_POPULAR))
+                    latestORPopular = extras.getString(LATEST_OR_POPULAR);
             }
         }
     }
@@ -424,7 +457,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
         isEntryIdAPI = false;
         deeplinkEntryId = null;
         isEntryAPI = false;
-        CategoryId = null;
+        categoryId = null;
         isVoteAPI = false;
         voteType = null;
     }
