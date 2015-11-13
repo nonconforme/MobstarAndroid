@@ -49,7 +49,7 @@
         <attr name="per_circleColor" format="color" />
         <attr name="per_radius" format="dimension" />
         <attr name="barWidth" format="dimension" />
-        <attr name="barLength" format="dimension" />
+        <attr name="pw_barLength" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="CheckableView">

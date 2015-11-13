@@ -17,7 +17,7 @@ public class ImageTwitter {
 	private static final String CONSUMER_SECRET = "rskJIuRaMPsvODBLx5rup57etMf0edMQVtGA9a3fvT0mO9scbu";
 
 	public OnCompleteListener onCompleteListener;
-	
+
 
 	private enum FROM {
 		TWITTER_POST, TWITTER_LOGIN
@@ -32,7 +32,7 @@ public class ImageTwitter {
 	String postString;
 	boolean authOnly = false;
 	private File imgFile;
-	
+
 	@SuppressLint("NewApi")
 	public ImageTwitter(Activity activity, boolean authOnly, String postString,File file) {
 		// TODO Auto-generated method stub
@@ -50,7 +50,7 @@ public class ImageTwitter {
 		mTwitter = new TwitterApp(activity, CONSUMER_KEY, CONSUMER_SECRET);
 		mTwitter.setListener(mTwLoginDialogListener);
 	}
-	
+
 
 	public void send() {
 		mTwitter.resetAccessToken();
@@ -106,7 +106,7 @@ public class ImageTwitter {
 					else {
 						post(postString);
 					}
-					
+
 					postAsToast(FROM.TWITTER_POST, MESSAGE.SUCCESS);
 				}
 

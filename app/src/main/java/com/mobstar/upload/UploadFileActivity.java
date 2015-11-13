@@ -28,15 +28,17 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.loopj.android.http.RequestParams;
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.RestClient;
+import com.mobstar.api.responce.BaseResponse;
+import com.mobstar.api.responce.UploadYouTubeVideoResponse;
 import com.mobstar.home.split.SplitActivity;
+import com.mobstar.home.youtube.YouTubeVideo;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -47,7 +49,6 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +62,7 @@ import java.util.List;
 
 public class UploadFileActivity extends Activity implements OnClickListener {
 
+	public static final String YOUTUBE_VIDEO = "you_tube_video";
     private static final String LOG_TAG = UploadFileActivity.class.getName();
     private ArrayList<String> arrayTags = new ArrayList<String>();
 	private TagListAdapter tagListAdapter;
@@ -82,6 +84,7 @@ public class UploadFileActivity extends Activity implements OnClickListener {
 	private double cm=2.54;
 	int posHeight=0,posAge=0;
     private EntryPojo parentSplitEntry;
+	private YouTubeVideo youTubeVideoData;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +123,8 @@ public class UploadFileActivity extends Activity implements OnClickListener {
 		if(extras.containsKey(SplitActivity.ENTRY_SPLIT)){
 			parentSplitEntry=(EntryPojo) extras.getSerializable(SplitActivity.ENTRY_SPLIT);
 		}
+		if (extras.containsKey(YOUTUBE_VIDEO))
+			youTubeVideoData = (YouTubeVideo) extras.getSerializable(YOUTUBE_VIDEO);
 	}
 
 	private void initControls() {
@@ -377,6 +382,9 @@ public class UploadFileActivity extends Activity implements OnClickListener {
 					}
 				}
 			}
+			else if (youTubeVideoData != null){
+				uploadYouTubeVideo();
+			}
 			else {
 
 				Utility.ShowProgressDialog(this, getString(R.string.uploading));
@@ -390,7 +398,44 @@ public class UploadFileActivity extends Activity implements OnClickListener {
 					Utility.HideDialog(this);
 				}
 			}
+
 		}
+	}
+
+	private void uploadYouTubeVideo(){
+		final HashMap<String, String> params = new HashMap<>();
+		params.put("category", categoryId);
+		params.put("description", editTitle.getText().toString());
+		params.put("language", "English (United States)");
+		params.put("name", youTubeVideoData.getTitle());
+		final String tagList = arrayTags.toString();
+		final String tags = tagList.substring(1, tagList.length() - 1).replace(", ", ",");
+		params.put("tags", tags);
+		params.put("thumbnail_url", youTubeVideoData.getThumbUri());
+		params.put("type", "video_youtube");
+		params.put("video_url", youTubeVideoData.getVideoUri());
+		Utility.ShowProgressDialog(this, getString(R.string.uploading));
+		RestClient.getInstance(this).postRequest(Constant.ENTRY, params, new ConnectCallback<UploadYouTubeVideoResponse>() {
+
+			@Override
+			public void onSuccess(UploadYouTubeVideoResponse object) {
+				Utility.HideDialog(UploadFileActivity.this);
+				Intent intent = new Intent("upload_successful");
+				LocalBroadcastManager.getInstance(UploadFileActivity.this).sendBroadcast(intent);
+
+				AdWordsManager.getInstance().sendUploadingContentEvent();
+				setResult(Activity.RESULT_OK);
+				onBackPressed();
+			}
+
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(UploadFileActivity.this);
+				setResult(Activity.RESULT_CANCELED);
+				onBackPressed();
+			}
+		});
+
 	}
 
 	private class UploadImage extends AsyncTask<String, Integer, String> {
@@ -440,7 +485,7 @@ public class UploadFileActivity extends Activity implements OnClickListener {
 					multipartContent.addPart("age", new StringBody(editAge.getText().toString()));
 					multipartContent.addPart("height", new StringBody(editHeight.getText().toString()));
 					
-				Log.d("mobstar","sending post request=> type"+sType+"category="+categoryId+" subCategory= "+subCat +" age="+editAge.getText().toString()+" height="+editHeight.getText().toString()+" language"+"english"+" name"+preferences.getString("username", null)+" description="+editTitle.getText().toString());
+				Log.d("mobstar","sending post request=> type"+sType+"category="+categoryId+" subCategory= "+subCat +" age="+editAge.getText().toString()+" height="+editHeight.getText().toString()+" language"+"english"+" name"+preferences.getString("username", null)+" description=" + editTitle.getText().toString());
 				}
 				multipartContent.addPart("language", new StringBody("english"));
 				multipartContent.addPart("name", new StringBody(preferences.getString("username", null), chars));

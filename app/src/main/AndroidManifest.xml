@@ -29,6 +29,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
+    <uses-library android:name="org.apache.http.legacy" android:required="false" />
     <permission
         android:name="com.mobstar.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -184,6 +185,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme" >
         </activity>
+        <activity android:name=".home.youtube.YouTubeListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme"  >
+        </activity>
         <activity
             android:name=".upload.TakePictureActivity"
             android:screenOrientation="portrait" >
@@ -243,10 +248,10 @@
             android:name=".help.FAQSActivity"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name=".ProfileActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+        <!--<activity-->
+            <!--android:name=".ProfileActivity"-->
+            <!--android:screenOrientation="portrait" >-->
+        <!--</activity>-->
         <activity
             android:name=".home.new_home_screen.profile.NewProfileActivity"
             android:screenOrientation="portrait"
@@ -331,6 +336,11 @@
         <activity android:name=".home.split.SplitActivity"
             android:screenOrientation="portrait"
             android:theme="@style/DialogTheme">
+        </activity>
+
+        <activity android:name=".home.youtube.YouTubePlayerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseActivityDialogTheme">
         </activity>
 
         <activity android:name=".geo_filtering.SelectCurrentRegionActivity"
