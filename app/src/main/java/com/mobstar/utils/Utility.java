@@ -12,6 +12,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,13 +24,18 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.api.client.googleapis.json.GoogleJsonError;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.mobstar.MobstarApplication;
 import com.mobstar.MobstarApplication.TrackerName;
 import com.mobstar.R;
@@ -318,6 +324,30 @@ public class Utility {
 
 	}
 
+	public static final void disLikeDialog(Activity activity, final Dialog.OnDismissListener onDismissListener){
+		final Dialog dialog = new Dialog(activity, R.style.DialogAnimationTheme);
+		dialog.setContentView(R.layout.dialog_dislike);
+		dialog.show();
+
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				try {
+					if (onDismissListener != null)
+						onDismissListener.onDismiss(null);
+					dialog.dismiss();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+		};
+		timer.schedule(task, 1000);
+	}
+
 	public static void DisLikeDialog(Activity activity) {
 		final Dialog dialog = new Dialog(activity, R.style.DialogAnimationTheme);
 		dialog.setContentView(R.layout.dialog_dislike);
@@ -329,7 +359,12 @@ public class Utility {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				dialog.dismiss();
+				try {
+					dialog.dismiss();
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 		};
 		timer.schedule(task, 1000);
@@ -824,6 +859,42 @@ public class Utility {
 		}
 		return null;
 	}
+	public static void logAndShow(Activity activity, String tag, Throwable t) {
+		Log.e(tag, "Error", t);
+		String message = t.getMessage();
+		if (t instanceof GoogleJsonResponseException) {
+			GoogleJsonError details = ((GoogleJsonResponseException) t).getDetails();
+			if (details != null) {
+				message = details.getMessage();
+			}
+		} else if (t.getCause() instanceof GoogleAuthException) {
+			message = ((GoogleAuthException) t.getCause()).getMessage();
+		}
+		showError(activity, message);
+	}
+
+	public static void showError(Activity activity, String message) {
+		String errorMessage = getErrorMessage(activity, message);
+		showErrorInternal(activity, errorMessage);
+	}
+
+	private static void showErrorInternal(final Activity activity, final String errorMessage) {
+		activity.runOnUiThread(new Runnable() {
+			public void run() {
+				Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show();
+			}
+		});
+	}
+
+	private static String getErrorMessage(Activity activity, String message) {
+		Resources resources = activity.getResources();
+		if (message == null) {
+//			return resources.getString(R.string.error);
+			return "";
+		}
+		return message;
+	}
+
 
     public static void removeFile(String filePath){
         final File file = new File(filePath);

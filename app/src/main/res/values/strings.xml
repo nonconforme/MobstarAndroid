@@ -387,5 +387,9 @@
 
     <string name="no_following_error_text">TO DIRECT MESSAGE\nANOTHER USER - YOU\nNEED TO BOTH FOLLOW\nEACH OTHER</string>
 
+    //v24
+
+    <string name="you_tube">YOUTUBE</string>
+    <string name="you_have_no_you_tube_video">There are no videos on your YouTube account to use yet</string>
 
 </resources>

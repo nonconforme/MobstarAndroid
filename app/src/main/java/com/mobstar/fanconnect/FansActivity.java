@@ -592,7 +592,6 @@ public class FansActivity extends Activity {
 			if (response != null) {
 
 				try {
-
 					JSONObject jsonObject = new JSONObject(response);
 
 					if (jsonObject.has("error")) {

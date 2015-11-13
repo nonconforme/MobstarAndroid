@@ -28,7 +28,9 @@ import com.mobstar.custom.recycler_view.OnEndAnimationListener;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.home.HomeFragment;
 import com.mobstar.home.notification.SingleEntryActivity;
+import com.mobstar.home.youtube.YouTubePlayerActivity;
 import com.mobstar.player.PlayerManager;
+import com.mobstar.player.YouTubePlayerManager;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -239,6 +241,9 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                             case "video":
                                 downloadFileManager.downloadFile(entryPojo.getVideoLink(), 0);
                                 break;
+                            case "video_youtube":
+//                                downloadFile(0);
+                                break;
                         }
                     }
                 }, 500);
@@ -279,7 +284,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
 //                entryAdapter.getEntryAtPosition(oldPosition).hideProgressBar();
             if (entryAdapter.getEntryAtPosition(currentPosition) != null) {
                 final String type = entryAdapter.getEntryAtPosition(currentPosition).getEntryPojo().getType();
-                if (type != null && !type.equals("image"))
+                if (type != null && !type.equals("image") && !type.equals("video_youtube"))
                     entryAdapter.getEntryAtPosition(currentPosition).showProgressBar();
             }
             PlayerManager.getInstance().standardizePrevious();
@@ -337,6 +342,9 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
             case "video":
                 downloadFileManager.cancelFile(entryPojo.getVideoLink());
                 break;
+            case "video_youtube":
+//                YouTubePlayerManager.getInstance().cancelPlayer((BaseActivity) getActivity());
+                break;
         }
     }
 
@@ -351,6 +359,10 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
             case "video":
                 downloadFileManager.downloadFile(entryPojo.getVideoLink(), currentPosition);
                 break;
+            case "video_youtube":
+//                if (entryAdapter.getEntryAtPosition(currentPosition) != null)
+//                    YouTubePlayerManager.getInstance().initialize((BaseActivity)getActivity(), entryPojo.getVideoLink(), entryAdapter.getEntryAtPosition(currentPosition).getContainerPlayer());
+                break;
         }
     }
 
@@ -364,7 +376,8 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
         HomeFragment homeFragment = null;
         try {
             homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.frag_content);
-        }catch (ClassCastException e){
+        }
+        catch (ClassCastException e){
             e.printStackTrace();
         }
         if (homeFragment != null) {
@@ -466,4 +479,21 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     public RecyclerViewAdapter getEntryAdapter() {
         return entryAdapter;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK){
+            switch (requestCode){
+                case YouTubePlayerActivity.REMOVE_ENTRY:
+                    final int removePosition = data.getIntExtra(YouTubePlayerActivity.ENTRY_POSITION, -1);
+                    if (removePosition != -1){
+                        getEntryAdapter().onRemoveEntry(removePosition);
+                    }
+                    break;
+
+            }
+        }
+    }
+
 }

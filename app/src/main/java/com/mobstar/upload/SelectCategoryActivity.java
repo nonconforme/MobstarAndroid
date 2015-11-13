@@ -30,6 +30,8 @@ import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.responce.BaseResponse;
 import com.mobstar.api.responce.CategoryResponse;
+//import com.mobstar.custom.CustomTextviewBold;
+
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.pojo.CategoryPojo;
 import com.mobstar.utils.Constant;
@@ -217,18 +219,10 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 
 					if(categoryObj.getCategoryActive()){
 						if(categoryObj.getID().equalsIgnoreCase("3")){ // pass model category id
-							Intent intent = new Intent(mContext, SelectSubCategoryActivity.class);
-							intent.putExtra("categoryId",categoryObj.getID());
-							startActivity(intent);
-							finish();
-							overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+							startSelectSubCategoryActivity(categoryObj.getID());
 						}
 						else{
-							Intent intent = new Intent(mContext, SelectMediaTypeActivity.class);
-							intent.putExtra("categoryId",categoryObj.getID());
-							startActivity(intent);
-							finish();
-							overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+							startSelectMediaTypeActivity(categoryObj.getID());
 						}
 
 					}
@@ -239,6 +233,22 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 
 		}
 
+	}
+
+	private void startSelectSubCategoryActivity(final String categoryId){
+		final Intent intent = new Intent(mContext, SelectSubCategoryActivity.class);
+		intent.putExtra("categoryId", categoryId);
+		startActivity(intent);
+		finish();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+	}
+
+	private void startSelectMediaTypeActivity(final String categoryId){
+		final Intent intent = new Intent(mContext, SelectMediaTypeActivity.class);
+		intent.putExtra("categoryId", categoryId);
+		startActivity(intent);
+		finish();
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 	}
 
 	private void getCategoryRequest(){

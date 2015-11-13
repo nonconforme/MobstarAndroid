@@ -807,8 +807,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 		Log.d("mobstar", "OnPause Called");
 	}
 
-
-
-
-
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (homeFragment != null)
+			homeFragment.onActivityResult(requestCode, resultCode, data);
+	}
 }
