@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.SurfaceTexture;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -44,7 +43,6 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 /**
  * Created by lipcha on 14.09.15.
@@ -89,6 +87,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private LinearLayout llItemUser;
     protected boolean isRemoveItemAfterVotingNo = true;
     private boolean isEnableSwipeAction = true;
+    private long previousTime = 0;
 
     public EntryItem(View itemView, boolean isEnableSwipe) {
         super(itemView);
@@ -540,6 +539,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void startYouTubePlayerActivity(){
+        if (previousTime + 500 > System.currentTimeMillis()){
+            previousTime = System.currentTimeMillis();
+            return;
+        }
+        previousTime = System.currentTimeMillis();
         final Intent intent = new Intent(baseActivity, YouTubePlayerActivity.class);
         intent.putExtra(YouTubePlayerActivity.ENTRY_POJO, entryPojo);
         intent.putExtra(YouTubePlayerActivity.ENTRY_POSITION, getPos());
