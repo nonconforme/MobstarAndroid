@@ -4,7 +4,7 @@ package com.mobstar.utils;
 public class Constant {
 
 
-    public static final boolean IS_RELEASE = true;
+    public static final boolean IS_RELEASE = false;
 
 	public static final String APP_NAME = "Mobstar";
     //	public static String SENDER_ID = "397816546137";

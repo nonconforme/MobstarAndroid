@@ -1,5 +1,7 @@
 package com.mobstar.api.responce;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +24,10 @@ public abstract class BaseResponse {
 
     public boolean hasError(){
         return !error.isEmpty();
+    }
+
+    protected Gson getGson(){
+        return new Gson();
     }
 
 }
