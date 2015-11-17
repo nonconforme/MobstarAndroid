@@ -159,7 +159,7 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
 			}
 
 			// Create an instance of Camera
-			mCamera = CameraUtility.getCameraInstance(currentCameraId);
+			mCamera = CameraUtility.getVideoCameraInstance(currentCameraId);
 
 			// Create our Preview view and set it as the content of our
 			// activity.
@@ -237,7 +237,7 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
 			// Create an instance of Camera
 
 
-			mCamera = CameraUtility.getCameraInstance(currentCameraId);
+			mCamera = CameraUtility.getVideoCameraInstance(currentCameraId);
 
 			mPreview.setCamera(mCamera);
 

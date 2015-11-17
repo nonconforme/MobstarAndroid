@@ -21,7 +21,7 @@ public class CameraUtility {
     public static final int ORIENTATION_LEFT = 3;
     public static final int ORIENTATION_DOWN = 4;
 
-    public static Camera getCameraInstance(int currentCameraId) {
+    public static Camera getVideoCameraInstance(int currentCameraId) {
         Camera c = null;
         try {
             c = Camera.open(currentCameraId); // attempt to get a Camera
@@ -42,6 +42,20 @@ public class CameraUtility {
         } catch (Exception e) {
             // Camera is not available (in use or does not exist)
             e.printStackTrace();
+        }
+        return c; // returns null if camera is unavailable
+    }
+
+    public static Camera getPhotoCameraInstance(int currentCameraId){
+        Camera c = null;
+        try {
+            c = Camera.open(currentCameraId); // attempt to get a Camera
+            Camera.Parameters params = c.getParameters();
+            params.set("orientation", "portrait");
+            params.setRotation(90);
+            c.setParameters(params); // instance
+        } catch (Exception e) {
+            // Camera is not available (in use or does not exist)
         }
         return c; // returns null if camera is unavailable
     }
@@ -81,6 +95,25 @@ public class CameraUtility {
                     break;
             }
         }
+        return (result);
+    }
+
+    public static Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {
+        Camera.Size result = null;
+        for (Camera.Size size : sizes) {
+            if (size.width <= width || size.height <= height) {
+                if (result == null) {
+                    result = size;
+                } else {
+                    int resultArea = result.width * result.height;
+                    int newArea = size.width * size.height;
+                    if (newArea > resultArea) {
+                        result = size;
+                    }
+                }
+            }
+        }
+
         return (result);
     }
 

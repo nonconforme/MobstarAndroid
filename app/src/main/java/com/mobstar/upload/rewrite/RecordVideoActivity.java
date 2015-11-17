@@ -43,16 +43,14 @@ import java.util.List;
 /**
  * Created by Alexandr on 22.10.2015.
  */
-public class RecordVideoActivity extends Activity implements SensorEventListener {
+public class RecordVideoActivity extends Activity implements SensorEventListener, View.OnClickListener {
 
     public static final int C_MAX_RECORD_DURATION_IN_MS = 30099;
     public static final long C_MAX_FILE_SIZE_IN_BYTES = 8000000;
     public static final long C_MAX_FILE_SIZE_IN_BYTES_PROFILE = 52428800; //50MB
     private static final String LOG_TAG = RecordVideoActivity.class.getName();
 
-    private Context mContext;
     private Camera mCamera;
-//    private CameraPreview mPreview;
     private TextView tvFlash;
     private LinearLayout btnFlash;
     private ImageView btnRecord, ivFlash, btnChangeCamera;
@@ -68,10 +66,6 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
     private String sFilepath;
     private int desiredwidth = 480;
     private int desiredheight = 720;
-    private List<Camera.Size> videosizes;
-    private final int cMaxRecordDurationInMs = 30099;
-    private final long cMaxFileSizeInBytes = 8000000;
-    private final long cMaxFileSizeInBytesProfile = 52428800; //50MB
     private String categoryId,subCat;
     private SensorManager mSensorManager;
     private Sensor accelerometer;
@@ -95,9 +89,11 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
         lp.screenBrightness = 1.0f;
         this.getWindow().setAttributes(lp);
         setContentView(R.layout.activity_record_video);
-        mContext = RecordVideoActivity.this;
         getArgs();
+        findViews();
+        setListeners();
         initControls();
+        verifyFrontCamera();
         Utility.SendDataToGA("RecordVideo Screen", RecordVideoActivity.this);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -134,31 +130,20 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
 
     private void initControls() {
 
-        layoutCameraOption = (LinearLayout) findViewById(R.id.layoutCameraOption);
         layoutCameraOption.setVisibility(View.VISIBLE);
-
-        textRecordSecond = (TextView) findViewById(R.id.textRecordSecond);
         textRecordSecond.setVisibility(View.GONE);
-        flCameraPreviewContaner = (FrameLayout) findViewById(R.id.camera_preview);
-
         textRecordSecond.setText(currentCount + "");
-
         recordTimer = new CountDownTimer(19000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
 
-                // Log.v(Constant.TAG, "currentCount " + currentCount);
-
                 if (currentCount == 1) {
-
                     currentCount = 0;
-
                     mCameraPreview.stopRecord();
                     textRecordSecond.setText("0");
 
                 } else if ((millisUntilFinished / 1000) != 18) {
-
                     if (currentCount != 0) {
                         currentCount--;
                         textRecordSecond.setText(currentCount + "");
@@ -171,90 +156,76 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
 
             }
         };
+    }
+
+    private void findViews(){
+        flCameraPreviewContaner = (FrameLayout) findViewById(R.id.camera_preview);
+        textRecordSecond        = (TextView) findViewById(R.id.textRecordSecond);
+        layoutCameraOption      = (LinearLayout) findViewById(R.id.layoutCameraOption);
+        btnRecord               = (ImageView) findViewById(R.id.btnRecord);
+        btnChangeCamera         = (ImageView) findViewById(R.id.btnChangeCamera);
+        tvFlash                 = (TextView) findViewById(R.id.tvFlash);
+        btnFlash                = (LinearLayout) findViewById(R.id.btnFlash);
+        ivFlash                 = (ImageView) findViewById(R.id.ivFlash);
+    }
+
+    private void setListeners(){
+        btnRecord.setOnClickListener(this);
+        btnChangeCamera.setOnClickListener(this);
+        btnFlash.setOnClickListener(this);
+    }
 
 
-        btnRecord = (ImageView) findViewById(R.id.btnRecord);
-        btnRecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (isRecording && startRecordTime + 2000 > System.currentTimeMillis())
-                    return;
-                if (isRecording)
-                    mCameraPreview.stopRecord();
-                else {
-                    if (!isPrepareRecord)
-                        if(mGravity != null && mGeomagnetic != null) {
-                            float angle = getDirection();
-                            Log.d(LOG_TAG, angle + "");
-                            mOrientetionCamera = CameraUtility.getOrientation(angle);
-                            mCameraPreview.setOrientation(mOrientetionCamera);
-                        }
-                    startRecordTime = System.currentTimeMillis();
-                    mCameraPreview.startRecord();
-                }
-
-            }
-        });
-
-        btnChangeCamera = (ImageView) findViewById(R.id.btnChangeCamera);
-        btnChangeCamera.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnRecord:
+                startRecord();
+                break;
+            case R.id.btnChangeCamera:
                 if (isFrontCameraAvailable) {
                     onCameraChange();
                 }
-            }
-        });
-        tvFlash = (TextView) findViewById(R.id.tvFlash);
-        btnFlash = (LinearLayout) findViewById(R.id.btnFlash);
-        ivFlash = (ImageView) findViewById(R.id.ivFlash);
-        btnFlash.setOnClickListener(new View.OnClickListener() {
+                break;
+            case R.id.btnFlash:
+                startFlash();
+                break;
+        }
+    }
 
-            @Override
-            public void onClick(View v) {
-
-                if (!isFlashOn && currentCameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-
-                } else {
-                    if (isFlashOn) {
-                        isFlashOn = false;
-                        tvFlash.setText(getString(R.string.off));
-
-                    } else {
-                        isFlashOn = true;
-                        tvFlash.setText(getString(R.string.on));
-                    }
-
-                    mCameraPreview.onOffFlash(isFlashOn);
+    private void startRecord(){
+        if (isRecording && startRecordTime + 2000 > System.currentTimeMillis())
+            return;
+        if (isRecording)
+            mCameraPreview.stopRecord();
+        else {
+            if (!isPrepareRecord)
+                if(mGravity != null && mGeomagnetic != null) {
+                    float angle = getDirection();
+                    Log.d(LOG_TAG, angle + "");
+                    mOrientetionCamera = CameraUtility.getOrientation(angle);
+                    mCameraPreview.setOrientation(mOrientetionCamera);
                 }
+            startRecordTime = System.currentTimeMillis();
+            mCameraPreview.startRecord();
+        }
+    }
 
+    private void startFlash(){
+        if (!isFlashOn && currentCameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+
+        } else {
+            if (isFlashOn) {
+                isFlashOn = false;
+                tvFlash.setText(getString(R.string.off));
+
+            } else {
+                isFlashOn = true;
+                tvFlash.setText(getString(R.string.on));
             }
-        });
-//        if (CameraUtility.checkCameraHardware(mContext)) {
-//
-//            Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-//            for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
-//                Camera.getCameraInfo(i, cameraInfo);
-//                if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-//                    isFrontCameraAvailable = true;
-//                }
-//            }
-//
-//            if (isFrontCameraAvailable) {
-//                currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
-//            }
-//
-//            // Create an instance of Camera
-//            mCamera = CameraUtility.getCameraInstance(currentCameraId);
-//
-//            // Create our Preview view and set it as the content of our
-//            // activity.
-//            mPreview = new CameraPreview(this);
-//            mPreview.setCamera(mCamera);
-//
-//        }
+
+            mCameraPreview.onOffFlash(isFlashOn);
+        }
     }
 
     private void initializeCameraPostDelay(){
@@ -266,6 +237,7 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
             }
         }, 50);
     }
+
     private void enableRecordButtonPostDelay(){
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -277,15 +249,8 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
 
     }
 
-    private void initializeCamera() {
-        if (flCameraPreviewContaner.getMeasuredHeight() == 0) {
-            initializeCameraPostDelay();
-            return;
-        }
-
-
-        if (CameraUtility.checkCameraHardware(mContext)) {
-
+    private void verifyFrontCamera(){
+        if (CameraUtility.checkCameraHardware(this)){
             final Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
             for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
                 Camera.getCameraInfo(i, cameraInfo);
@@ -294,59 +259,62 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
                 }
             }
 
-            if (isFrontCameraAvailable) {
+            if (isFrontCameraAvailable ) {
                 currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
             }
+        }
+    }
 
-            // Create an instance of Camera
-            mCamera = CameraUtility.getCameraInstance(currentCameraId);
-            supportedVideoSizes = mCamera.getParameters().getSupportedVideoSizes();
-            // Create our Preview view and set it as the content of our
-            // activity.
-            mCameraPreview = new CameraPreview(mContext);
-            mCameraPreview.setCamera(mCamera);
-//            flCameraPreviewContaner.removeAllViews();
-            final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.CENTER;
-            mCameraPreview.setLayoutParams(layoutParams);
-
-            flCameraPreviewContaner.addView(mCameraPreview);
-//            setPreviewSize();
+    private void initializeCamera() {
+        if (flCameraPreviewContaner.getMeasuredHeight() == 0) {
+            initializeCameraPostDelay();
+            return;
+        }
+        if (CameraUtility.checkCameraHardware(this)) {
+            mCamera = CameraUtility.getVideoCameraInstance(currentCameraId);
+            prepareCameraPreview();
+            setPreviewSize();
             btnRecord.setEnabled(true);
         }
     }
 
-    private void onCameraChange() {
-        try {
-            mCamera.stopPreview();
-            mCamera.release(); // release the camera for other
-            // applications
+    private void prepareCameraPreview(){
+        mCameraPreview = new CameraPreview(this);
+        mCameraPreview.setCamera(mCamera);
+        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.CENTER;
+        mCameraPreview.setLayoutParams(layoutParams);
+        flCameraPreviewContaner.addView(mCameraPreview);
+    }
 
-
-            // swap the id of the camera to be used
-            if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
-            } else {
-                currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
-            }
-
-            // Create an instance of Camera
-
-
-            mCamera = CameraUtility.getCameraInstance(currentCameraId);
-
-            mCameraPreview.setCamera(mCamera);
-
-            mCamera.setPreviewDisplay(mCameraPreview.mHolder);
-            mCamera.startPreview();
-            CameraUtility.setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            // ignore: tried to stop a non-existent preview
+    private void setPreviewSize() {
+        int width = flCameraPreviewContaner.getMeasuredWidth();
+        int height = flCameraPreviewContaner.getMeasuredHeight();
+        supportedVideoSizes = mCamera.getParameters().getSupportedVideoSizes();
+        optimalVideoSize = CameraUtility.getOptimalPreviewSize(supportedVideoSizes, width, height);
+        int previewWidth = width;
+        int previewHeight = height;
+        if (height / width !=  optimalVideoSize.height / optimalVideoSize.width) {
+            if (height / width < optimalVideoSize.height / optimalVideoSize.width)
+                previewWidth = (optimalVideoSize.height * height) / optimalVideoSize.width;
+            else previewHeight = (optimalVideoSize.width * width) / optimalVideoSize.height;
         }
+
+        mCameraPreview.getLayoutParams().height = previewHeight;
+        mCameraPreview.getLayoutParams().width = previewWidth;
+
+    }
+
+    private void onCameraChange() {
+        flCameraPreviewContaner.removeView(mCameraPreview);
+        mCameraPreview.getmHolder().removeCallback(mCameraPreview);
+        CameraUtility.releaseCamera(mCamera);
+        if (currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        } else {
+            currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+        }
+        initializeCamera();
     }
 
 
@@ -448,29 +416,8 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
             // Step 2: Set sources
             mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-//            if (supportedVideoSizes != null) {
-//                Log.d("tagSize", "setRecordSize = " + "width = " + optimalVideoSize.width + " height = " + optimalVideoSize.height);
-////                calculateCropRect(optimalVideoSize);
-//            }
             mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
-//
-//            mMediaRecorder.setVideoSize(optimalVideoSize.width,
-//                    optimalVideoSize.height);
 
-
-
-            // // Step 3: Set a CamcorderProfile (requires API Level 8 or
-//            // higher)
-//            final CamcorderProfile profile = CamcorderProfile.get(currentCameraId, CamcorderProfile.QUALITY_HIGH);
-//            if (supportedVideoSizes != null) {
-//                optimalVideoSize = getOptimalPreviewSize(supportedVideoSizes, desiredheight, desiredwidth);
-//                profile.videoFrameWidth = optimalVideoSize.width;
-//                profile.videoFrameHeight = optimalVideoSize.height;
-//            }
-//            mMediaRecorder.setProfile(profile);
-
-            // Log.v(Constant.TAG, "optimalVideoSize width " +
-            // optimalVideoSize.width + " height " + optimalVideoSize.height);
              mMediaRecorder.setVideoSize(optimalVideoSize.width,
              optimalVideoSize.height);
 
@@ -486,7 +433,7 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
 
             mMediaRecorder.setVideoFrameRate(30);
 
-            sFilepath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO,mContext).toString();
+            sFilepath = Utility.getOutputMediaFile(Utility.MEDIA_TYPE_VIDEO, RecordVideoActivity.this).toString();
 
             // Step 4: Set output file
             mMediaRecorder.setOutputFile(sFilepath);
@@ -604,7 +551,7 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
             try {
                 mCamera.setPreviewDisplay(holder);
                 mCamera.startPreview();
-                CameraUtility.setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
+                CameraUtility.setCameraDisplayOrientation((Activity) RecordVideoActivity.this, currentCameraId, mCamera);
             } catch (Exception e) {
                 //				Log.d(Constant.TAG, "Error setting camera preview: " + e.getMessage());
             }
@@ -626,7 +573,7 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
             desiredwidth = width;
             desiredheight = height;
             if (supportedVideoSizes != null) {
-                optimalVideoSize = getOptimalPreviewSize(supportedVideoSizes, desiredheight, desiredwidth);
+                optimalVideoSize = CameraUtility.getOptimalPreviewSize(supportedVideoSizes, desiredwidth, desiredheight);
             }
 
             // stop preview before making changes
@@ -634,14 +581,13 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
                 if (mCamera != null) {
                     mCamera.stopPreview();
 
-                    if (optimalVideoSize!=null) {
+                    if (optimalVideoSize != null) {
                         Camera.Parameters parameters = mCamera.getParameters();
                         parameters.setPreviewSize(optimalVideoSize.width, optimalVideoSize.height);
                         mCamera.setParameters(parameters);
                     }
-                    CameraUtility.setCameraDisplayOrientation((Activity) mContext, currentCameraId, mCamera);
 
-
+                    CameraUtility.setCameraDisplayOrientation( RecordVideoActivity.this, currentCameraId, mCamera);
                     mCamera.startPreview();
                 }
 
@@ -695,7 +641,7 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
                 if (mOrientetionCamera == CameraUtility.ORIENTATION_RIGHT) {
                     Utility.removeFile(sFilepath);
                     sFilepath = _fileOutPath;
-                    final File file = Utility.getTemporaryMediaFile(mContext, "cropNewVideo2");
+                    final File file = Utility.getTemporaryMediaFile(RecordVideoActivity.this, "cropNewVideo2");
                     if (file == null)
                         return;
                     final String fileOutPath = file.toString();
@@ -739,7 +685,7 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
     }
 
     private void startApproveVideoActivity(){
-        final Intent intent = new Intent(mContext, ApproveVideoActivity.class);
+        final Intent intent = new Intent(this, ApproveVideoActivity.class);
         intent.putExtra("video_path", sFilepath);
         intent.putExtra("categoryId", categoryId);
         if(subCat != null && subCat.length() > 0){
@@ -748,24 +694,5 @@ public class RecordVideoActivity extends Activity implements SensorEventListener
         startActivity(intent);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-    }
-
-    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int height) {
-        Camera.Size result = null;
-        for (Camera.Size size : sizes) {
-
-            if (size.width <= width && size.height <= height) {
-                if (result == null) {
-                    result = size;
-                } else {
-                    int resultArea = result.width * result.height;
-                    int newArea = size.width * size.height;
-                    if (newArea > resultArea) {
-                        result = size;
-                    }
-                }
-            }
-        }
-        return (result);
     }
 }

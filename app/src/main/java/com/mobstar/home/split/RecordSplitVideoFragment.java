@@ -187,7 +187,7 @@ public class RecordSplitVideoFragment extends Fragment implements HeadsetPlugRec
             }
 
             // Create an instance of Camera
-            mCamera = CameraUtility.getCameraInstance(currentCameraId);
+            mCamera = CameraUtility.getVideoCameraInstance(currentCameraId);
             supportedVideoSizes = mCamera.getParameters().getSupportedVideoSizes();
             // Create our Preview view and set it as the content of our
             // activity.
