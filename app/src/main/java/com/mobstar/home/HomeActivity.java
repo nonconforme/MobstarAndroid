@@ -41,6 +41,7 @@ import com.mobstar.home.notification.NotificationsFragment;
 import com.mobstar.home.search.SearchFragment;
 import com.mobstar.inbox.InboxFragment;
 import com.mobstar.login.LoginSocialActivity;
+import com.mobstar.login.facebook.FacebookManager;
 import com.mobstar.service.NotificationService;
 import com.mobstar.settings.SettingsFragment;
 import com.mobstar.talentconnect.TalentConnectHomeFragment;
@@ -513,6 +514,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Drawe
 		} else if (llLogout.equals(view)) {
 			if (Utility.isNetworkAvailable(mContext)) {
 				new LogoutCall(Utility.getRegistrationId(mContext)).start();
+				FacebookManager.facebookLogOut(HomeActivity.this);
 			}
 			
 			SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);

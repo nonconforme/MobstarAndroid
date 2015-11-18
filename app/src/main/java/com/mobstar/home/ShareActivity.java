@@ -16,17 +16,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookRequestError;
-import com.facebook.LoggingBehavior;
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.Settings;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.share.Sharer;
 import com.google.android.gms.plus.PlusShare;
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.custom.RoundedTransformation;
+import com.mobstar.login.facebook.FacebookManager;
+import com.mobstar.login.facebook.FacebookResponse;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.twitter.ImageTwitter;
 import com.mobstar.twitter.ImageTwitter.OnCompleteListener;
@@ -35,21 +33,17 @@ import com.mobstar.utils.ImageDownloader.ImageLoaderListener;
 import com.mobstar.utils.Utility;
 import com.rosaloves.bitlyj.Url;
 import com.squareup.picasso.Picasso;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-
 import static com.rosaloves.bitlyj.Bitly.as;
 import static com.rosaloves.bitlyj.Bitly.shorten;
-public class ShareActivity extends Activity implements OnClickListener {
 
-	private Context mContext;
+public class ShareActivity extends Activity implements OnClickListener, FacebookManager.OnFacebookSignInCompletedListener, FacebookCallback<Sharer.Result> {
+
 	private EntryPojo entryPojo;
 	private TextView textUserName, textTime, textDescription;
 	private ImageView imgUserPic;
@@ -60,30 +54,32 @@ public class ShareActivity extends Activity implements OnClickListener {
 	private ImageDownloader mDownloader;
 	private static Bitmap bitmap;
 	private FileOutputStream fos;
-
-	private String ShareText;
+	private String shareText;
 	private String ShortURL="";
-	private String TwitterShareText;
-	private Session.StatusCallback statusCallback = new SessionStatusCallback();
-	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private String twitterShareText;
 	private boolean isTalent=false;
 	private String UserName,UserImg;
 
+    private FacebookManager facebook;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
+        facebook = new FacebookManager(getApplicationContext(), this, this);
         setContentView(R.layout.activity_share);
-        ShareText = getResources().getString(R.string.share_text) + " ";
-        TwitterShareText = getResources().getString(R.string.twitter_share_text) + " ";
+        prepareShareText();
+        getBundleExtra();
+        initControls();
+        Utility.SendDataToGA("Share Screen", ShareActivity.this);
+    }
 
-        // StrictMode.ThreadPolicy policy = new
-        // StrictMode.ThreadPolicy.Builder().permitAll().build();
-        // StrictMode.setThreadPolicy(policy);
+    private void prepareShareText(){
+        shareText = getResources().getString(R.string.share_text) + " ";
+        twitterShareText = getResources().getString(R.string.twitter_share_text) + " ";
+    }
 
-        mContext = ShareActivity.this;
-
-        Bundle bundle = getIntent().getExtras();
+    private void getBundleExtra(){
+        final Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             isTalent = bundle.getBoolean("isTalent");
             if (isTalent) {
@@ -96,10 +92,10 @@ public class ShareActivity extends Activity implements OnClickListener {
                         public void onImageDownloaded(Bitmap bmp) {
                             bitmap = bmp;
 
-                            if (Utility.isNetworkAvailable(mContext)) {
+                            if (Utility.isNetworkAvailable(ShareActivity.this)) {
                                 pngUri = saveImageToSD();
                             } else {
-                                Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ShareActivity.this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
                             }
 
                         }
@@ -113,40 +109,18 @@ public class ShareActivity extends Activity implements OnClickListener {
                 entryPojo = (EntryPojo) getIntent().getSerializableExtra("entry");
             }
         }
-
-
-        Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
-
-        Session session = Session.getActiveSession();
-
-        if (session == null) {
-            if (savedInstanceState != null) {
-                session = Session.restoreSession(mContext, null, statusCallback, savedInstanceState);
-            }
-            if (session == null) {
-                session = new Session(mContext);
-            }
-            Session.setActiveSession(session);
-        }
-
-        InitControls();
-
-        Utility.SendDataToGA("Share Screen", ShareActivity.this);
     }
 
-    void InitControls() {
 
-		btnClose = (ImageButton) findViewById(R.id.btnClose);
-		btnClose.setOnClickListener(this);
+    private void initControls() {
+        findViews();
+        setListeners();
+        initializeViews();
+    }
 
-		textUserName = (TextView) findViewById(R.id.textUserName);
-		textTime = (TextView) findViewById(R.id.textTime);
-		textDescription = (TextView) findViewById(R.id.textDescription);
-
-        //		ShareText += "\n" + "http://www.mobstar.com/android";
-
+    private void initializeViews(){
         if (!isTalent) {
-            Utility.ShowProgressDialog(mContext, getString(R.string.generating_shorten_link));
+            Utility.ShowProgressDialog(this, getString(R.string.generating_shorten_link));
 
             new Thread(new Runnable() {
 
@@ -154,23 +128,13 @@ public class ShareActivity extends Activity implements OnClickListener {
                 public void run() {
                     // TODO Auto-generated method stub
                     Url url = null;
-                    //		 if (entryPojo.getType().equals("image")) {
-                    //		 url = as("niravspaceo",
-                    //		 "R_5e9eb981a6e34baea49713adbff50779").call(shorten(entryPojo.getImageLink()));
-                    //		 } else if (entryPojo.getType().equals("audio")) {
-                    //		 url = as("niravspaceo",
-                    //		 "R_5e9eb981a6e34baea49713adbff50779").call(shorten(entryPojo.getAudioLink()));
-                    //		 } else if (entryPojo.getType().equals("video")) {
-
-                    //		 http://dev.spaceotechnologies.com/projects/redirect/iphone/
-                    //		 http://www.mobstar.com/android
                     url = as("niravspaceo",
                             "R_5e9eb981a6e34baea49713adbff50779").call(shorten("http://share.mobstar.com/info.php?id=" + entryPojo.getID()));
                     //		 }
 
                     ShortURL = url.getShortUrl();
-                    ShareText = ShareText + ShortURL;
-                    Utility.HideDialog(mContext);
+                    shareText = shareText + ShortURL;
+                    Utility.HideDialog(ShareActivity.this);
                 }
             }).start();
 
@@ -185,149 +149,37 @@ public class ShareActivity extends Activity implements OnClickListener {
             } else {
                 imgUserPic.setImageResource(R.drawable.ic_pic_small);
 
-                Picasso.with(mContext).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop().placeholder(R.drawable.ic_pic_small)
-                        .error(R.drawable.ic_pic_small).transform(new RoundedTransformation(Utility.dpToPx(mContext, 45), 0)).into(imgUserPic);
+                Picasso.with(this).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(this, 45), Utility.dpToPx(this, 45)).centerCrop().placeholder(R.drawable.ic_pic_small)
+                        .error(R.drawable.ic_pic_small).transform(new RoundedTransformation(Utility.dpToPx(this, 45), 0)).into(imgUserPic);
 
             }
         } else {
             ShortURL = UserName;
-            ShareText = "#mobstar " + UserName;
+            shareText = "#mobstar " + UserName;
             textUserName.setText(UserName);
             textTime.setVisibility(View.GONE);
             textDescription.setVisibility(View.GONE);
         }
 
+    }
 
+    private void findViews(){
+        btnClose = (ImageButton) findViewById(R.id.btnClose);
+        textUserName = (TextView) findViewById(R.id.textUserName);
+        textTime = (TextView) findViewById(R.id.textTime);
+        textDescription = (TextView) findViewById(R.id.textDescription);
         btnTweet = (TextView) findViewById(R.id.btnTweet);
-        btnTweet.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                TwitterShareText = TwitterShareText + ShortURL;
-                if (isTalent && picFile != null) {
-
-                    Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-
-                    boolean authOnly = false;
-                    ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly, TwitterShareText, picFile);
-                    mTweet.setOnCompleteListener(new OnCompleteListener() {
-
-                        @Override
-                        public void onComplete(final String action) {
-
-                            if (action.equals("Success")) {
-
-                                Utility.HideDialog(mContext);
-                                AdWordsManager.getInstance().sendSharedEntryEvent();
-
-                            } else {
-                                Utility.HideDialog(mContext);
-                            }
-
-                        }
-                    });
-                    mTweet.send();
-                } else {
-                    Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-
-                    boolean authOnly = false;
-                    ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly, TwitterShareText, null);
-                    mTweet.setOnCompleteListener(new OnCompleteListener() {
-
-                        @Override
-                        public void onComplete(final String action) {
-                            // TODO Auto-generated method stub
-
-                            if (action.equals("Success")) {
-
-                                Utility.HideDialog(mContext);
-                                AdWordsManager.getInstance().sendSharedEntryEvent();
-
-                            } else {
-                                Utility.HideDialog(mContext);
-                            }
-
-                        }
-                    });
-                    mTweet.send();
-                }
-
-            }
-        });
-
         btnSendToFriend = (TextView) findViewById(R.id.btnSendToFriend);
-        btnSendToFriend.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (isTalent) {
-                    Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("message/rfc822");
-                    i.putExtra(Intent.EXTRA_SUBJECT, "Mobstar");
-                    i.putExtra(Intent.EXTRA_TEXT, ShareText);
-                    if (pngUri != null) {
-                        i.putExtra(Intent.EXTRA_STREAM, pngUri);
-                    }
-                    try {
-                        startActivity(Intent.createChooser(i, "Send mail..."));
-                        AdWordsManager.getInstance().sendSharedEntryEvent();
-                    } catch (android.content.ActivityNotFoundException ex) {
-                        Toast.makeText(ShareActivity.this, getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Intent i = new Intent(Intent.ACTION_SEND);
-                    i.setType("message/rfc822");
-                    i.putExtra(Intent.EXTRA_SUBJECT, "Mobstar");
-                    i.putExtra(Intent.EXTRA_TEXT, ShareText);
-                    try {
-                        startActivity(Intent.createChooser(i, "Send mail..."));
-                        AdWordsManager.getInstance().sendSharedEntryEvent();
-                    } catch (android.content.ActivityNotFoundException ex) {
-                        Toast.makeText(ShareActivity.this, getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-            }
-        });
-
         btnAddToGPlus = (TextView) findViewById(R.id.btnAddToGPlus);
-        btnAddToGPlus.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (isTalent && pngUri != null) {
-                    Intent shareIntent = ShareCompat.IntentBuilder.from(ShareActivity.this)
-                            .setText(ShareText)
-                            .setType("image/jpeg")
-                            .setStream(pngUri)
-                            .getIntent()
-                            .setPackage("com.google.android.apps.plus");
-                    startActivityForResult(shareIntent, 0);
-                    AdWordsManager.getInstance().sendSharedEntryEvent();
-                } else {
-                    Intent shareIntent = new PlusShare.Builder(ShareActivity.this).setType("text/plain")
-                            .setText(ShareText + "\n#mobstar").getIntent();
-                    startActivityForResult(shareIntent, 0);
-                    AdWordsManager.getInstance().sendSharedEntryEvent();
-                }
-
-
-            }
-        });
-
         btnFBPost = (TextView) findViewById(R.id.btnFBPost);
-        btnFBPost.setOnClickListener(new OnClickListener() {
+    }
 
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Utility.ShowProgressDialog(mContext, getString(R.string.uploading_your_post) + "...");
-                onClickLogin();
-            }
-        });
+    private void setListeners(){
+        btnClose.setOnClickListener(this);
+        btnTweet.setOnClickListener(this);
+        btnSendToFriend.setOnClickListener(this);
+        btnAddToGPlus.setOnClickListener(this);
+        btnFBPost.setOnClickListener(this);
     }
 
     @Override
@@ -336,109 +188,173 @@ public class ShareActivity extends Activity implements OnClickListener {
             case R.id.btnClose:
                 onBackPressed();
                 break;
+            case R.id.btnTweet:
+                postToTitter();
+                break;
+            case R.id.btnSendToFriend:
+                sendToFriends();
+                break;
+            case R.id.btnAddToGPlus:
+                addToGplus();
+                break;
+            case R.id.btnFBPost:
+                postToFacebook();
+                break;
         }
     }
 
-    private void onClickLogin() {
-        Session session = Session.getActiveSession();
-        if (!session.isOpened() && !session.isClosed()) {
-            session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
-        } else {
-            Session.openActiveSession(this, true, statusCallback);
-        }
-    }
+    private void postToTitter(){
+        twitterShareText = twitterShareText + ShortURL;
+        if (isTalent && picFile != null) {
 
-    private class SessionStatusCallback implements Session.StatusCallback {
-        @Override
-        public void call(Session session, SessionState state, Exception exception) {
+            Utility.ShowProgressDialog(this, getString(R.string.loading));
 
-            if (exception != null) {
+            boolean authOnly = false;
+            ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly, twitterShareText, picFile);
+            mTweet.setOnCompleteListener(new OnCompleteListener() {
 
-                exception.printStackTrace();
-                new AlertDialog.Builder(mContext).setTitle(R.string.app_name).setMessage(exception.getMessage()).setPositiveButton("OK", null).show();
+                @Override
+                public void onComplete(final String action) {
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Utility.HideDialog(mContext);
-                        return;
-                    }
-                });
-            } else {
+                    if (action.equals("Success")) {
 
-                if (session.isOpened()) {
+                        Utility.HideDialog(ShareActivity.this);
+                        AdWordsManager.getInstance().sendSharedEntryEvent();
 
-                    List<String> permissions = session.getPermissions();
-                    if (!isSubsetOf(PERMISSIONS, permissions)) {
-
-                        Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest((Activity) mContext, PERMISSIONS);
-                        session.requestNewPublishPermissions(newPermissionsRequest);
-                        return;
+                    } else {
+                        Utility.HideDialog(ShareActivity.this);
                     }
 
-                    if (session.getPermissions().contains("publish_actions")) {
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                Bitmap bitmap = null;
-                                if (isTalent) {
-                                    bitmap = Utility.getBitmapFromURL(UserImg);
-                                } else {
-                                    if (entryPojo.getType().equalsIgnoreCase("image")) {
-                                        bitmap = Utility.getBitmapFromURL(entryPojo.getImageLink());
-                                    } else if (entryPojo.getType().equalsIgnoreCase("audio")) {
-                                        bitmap = Utility.getBitmapFromURL(entryPojo.getImageLink());
-                                    } else if (entryPojo.getType().equalsIgnoreCase("video")) {
-                                        bitmap = Utility.getBitmapFromURL(entryPojo.getVideoThumb());
-                                    }
-                                }
-
-                                if (bitmap != null) {
-                                    Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
-
-                                        @Override
-                                        public void onCompleted(final Response response) {
-                                            runOnUiThread(new Runnable() {
-
-                                                @Override
-                                                public void run() {
-                                                    Utility.HideDialog(mContext);
-                                                }
-                                            });
-
-                                            FacebookRequestError error = response.getError();
-                                            if (error != null) {
-
-                                                new AlertDialog.Builder(mContext).setTitle(R.string.app_name).setMessage(error.getErrorMessage()).setPositiveButton("OK", null).show();
-                                            } else {
-
-                                                new AlertDialog.Builder(mContext).setTitle(R.string.app_name)
-                                                        .setMessage(getString(R.string.post_successfully_shared_on_your_wall)).setPositiveButton("OK", null).show();
-                                                AdWordsManager.getInstance().sendSharedEntryEvent();
-                                            }
-
-                                        }
-                                    });
-                                    Bundle parameters = request.getParameters(); // <-- THIS IS IMPORTANT
-                                    parameters.putString("name", ShareText);//also try key message
-                                    request.setParameters(parameters);
-
-                                    request.executeAsync();
-                                }
-                            }
-                        });
-
-                    }
                 }
-            }
+            });
+            mTweet.send();
+        } else {
+            Utility.ShowProgressDialog(this, getString(R.string.loading));
+
+            boolean authOnly = false;
+            ImageTwitter mTweet = new ImageTwitter(ShareActivity.this, authOnly, twitterShareText, null);
+            mTweet.setOnCompleteListener(new OnCompleteListener() {
+
+                @Override
+                public void onComplete(final String action) {
+                    // TODO Auto-generated method stub
+
+                    if (action.equals("Success")) {
+
+                        Utility.HideDialog(ShareActivity.this);
+                        AdWordsManager.getInstance().sendSharedEntryEvent();
+
+                    } else {
+                        Utility.HideDialog(ShareActivity.this);
+                    }
+
+                }
+            });
+            mTweet.send();
         }
+    }
+
+    private void sendToFriends(){
+        if (isTalent) {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("message/rfc822");
+            i.putExtra(Intent.EXTRA_SUBJECT, "Mobstar");
+            i.putExtra(Intent.EXTRA_TEXT, shareText);
+            if (pngUri != null) {
+                i.putExtra(Intent.EXTRA_STREAM, pngUri);
+            }
+            try {
+                startActivity(Intent.createChooser(i, "Send mail..."));
+                AdWordsManager.getInstance().sendSharedEntryEvent();
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(ShareActivity.this, getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("message/rfc822");
+            i.putExtra(Intent.EXTRA_SUBJECT, "Mobstar");
+            i.putExtra(Intent.EXTRA_TEXT, shareText);
+            try {
+                startActivity(Intent.createChooser(i, "Send mail..."));
+                AdWordsManager.getInstance().sendSharedEntryEvent();
+            } catch (android.content.ActivityNotFoundException ex) {
+                Toast.makeText(ShareActivity.this, getString(R.string.there_are_no_email_clients_installed), Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+    private void addToGplus(){
+        if (isTalent && pngUri != null) {
+            Intent shareIntent = ShareCompat.IntentBuilder.from(ShareActivity.this)
+                    .setText(shareText)
+                    .setType("image/jpeg")
+                    .setStream(pngUri)
+                    .getIntent()
+                    .setPackage("com.google.android.apps.plus");
+            startActivityForResult(shareIntent, 0);
+            AdWordsManager.getInstance().sendSharedEntryEvent();
+        } else {
+            Intent shareIntent = new PlusShare.Builder(ShareActivity.this).setType("text/plain")
+                    .setText(shareText + "\n#mobstar").getIntent();
+            startActivityForResult(shareIntent, 0);
+            AdWordsManager.getInstance().sendSharedEntryEvent();
+        }
+
+    }
+
+    private void postToFacebook() {
+        if (FacebookManager.isLoggedIn()){
+            Utility.ShowProgressDialog(this, getString(R.string.uploading_your_post) + "...");
+            facebook.post(entryPojo, isTalent, UserImg, shareText, this);
+        }
+        else {
+            facebook.signInWithFacebook();
+        }
+    }
+
+    //    facebook login callback
+
+    @Override
+    public void onFacebookLoginSuccess(FacebookResponse response) {
+        Utility.ShowProgressDialog(this, getString(R.string.uploading_your_post) + "...");
+        facebook.post(entryPojo, isTalent, UserImg, shareText, this);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Session.getActiveSession().addCallback(statusCallback);
+    public void onFacebookLoginFailure() {
+
+    }
+
+    //  facebook share callback
+
+    @Override
+    public void onSuccess(Sharer.Result result) {
+        Utility.HideDialog(this);
+        showSuccessPostDialog();
+    }
+
+    @Override
+    public void onCancel() {
+        Utility.HideDialog(this);
+    }
+
+    @Override
+    public void onError(FacebookException e) {
+        Utility.HideDialog(this);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.app_name)
+                .setMessage(e.getMessage())
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
+    private void showSuccessPostDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.app_name)
+                .setMessage(getString(R.string.post_successfully_shared_on_your_wall))
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
@@ -458,37 +374,9 @@ public class ShareActivity extends Activity implements OnClickListener {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-
-        Session session = Session.getActiveSession();
-        Session.saveSession(session, outState);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        Session.getActiveSession().removeCallback(statusCallback);
-    }
-
-    @Override
-    protected void onDestroy() {
-        // TODO Auto-generated method stub
-
-        super.onDestroy();
-
-        Session session = Session.getActiveSession();
-        if (!session.isClosed()) {
-            session.closeAndClearTokenInformation();
-        }
-
-    }
-
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+        facebook.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -498,7 +386,7 @@ public class ShareActivity extends Activity implements OnClickListener {
                 @Override
                 public void run() {
                     // TODO Auto-generated method stub
-                    Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShareActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -512,8 +400,8 @@ public class ShareActivity extends Activity implements OnClickListener {
                 @Override
                 public void run() {
                     // TODO Auto-generated method stub
-                    Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-                    Utility.HideDialog(mContext);
+                    Toast.makeText(ShareActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Utility.HideDialog(ShareActivity.this);
                 }
             });
         }

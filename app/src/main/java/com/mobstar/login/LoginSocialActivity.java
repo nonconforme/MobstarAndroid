@@ -17,13 +17,13 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.facebook.LoggingBehavior;
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.Settings;
-import com.facebook.model.GraphUser;
+//import com.facebook.LoggingBehavior;
+//import com.facebook.Request;
+//import com.facebook.Response;
+//import com.facebook.Session;
+//import com.facebook.SessionState;
+//import com.facebook.Settings;
+//import com.facebook.model.GraphUser;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
@@ -33,6 +33,9 @@ import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
+import com.mobstar.api.new_api_call.LoginCall;
+import com.mobstar.api.new_api_model.SocialType;
+import com.mobstar.api.new_api_model.response.LoginResponse;
 import com.mobstar.api.responce.UserAccountResponse;
 import com.mobstar.custom.AbstractGetNameTask;
 import com.mobstar.custom.CustomTextview;
@@ -41,28 +44,24 @@ import com.mobstar.custom.GetNameInForeground;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
+import com.mobstar.login.facebook.FacebookManager;
+import com.mobstar.login.facebook.FacebookResponse;
 import com.mobstar.twitter.ImageTwitter;
 import com.mobstar.twitter.ImageTwitter.OnCompleteListener;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
-public class LoginSocialActivity extends Activity implements OnClickListener {
+public class LoginSocialActivity extends Activity implements OnClickListener, FacebookManager.OnFacebookSignInCompletedListener {
 
 	private Context mContext;
-
 	private LinearLayout btnGetStarted, btnSignIn;
 	private CustomTextview btnLoginFB,  btnLoginTwitter, btnLoginGoogle;
 	private CustomTextviewBold btnCountinueWOSignin;
-	private Session.StatusCallback statusCallback = new SessionStatusCallback();
-	private static final List<String> READ_PERMISSIONS = Arrays.asList("email","public_profile");
 
 	private String sUserID = "", sToken = "", sUserFullName = "", sUserName = "", sUserDisplayName = "";
 	private String sErrorMessage = "";
@@ -77,34 +76,15 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 	static final int REQUEST_CODE_RECOVER_FROM_AUTH_ERROR = 1001;
 	static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1002;
 	String googleToken="";
+	private FacebookManager facebookManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		facebookManager = new FacebookManager(getApplicationContext(), this, this);
 		setContentView(R.layout.activity_login_social);
-
 		mContext = LoginSocialActivity.this;
-
 		initControls();
-
-		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
-
-		Session session = Session.getActiveSession();
-
-		if (session == null) {
-			if (savedInstanceState != null) {
-				session = Session.restoreSession(mContext, null, statusCallback, savedInstanceState);
-			}
-			if (session == null) {
-				session = new Session(mContext);
-			}
-			Session.setActiveSession(session);
-		}
-        session = Session.getActiveSession();
-        session.closeAndClearTokenInformation();
-        session.removeCallback(statusCallback);
-        Session.setActiveSession(session);
-
 		Utility.SendDataToGA("LgoinSocial Screen", LoginSocialActivity.this);
 
 	}
@@ -164,7 +144,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-					onFBLogin();
+					facebookManager.signInWithFacebook();
 					dialog.dismiss();
 				}
 			});
@@ -262,83 +242,28 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 		startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
 	}
 
-	private void onFBLogin() {
-        Session session = Session.getActiveSession();
-        session.closeAndClearTokenInformation();
-        session.removeCallback(statusCallback);
-
-
-        Session.setActiveSession(new Session(mContext));
-		session = Session.getActiveSession();
-
-		if (!session.isOpened() && !session.isClosed()) {
-			session.openForRead(new Session.OpenRequest(this).setCallback(statusCallback));
-
-		} else {
-			Session.openActiveSession(LoginSocialActivity.this, true, statusCallback);
-		}
+	@Override
+	public void onFacebookLoginSuccess(FacebookResponse response) {
+		loginWithFacebook(response);
 	}
 
-	private class SessionStatusCallback implements Session.StatusCallback {
-		@Override
-		public void call(Session session, SessionState state, Exception exception) {
+	@Override
+	public void onFacebookLoginFailure() {
 
-			if (exception != null) {
+	}
 
-				new AlertDialog.Builder(mContext).setTitle(R.string.app_name).setMessage(exception.getMessage()).setPositiveButton("OK", null).show();
+	private void loginWithFacebook(final FacebookResponse facebook){
+		try {
+			SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
+			pref.edit().putBoolean("isSocialLogin",true).commit();
 
-				Utility.HideDialog(mContext);
-
-			}
-
-			if (session.isOpened()) {
-
-				List<String> permissions = session.getPermissions();
-				if (!isSubsetOf(READ_PERMISSIONS, permissions)) {
-
-					Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(LoginSocialActivity.this, READ_PERMISSIONS);
-					session.requestNewReadPermissions(newPermissionsRequest);
-
-					return;
-				}
-
-				if (session.getPermissions().contains("email")) {
-
-					if (Utility.isNetworkAvailable(mContext)) {
-						Request.newMeRequest(session, new Request.GraphUserCallback() {
-
-							@Override
-							public void onCompleted(GraphUser user, Response response) {
-								if (user != null) {
-									sErrorMessage = "";
-									try {
-										SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-										pref.edit().putBoolean("isSocialLogin",true).commit();
-                                        FbAccount fbAccount = new FbAccount(user);
-//										new FBLoginCall(user.getId(), user.getName(), user.getProperty("email").toString(), user.getName(), user.getBirthday(), user.getProperty(
-//												"gender").toString(), user.getFirstName()).start();
-                                        new FBLoginCall(fbAccount.id, fbAccount.name, fbAccount.email, fbAccount.name,
-                                                fbAccount.birthday, fbAccount.gender, fbAccount.firstName).start();
-                                    } catch (Exception e) {
-										// TODO: handle exception
-										e.printStackTrace();
-										Toast.makeText(mContext, getString(R.string.error_while_login_with_facebook), Toast.LENGTH_SHORT).show();
-										Utility.HideDialog(mContext);
-									}
-
-								}
-							}
-						}).executeAsync();
-					} else {
-
-						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-						Utility.HideDialog(mContext);
-					}
-
-				}
-
-			}
-
+			new FBLoginCall(facebook.getId(), facebook.getName(), facebook.getEmail(), facebook.getName(),
+					facebook.getBirthday(), facebook.getGender(), facebook.getName()).start();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			Toast.makeText(mContext, getString(R.string.error_while_login_with_facebook), Toast.LENGTH_SHORT).show();
+			Utility.HideDialog(mContext);
 		}
 	}
 
@@ -349,6 +274,28 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 			}
 		}
 		return true;
+	}
+
+	private void facebookLoginCall(String displayName, String fullName, String socialId){
+		loginRequest(displayName, fullName, socialId, SocialType.facebook);
+	}
+
+	private void googleLoginCall(String displayName, String fullName, String socialId){
+		loginRequest(displayName, fullName, socialId, SocialType.google);
+	}
+
+	private void loginRequest(String displayName, String fullName, String socialId, SocialType socialType){
+		LoginCall.signSocial(this,  displayName, fullName, socialId, socialType, new ConnectCallback<LoginResponse>() {
+			@Override
+			public void onSuccess(LoginResponse object) {
+
+			}
+
+			@Override
+			public void onFailure(String error) {
+
+			}
+		});
 	}
 
 	class GoogleLoginCall extends Thread {
@@ -715,14 +662,15 @@ public class LoginSocialActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Session session = Session.getActiveSession();
-		Session.saveSession(session, outState);
+//		Session session = Session.getActiveSession();
+//		Session.saveSession(session, outState);
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+		facebookManager.onActivityResult(requestCode, resultCode, data);
+//		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 		if (requestCode == REQUEST_CODE_PICK_ACCOUNT) {
 			if (resultCode == RESULT_OK) {
 				mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);

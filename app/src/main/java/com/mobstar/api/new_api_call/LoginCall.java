@@ -6,6 +6,7 @@ import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.new_api_model.SocialType;
 import com.mobstar.api.new_api_model.response.LoginResponse;
+import com.mobstar.utils.Utility;
 
 import java.util.HashMap;
 import static com.mobstar.api.ApiConstant.*;
@@ -50,7 +51,6 @@ public class LoginCall {
 
     public static final void signSocial(
             final Context context,
-            final String deviceToken,
             final String displayName,
             final String fullName,
             final String socialId,
@@ -58,7 +58,7 @@ public class LoginCall {
             final ConnectCallback<LoginResponse> connectCallback){
         final HashMap<String, String> params = new HashMap<>();
         params.put("deviceType", "google");
-        params.put("deviceToken", deviceToken);
+        params.put("deviceToken", Utility.getRegistrationId(context));
         params.put("displayName", displayName);
         params.put("fullName", fullName);
         params.put("socialId", socialId);
