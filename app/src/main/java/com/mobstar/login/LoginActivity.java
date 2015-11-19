@@ -1,8 +1,6 @@
 package com.mobstar.login;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -20,17 +18,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.new_api_call.LoginCall;
+import com.mobstar.api.new_api_call.AuthCall;
 import com.mobstar.api.new_api_model.Login;
 import com.mobstar.api.new_api_model.Profile;
 import com.mobstar.api.new_api_model.Settings;
 import com.mobstar.api.new_api_model.response.LoginResponse;
-import com.mobstar.api.responce.*;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.utils.Constant;
@@ -38,7 +34,6 @@ import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -200,7 +195,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 //			if (Utility.isNetworkAvailable(mContext)) {
 ////					String s=Utility.getRegistrationId(mContext);
 ////					Log.d("mobstar","Login=>"+s);
-//				new LoginCall(editEmail.getText().toString().trim(), editPassword.getText().toString().trim()).start();
+//				new AuthCall(editEmail.getText().toString().trim(), editPassword.getText().toString().trim()).start();
 //
 //			} else {
 //
@@ -212,7 +207,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	private void loginRequest(final String email, final String password){
-		LoginCall.signInMail(this, email, password, new ConnectCallback<LoginResponse>() {
+		AuthCall.signInMail(this, email, password, new ConnectCallback<LoginResponse>() {
 			@Override
 			public void onSuccess(LoginResponse object) {
 				onLoginSuccess(object);
@@ -230,11 +225,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 		});
 	}
 
-//	class LoginCall extends Thread {
+//	class AuthCall extends Thread {
 //
 //		String password, email;
 //
-//		public LoginCall(String email, String password) {
+//		public AuthCall(String email, String password) {
 //
 //			this.email = email;
 //			this.password = password;
@@ -250,7 +245,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 //
 //			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.LOGIN, name, value,null);
 //
-//			Log.v(Constant.TAG, "LoginCall response " + response);
+//			Log.v(Constant.TAG, "AuthCall response " + response);
 //
 //			if (response != null) {
 //
@@ -570,7 +565,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		if (profile != null){
 //			UserPreference.saveUserProfileToPreference(this, profile, true);
 			AdWordsManager.getInstance().sendSingupEvent();
-			if (UserPreference.welcomIsChecked(this)) {
+			if (UserPreference.welcomeIsChecked(this)) {
 				startWelcomeActivity();
 			}else {
 				if (login.getSettings() != null)

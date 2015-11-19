@@ -1,37 +1,22 @@
 package com.mobstar.login;
 
-import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
-import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.android.gms.common.AccountPicker;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+
 import com.google.android.gms.plus.model.people.Person;
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.RestClient;
-import com.mobstar.api.new_api_call.LoginCall;
+import com.mobstar.api.new_api_call.AuthCall;
 import com.mobstar.api.new_api_model.Login;
 import com.mobstar.api.new_api_model.Profile;
 import com.mobstar.api.new_api_model.Settings;
 import com.mobstar.api.new_api_model.SocialType;
 import com.mobstar.api.new_api_model.response.LoginResponse;
-import com.mobstar.api.responce.*;
-import com.mobstar.api.responce.Error;
 //import com.mobstar.custom.AbstractGetNameTask;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
@@ -45,11 +30,8 @@ import com.mobstar.login.facebook.FacebookResponse;
 import com.mobstar.login.google_plus.GooglePlusManager;
 import com.mobstar.twitter.ImageTwitter;
 import com.mobstar.twitter.ImageTwitter.OnCompleteListener;
-import com.mobstar.utils.Constant;
 import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -83,7 +65,6 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		facebookManager = new FacebookManager(getApplicationContext(), this, this);
 		setContentView(R.layout.activity_login_social);
 		googlePlusManager = new GooglePlusManager(this, this);
-		CookieHandler.setDefault(new CookieManager());
 		findViews();
 		setListeners();
 		Utility.SendDataToGA("LgoinSocial Screen", LoginSocialActivity.this);
@@ -258,7 +239,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 
 	private void socialLoginRequest(String displayName, String fullName, String socialId, SocialType socialType){
 		Utility.ShowProgressDialog(this, getString(R.string.loading));
-		LoginCall.signSocial(this,  displayName, fullName, socialId, socialType, new ConnectCallback<LoginResponse>() {
+		AuthCall.signSocial(this, displayName, fullName, socialId, socialType, new ConnectCallback<LoginResponse>() {
 			@Override
 			public void onSuccess(LoginResponse object) {
 //				UserPreference.isSocialLoginToPreference(LoginSocialActivity.this, true);
@@ -286,7 +267,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		if (profile != null){
 //			UserPreference.saveUserProfileToPreference(this, profile, true);
 			AdWordsManager.getInstance().sendSingupEvent();
-			if (UserPreference.welcomIsChecked(this)) {
+			if (UserPreference.welcomeIsChecked(this)) {
 				startWelcomeActivity();
 			}else {
 				if (login.getSettings() != null)

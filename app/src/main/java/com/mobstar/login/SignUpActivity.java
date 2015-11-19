@@ -1,13 +1,9 @@
 package com.mobstar.login;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,27 +11,20 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.RestClient;
-import com.mobstar.api.new_api_call.LoginCall;
+import com.mobstar.api.new_api_call.AuthCall;
 import com.mobstar.api.new_api_model.Login;
 import com.mobstar.api.new_api_model.Profile;
 import com.mobstar.api.new_api_model.Settings;
 import com.mobstar.api.new_api_model.response.LoginResponse;
-import com.mobstar.api.responce.*;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
-import com.mobstar.utils.Constant;
-import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
-
-import org.json.JSONObject;
 
 public class SignUpActivity extends Activity implements OnClickListener {
 
@@ -334,7 +323,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 	}
 
 	private void signUpRequest(final String email, final String fullName, final String displayName, final String password){
-		LoginCall.signUpMail(this, email, fullName, displayName, password, new ConnectCallback<LoginResponse>() {
+		AuthCall.signUpMail(this, email, fullName, displayName, password, new ConnectCallback<LoginResponse>() {
 			@Override
 			public void onSuccess(LoginResponse object) {
 				Utility.HideDialog(SignUpActivity.this);
@@ -362,7 +351,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 		if (profile != null){
 //			UserPreference.saveUserProfileToPreference(this, profile, true);
 			AdWordsManager.getInstance().sendSingupEvent();
-			if (UserPreference.welcomIsChecked(this)) {
+			if (UserPreference.welcomeIsChecked(this)) {
 				startWelcomeActivity();
 			}else {
 				if (login.getSettings() != null)

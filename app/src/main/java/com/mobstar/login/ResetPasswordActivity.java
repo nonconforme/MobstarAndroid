@@ -13,6 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.new_api_call.AuthCall;
+import com.mobstar.api.new_api_model.response.SuccessResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.utils.Utility;
 
 public class ResetPasswordActivity extends Activity implements OnClickListener, TextWatcher {
@@ -87,7 +91,7 @@ public class ResetPasswordActivity extends Activity implements OnClickListener, 
 
 	private void resetPassword(){
 		if (isValidMail()) {
-			onBackPressed();
+			resetPasswordRequest(editEmail.getText().toString().trim());
 		}
 	}
 
@@ -109,6 +113,27 @@ public class ResetPasswordActivity extends Activity implements OnClickListener, 
 			textEmailHint.setVisibility(View.INVISIBLE);
 		}
 		return isValid;
+	}
+
+	private void resetPasswordRequest(final String email){
+		Utility.ShowProgressDialog(this, getString(R.string.reset_password));
+		AuthCall.postForgotPassword(this, email, new ConnectCallback<SuccessResponse>() {
+			@Override
+			public void onSuccess(SuccessResponse object) {
+				Utility.HideDialog(ResetPasswordActivity.this);
+				onBackPressed();
+			}
+
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(ResetPasswordActivity.this);
+			}
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+				Utility.HideDialog(ResetPasswordActivity.this);
+			}
+		});
 	}
 	
 	@Override

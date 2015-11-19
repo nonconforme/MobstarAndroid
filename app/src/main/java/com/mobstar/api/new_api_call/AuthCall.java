@@ -2,10 +2,13 @@ package com.mobstar.api.new_api_call;
 
 import android.content.Context;
 
+import com.mobstar.api.ApiConstant;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.new_api_model.SocialType;
 import com.mobstar.api.new_api_model.response.LoginResponse;
+import com.mobstar.api.new_api_model.response.SuccessResponse;
+import com.mobstar.api.new_api_model.response.WelcomeVideoResponse;
 import com.mobstar.utils.Utility;
 
 import java.util.HashMap;
@@ -14,7 +17,7 @@ import static com.mobstar.api.ApiConstant.*;
 /**
  * Created by lipcha on 17.11.15.
  */
-public class LoginCall {
+public class AuthCall {
 
     public static final void signUpMail(
             final Context context,
@@ -62,5 +65,16 @@ public class LoginCall {
         params.put("socialId", socialId);
         params.put("socialType", socialType.toString());
         RestClient.getInstance(context).postRequest(SIGN_SOCIAL, params, connectCallback);
+    }
+
+
+    public static final void getWelcomeVideo(final Context context, final ConnectCallback<WelcomeVideoResponse> connectCallback){
+        RestClient.getInstance(context).getRequest(ApiConstant.WELCOME, null, connectCallback);
+    }
+
+    public static final void postForgotPassword(final Context context, final String email, final ConnectCallback<SuccessResponse> connectCallback){
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("email", email);
+        RestClient.getInstance(context).postRequest(FORGOT_PASSWORD, params, connectCallback);
     }
 }

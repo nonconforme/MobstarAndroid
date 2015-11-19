@@ -43,8 +43,12 @@ public class UserPreference {
         getPreference(context).edit().putBoolean(IS_SOCIAL_LOGIN, isSocial).apply();
     }
 
-    public static boolean welcomIsChecked(final Context context){
+    public static boolean welcomeIsChecked(final Context context){
         return getPreference(context).getBoolean(WELCOME_IS_CHECKED, true);
+    }
+
+    public static void setWelcomeChecked(final Context context, final boolean isChecked){
+        getPreference(context).edit().putBoolean(WELCOME_IS_CHECKED, isChecked).apply();
     }
 
     private static  SharedPreferences getPreference(final Context context){

@@ -1,18 +1,14 @@
 package com.mobstar.help;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -25,32 +21,27 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.DownloadFileManager;
+import com.mobstar.api.new_api_call.AuthCall;
+import com.mobstar.api.new_api_model.response.WelcomeVideoResponse;
 import com.mobstar.login.WhoToFollowActivity;
-import com.mobstar.utils.Constant;
-import com.mobstar.utils.JSONParser;
+import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
-
-import cz.msebera.android.httpclient.Header;
-import org.json.JSONObject;
 
 import java.io.File;
 
-public class WelcomeVideoActivity extends Activity implements OnClickListener {
+public class WelcomeVideoActivity extends Activity implements OnClickListener, OnCompletionListener, DownloadFileManager.DownloadCallback {
 
-	public static final String WELCOME_IS_CHECKED = "welcome_is_checked";
+//	public static final String WELCOME_IS_CHECKED = "welcome_is_checked";
 
-	private String sErrorMessage;
-	private Context mContext;
-	private SharedPreferences preferences;
+//	private String sErrorMessage;
 	private Button btnTakeTour, btnEnterMobstar;
 	private Typeface typefaceBtn;
 	private CheckBox cbPrivacyPolicy, cbDonTShowAgain;
-	private String videoURL = "";
+//	private String videoURL = "";
 	private ImageView imageFrame;
 	private TextureView textureView;
 	private ProgressBar progressbar;
@@ -60,80 +51,69 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 	private ImageView btnPausePlay;
 	private ProgressBar progressMediaPlayer;
 
+	private String videoFilePath = "";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_welcome_video);
-
-		mContext = WelcomeVideoActivity.this;
-
-		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
-
 		mediaPlayer = new MediaPlayer();
-
 		surfaceTextureListener = new CustomSurfaceTextureListener();
-
-		InitControls();
-
+		initControls();
+		getWelcomeVideoUrl();
 		Utility.SendDataToGA("WelcomeVideo Screen", WelcomeVideoActivity.this);
 
 	}
 
-	private void InitControls() {
+	private void findViews(){
+		progressMediaPlayer   = (ProgressBar) findViewById(R.id.progressMediaPlayer);
+		cbDonTShowAgain       = (CheckBox) findViewById(R.id.cbDontShow);
+		btnPausePlay          = (ImageView) findViewById(R.id.btnPausePlay);
+		imageFrame            = (ImageView) findViewById(R.id.imageFrame);
+		progressbar           = (ProgressBar) findViewById(R.id.progressbar);
+		textureView           = (TextureView) findViewById(R.id.textureView);
+		cbPrivacyPolicy       = (CheckBox) findViewById(R.id.cbPrivacyPolicy);
+		btnTakeTour           = (Button) findViewById(R.id.btnTakeTour);
+		btnEnterMobstar       = (Button) findViewById(R.id.btnEnterMobstar);
 
+	}
+
+	private void setListeners(){
+		mediaPlayer.setOnCompletionListener(this);
+		btnPausePlay.setOnClickListener(this);
+		btnTakeTour.setOnClickListener(this);
+		btnEnterMobstar.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.btnTakeTour:
+				onTakeTour();
+				break;
+			case R.id.btnEnterMobstar:
+				onEnterMobstar();
+				break;
+			case R.id.btnPausePlay:
+				playPause();
+				break;
+		}
+	}
+
+	private void setTypeface(){
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
-
-		mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-
-			@Override
-			public void onCompletion(MediaPlayer arg0) {
-				// TODO Auto-generated method stub
-
-				btnPausePlay.setImageResource(R.drawable.btn_play);
-				btnPausePlay.setSelected(true);
-			}
-		});
-		progressMediaPlayer = (ProgressBar) findViewById(R.id.progressMediaPlayer);
-		cbDonTShowAgain = (CheckBox) findViewById(R.id.cbDontShow);
-		progressMediaPlayer.setProgress(0);
-		btnPausePlay = (ImageView) findViewById(R.id.btnPausePlay);
-		btnPausePlay.setSelected(true);
-		btnPausePlay.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View view) {
-				// TODO Auto-generated method stub
-				if (btnPausePlay.isSelected()) {
-
-					btnPausePlay.setImageResource(R.drawable.btn_pause);
-					btnPausePlay.setSelected(false);
-
-					if (mediaPlayer != null) {
-						mediaPlayer.start();
-					}
-
-					mediaPlayerProgressUpdater();
-
-				} else {
-
-					if (mediaPlayer.isPlaying()) {
-						mediaPlayer.pause();
-					}
-
-					btnPausePlay.setImageResource(R.drawable.btn_play);
-					btnPausePlay.setSelected(true);
-				}
-			}
-		});
-
-		imageFrame = (ImageView) findViewById(R.id.imageFrame);
-		progressbar = (ProgressBar) findViewById(R.id.progressbar);
-		textureView = (TextureView) findViewById(R.id.textureView);
-
-		//added by khyati
-		cbPrivacyPolicy = (CheckBox) findViewById(R.id.cbPrivacyPolicy);
 		cbPrivacyPolicy.setTypeface(typefaceBtn);
+		btnTakeTour.setTypeface(typefaceBtn);
+		btnEnterMobstar.setTypeface(typefaceBtn);
+	}
 
+	private void initControls() {
+		findViews();
+		setListeners();
+		setTypeface();
+
+		progressMediaPlayer.setProgress(0);
+		btnPausePlay.setSelected(true);
 		cbPrivacyPolicy.setChecked(false);
 
 		String cbText = cbPrivacyPolicy.getText().toString();
@@ -162,192 +142,258 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 
 		String text4=cbText.substring(pos+1);
 //		Log.d("text4", text4);
-		Spannable word4 = new SpannableString(text4); 
+		Spannable word4 = new SpannableString(text4);
 		word4.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, word4.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		cbPrivacyPolicy.append(word4);
 
 		//		****
 
-		btnTakeTour = (Button) findViewById(R.id.btnTakeTour);
-		btnTakeTour.setTypeface(typefaceBtn);
-		btnEnterMobstar = (Button) findViewById(R.id.btnEnterMobstar);
-		btnEnterMobstar.setTypeface(typefaceBtn);
 
-		btnTakeTour.setOnClickListener(this);
-		btnEnterMobstar.setOnClickListener(this);
+//		if (Utility.isNetworkAvailable(this)) {
+//
+//			new WelcomeCall().start();
+//
+//		} else {
+//
+//			Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//
+//		}
+	}
 
-		if (Utility.isNetworkAvailable(mContext)) {
 
-			new WelcomeCall().start();
+	private void playPause(){
+		if (btnPausePlay.isSelected()) {
+
+			btnPausePlay.setImageResource(R.drawable.btn_pause);
+			btnPausePlay.setSelected(false);
+
+			if (mediaPlayer != null) {
+				mediaPlayer.start();
+			}
+
+			mediaPlayerProgressUpdater();
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			if (mediaPlayer.isPlaying()) {
+				mediaPlayer.pause();
+			}
 
+			btnPausePlay.setImageResource(R.drawable.btn_play);
+			btnPausePlay.setSelected(true);
 		}
 	}
 
-	class WelcomeCall extends Thread {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.WELCOME, preferences.getString("token", null));
-
-			// Log.v(Constant.TAG, "WelcomeCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (jsonObject.has("url")) {
-						videoURL = jsonObject.getString("url");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerWelcome.sendEmptyMessage(0);
-					} else {
-						handlerWelcome.sendEmptyMessage(1);
-					}
-
-				} catch (Exception exception) {
-					// TODO: handle exception
-					exception.printStackTrace();
-					handlerWelcome.sendEmptyMessage(0);
-				}
-			}
-
-		}
+	private void onTakeTour(){
+		if (!cbPrivacyPolicy.isChecked())
+			return;
+		UserPreference.setWelcomeChecked(this, !cbDonTShowAgain.isChecked());
+		startTakeTourActivity();
 	}
 
-	Handler handlerWelcome = new Handler() {
+	private void onEnterMobstar(){
+		if (!cbPrivacyPolicy.isChecked())
+			return;
+		UserPreference.setWelcomeChecked(this, !cbDonTShowAgain.isChecked());
+		startWhoToFollowActivity();
 
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
+	}
 
-			final String sFileName;
+	@Override
+	public void onCompletion(MediaPlayer mp) {
+		btnPausePlay.setImageResource(R.drawable.btn_play);
+		btnPausePlay.setSelected(true);
+	}
 
-			sFileName = Utility.GetFileNameFromURl(videoURL);
-
-			String path = Utility.getCurrentDirectory(mContext);
-			
-//			File folder = new File(Environment.getExternalStorageDirectory() + "/.mobstar");
-			
-			File folder = new File(path);
-			
-			if (!folder.exists()) {
-				folder.mkdir();
+	private void getWelcomeVideoUrl(){
+		AuthCall.getWelcomeVideo(this, new ConnectCallback<WelcomeVideoResponse>() {
+			@Override
+			public void onSuccess(WelcomeVideoResponse object) {
+				downloadWelcomeVideo(object.getVideoUrl());
 			}
-			
-			File file = new File(path+ sFileName);
 
-			if (!file.exists()) {
-				// Log.v(Constant.TAG, "Download video " + videoURL);
+			@Override
+			public void onFailure(String error) {
 
-				AsyncHttpClient client = new AsyncHttpClient();
-				final int DEFAULT_TIMEOUT = 60 * 1000;
-				client.setTimeout(DEFAULT_TIMEOUT);
-				client.get(videoURL, new FileAsyncHttpResponseHandler(file) {
-
-					@Override
-					public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public void onSuccess(int arg0, Header[] arg1, File file) {
-						// TODO Auto-generated method stub
-						// Log.v(Constant.TAG,
-						// "onSuccess Video File  downloaded");
-
-						btnPausePlay.setImageResource(R.drawable.btn_pause);
-						btnPausePlay.setSelected(false);
-
-						progressbar.setVisibility(View.GONE);
-
-						imageFrame.setImageResource(R.drawable.video_placeholder);
-						textureView.setVisibility(View.GONE);
-						imageFrame.setVisibility(View.VISIBLE);
-
-						imageFrame.setImageResource(R.drawable.video_placeholder);
-						textureView.setVisibility(View.VISIBLE);
-
-						textureView.setSurfaceTextureListener(surfaceTextureListener);
-						if (textureView.isAvailable()) {
-							surfaceTextureListener.onSurfaceTextureAvailable(textureView.getSurfaceTexture(), textureView.getWidth(), textureView.getHeight());
-						}
-
-						imageFrame.setVisibility(View.GONE);
-					}
-					
-
-				});
-
-				// Ion.with(mContext).load(videoURL).write(file).setCallback(new
-				// FutureCallback<File>() {
-				// @Override
-				// public void onCompleted(Exception e, File file) {
-				// if (file != null && e == null) {
-				//
-				// btnPausePlay.setImageResource(R.drawable.btn_pause);
-				// btnPausePlay.setSelected(false);
-				//
-				// progressbar.setVisibility(View.GONE);
-				//
-				// imageFrame.setImageResource(R.drawable.video_placeholder);
-				// textureView.setVisibility(View.GONE);
-				// imageFrame.setVisibility(View.VISIBLE);
-				//
-				// imageFrame.setImageResource(R.drawable.video_placeholder);
-				// textureView.setVisibility(View.VISIBLE);
-				//
-				// textureView.setSurfaceTextureListener(surfaceTextureListener);
-				// if (textureView.isAvailable()) {
-				// surfaceTextureListener.onSurfaceTextureAvailable(textureView.getSurfaceTexture(),
-				// textureView.getWidth(), textureView.getHeight());
-				// }
-				//
-				// imageFrame.setVisibility(View.GONE);
-				// }
-				//
-				// }
-				// });
-			} else {
-
-				btnPausePlay.setImageResource(R.drawable.btn_pause);
-				btnPausePlay.setSelected(false);
-
-//				Log.v(Constant.TAG, "Exist " + videoURL);
-
-				progressbar.setVisibility(View.GONE);
-
-				imageFrame.setImageResource(R.drawable.video_placeholder);
-				textureView.setVisibility(View.GONE);
-				imageFrame.setVisibility(View.VISIBLE);
-
-				imageFrame.setImageResource(R.drawable.video_placeholder);
-				textureView.setVisibility(View.VISIBLE);
-
-				textureView.setSurfaceTextureListener(surfaceTextureListener);
-				if (textureView.isAvailable()) {
-					surfaceTextureListener.onSurfaceTextureAvailable(textureView.getSurfaceTexture(), textureView.getWidth(), textureView.getHeight());
-				}
-
-				imageFrame.setVisibility(View.GONE);
 			}
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
+			}
+		});
+	}
+
+	private void downloadWelcomeVideo(final String videoUrl){
+		if (videoUrl == null)
+			return;
+		final DownloadFileManager downloadFileManager = new DownloadFileManager(this, this);
+		downloadFileManager.downloadFile(videoUrl, 0);
+	}
+
+	@Override
+	public void onDownload(String filePath, int position) {
+		videoFilePath = filePath;
+		preparePlayer();
+	}
+
+	@Override
+	public void onFailed() {
+
+	}
+
+	private void preparePlayer(){
+
+		btnPausePlay.setImageResource(R.drawable.btn_pause);
+		btnPausePlay.setSelected(false);
+		progressbar.setVisibility(View.GONE);
+		imageFrame.setImageResource(R.drawable.video_placeholder);
+		textureView.setVisibility(View.GONE);
+		imageFrame.setVisibility(View.VISIBLE);
+
+		imageFrame.setImageResource(R.drawable.video_placeholder);
+		textureView.setVisibility(View.VISIBLE);
+
+		textureView.setSurfaceTextureListener(surfaceTextureListener);
+		if (textureView.isAvailable()) {
+			surfaceTextureListener.onSurfaceTextureAvailable(textureView.getSurfaceTexture(), textureView.getWidth(), textureView.getHeight());
 		}
-	};
 
-	void PlayVideo(int position, final Surface surface) {
+		imageFrame.setVisibility(View.GONE);
+	}
+
+//	class WelcomeCall extends Thread {
+//
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//
+//			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.WELCOME, preferences.getString("token", null));
+//
+//			// Log.v(Constant.TAG, "WelcomeCall response " + response);
+//
+//			if (response != null) {
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						sErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					if (jsonObject.has("url")) {
+//						videoURL = jsonObject.getString("url");
+//					}
+//
+//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
+//						handlerWelcome.sendEmptyMessage(0);
+//					} else {
+//						handlerWelcome.sendEmptyMessage(1);
+//					}
+//
+//				} catch (Exception exception) {
+//					// TODO: handle exception
+//					exception.printStackTrace();
+//					handlerWelcome.sendEmptyMessage(0);
+//				}
+//			}
+//
+//		}
+//	}
+
+//	Handler handlerWelcome = new Handler() {
+//
+//		@Override
+//		public void handleMessage(Message msg) {
+//			// TODO Auto-generated method stub
+//
+//			final String sFileName;
+//
+//			sFileName = Utility.GetFileNameFromURl(videoURL);
+//
+//			String path = Utility.getCurrentDirectory(WelcomeVideoActivity.this);
+//
+////			File folder = new File(Environment.getExternalStorageDirectory() + "/.mobstar");
+//
+//			File folder = new File(path);
+//
+//			if (!folder.exists()) {
+//				folder.mkdir();
+//			}
+//
+//			File file = new File(path+ sFileName);
+//
+//			if (!file.exists()) {
+//				// Log.v(Constant.TAG, "Download video " + videoURL);
+//
+//				AsyncHttpClient client = new AsyncHttpClient();
+//				final int DEFAULT_TIMEOUT = 60 * 1000;
+//				client.setTimeout(DEFAULT_TIMEOUT);
+//				client.get(videoURL, new FileAsyncHttpResponseHandler(file) {
+//
+//					@Override
+//					public void onFailure(int arg0, Header[] arg1, Throwable arg2, File file) {
+//						// TODO Auto-generated method stub
+//
+//					}
+//
+//					@Override
+//					public void onSuccess(int arg0, Header[] arg1, File file) {
+//						// TODO Auto-generated method stub
+//						// Log.v(Constant.TAG,
+//						// "onSuccess Video File  downloaded");
+//
+//						btnPausePlay.setImageResource(R.drawable.btn_pause);
+//						btnPausePlay.setSelected(false);
+//
+//						progressbar.setVisibility(View.GONE);
+//
+//						imageFrame.setImageResource(R.drawable.video_placeholder);
+//						textureView.setVisibility(View.GONE);
+//						imageFrame.setVisibility(View.VISIBLE);
+//
+//						imageFrame.setImageResource(R.drawable.video_placeholder);
+//						textureView.setVisibility(View.VISIBLE);
+//
+//						textureView.setSurfaceTextureListener(surfaceTextureListener);
+//						if (textureView.isAvailable()) {
+//							surfaceTextureListener.onSurfaceTextureAvailable(textureView.getSurfaceTexture(), textureView.getWidth(), textureView.getHeight());
+//						}
+//
+//						imageFrame.setVisibility(View.GONE);
+//					}
+//
+//
+//				});
+//
+//			} else {
+//
+//				btnPausePlay.setImageResource(R.drawable.btn_pause);
+//				btnPausePlay.setSelected(false);
+//
+////				Log.v(Constant.TAG, "Exist " + videoURL);
+//
+//				progressbar.setVisibility(View.GONE);
+//
+//				imageFrame.setImageResource(R.drawable.video_placeholder);
+//				textureView.setVisibility(View.GONE);
+//				imageFrame.setVisibility(View.VISIBLE);
+//
+//				imageFrame.setImageResource(R.drawable.video_placeholder);
+//				textureView.setVisibility(View.VISIBLE);
+//
+//				textureView.setSurfaceTextureListener(surfaceTextureListener);
+//				if (textureView.isAvailable()) {
+//					surfaceTextureListener.onSurfaceTextureAvailable(textureView.getSurfaceTexture(), textureView.getWidth(), textureView.getHeight());
+//				}
+//
+//				imageFrame.setVisibility(View.GONE);
+//			}
+//		}
+//	};
+
+	private void playVideo(final Surface surface) {
 
 		new Thread() {
 
@@ -358,22 +404,21 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 						mediaPlayer.reset();
 					}
 
-					final String sFileName = Utility.GetFileNameFromURl(videoURL);
+//					final String sFileName = Utility.GetFileNameFromURl(videoURL);
 
 					// Log.v(Constant.TAG, "sFileName " +
 					// Environment.getExternalStorageDirectory() +
 					// "/.mobstar/" + sFileName);
 
-					String path = Utility.getCurrentDirectory(WelcomeVideoActivity.this);
+//					String path = Utility.getCurrentDirectory(WelcomeVideoActivity.this);
 					
 //					File file = new File(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
-					
-					File file = new File(path + sFileName);
 
-					if (file.exists()) {
+
+					if (new File(videoFilePath).exists()) {
 //						mediaPlayer.setDataSource(Environment.getExternalStorageDirectory() + "/.mobstar/" + sFileName);
 						
-						mediaPlayer.setDataSource(path + sFileName);
+						mediaPlayer.setDataSource(videoFilePath);
 						
 						mediaPlayer.setSurface(surface);
 						// Play video when the media source is ready for
@@ -425,7 +470,7 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 
 		if (mediaPlayer.isPlaying()) {
 
-			Runnable notification = new Runnable() {
+			final Runnable notification = new Runnable() {
 				public void run() {
 					mediaPlayerProgressUpdater();
 				}
@@ -437,34 +482,26 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 
 	public class CustomSurfaceTextureListener implements SurfaceTextureListener {
 
-		int position;
-
 		@Override
 		public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int arg1, int arg2) {
-			// TODO Auto-generated method stub
 
-			// Log.v(Constant.TAG, "Play Video onSurfaceTextureAvailable ");
-			Surface surface = new Surface(surfaceTexture);
-			PlayVideo(position, surface);
+			final Surface surface = new Surface(surfaceTexture);
+			playVideo(surface);
 
 		}
 
 		@Override
 		public boolean onSurfaceTextureDestroyed(SurfaceTexture texture) {
-			// TODO Auto-generated method stub
-
 			return false;
 		}
 
 		@Override
 		public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int arg1, int arg2) {
-			// TODO Auto-generated method stub
 
 		}
 
 		@Override
 		public void onSurfaceTextureUpdated(SurfaceTexture texture) {
-			// TODO Auto-generated method stub
 
 		}
 
@@ -490,18 +527,16 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	@Override
-	public void onClick(View v) {
-		if (!cbPrivacyPolicy.isChecked())
-			return;
-		// TODO Auto-generated method stub
-		Intent intent = new Intent();
-		if (v.equals(btnTakeTour)) {
-			intent = new Intent(mContext, TakeTourActivity.class);
-		} else if (v.equals(btnEnterMobstar)) {
-			intent = new Intent(mContext, WhoToFollowActivity.class);
-		}
-		preferences.edit().putBoolean(WELCOME_IS_CHECKED, !cbDonTShowAgain.isChecked()).apply();
+
+	private void startTakeTourActivity(){
+		final Intent intent = new Intent(this, TakeTourActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+		finish();
+	}
+
+	private void startWhoToFollowActivity(){
+		final Intent intent = new Intent(this, WhoToFollowActivity.class);
 		startActivity(intent);
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 		finish();

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
 import com.loopj.android.http.RequestParams;
 import com.mobstar.R;
 import com.mobstar.api.responce.OnFileDownloadCallback;
@@ -43,11 +44,13 @@ public class RestClient {
     public static RestClient getInstance(final Context _context){
         if (instance == null) {
             instance = new RestClient();
+            instance.httpClient = new AsyncHttpClient();
+            final PersistentCookieStore myCookieStore = new PersistentCookieStore(_context);
+            instance.httpClient.setCookieStore(myCookieStore);
         }
         if (instance.preferences == null)
             instance.preferences = _context.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
         instance.context = _context;
-        instance.httpClient = new AsyncHttpClient();
         instance.httpClient.setTimeout(Constant.TIMEOUTCONNECTION);
         instance.httpClient.addHeader("Content-Type", "application/json; charset=utf-8");
 //        instance.httpClient.addHeader("Content-Type", "multipart/form-data");
