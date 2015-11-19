@@ -257,7 +257,7 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 			@Override
 			public void onSuccess(CategoryResponse object) {
 				if (object.hasError()) {
-					OkayAlertDialog(object.getError());
+					OkayAlertDialog(object.getErrorMessage());
 				} else {
 					arrCategoryPojos = object.getCategoryPojos();
 					categoryAdapter.notifyDataSetChanged();
@@ -272,6 +272,8 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 	}
 
 	void OkayAlertDialog(final String msg) {
+		if (msg == null)
+			return;
 
 		if (!isFinishing()) {
 			runOnUiThread(new Runnable() {

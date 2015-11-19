@@ -12,28 +12,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
-//import com.facebook.LoggingBehavior;
-//import com.facebook.Request;
-//import com.facebook.Response;
-//import com.facebook.Session;
-//import com.facebook.SessionState;
-//import com.facebook.Settings;
-//import com.facebook.model.GraphUser;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.plus.model.people.Person;
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.new_api_call.LoginCall;
+import com.mobstar.api.new_api_model.Login;
+import com.mobstar.api.new_api_model.Profile;
+import com.mobstar.api.new_api_model.Settings;
 import com.mobstar.api.new_api_model.SocialType;
 import com.mobstar.api.new_api_model.response.LoginResponse;
 import com.mobstar.api.responce.UserAccountResponse;
@@ -44,19 +38,23 @@ import com.mobstar.custom.GetNameInForeground;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
+import com.mobstar.login.facebook.FacebookLoginDialog;
 import com.mobstar.login.facebook.FacebookManager;
 import com.mobstar.login.facebook.FacebookResponse;
+import com.mobstar.login.google_plus.GooglePlusManager;
 import com.mobstar.twitter.ImageTwitter;
 import com.mobstar.twitter.ImageTwitter.OnCompleteListener;
 import com.mobstar.utils.Constant;
-import com.mobstar.utils.JSONParser;
+import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.util.Collection;
 
-public class LoginSocialActivity extends Activity implements OnClickListener, FacebookManager.OnFacebookSignInCompletedListener {
+public class LoginSocialActivity extends Activity implements OnClickListener, FacebookManager.OnFacebookSignInCompletedListener, GooglePlusManager.OnGooglePlusSignInCompletedListener {
 
 	private Context mContext;
 	private LinearLayout btnGetStarted, btnSignIn;
@@ -67,6 +65,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 	private String sErrorMessage = "";
 	private String ProfileImage = "", ProfileCover = "", UserTagLine = "",UserBio = "";
 	private ImageTwitter mTweet;
+	private GooglePlusManager googlePlusManager;
 
 	// Google plus sign in
 	String mEmail;
@@ -83,122 +82,99 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		super.onCreate(savedInstanceState);
 		facebookManager = new FacebookManager(getApplicationContext(), this, this);
 		setContentView(R.layout.activity_login_social);
+		googlePlusManager = new GooglePlusManager(this, this);
+		CookieHandler.setDefault(new CookieManager());
 		mContext = LoginSocialActivity.this;
-		initControls();
+		findViews();
+		setListeners();
 		Utility.SendDataToGA("LgoinSocial Screen", LoginSocialActivity.this);
 
 	}
 
-	void initControls() {
-
+	private void findViews() {
 		btnGetStarted = (LinearLayout) findViewById(R.id.btnGetStarted);
-		btnGetStarted.setOnClickListener(this);
-
 		btnSignIn = (LinearLayout) findViewById(R.id.btnSignIn);
-		btnSignIn.setOnClickListener(this);
-
 		btnLoginFB = (CustomTextview) findViewById(R.id.btnLoginFB);
-		btnLoginFB.setOnClickListener(this);
-
 		btnLoginTwitter = (CustomTextview) findViewById(R.id.btnLoginTwitter);
-		btnLoginTwitter.setOnClickListener(this);
-
 		btnLoginGoogle = (CustomTextview) findViewById(R.id.btnLoginGoogle);
-		btnLoginGoogle.setOnClickListener(this);
-		
 		btnCountinueWOSignin= (CustomTextviewBold) findViewById(R.id.btnCountinueWOSignin);
-		btnCountinueWOSignin.setOnClickListener(this);
+	}
 
+	private void setListeners(){
+		btnGetStarted.setOnClickListener(this);
+		btnSignIn.setOnClickListener(this);
+		btnLoginFB.setOnClickListener(this);
+		btnLoginTwitter.setOnClickListener(this);
+		btnLoginGoogle.setOnClickListener(this);
+		btnCountinueWOSignin.setOnClickListener(this);
 	}
 
 	@Override
 	public void onClick(View view) {
-		// TODO Auto-generated method stub
+		switch (view.getId()){
+			case R.id.btnGetStarted:
+				startSignUpActivity();
+				break;
+			case R.id.btnSignIn:
+				startLoginActivity();
+				break;
+			case R.id.btnLoginFB:
+				startLoginWithFacebookDialog();
+				break;
+			case R.id.btnLoginTwitter:
+				loginWithTwitter();
+				break;
+			case R.id.btnLoginGoogle:
+				googlePlusManager.signInWithGplus();
+				break;
+			case R.id.btnCountinueWOSignin:
 
-		if (view.equals(btnGetStarted)) {
-			Intent intent = new Intent(mContext, SignUpActivity.class);
-			startActivity(intent);
-			finish();
-		} else if (view.equals(btnSignIn)) {
-			Intent intent = new Intent(mContext, LoginActivity.class);
-			startActivity(intent);
-			finish();
-		} else if (btnLoginFB.equals(view)) {
-
-			final Button btnDeny, btnAllow;
-			final ImageButton btnClose;
-
-			final Dialog dialog = new Dialog(LoginSocialActivity.this, R.style.DialogTheme);
-			dialog.setContentView(R.layout.dialog_fb);
-			btnClose = (ImageButton) dialog.findViewById(R.id.btnClose);
-			btnClose.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-			btnAllow = (Button) dialog.findViewById(R.id.btnAllow);
-			btnAllow.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-					facebookManager.signInWithFacebook();
-					dialog.dismiss();
-				}
-			});
-			btnDeny = (Button) dialog.findViewById(R.id.btnDeny);
-			btnDeny.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					dialog.dismiss();
-				}
-			});
-			dialog.show();
-
-		} else if (btnLoginTwitter.equals(view)) {
-
-			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-
-			boolean authOnly = true;
-			mTweet = new ImageTwitter(LoginSocialActivity.this, authOnly, null,null);
-			mTweet.setOnCompleteListener(new OnCompleteListener() {
-
-				@Override
-				public void onComplete(final String action) {
-					// TODO Auto-generated method stub
-
-					if (action.equals("Success")) {
-
-						if (Utility.isNetworkAvailable(mContext)) {
-							// Log.v(Constant.TAG, "User " +
-							// mTweet.mUser.toString());
-
-							sErrorMessage = "";
-							SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-							pref.edit().putBoolean("isSocialLogin",true).commit();
-							new TwitterLoginCall(mTweet.mUser.getId() + "", mTweet.mUser.getScreenName(), mTweet.mUser.getName(), mTweet.mUser.getScreenName()).start();
-						} else {
-							Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-							Utility.HideDialog(mContext);
-						}
-					} else {
-						Utility.HideDialog(mContext);
-					}
-
-				}
-			});
-			mTweet.send();
-		} else if (btnLoginGoogle.equals(view)) {
-			Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-			getUsername();
-		}else if(btnCountinueWOSignin.equals(view)) {           //khyati
-			
+				break;
 		}
-		
+	}
+
+	private void startLoginWithFacebookDialog(){
+		final FacebookLoginDialog dialog = new FacebookLoginDialog(this);
+		dialog.setOnAcceptListener(new FacebookLoginDialog.OnFacebookAcceptListener() {
+			@Override
+			public void onFacebookAccept() {
+				dialog.dismiss();
+				facebookManager.signInWithFacebook();
+			}
+		});
+		dialog.show();
+	}
+
+	private void loginWithTwitter(){
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		mTweet = new ImageTwitter(LoginSocialActivity.this, true, null,null);
+		mTweet.setOnCompleteListener(new OnCompleteListener() {
+
+			@Override
+			public void onComplete(final String action) {
+				// TODO Auto-generated method stub
+
+				if (action.equals("Success")) {
+					socialLoginRequest(mTweet.mUser.getName(), mTweet.mUser.getScreenName(), Long.toString(mTweet.mUser.getId()), SocialType.twitter);
+//					if (Utility.isNetworkAvailable(mContext)) {
+//						// Log.v(Constant.TAG, "User " +
+//						// mTweet.mUser.toString());
+//
+//						sErrorMessage = "";
+//						SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
+//						pref.edit().putBoolean("isSocialLogin", true).commit();
+//						new TwitterLoginCall(mTweet.mUser.getId() + "", mTweet.mUser.getScreenName(), mTweet.mUser.getName(), mTweet.mUser.getScreenName()).start();
+//					} else {
+//						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//						Utility.HideDialog(mContext);
+//					}
+				} else {
+					Utility.HideDialog(mContext);
+				}
+
+			}
+		});
+		mTweet.send();
 	}
 
 	/** Called by button in the layout */
@@ -244,7 +220,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 
 	@Override
 	public void onFacebookLoginSuccess(FacebookResponse response) {
-		loginWithFacebook(response);
+		socialLoginRequest(response.getName(), response.getName(), response.getId(), SocialType.facebook);
 	}
 
 	@Override
@@ -252,20 +228,25 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 
 	}
 
-	private void loginWithFacebook(final FacebookResponse facebook){
-		try {
-			SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-			pref.edit().putBoolean("isSocialLogin",true).commit();
-
-			new FBLoginCall(facebook.getId(), facebook.getName(), facebook.getEmail(), facebook.getName(),
-					facebook.getBirthday(), facebook.getGender(), facebook.getName()).start();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			Toast.makeText(mContext, getString(R.string.error_while_login_with_facebook), Toast.LENGTH_SHORT).show();
-			Utility.HideDialog(mContext);
-		}
+	@Override
+	public void onGooglePlusSuccess(Person person) {
+		socialLoginRequest(person.getDisplayName(), person.getNickname(), person.getId(), SocialType.google);
 	}
+
+//	private void loginWithFacebook(final FacebookResponse facebook){
+//		try {
+//			SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
+//			pref.edit().putBoolean("isSocialLogin",true).commit();
+//
+//			new FBLoginCall(facebook.getId(), facebook.getName(), facebook.getEmail(), facebook.getName(),
+//					facebook.getBirthday(), facebook.getGender(), facebook.getName()).start();
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//			Toast.makeText(mContext, getString(R.string.error_while_login_with_facebook), Toast.LENGTH_SHORT).show();
+//			Utility.HideDialog(mContext);
+//		}
+//	}
 
 	private boolean isSubsetOf(Collection<String> subset, Collection<String> superset) {
 		for (String string : subset) {
@@ -276,288 +257,316 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		return true;
 	}
 
-	private void facebookLoginCall(String displayName, String fullName, String socialId){
-		loginRequest(displayName, fullName, socialId, SocialType.facebook);
-	}
+//	private void facebookLoginCall(final FacebookResponse facebook){
+//		socialLoginRequest(facebook.getName(), facebook.getName(), facebook.getId(), SocialType.facebook);
+//	}
+//
+//	private void googleLoginCall(String displayName, String fullName, String socialId){
+//		socialLoginRequest(displayName, fullName, socialId, SocialType.google);
+//	}
 
-	private void googleLoginCall(String displayName, String fullName, String socialId){
-		loginRequest(displayName, fullName, socialId, SocialType.google);
-	}
-
-	private void loginRequest(String displayName, String fullName, String socialId, SocialType socialType){
+	private void socialLoginRequest(String displayName, String fullName, String socialId, SocialType socialType){
+		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
 		LoginCall.signSocial(this,  displayName, fullName, socialId, socialType, new ConnectCallback<LoginResponse>() {
 			@Override
 			public void onSuccess(LoginResponse object) {
-
+//				UserPreference.isSocialLoginToPreference(LoginSocialActivity.this, true);
+				onLoginSuccess(object);
 			}
 
 			@Override
 			public void onFailure(String error) {
-
+				Utility.HideDialog(mContext);
 			}
 		});
 	}
 
-	class GoogleLoginCall extends Thread {
-
-		String displayName, userId, userName, gender, fullName;
-
-		public GoogleLoginCall(String userId, String userName, String displayName, String gender, String fullName) {
-			this.userId = userId;
-			this.displayName = displayName;
-			this.userName = userName;
-			this.gender = gender;
-			this.fullName = fullName;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String[] name = { "userName", "userId", "displayName", "gender", "fullName","deviceToken","device"};
-			String[] value = { userName, userId, displayName, gender, fullName,Utility.getRegistrationId(mContext),"google" };
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.GOOGLE_LOGIN, name, value, null);
-
-//			Log.v(Constant.TAG, "GoogleLoginCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (jsonObject.has("token")) {
-						sToken = jsonObject.getString("token");
-					}
-
-					if (jsonObject.has("userId")) {
-						sUserID = jsonObject.getString("userId");
-					}
-
-					if (jsonObject.has("userName")) {
-						sUserName = jsonObject.getString("userName");
-					}
-
-					if (jsonObject.has("fullName")) {
-						sUserFullName = jsonObject.getString("fullName");
-					}
-
-					if (jsonObject.has("profileImage")) {
-						ProfileImage = jsonObject.getString("profileImage");
-					}
-
-					if (jsonObject.has("profileCover")) {
-						ProfileCover = jsonObject.getString("profileCover");
-					}
-
-					if (jsonObject.has("userTagline")) {
-						UserTagLine = jsonObject.getString("userTagline");
-					}
-					
-					if (jsonObject.has("userBio")) {
-						UserBio = jsonObject.getString("userBio");
-					}
-
-					if (jsonObject.has("userDisplayName")) {
-						sUserDisplayName = jsonObject.getString("userDisplayName");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerLogin.sendEmptyMessage(0);
-					} else {
-						handlerLogin.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerLogin.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerLogin.sendEmptyMessage(0);
+	private void onLoginSuccess(final LoginResponse loginResponse){
+		Utility.HideDialog(mContext);
+		if(loginResponse.getLogin() == null)
+			return;
+		final Login login = loginResponse.getLogin();
+		final Profile profile = login.getProfile();
+		if (profile != null){
+//			UserPreference.saveUserProfileToPreference(this, profile, true);
+			AdWordsManager.getInstance().sendSingupEvent();
+			if (UserPreference.welcomIsChecked(this)) {
+				startWelcomeActivity();
+			}else {
+				if (login.getSettings() != null)
+					verifyUserContinent(login.getSettings());
 			}
-
 		}
 	}
 
-	class FBLoginCall extends Thread {
-		
-		
-		String displayName, username, dob, userId, email, gender, fullName;
+	private void verifyUserContinent(final Settings settings){
+		final String userContinents = settings.getContinent();
+		if (userContinents == null || userContinents.equalsIgnoreCase("") || userContinents.equalsIgnoreCase("0"))
+			startSelectCurrentRegionActivity();
+		else startHomeActivity();
 
-		public FBLoginCall(String userId, String username, String email, String displayName, String dob, String gender, String fullName) {
-			this.userId = userId;
-			this.username = username;
-			this.displayName = displayName;
-			this.email = email;
-			this.dob = dob;
-			this.gender = gender;
-			this.fullName = fullName;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String[] name = { "userName", "email", "userId", "displayName", "dob", "gender", "fullName","deviceToken","device" };
-			String[] value = { username, email, userId, displayName, dob, gender, fullName ,Utility.getRegistrationId(mContext),"google"};
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.FACEBOOK_LOGIN, name, value, null);
-
-//			Log.v(Constant.TAG, "FBLoginCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (jsonObject.has("token")) {
-						sToken = jsonObject.getString("token");
-					}
-
-					if (jsonObject.has("userId")) {
-						sUserID = jsonObject.getString("userId");
-					}
-
-					if (jsonObject.has("userName")) {
-						sUserName = jsonObject.getString("userName");
-					}
-
-					if (jsonObject.has("fullName")) {
-						sUserFullName = jsonObject.getString("fullName");
-					}
-
-					if (jsonObject.has("userDisplayName")) {
-						sUserDisplayName = jsonObject.getString("userDisplayName");
-					}
-
-					if (jsonObject.has("profileImage")) {
-						ProfileImage = jsonObject.getString("profileImage");
-					}
-
-					if (jsonObject.has("profileCover")) {
-						ProfileCover = jsonObject.getString("profileCover");
-					}
-
-					if (jsonObject.has("userTagline")) {
-						UserTagLine = jsonObject.getString("userTagline");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerLogin.sendEmptyMessage(0);
-					} else {
-						handlerLogin.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerLogin.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerLogin.sendEmptyMessage(0);
-			}
-
-		}
 	}
 
-	class TwitterLoginCall extends Thread {
+//	class GoogleLoginCall extends Thread {
+//
+//		String displayName, userId, userName, gender, fullName;
+//
+//		public GoogleLoginCall(String userId, String userName, String displayName, String gender, String fullName) {
+//			this.userId = userId;
+//			this.displayName = displayName;
+//			this.userName = userName;
+//			this.gender = gender;
+//			this.fullName = fullName;
+//		}
+//
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//
+//			String[] name = { "userName", "userId", "displayName", "gender", "fullName","deviceToken","device"};
+//			String[] value = { userName, userId, displayName, gender, fullName,Utility.getRegistrationId(mContext),"google" };
+//
+//			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.GOOGLE_LOGIN, name, value, null);
+//
+////			Log.v(Constant.TAG, "GoogleLoginCall response " + response);
+//
+//			if (response != null) {
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						sErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					if (jsonObject.has("token")) {
+//						sToken = jsonObject.getString("token");
+//					}
+//
+//					if (jsonObject.has("userId")) {
+//						sUserID = jsonObject.getString("userId");
+//					}
+//
+//					if (jsonObject.has("userName")) {
+//						sUserName = jsonObject.getString("userName");
+//					}
+//
+//					if (jsonObject.has("fullName")) {
+//						sUserFullName = jsonObject.getString("fullName");
+//					}
+//
+//					if (jsonObject.has("profileImage")) {
+//						ProfileImage = jsonObject.getString("profileImage");
+//					}
+//
+//					if (jsonObject.has("profileCover")) {
+//						ProfileCover = jsonObject.getString("profileCover");
+//					}
+//
+//					if (jsonObject.has("userTagline")) {
+//						UserTagLine = jsonObject.getString("userTagline");
+//					}
+//
+//					if (jsonObject.has("userBio")) {
+//						UserBio = jsonObject.getString("userBio");
+//					}
+//
+//					if (jsonObject.has("userDisplayName")) {
+//						sUserDisplayName = jsonObject.getString("userDisplayName");
+//					}
+//
+//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
+//						handlerLogin.sendEmptyMessage(0);
+//					} else {
+//						handlerLogin.sendEmptyMessage(1);
+//					}
+//
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//					e.printStackTrace();
+//					handlerLogin.sendEmptyMessage(0);
+//				}
+//
+//			} else {
+//
+//				handlerLogin.sendEmptyMessage(0);
+//			}
+//
+//		}
+//	}
 
-		String displayName, userId, FullName, UserName;
+//	class FBLoginCall extends Thread {
+//
+//
+//		String displayName, username, dob, userId, email, gender, fullName;
+//
+//		public FBLoginCall(String userId, String username, String email, String displayName, String dob, String gender, String fullName) {
+//			this.userId = userId;
+//			this.username = username;
+//			this.displayName = displayName;
+//			this.email = email;
+//			this.dob = dob;
+//			this.gender = gender;
+//			this.fullName = fullName;
+//		}
+//
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//
+//			String[] name = { "userName", "email", "userId", "displayName", "dob", "gender", "fullName","deviceToken","device" };
+//			String[] value = { username, email, userId, displayName, dob, gender, fullName ,Utility.getRegistrationId(mContext),"google"};
+//
+//			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.FACEBOOK_LOGIN, name, value, null);
+//
+////			Log.v(Constant.TAG, "FBLoginCall response " + response);
+//
+//			if (response != null) {
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						sErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					if (jsonObject.has("token")) {
+//						sToken = jsonObject.getString("token");
+//					}
+//
+//					if (jsonObject.has("userId")) {
+//						sUserID = jsonObject.getString("userId");
+//					}
+//
+//					if (jsonObject.has("userName")) {
+//						sUserName = jsonObject.getString("userName");
+//					}
+//
+//					if (jsonObject.has("fullName")) {
+//						sUserFullName = jsonObject.getString("fullName");
+//					}
+//
+//					if (jsonObject.has("userDisplayName")) {
+//						sUserDisplayName = jsonObject.getString("userDisplayName");
+//					}
+//
+//					if (jsonObject.has("profileImage")) {
+//						ProfileImage = jsonObject.getString("profileImage");
+//					}
+//
+//					if (jsonObject.has("profileCover")) {
+//						ProfileCover = jsonObject.getString("profileCover");
+//					}
+//
+//					if (jsonObject.has("userTagline")) {
+//						UserTagLine = jsonObject.getString("userTagline");
+//					}
+//
+//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
+//						handlerLogin.sendEmptyMessage(0);
+//					} else {
+//						handlerLogin.sendEmptyMessage(1);
+//					}
+//
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//					e.printStackTrace();
+//					handlerLogin.sendEmptyMessage(0);
+//				}
+//
+//			} else {
+//
+//				handlerLogin.sendEmptyMessage(0);
+//			}
+//
+//		}
+//	}
 
-		public TwitterLoginCall(String userId, String displayName, String FullName, String UserName) {
-			this.userId = userId;
-			this.displayName = displayName;
-			this.FullName = FullName;
-			this.UserName = UserName;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String[] name = { "userId", "displayName", "fullName", "userName" };
-			String[] value = { userId, displayName, FullName, UserName };
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.TWITTER_LOGIN, name, value, null);
-
-//			Log.v(Constant.TAG, "TwitterLoginCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (jsonObject.has("token")) {
-						sToken = jsonObject.getString("token");
-					}
-
-					if (jsonObject.has("userId")) {
-						sUserID = jsonObject.getString("userId");
-					}
-
-					if (jsonObject.has("userName")) {
-						sUserName = jsonObject.getString("userName");
-					}
-
-					if (jsonObject.has("fullName")) {
-						sUserFullName = jsonObject.getString("fullName");
-					}
-
-					if (jsonObject.has("userDisplayName")) {
-						sUserDisplayName = jsonObject.getString("userDisplayName");
-					}
-
-					if (jsonObject.has("profileImage")) {
-						ProfileImage = jsonObject.getString("profileImage");
-					}
-
-					if (jsonObject.has("profileCover")) {
-						ProfileCover = jsonObject.getString("profileCover");
-					}
-
-					if (jsonObject.has("userTagline")) {
-						UserTagLine = jsonObject.getString("userTagline");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerLogin.sendEmptyMessage(0);
-					} else {
-						handlerLogin.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerLogin.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerLogin.sendEmptyMessage(0);
-			}
-
-		}
-	}
+//	class TwitterLoginCall extends Thread {
+//
+//		String displayName, userId, FullName, UserName;
+//
+//		public TwitterLoginCall(String userId, String displayName, String FullName, String UserName) {
+//			this.userId = userId;
+//			this.displayName = displayName;
+//			this.FullName = FullName;
+//			this.UserName = UserName;
+//		}
+//
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//
+//			String[] name = { "userId", "displayName", "fullName", "userName" };
+//			String[] value = { userId, displayName, FullName, UserName };
+//
+//			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.TWITTER_LOGIN, name, value, null);
+//
+////			Log.v(Constant.TAG, "TwitterLoginCall response " + response);
+//
+//			if (response != null) {
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						sErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					if (jsonObject.has("token")) {
+//						sToken = jsonObject.getString("token");
+//					}
+//
+//					if (jsonObject.has("userId")) {
+//						sUserID = jsonObject.getString("userId");
+//					}
+//
+//					if (jsonObject.has("userName")) {
+//						sUserName = jsonObject.getString("userName");
+//					}
+//
+//					if (jsonObject.has("fullName")) {
+//						sUserFullName = jsonObject.getString("fullName");
+//					}
+//
+//					if (jsonObject.has("userDisplayName")) {
+//						sUserDisplayName = jsonObject.getString("userDisplayName");
+//					}
+//
+//					if (jsonObject.has("profileImage")) {
+//						ProfileImage = jsonObject.getString("profileImage");
+//					}
+//
+//					if (jsonObject.has("profileCover")) {
+//						ProfileCover = jsonObject.getString("profileCover");
+//					}
+//
+//					if (jsonObject.has("userTagline")) {
+//						UserTagLine = jsonObject.getString("userTagline");
+//					}
+//
+//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
+//						handlerLogin.sendEmptyMessage(0);
+//					} else {
+//						handlerLogin.sendEmptyMessage(1);
+//					}
+//
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//					e.printStackTrace();
+//					handlerLogin.sendEmptyMessage(0);
+//				}
+//
+//			} else {
+//
+//				handlerLogin.sendEmptyMessage(0);
+//			}
+//
+//		}
+//	}
 
 	Handler handlerLogin = new Handler() {
 
@@ -660,17 +669,10 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 	}
 
 	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-//		Session session = Session.getActiveSession();
-//		Session.saveSession(session, outState);
-	}
-
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		facebookManager.onActivityResult(requestCode, resultCode, data);
-//		Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
+		googlePlusManager.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUEST_CODE_PICK_ACCOUNT) {
 			if (resultCode == RESULT_OK) {
 				mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
@@ -743,11 +745,12 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 			sErrorMessage = "";
 			SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 			pref.edit().putBoolean("isSocialLogin",true).commit();
-			new GoogleLoginCall(jsonObject.optString("id", "")
-                    , jsonObject.optString("given_name", "")
-                    , jsonObject.optString("name", "")
-                    , jsonObject.optString("gender", "")
-                    , jsonObject.optString("name", "")).start();
+//			googleLoginCall(jsonObject.optString("name", ""), jsonObject.optString("given_name", ""), jsonObject.optString("id", ""));
+//			new GoogleLoginCall(jsonObject.optString("id", "")
+//                    , jsonObject.optString("given_name", "")
+//                    , jsonObject.optString("name", "")
+//                    , jsonObject.optString("gender", "")
+//                    , jsonObject.optString("name", "")).start();
 //			Intent i=new Intent(LoginSocialActivity.this,YouTubeData.class);
 //			startActivity(i);
 
@@ -792,6 +795,30 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 			});
 		}
 
+	}
+
+	private void startSignUpActivity(){
+		final Intent intent = new Intent(mContext, SignUpActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startLoginActivity(){
+		final Intent intent = new Intent(mContext, LoginActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		googlePlusManager.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		googlePlusManager.onStop();
 	}
 	
 	

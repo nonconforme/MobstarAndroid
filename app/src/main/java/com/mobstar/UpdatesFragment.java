@@ -248,7 +248,7 @@
 //		//		});
 //
 //		listEntry.setOnTouchListener(new OnTouchListener() {
-//			// Setting on Touch Listener for handling the touch inside ScrollView
+//			// Settings on Touch Listener for handling the touch inside ScrollView
 //			@Override
 //			public boolean onTouch(View v, MotionEvent event) {
 //				// Disallow the touch request for parent scroll on touch of child view

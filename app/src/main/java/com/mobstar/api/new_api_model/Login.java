@@ -6,13 +6,13 @@ package com.mobstar.api.new_api_model;
 public class Login {
 
     private Profile profile;
-    private Setting setting;
+    private Settings settings;
 
     public Profile getProfile() {
         return profile;
     }
 
-    public Setting getSetting() {
-        return setting;
+    public Settings getSettings() {
+        return settings;
     }
 }

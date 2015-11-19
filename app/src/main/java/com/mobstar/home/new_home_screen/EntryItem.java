@@ -429,7 +429,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
             public void onSuccess(StarResponse object) {
                 Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
                 Utility.HideDialog(baseActivity);
-                if (object.getError() == null || object.getError().equals("")) {
+                if (!object.hasError()) {
                     if (onChangeEntryListener != null)
                         onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "1");
                 }
@@ -467,8 +467,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                     public void onSuccess(StarResponse object) {
                         Log.d(LOG_TAG, "StarCall.delStarCall.onSuccess");
                         Utility.HideDialog(baseActivity);
-                        final String error = object.getError();
-                        if (error == null || error.equals("")) {
+                        if (!object.hasError()) {
                             if (onChangeEntryListener != null)
                                 onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "0");
                         }

@@ -24,9 +24,17 @@ import android.widget.Toast;
 
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.new_api_call.LoginCall;
+import com.mobstar.api.new_api_model.Login;
+import com.mobstar.api.new_api_model.Profile;
+import com.mobstar.api.new_api_model.Settings;
+import com.mobstar.api.new_api_model.response.LoginResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
+import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
 
 import org.json.JSONArray;
@@ -36,52 +44,64 @@ import java.util.List;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
-	Context mContext;
-
-	Button btnBack, btnLogin;
-
-	Typeface typefaceBtn;
-
-	EditText editEmail, editPassword;
-	TextView textEmailHint, textPasswordHint;
-
-	LinearLayout btnNewUser, btnResetPassword;
-	String sUserID = "", sToken = "", sUserFullName = "", sUserName = "", sUserDisplayName = "";
-	String ProfileImage = "", ProfileCover = "", UserTagLine = "",UserBio;
-	String sErrorMessage = "";
+	private Button btnBack, btnLogin;
+	private Typeface typefaceBtn;
+	private EditText editEmail, editPassword;
+	private TextView textEmailHint, textPasswordHint;
+	private LinearLayout btnNewUser, btnResetPassword;
+	private String sUserID = "", sToken = "", sUserFullName = "", sUserName = "", sUserDisplayName = "";
+	private String ProfileImage = "", ProfileCover = "", UserTagLine = "",UserBio;
+	private String sErrorMessage = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		mContext = LoginActivity.this;
 
-		InitControls();
+		initControls();
 
 		Utility.SendDataToGA("Lgoin Screen", LoginActivity.this);
 	}
 
-	void InitControls() {
+	private void initControls() {
+		findViews();
+		setListeners();
+		setTypeface();
+		setTextChangeListeners();
+		textEmailHint.setVisibility(View.INVISIBLE);
+		textPasswordHint.setVisibility(View.INVISIBLE);
+	}
 
-		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
+	private void findViews(){
+		btnNewUser        = (LinearLayout) findViewById(R.id.btnNewUser);
+		btnResetPassword  = (LinearLayout) findViewById(R.id.btnResetPassword);
+		btnBack           = (Button) findViewById(R.id.btnBack);
+		btnLogin          = (Button) findViewById(R.id.btnLogin);
+		editEmail         = (EditText) findViewById(R.id.editEmail);
+		editPassword      = (EditText) findViewById(R.id.editPassword);
+		textEmailHint     = (TextView) findViewById(R.id.textEmailHint);
+		textPasswordHint  = (TextView) findViewById(R.id.textPasswordHint);
+	}
 
-		btnNewUser = (LinearLayout) findViewById(R.id.btnNewUser);
+	private void setListeners(){
 		btnNewUser.setOnClickListener(this);
-
-		btnResetPassword = (LinearLayout) findViewById(R.id.btnResetPassword);
 		btnResetPassword.setOnClickListener(this);
-
-		btnBack = (Button) findViewById(R.id.btnBack);
-		btnBack.setTypeface(typefaceBtn);
 		btnBack.setOnClickListener(this);
-
-		btnLogin = (Button) findViewById(R.id.btnLogin);
-		btnLogin.setTypeface(typefaceBtn);
 		btnLogin.setOnClickListener(this);
 
-		editEmail = (EditText) findViewById(R.id.editEmail);
+	}
+
+	private void setTypeface(){
+		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
+		btnBack.setTypeface(typefaceBtn);
+		btnLogin.setTypeface(typefaceBtn);
 		editEmail.setTypeface(typefaceBtn);
+		editPassword.setTypeface(typefaceBtn);
+
+	}
+
+	private void setTextChangeListeners(){
 		editEmail.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -104,8 +124,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 		});
 
-		editPassword = (EditText) findViewById(R.id.editPassword);
-		editPassword.setTypeface(typefaceBtn);
 		editPassword.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -127,211 +145,378 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			}
 		});
-
-		textEmailHint = (TextView) findViewById(R.id.textEmailHint);
-		textEmailHint.setVisibility(View.INVISIBLE);
-
-		textPasswordHint = (TextView) findViewById(R.id.textPasswordHint);
-		textPasswordHint.setVisibility(View.INVISIBLE);
-
-		 //editEmail.setText("dhavalk.spaceo@gmail.com");
-		 //editPassword.setText("123123");
 	}
 
 	@Override
 	public void onClick(View view) {
-		// TODO Auto-generated method stub
-		if (btnBack.equals(view)) {
-			Intent intent = new Intent(mContext, LoginSocialActivity.class);
-			startActivity(intent);
-			finish();
-		} else if (btnLogin.equals(view)) {
-
-			boolean isValid = true;
-
-			if (editEmail.getText().toString().trim().length() == 0) {
-				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText(getString(R.string.enter_email_address));
-				textEmailHint.setVisibility(View.VISIBLE);
-				isValid = false;
-			} else if (!Utility.IsValidEmail(editEmail)) {
-				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText(getString(R.string.enter_valid_email_address));
-				textEmailHint.setVisibility(View.VISIBLE);
-				isValid = false;
-			} else {
-				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_tick, 0);
-				textEmailHint.setVisibility(View.INVISIBLE);
-			}
-
-			if (editPassword.getText().toString().trim().length() == 0) {
-				editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textPasswordHint.setText(getString(R.string.enter_password));
-				textPasswordHint.setVisibility(View.VISIBLE);
-				isValid = false;
-			} else {
-				editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_tick, 0);
-				textPasswordHint.setVisibility(View.INVISIBLE);
-			}
-
-			if (isValid) {
-				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-				sErrorMessage = "";
-				if (Utility.isNetworkAvailable(mContext)) {
-//					String s=Utility.getRegistrationId(mContext);
-//					Log.d("mobstar","Login=>"+s);
-					new LoginCall(editEmail.getText().toString().trim(), editPassword.getText().toString().trim()).start();
-
-				} else {
-
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-					Utility.HideDialog(mContext);
-				}
-			}
-
-		} else if (view.equals(btnNewUser)) {
-			Intent intent = new Intent(mContext, SignUpActivity.class);
-			startActivity(intent);
-			finish();
-		} else if (view.equals(btnResetPassword)) {
-			Intent intent = new Intent(mContext, ResetPasswordActivity.class);
-			startActivity(intent);
-			finish();
+		switch (view.getId()){
+			case R.id.btnBack:
+				startLoginSocialActivity();
+				break;
+			case R.id.btnLogin:
+				onClickLogin();
+				break;
+			case R.id.btnNewUser:
+				startSignUpActivity();
+				break;
+			case R.id.btnResetPassword:
+				startResetPasswordActivity();
+				break;
 		}
 	}
 
-	class LoginCall extends Thread {
+	private void onClickLogin(){
+		boolean isValid = true;
 
-		String password, email;
-
-		public LoginCall(String email, String password) {
-
-			this.email = email;
-			this.password = password;
+		if (editEmail.getText().toString().trim().length() == 0) {
+			editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
+			textEmailHint.setText(getString(R.string.enter_email_address));
+			textEmailHint.setVisibility(View.VISIBLE);
+			isValid = false;
+		} else if (!Utility.IsValidEmail(editEmail)) {
+			editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
+			textEmailHint.setText(getString(R.string.enter_valid_email_address));
+			textEmailHint.setVisibility(View.VISIBLE);
+			isValid = false;
+		} else {
+			editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_tick, 0);
+			textEmailHint.setVisibility(View.INVISIBLE);
 		}
 
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-//			Log.d("mobstar","GCM RegId is=>"+Utility.getRegistrationId(mContext));
+		if (editPassword.getText().toString().trim().length() == 0) {
+			editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
+			textPasswordHint.setText(getString(R.string.enter_password));
+			textPasswordHint.setVisibility(View.VISIBLE);
+			isValid = false;
+		} else {
+			editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_tick, 0);
+			textPasswordHint.setVisibility(View.INVISIBLE);
+		}
 
-			String[] name = { "email", "password","deviceToken","device"};
-			String[] value = { email, password,Utility.getRegistrationId(mContext),"google" };
+		if (isValid) {
+			Utility.ShowProgressDialog(this, getString(R.string.loading));
+//			sErrorMessage = "";
+//			if (Utility.isNetworkAvailable(mContext)) {
+////					String s=Utility.getRegistrationId(mContext);
+////					Log.d("mobstar","Login=>"+s);
+//				new LoginCall(editEmail.getText().toString().trim(), editPassword.getText().toString().trim()).start();
+//
+//			} else {
+//
+//				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//				Utility.HideDialog(mContext);
+//			}
+			loginRequest(editEmail.getText().toString().trim(), editPassword.getText().toString().trim());
+		}
+	}
 
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.LOGIN, name, value,null);
-
-			Log.v(Constant.TAG, "LoginCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (jsonObject.has("token")) {
-						sToken = jsonObject.getString("token");
-					}
-
-					if (jsonObject.has("userId")) {
-						sUserID = jsonObject.getString("userId");
-					}
-
-					if (jsonObject.has("userName")) {
-						sUserName = jsonObject.getString("userName");
-					}
-
-					if (jsonObject.has("userFullName")) {
-						sUserFullName = jsonObject.getString("userFullName");
-					}
-
-					if (jsonObject.has("userDisplayName")) {
-						sUserDisplayName = jsonObject.getString("userDisplayName");
-					}
-
-					if (jsonObject.has("profileImage")) {
-						ProfileImage = jsonObject.getString("profileImage");
-					}
-
-					if (jsonObject.has("profileCover")) {
-						ProfileCover = jsonObject.getString("profileCover");
-					}
-
-					if (jsonObject.has("userTagline")) {
-						UserTagLine = jsonObject.getString("userTagline");
-					}
-					
-					if (jsonObject.has("userBio")) {
-						UserBio = jsonObject.getString("userBio");
-					}
-					
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerLogin.sendEmptyMessage(0);
-					} else {
-						handlerLogin.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerLogin.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerLogin.sendEmptyMessage(0);
+	private void loginRequest(final String email, final String password){
+		LoginCall.signInMail(this, email, password, new ConnectCallback<LoginResponse>() {
+			@Override
+			public void onSuccess(LoginResponse object) {
+				onLoginSuccess(object);
 			}
 
-		}
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(LoginActivity.this);
+			}
+		});
 	}
 
-	void OkayAlertDialog(final String msg) {
-
-		if (!isFinishing()) {
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
-
-					// set title
-					alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
-
-					// set dialog message
-					alertDialogBuilder.setMessage(msg).setCancelable(false).setNeutralButton("OK", null);
-
-					// create alert dialog
-					AlertDialog alertDialog = alertDialogBuilder.create();
-
-					// show it
-					alertDialog.show();
-				}
-			});
-		}
-
-	}
-
-	Handler handlerLogin = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			Utility.HideDialog(mContext);
-
-			if (msg.what == 1) {
-
-				SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-				
-				pref.edit().putString("token", sToken).commit();
-				pref.edit().putString("userid", sUserID).commit();
-				pref.edit().putString("email_address", editEmail.getText().toString()).commit();
-				
-				
+//	class LoginCall extends Thread {
+//
+//		String password, email;
+//
+//		public LoginCall(String email, String password) {
+//
+//			this.email = email;
+//			this.password = password;
+//		}
+//
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+////			Log.d("mobstar","GCM RegId is=>"+Utility.getRegistrationId(mContext));
+//
+//			String[] name = { "email", "password","deviceToken","device"};
+//			String[] value = { email, password,Utility.getRegistrationId(mContext),"google" };
+//
+//			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.LOGIN, name, value,null);
+//
+//			Log.v(Constant.TAG, "LoginCall response " + response);
+//
+//			if (response != null) {
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						sErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					if (jsonObject.has("token")) {
+//						sToken = jsonObject.getString("token");
+//					}
+//
+//					if (jsonObject.has("userId")) {
+//						sUserID = jsonObject.getString("userId");
+//					}
+//
+//					if (jsonObject.has("userName")) {
+//						sUserName = jsonObject.getString("userName");
+//					}
+//
+//					if (jsonObject.has("userFullName")) {
+//						sUserFullName = jsonObject.getString("userFullName");
+//					}
+//
+//					if (jsonObject.has("userDisplayName")) {
+//						sUserDisplayName = jsonObject.getString("userDisplayName");
+//					}
+//
+//					if (jsonObject.has("profileImage")) {
+//						ProfileImage = jsonObject.getString("profileImage");
+//					}
+//
+//					if (jsonObject.has("profileCover")) {
+//						ProfileCover = jsonObject.getString("profileCover");
+//					}
+//
+//					if (jsonObject.has("userTagline")) {
+//						UserTagLine = jsonObject.getString("userTagline");
+//					}
+//
+//					if (jsonObject.has("userBio")) {
+//						UserBio = jsonObject.getString("userBio");
+//					}
+//
+//
+//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
+//						handlerLogin.sendEmptyMessage(0);
+//					} else {
+//						handlerLogin.sendEmptyMessage(1);
+//					}
+//
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//					e.printStackTrace();
+//					handlerLogin.sendEmptyMessage(0);
+//				}
+//
+//			} else {
+//
+//				handlerLogin.sendEmptyMessage(0);
+//			}
+//
+//		}
+//	}
+//
+//	void OkayAlertDialog(final String msg) {
+//
+//		if (!isFinishing()) {
+//			runOnUiThread(new Runnable() {
+//
+//				@Override
+//				public void run() {
+//					// TODO Auto-generated method stub
+//					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+//
+//					// set title
+//					alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
+//
+//					// set dialog message
+//					alertDialogBuilder.setMessage(msg).setCancelable(false).setNeutralButton("OK", null);
+//
+//					// create alert dialog
+//					AlertDialog alertDialog = alertDialogBuilder.create();
+//
+//					// show it
+//					alertDialog.show();
+//				}
+//			});
+//		}
+//
+//	}
+//
+//	Handler handlerLogin = new Handler() {
+//
+//		@Override
+//		public void handleMessage(Message msg) {
+//			// TODO Auto-generated method stub
+//			Utility.HideDialog(mContext);
+//
+//			if (msg.what == 1) {
+//
+//				SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
+//
+//				pref.edit().putString("token", sToken).commit();
+//				pref.edit().putString("userid", sUserID).commit();
+//				pref.edit().putString("email_address", editEmail.getText().toString()).commit();
+//
+//
+////				pref.edit().putString("username", sUserName).commit();
+////				pref.edit().putString("fullName", sUserFullName).commit();
+////				pref.edit().putString("displayName", sUserDisplayName).commit();
+////				pref.edit().putString("profile_image", ProfileImage).commit();
+////				pref.edit().putString("cover_image", ProfileCover).commit();
+////				pref.edit().putString("tagline", UserTagLine).commit();
+////				pref.edit().putString("bio", UserBio).commit();
+////				pref.edit().putBoolean("isLogin", true).commit();
+////				pref.edit().putBoolean("isVerifyMobileCode",true).commit();
+//
+////				Intent intent = new Intent(mContext, HomeActivity.class);
+////				startActivity(intent);
+////				finish();
+//
+//				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+//				sErrorMessage = "";
+//				if (Utility.isNetworkAvailable(mContext)) {
+////					String s=Utility.getRegistrationId(mContext);
+////					Log.d("mobstar","Login=>"+s);
+//					new GetProfileCall(sUserID).start();
+//
+//				} else {
+//
+//					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//					Utility.HideDialog(mContext);
+//				}
+//
+//			} else {
+//
+//				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
+//				textEmailHint.setText("");
+//				textEmailHint.setVisibility(View.VISIBLE);
+//
+//				editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
+//				textPasswordHint.setText("");
+//				textPasswordHint.setVisibility(View.VISIBLE);
+//
+//				OkayAlertDialog(sErrorMessage);
+//			}
+//		}
+//	};
+//
+//	class GetProfileCall extends Thread {
+//
+//		String UserID;
+//
+//		public GetProfileCall(String UserID) {
+//			this.UserID = UserID;
+//		}
+//
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//
+//			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.GET_PROFILE + UserID,sToken);
+//
+////			Log.v(Constant.TAG, "GetProfile response " + response);
+//
+//			if (response != null) {
+//
+//				String ErrorMessage = "";
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						ErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					if (jsonObject.has("users")) {
+//
+//						JSONArray jsonArrayUser = jsonObject.getJSONArray("users");
+//
+//						if (jsonArrayUser.length() > 0) {
+//
+//							JSONObject jsonObj = jsonArrayUser.getJSONObject(0);
+//
+//							if (jsonObj.has("user")) {
+//								JSONObject jsonObjUser = jsonObj.getJSONObject("user");
+//
+//								// entryPojo.setUserID(jsonObjUser.getString("id"));
+//								// entryPojo.setUserName(jsonObjUser.getString("userName"));
+//								// entryPojo.setUserDisplayName(jsonObjUser.getString("displayName"));
+//								// entryPojo.setProfileImage(jsonObjUser.getString("profileImage"));
+//								// entryPojo.setProfileCover(jsonObjUser.getString("profileCover"));
+//								// entryPojo.setTagline(jsonObjUser.getString("tagLine"));
+//								//								UserName = jsonObjUser.getString("userName");
+//								//								UserDisplayName = jsonObjUser.getString("displayName");
+//								sUserName=jsonObjUser.getString("userName");
+//								sUserFullName=jsonObjUser.getString("fullName");
+//								sUserDisplayName=jsonObjUser.getString("displayName");
+//								ProfileImage=jsonObjUser.getString("profileImage");
+//								ProfileCover=jsonObjUser.getString("profileCover");
+//								UserTagLine=jsonObjUser.getString("tagLine");
+//								UserBio=jsonObjUser.getString("bio");
+//							}
+//						}
+//					}
+//
+//					if (ErrorMessage != null && !ErrorMessage.equals("")) {
+//						handlerProfile.sendEmptyMessage(0);
+//					} else {
+//						handlerProfile.sendEmptyMessage(1);
+//					}
+//
+//				} catch (Exception exception) {
+//					// TODO: handle exception
+//					exception.printStackTrace();
+//					handlerProfile.sendEmptyMessage(0);
+//				}
+//
+//			} else {
+//				handlerProfile.sendEmptyMessage(0);
+//			}
+//
+//		}
+//	}
+//
+//	Handler handlerProfile = new Handler() {
+//
+//		@Override
+//		public void handleMessage(Message msg) {
+//			// TODO Auto-generated method stub
+//			Utility.HideDialog(mContext);
+//
+//			if (msg.what == 1) {
+//				//				if (UserCoverImage.equals("")) {
+//				//					imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
+//				//				} else {
+//				//					imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
+//				//
+//				//					Picasso.with(mContext).load(UserCoverImage).fit().centerCrop().placeholder(R.drawable.cover_bg).error(R.drawable.cover_bg).into(imgCoverPage);
+//				//				}
+//				//
+//				//				if (UserPic.equals("")) {
+//				//					imgUserPic.setImageResource(R.drawable.profile_pic_new);
+//				//				} else {
+//				//					imgUserPic.setImageResource(R.drawable.profile_pic_new);
+//				//
+//				//					Picasso.with(mContext).load(UserPic).resize(Utility.dpToPx(mContext, 126), Utility.dpToPx(mContext, 126)).centerCrop().placeholder(R.drawable.profile_pic_new)
+//				//					.error(R.drawable.profile_pic_new).transform(new RoundedTransformation(Utility.dpToPx(mContext, 126), 0)).into(imgUserPic);
+//				//				}
+//				//
+//				//				textUserName.setText(UserName);
+//				//				textUserDisplayName.setText(UserDisplayName);
+////				textTagline.setText(StringEscapeUtils.unescapeJava(UserTagline));
+//
+//				//				UpdatesFragment updatesFragment = new UpdatesFragment();
+//				//				Bundle extras = new Bundle();
+//				//				extras.putString("UserID",UserID);
+//				//				updatesFragment.setArguments(extras);
+//				//				replaceFragment(updatesFragment, "UpdatesFragment");
+//
+//				//add dynamically layout header height
+//				//				ViewGroup.LayoutParams params = topTransparent.getLayoutParams();
+//				//				params.height = llHeader.getHeight()+150;
+//				//				topTransparent.setLayoutParams(params);
+//				//				topTransparent.requestLayout();
+//
+//				SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 //				pref.edit().putString("username", sUserName).commit();
 //				pref.edit().putString("fullName", sUserFullName).commit();
 //				pref.edit().putString("displayName", sUserDisplayName).commit();
@@ -341,193 +526,62 @@ public class LoginActivity extends Activity implements OnClickListener {
 //				pref.edit().putString("bio", UserBio).commit();
 //				pref.edit().putBoolean("isLogin", true).commit();
 //				pref.edit().putBoolean("isVerifyMobileCode",true).commit();
+//				pref.edit().putBoolean("isSocialLogin",false).commit();
+//
+////				Intent intent = new Intent(mContext, HomeActivity.class);
+////				startActivity(intent);
+////				finish();
+//                AdWordsManager.getInstance().sendSingupEvent();
+//				sendAnalytics();
+//
+//				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
+//					Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
+//					startActivity(intent);
+//					finish();
+//				}
+//				else {
+//					Intent intent = new Intent(mContext, WhoToFollowActivity.class);
+//					startActivity(intent);
+//					finish();
+//				}
+//
+//
+//			} else {
+//
+//			}
+//		}
+//	};
 
-//				Intent intent = new Intent(mContext, HomeActivity.class);
-//				startActivity(intent);
-//				finish();
-				
-				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-				sErrorMessage = "";
-				if (Utility.isNetworkAvailable(mContext)) {
-//					String s=Utility.getRegistrationId(mContext);
-//					Log.d("mobstar","Login=>"+s);
-					new GetProfileCall(sUserID).start();
 
-				} else {
-
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-					Utility.HideDialog(mContext);
-				}
-
-			} else {
-
-				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textEmailHint.setText("");
-				textEmailHint.setVisibility(View.VISIBLE);
-
-				editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-				textPasswordHint.setText("");
-				textPasswordHint.setVisibility(View.VISIBLE);
-
-				OkayAlertDialog(sErrorMessage);
+	private void onLoginSuccess(final LoginResponse loginResponse){
+		Utility.HideDialog(this);
+		AdWordsManager.getInstance().sendSingupEvent();
+		sendAnalytics();
+		if(loginResponse.getLogin() == null)
+			return;
+		final Login login = loginResponse.getLogin();
+		final Profile profile = login.getProfile();
+		if (profile != null){
+//			UserPreference.saveUserProfileToPreference(this, profile, true);
+			AdWordsManager.getInstance().sendSingupEvent();
+			if (UserPreference.welcomIsChecked(this)) {
+				startWelcomeActivity();
+			}else {
+				if (login.getSettings() != null)
+					verifyUserContinent(login.getSettings());
 			}
-		}
-	};
-
-	class GetProfileCall extends Thread {
-
-		String UserID;
-
-		public GetProfileCall(String UserID) {
-			this.UserID = UserID;
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-
-			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.GET_PROFILE + UserID,sToken);
-
-//			Log.v(Constant.TAG, "GetProfile response " + response);
-
-			if (response != null) {
-
-				String ErrorMessage = "";
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						ErrorMessage = jsonObject.getString("error");
-					}
-
-					if (jsonObject.has("users")) {
-
-						JSONArray jsonArrayUser = jsonObject.getJSONArray("users");
-
-						if (jsonArrayUser.length() > 0) {
-
-							JSONObject jsonObj = jsonArrayUser.getJSONObject(0);
-
-							if (jsonObj.has("user")) {
-								JSONObject jsonObjUser = jsonObj.getJSONObject("user");
-
-								// entryPojo.setUserID(jsonObjUser.getString("id"));
-								// entryPojo.setUserName(jsonObjUser.getString("userName"));
-								// entryPojo.setUserDisplayName(jsonObjUser.getString("displayName"));
-								// entryPojo.setProfileImage(jsonObjUser.getString("profileImage"));
-								// entryPojo.setProfileCover(jsonObjUser.getString("profileCover"));
-								// entryPojo.setTagline(jsonObjUser.getString("tagLine"));
-								//								UserName = jsonObjUser.getString("userName");
-								//								UserDisplayName = jsonObjUser.getString("displayName");
-								sUserName=jsonObjUser.getString("userName");
-								sUserFullName=jsonObjUser.getString("fullName");
-								sUserDisplayName=jsonObjUser.getString("displayName");
-								ProfileImage=jsonObjUser.getString("profileImage");
-								ProfileCover=jsonObjUser.getString("profileCover");
-								UserTagLine=jsonObjUser.getString("tagLine");
-								UserBio=jsonObjUser.getString("bio");
-							}
-						}
-					}
-
-					if (ErrorMessage != null && !ErrorMessage.equals("")) {
-						handlerProfile.sendEmptyMessage(0);
-					} else {
-						handlerProfile.sendEmptyMessage(1);
-					}
-
-				} catch (Exception exception) {
-					// TODO: handle exception
-					exception.printStackTrace();
-					handlerProfile.sendEmptyMessage(0);
-				}
-
-			} else {
-				handlerProfile.sendEmptyMessage(0);
-			}
-
 		}
 	}
 
-	Handler handlerProfile = new Handler() {
+	private void verifyUserContinent(final Settings settings){
+		final String userContinents = settings.getContinent();
+		if (userContinents == null || userContinents.equalsIgnoreCase("") || userContinents.equalsIgnoreCase("0"))
+			startSelectCurrentRegionActivity();
+		else startWhoToFollowActivity();
 
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			Utility.HideDialog(mContext);
+	}
 
-			if (msg.what == 1) {
-				//				if (UserCoverImage.equals("")) {
-				//					imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
-				//				} else {
-				//					imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
-				//
-				//					Picasso.with(mContext).load(UserCoverImage).fit().centerCrop().placeholder(R.drawable.cover_bg).error(R.drawable.cover_bg).into(imgCoverPage);
-				//				}
-				//
-				//				if (UserPic.equals("")) {
-				//					imgUserPic.setImageResource(R.drawable.profile_pic_new);
-				//				} else {
-				//					imgUserPic.setImageResource(R.drawable.profile_pic_new);
-				//
-				//					Picasso.with(mContext).load(UserPic).resize(Utility.dpToPx(mContext, 126), Utility.dpToPx(mContext, 126)).centerCrop().placeholder(R.drawable.profile_pic_new)
-				//					.error(R.drawable.profile_pic_new).transform(new RoundedTransformation(Utility.dpToPx(mContext, 126), 0)).into(imgUserPic);
-				//				}
-				//
-				//				textUserName.setText(UserName);
-				//				textUserDisplayName.setText(UserDisplayName);
-//				textTagline.setText(StringEscapeUtils.unescapeJava(UserTagline));
 
-				//				UpdatesFragment updatesFragment = new UpdatesFragment();
-				//				Bundle extras = new Bundle();
-				//				extras.putString("UserID",UserID);
-				//				updatesFragment.setArguments(extras);
-				//				replaceFragment(updatesFragment, "UpdatesFragment");
-
-				//add dynamically layout header height
-				//				ViewGroup.LayoutParams params = topTransparent.getLayoutParams();
-				//				params.height = llHeader.getHeight()+150;
-				//				topTransparent.setLayoutParams(params);
-				//				topTransparent.requestLayout();
-
-				SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-				pref.edit().putString("username", sUserName).commit();
-				pref.edit().putString("fullName", sUserFullName).commit();
-				pref.edit().putString("displayName", sUserDisplayName).commit();
-				pref.edit().putString("profile_image", ProfileImage).commit();
-				pref.edit().putString("cover_image", ProfileCover).commit();
-				pref.edit().putString("tagline", UserTagLine).commit();
-				pref.edit().putString("bio", UserBio).commit();
-				pref.edit().putBoolean("isLogin", true).commit();
-				pref.edit().putBoolean("isVerifyMobileCode",true).commit();
-				pref.edit().putBoolean("isSocialLogin",false).commit();
-
-//				Intent intent = new Intent(mContext, HomeActivity.class);
-//				startActivity(intent);
-//				finish();
-                AdWordsManager.getInstance().sendSingupEvent();
-				sendAnalytics();
-				
-				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
-					Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
-					startActivity(intent);
-					finish();
-				}
-				else {
-					Intent intent = new Intent(mContext, WhoToFollowActivity.class);
-					startActivity(intent);
-					finish();
-				}
-				
-
-			} else {
-
-			}
-		}
-	};
-	
 	private void sendAnalytics(){
 		String myVersion = android.os.Build.VERSION.RELEASE; // e.g. myVersion := "1.6"
 		
@@ -551,7 +605,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		
 		String deviceName=getDeviceName();
 		
-		if (Utility.isNetworkAvailable(mContext)) {
+		if (Utility.isNetworkAvailable(this)) {
 			Log.d("log_tag","versionName"+versionName);
 			Log.d("log_tag","versionCode"+versionCode);
 			Log.d("log_tag","Analytics data==>osVersion "+myVersion +" appVersion "+versionCode+" deviceName "+deviceName);
@@ -650,5 +704,45 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startWhoToFollowActivity(){
+		final Intent intent = new Intent(this, WhoToFollowActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startWelcomeActivity(){
+		final Intent intent = new Intent(this, WelcomeVideoActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startLoginSocialActivity(){
+		final Intent intent = new Intent(this, LoginSocialActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startSignUpActivity(){
+		final Intent intent = new Intent(this, SignUpActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void startResetPasswordActivity(){
+		final Intent intent = new Intent(this, ResetPasswordActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+
 	
 }

@@ -29,7 +29,6 @@ import cz.msebera.android.httpclient.Header;
  */
 public class RestClient {
 
-
     private static final String LOG_TAG = RestClient.class.getName();
     private static RestClient instance;
     private AsyncHttpClient httpClient;
@@ -50,8 +49,8 @@ public class RestClient {
         instance.context = _context;
         instance.httpClient = new AsyncHttpClient();
         instance.httpClient.setTimeout(Constant.TIMEOUTCONNECTION);
-//        instance.httpClient.addHeader("Content-Type", "application/json");
-        instance.httpClient.addHeader("Content-Type", "multipart/form-data");
+        instance.httpClient.addHeader("Content-Type", "application/json; charset=utf-8");
+//        instance.httpClient.addHeader("Content-Type", "multipart/form-data");
         instance.httpClient.addHeader("X-API-KEY", Constant.API_KEY);
         instance.httpClient.addHeader("X-API-TOKEN", instance.preferences.getString("token", null));
         return instance;
@@ -72,7 +71,7 @@ public class RestClient {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 try {
-                    String jsonStr = new String(bytes, "US-ASCII");
+                    String jsonStr = new String(bytes, "UTF-8");
                     if (jsonStr.equals("[]"))
                         jsonStr = "{}";
                     final JSONObject jsonObject = new JSONObject(jsonStr);
@@ -103,7 +102,7 @@ public class RestClient {
             callback.onFailure("");
             return;
         }
-        final String absoluteUrl = Constant.SERVER_URL + url;
+        final String absoluteUrl = ApiConstant.BASE_SERVER_URL + url;
         final RequestParams requestParams = new RequestParams(params);
         Log.d(LOG_TAG, "http request post: "+ absoluteUrl + "?" + requestParams.toString());
         httpClient.removeHeader("Content-Type");
@@ -111,7 +110,7 @@ public class RestClient {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 try {
-                    final JSONObject jsonObject = new JSONObject(new String(bytes, "US-ASCII"));
+                    final JSONObject jsonObject = new JSONObject(new String(bytes, "UTF-8"));
                     if (callback != null) {
                         callback.parse(jsonObject);
                     }

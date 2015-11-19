@@ -424,7 +424,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	public void setMode(Mode mode) {
 		if (mode != mMode) {
 			if (DEBUG) {
-				Log.d(LOG_TAG, "Setting mode to: " + mode);
+				Log.d(LOG_TAG, "Settings mode to: " + mode);
 			}
 			mMode = mode;
 			updateUIForMode();
@@ -915,7 +915,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		}
 
 		if (DEBUG) {
-			Log.d(LOG_TAG, String.format("Setting Padding. L: %d, T: %d, R: %d, B: %d", pLeft, pTop, pRight, pBottom));
+			Log.d(LOG_TAG, String.format("Settings Padding. L: %d, T: %d, R: %d, B: %d", pLeft, pTop, pRight, pBottom));
 		}
 		setPadding(pLeft, pTop, pRight, pBottom);
 	}

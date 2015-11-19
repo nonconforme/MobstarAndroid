@@ -22,7 +22,6 @@ public class LoginCall {
             final String fullName,
             final String displayName,
             final String password,
-            final String deviceToken,
             final ConnectCallback<LoginResponse> connectCallback){
 
         final HashMap<String, String> params = new HashMap<>();
@@ -30,23 +29,22 @@ public class LoginCall {
         params.put("fullName", fullName);
         params.put("displayName", displayName);
         params.put("password", password);
-        params.put("deviceToken", deviceToken);
+        params.put("deviceToken", Utility.getRegistrationId(context));
         params.put("deviceType", GOOGLE_DEVICE_TYPE);
-        RestClient.getInstance(context).postRequest(BASE_SERVER_URL + SIGN_UP, params, connectCallback);
+        RestClient.getInstance(context).postRequest(SIGN_UP, params, connectCallback);
     }
 
     public static final void signInMail(
             final Context context,
             final String email,
             final String password,
-            final String deviceToken,
-            final ConnectCallback connectCallback){
+            final ConnectCallback<LoginResponse> connectCallback){
         final HashMap<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);
-        params.put("deviceToken", deviceToken);
+        params.put("deviceToken", Utility.getRegistrationId(context));
         params.put("deviceType", GOOGLE_DEVICE_TYPE);
-        RestClient.getInstance(context).postRequest(BASE_SERVER_URL + SIGN_IN, params, connectCallback);
+        RestClient.getInstance(context).postRequest(SIGN_IN, params, connectCallback);
     }
 
     public static final void signSocial(
@@ -63,6 +61,6 @@ public class LoginCall {
         params.put("fullName", fullName);
         params.put("socialId", socialId);
         params.put("socialType", socialType.toString());
-        RestClient.getInstance(context).postRequest(BASE_SERVER_URL + SIGN_SOCIAL, params, connectCallback);
+        RestClient.getInstance(context).postRequest(SIGN_SOCIAL, params, connectCallback);
     }
 }

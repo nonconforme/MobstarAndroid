@@ -10,20 +10,25 @@ import org.json.JSONObject;
  */
 public abstract class BaseResponse {
 
-    protected String error="";
+    private Error error;
+
     public void configure(JSONObject jsonObject) throws JSONException {
         if(jsonObject.has("error"))
-            error = jsonObject.getString("error");
-        if(jsonObject.has("errors"))
-            error = jsonObject.getString("errors");
+            error = new Error(jsonObject.getJSONObject("error"));
     }
 
-    public String getError() {
+    public String getErrorMessage() {
+        if (error == null)
+            return null;
+        return error.getMessage();
+    }
+
+    public Error getError() {
         return error;
     }
 
     public boolean hasError(){
-        return !error.isEmpty();
+        return error != null;
     }
 
     protected Gson getGson(){

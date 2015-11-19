@@ -103,7 +103,7 @@ public class ProgressWheelPercentage extends View {
 	}
 	
 	//----------------------------------
-	//Setting up stuff
+	//Settings up stuff
 	//----------------------------------
 	
 	/**

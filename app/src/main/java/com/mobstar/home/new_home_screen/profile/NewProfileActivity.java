@@ -195,8 +195,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onSuccess(StarResponse object) {
                 Utility.HideDialog(NewProfileActivity.this);
-                final String error = object.getError();
-                if (error == null || error.equals("")) {
+                if (!object.hasError()) {
                     if (profileFragment != null)
                         getProfileFragment().onFollowEntry(user.getUserId(), "0");
                     setIsMyStar("0");

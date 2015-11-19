@@ -48,7 +48,7 @@
 //		preferences = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 //		sUserId = preferences.getString("userid", "");
 //		getBundleExtras();
-//		InitControls();
+//		initControls();
 //	}
 //
 //	private void getBundleExtras() {
@@ -58,7 +58,7 @@
 //		}
 //	}
 //
-//	private void InitControls() {
+//	private void initControls() {
 //		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 //
 //		textVerifyMobileno=(TextView) findViewById(R.id.textVerifyMobileno);

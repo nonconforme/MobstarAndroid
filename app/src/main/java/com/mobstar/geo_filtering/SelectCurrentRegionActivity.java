@@ -81,7 +81,6 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
             onClickOk();
                 break;
         }
-
     }
 
     private void onClickOk(){

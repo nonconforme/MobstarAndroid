@@ -22,10 +22,12 @@ public class UserPreference {
     public static final String TAGLINE           = "tagline";
     public static final String BIO               = "bio";
     public static final String IS_LOGIN          = "isLogin";
+    public static final String IS_SOCIAL_LOGIN   = "isSocialLogin";
+
+    public static final String WELCOME_IS_CHECKED = "welcome_is_checked";
 
     public static final void saveUserProfileToPreference(final Context context, final Profile profile, final boolean isLogin){
-        final SharedPreferences pref = context.getSharedPreferences(MOBSTAR_PREFERENCE, Context.MODE_PRIVATE);
-        pref.edit()
+        getPreference(context).edit()
                 .putString(USER_NAME, profile.getDisplayName())
                 .putString(FULL_NAME, profile.getFullName())
                 .putString(USER_ID, profile.getId())
@@ -35,6 +37,18 @@ public class UserPreference {
                 .putString(BIO, profile.getBio())
                 .putBoolean(IS_LOGIN, isLogin)
                 .apply();
+    }
+
+    public static void isSocialLoginToPreference(final Context context, final boolean isSocial){
+        getPreference(context).edit().putBoolean(IS_SOCIAL_LOGIN, isSocial).apply();
+    }
+
+    public static boolean welcomIsChecked(final Context context){
+        return getPreference(context).getBoolean(WELCOME_IS_CHECKED, true);
+    }
+
+    private static  SharedPreferences getPreference(final Context context){
+        return context.getSharedPreferences(MOBSTAR_PREFERENCE, Context.MODE_PRIVATE);
     }
 
 

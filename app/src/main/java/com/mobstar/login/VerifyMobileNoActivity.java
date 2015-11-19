@@ -62,10 +62,10 @@
 //		mContext=VerifyMobileNoActivity.this;
 //		preferences = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 //		sUserId = preferences.getString("userid", "");
-//		InitControls();
+//		initControls();
 //	}
 //
-//	private void InitControls() {
+//	private void initControls() {
 //		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 //
 //		btnSendCode = (Button) findViewById(R.id.btnSendCode);
