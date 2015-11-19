@@ -20,7 +20,7 @@ import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.DownloadFileManager;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.EntriesResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.custom.pull_to_refresh.PullToRefreshBase;
 import com.mobstar.custom.pull_to_refresh.PullToRefreshRecyclerView;
 import com.mobstar.custom.recycler_view.EndlessRecyclerOnScrollListener;
@@ -203,6 +203,11 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                 pullToRefreshRecyclerView.onRefreshComplete();
                 Utility.HideDialog(getActivity());
                 setNoEntriesMessage();
+            }
+
+            @Override
+            public void onServerError(com.mobstar.api.responce.Error error) {
+
             }
         });
     }

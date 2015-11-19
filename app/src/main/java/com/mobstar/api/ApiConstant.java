@@ -13,6 +13,10 @@ public class ApiConstant {
     public static final String SIGN_SOCIAL           = "signSocial";
     public static final String SIGN_IN               = "signIn";
 
+    //   SETTING
+    public static final String SETTING_USER_CONTINENT = "settings/userContinent/";
+
+
 
     //    OTHER
     public static final String GOOGLE_DEVICE_TYPE    = "google";

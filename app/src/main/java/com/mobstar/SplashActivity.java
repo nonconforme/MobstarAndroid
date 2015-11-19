@@ -22,7 +22,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.home.HomeInformationActivity;
@@ -175,6 +175,11 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 			public void onFailure(String error) {
 				Utility.HideDialog(SplashActivity.this);
 				startHomeActivity();
+			}
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
 			}
 		});
 	}

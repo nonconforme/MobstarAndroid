@@ -30,11 +30,12 @@ import com.mobstar.api.new_api_model.Profile;
 import com.mobstar.api.new_api_model.Settings;
 import com.mobstar.api.new_api_model.SocialType;
 import com.mobstar.api.new_api_model.response.LoginResponse;
-import com.mobstar.api.responce.UserAccountResponse;
-import com.mobstar.custom.AbstractGetNameTask;
+import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
+//import com.mobstar.custom.AbstractGetNameTask;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
-import com.mobstar.custom.GetNameInForeground;
+//import com.mobstar.custom.GetNameInForeground;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
@@ -56,25 +57,24 @@ import java.util.Collection;
 
 public class LoginSocialActivity extends Activity implements OnClickListener, FacebookManager.OnFacebookSignInCompletedListener, GooglePlusManager.OnGooglePlusSignInCompletedListener {
 
-	private Context mContext;
 	private LinearLayout btnGetStarted, btnSignIn;
 	private CustomTextview btnLoginFB,  btnLoginTwitter, btnLoginGoogle;
 	private CustomTextviewBold btnCountinueWOSignin;
 
-	private String sUserID = "", sToken = "", sUserFullName = "", sUserName = "", sUserDisplayName = "";
-	private String sErrorMessage = "";
-	private String ProfileImage = "", ProfileCover = "", UserTagLine = "",UserBio = "";
+//	private String sUserID = "", sToken = "", sUserFullName = "", sUserName = "", sUserDisplayName = "";
+//	private String sErrorMessage = "";
+//	private String ProfileImage = "", ProfileCover = "", UserTagLine = "",UserBio = "";
 	private ImageTwitter mTweet;
 	private GooglePlusManager googlePlusManager;
 
 	// Google plus sign in
-	String mEmail;
+//	String mEmail;
 	private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile";
 //	private static final String SCOPE="https://www.googleapis.com/auth/youtube.readonly";
-	static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
-	static final int REQUEST_CODE_RECOVER_FROM_AUTH_ERROR = 1001;
-	static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1002;
-	String googleToken="";
+//	static final int REQUEST_CODE_PICK_ACCOUNT = 1000;
+//	static final int REQUEST_CODE_RECOVER_FROM_AUTH_ERROR = 1001;
+//	static final int REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR = 1002;
+//	String googleToken="";
 	private FacebookManager facebookManager;
 
 	@Override
@@ -84,7 +84,6 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		setContentView(R.layout.activity_login_social);
 		googlePlusManager = new GooglePlusManager(this, this);
 		CookieHandler.setDefault(new CookieManager());
-		mContext = LoginSocialActivity.this;
 		findViews();
 		setListeners();
 		Utility.SendDataToGA("LgoinSocial Screen", LoginSocialActivity.this);
@@ -146,7 +145,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 	}
 
 	private void loginWithTwitter(){
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
 		mTweet = new ImageTwitter(LoginSocialActivity.this, true, null,null);
 		mTweet.setOnCompleteListener(new OnCompleteListener() {
 
@@ -169,7 +168,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 //						Utility.HideDialog(mContext);
 //					}
 				} else {
-					Utility.HideDialog(mContext);
+					Utility.HideDialog(LoginSocialActivity.this);
 				}
 
 			}
@@ -177,46 +176,46 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		mTweet.send();
 	}
 
-	/** Called by button in the layout */
-	public void greetTheUser() {
-		int statusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-		if (statusCode == ConnectionResult.SUCCESS) {
-			getUsername();
-		} else if (GooglePlayServicesUtil.isUserRecoverableError(statusCode)) {
-			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode, this, 0 /*
-																					 * request
-																					 * code
-																					 * not
-																					 * used
-																					 */);
-			dialog.show();
-		} else {
-			Toast.makeText(this, R.string.unrecoverable_error, Toast.LENGTH_SHORT).show();
-		}
-	}
+//	/** Called by button in the layout */
+//	public void greetTheUser() {
+//		int statusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+//		if (statusCode == ConnectionResult.SUCCESS) {
+//			getUsername();
+//		} else if (GooglePlayServicesUtil.isUserRecoverableError(statusCode)) {
+//			Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode, this, 0 /*
+//																					 * request
+//																					 * code
+//																					 * not
+//																					 * used
+//																					 */);
+//			dialog.show();
+//		} else {
+//			Toast.makeText(this, R.string.unrecoverable_error, Toast.LENGTH_SHORT).show();
+//		}
+//	}
 
 	/**
 	 * Attempt to get the user name. If the email address isn't known yet, then
 	 * call pickUserAccount() method so the user can pick an account.
 	 */
-	private void getUsername() {
-		if (mEmail == null) {
-			pickUserAccount();
-		} else {
-			if (Utility.isNetworkAvailable(mContext)) {
-				getTask(LoginSocialActivity.this, mEmail, SCOPE).execute();
-			} else {
-				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-				Utility.HideDialog(mContext);
-			}
-		}
-	}
+//	private void getUsername() {
+//		if (mEmail == null) {
+//			pickUserAccount();
+//		} else {
+//			if (Utility.isNetworkAvailable(mContext)) {
+//				getTask(LoginSocialActivity.this, mEmail, SCOPE).execute();
+//			} else {
+//				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+//				Utility.HideDialog(mContext);
+//			}
+//		}
+//	}
 
-	private void pickUserAccount() {
-		String[] accountTypes = new String[] { "com.google" };
-		Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
-		startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
-	}
+//	private void pickUserAccount() {
+//		String[] accountTypes = new String[] { "com.google" };
+//		Intent intent = AccountPicker.newChooseAccountIntent(null, null, accountTypes, false, null, null, null, null);
+//		startActivityForResult(intent, REQUEST_CODE_PICK_ACCOUNT);
+//	}
 
 	@Override
 	public void onFacebookLoginSuccess(FacebookResponse response) {
@@ -257,16 +256,8 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		return true;
 	}
 
-//	private void facebookLoginCall(final FacebookResponse facebook){
-//		socialLoginRequest(facebook.getName(), facebook.getName(), facebook.getId(), SocialType.facebook);
-//	}
-//
-//	private void googleLoginCall(String displayName, String fullName, String socialId){
-//		socialLoginRequest(displayName, fullName, socialId, SocialType.google);
-//	}
-
 	private void socialLoginRequest(String displayName, String fullName, String socialId, SocialType socialType){
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
 		LoginCall.signSocial(this,  displayName, fullName, socialId, socialType, new ConnectCallback<LoginResponse>() {
 			@Override
 			public void onSuccess(LoginResponse object) {
@@ -276,13 +267,18 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 
 			@Override
 			public void onFailure(String error) {
-				Utility.HideDialog(mContext);
+				Utility.HideDialog(LoginSocialActivity.this);
+			}
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
 			}
 		});
 	}
 
 	private void onLoginSuccess(final LoginResponse loginResponse){
-		Utility.HideDialog(mContext);
+		Utility.HideDialog(this);
 		if(loginResponse.getLogin() == null)
 			return;
 		final Login login = loginResponse.getLogin();
@@ -567,66 +563,233 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 //
 //		}
 //	}
+//
+//	Handler handlerLogin = new Handler() {
+//
+//		@Override
+//		public void handleMessage(Message msg) {
+//			// TODO Auto-generated method stub
+//			Utility.HideDialog(mContext);
+//
+//			if (msg.what == 1) {
+//
+//				SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
+//				pref.edit().putString("username", sUserName).commit();
+//				pref.edit().putString("fullName", sUserFullName).commit();
+//				pref.edit().putString("displayName", sUserDisplayName).commit();
+//				pref.edit().putString("token", sToken).commit();
+//				pref.edit().putString("userid", sUserID).commit();
+//				pref.edit().putString("profile_image", ProfileImage).commit();
+//				pref.edit().putString("cover_image", ProfileCover).commit();
+//				pref.edit().putString("tagline", UserTagLine).commit();
+//				pref.edit().putString("bio", UserBio).commit();
+//				pref.edit().putBoolean("isLogin", true).commit();
+//
+//                AdWordsManager.getInstance().sendSingupEvent();
+//				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
+//					startWelcomeActivity();
+//				}else {
+//					getUserAccountRequest();
+//				}
+//
+//			} else {
+//				OkayAlertDialog(sErrorMessage);
+//			}
+//		}
+//	};
 
-	Handler handlerLogin = new Handler() {
+//	private void getUserAccountRequest(){
+//		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+//		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
+//			@Override
+//			public void onSuccess(UserAccountResponse object) {
+//				Utility.HideDialog(mContext);
+//				if (object.getUser().getUserContinentId() == 0) {
+//					startSelectCurrentRegionActivity();
+//				} else startHomeActivity();
+//			}
+//
+//			@Override
+//			public void onFailure(String error) {
+//				Utility.HideDialog(mContext);
+//				startHomeActivity();
+//			}
+//
+//			@Override
+//			public void onServerError(Error error) {
+//
+//			}
+//		});
+//	}
 
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			Utility.HideDialog(mContext);
+//	void OkayAlertDialog(final String msg) {
+//
+//		if (!isFinishing()) {
+//			runOnUiThread(new Runnable() {
+//
+//				@Override
+//				public void run() {
+//					// TODO Auto-generated method stub
+//					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+//
+//					// set title
+//					alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
+//
+//					// set dialog message
+//					alertDialogBuilder.setMessage(msg).setCancelable(false).setNeutralButton("OK", null);
+//
+//					// create alert dialog
+//					AlertDialog alertDialog = alertDialogBuilder.create();
+//
+//					// show it
+//					alertDialog.show();
+//				}
+//			});
+//		}
+//	}
 
-			if (msg.what == 1) {
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		facebookManager.onActivityResult(requestCode, resultCode, data);
+		googlePlusManager.onActivityResult(requestCode, resultCode, data);
+//		if (requestCode == REQUEST_CODE_PICK_ACCOUNT) {
+//			if (resultCode == RESULT_OK) {
+//				mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+//				getUsername();
+//			} else if (resultCode == RESULT_CANCELED) {
+//				Toast.makeText(this, getString(R.string.you_must_pick_an_account), Toast.LENGTH_SHORT).show();
+//			}
+//		} else if ((requestCode == REQUEST_CODE_RECOVER_FROM_AUTH_ERROR || requestCode == REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR) && resultCode == RESULT_OK) {
+//			handleAuthorizeResult(resultCode, data);
+//			return;
+//		}
+//		super.onActivityResult(requestCode, resultCode, data);
+	}
 
-				SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-				pref.edit().putString("username", sUserName).commit();
-				pref.edit().putString("fullName", sUserFullName).commit();
-				pref.edit().putString("displayName", sUserDisplayName).commit();
-				pref.edit().putString("token", sToken).commit();
-				pref.edit().putString("userid", sUserID).commit();
-				pref.edit().putString("profile_image", ProfileImage).commit();
-				pref.edit().putString("cover_image", ProfileCover).commit();
-				pref.edit().putString("tagline", UserTagLine).commit();
-				pref.edit().putString("bio", UserBio).commit();
-				pref.edit().putBoolean("isLogin", true).commit();
+//	private void handleAuthorizeResult(int resultCode, Intent data) {
+//		if (data == null) {
+//			showToast(getString(R.string.unknown_error_click_button));
+//			return;
+//		}
+//		if (resultCode == RESULT_OK) {
+//			showToast(getString(R.string.retrying));
+//			getTask(this, mEmail, SCOPE).execute();
+//			return;
+//		}
+//		if (resultCode == RESULT_CANCELED) {
+//			showToast(getString(R.string.user_rejected_authorization));
+//			return;
+//		}
+//		showToast(getString(R.string.unknown_error_click_button));
+//	}
+//
+//	private AbstractGetNameTask getTask(LoginSocialActivity activity, String email, String scope) {
+//
+//		return new GetNameInForeground(activity, email, scope);
+//
+//	}
 
-                AdWordsManager.getInstance().sendSingupEvent();
-				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
-					startWelcomeActivity();
-				}else {
-					getUserAccountRequest();
-				}
-				
-			} else {
-				OkayAlertDialog(sErrorMessage);
-			}
-		}
-	};
+	/**
+	 * This method is a hook for background threads and async tasks that need to
+	 * provide the user a response UI when an exception occurs.
+	 */
+//	public void handleException(final Exception e) {
+//		runOnUiThread(new Runnable() {
+//			@Override
+//			public void run() {
+//				if (e instanceof GooglePlayServicesAvailabilityException) {
+//					// The Google Play services APK is old, disabled, or not
+//					// present.
+//					// Show a dialog created by Google Play services that allows
+//					// the user to update the APK
+//					int statusCode = ((GooglePlayServicesAvailabilityException) e).getConnectionStatusCode();
+//					Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode, LoginSocialActivity.this, REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
+//					dialog.show();
+//				} else if (e instanceof UserRecoverableAuthException) {
+//					// Unable to authenticate, such as when the user has not yet
+//					// granted
+//					// the app access to the account, but the user can fix this.
+//					// Forward the user to an activity in Google Play services.
+//					Intent intent = ((UserRecoverableAuthException) e).getIntent();
+//					startActivityForResult(intent, REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
+//				}
+//			}
+//		});
+//	}
 
-	private void startWelcomeActivity(){
-		Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//	public void GetGoogleLoginInfo(final String resposne) {
+////		Log.v(Constant.TAG, "resposne " + resposne);
+//		try {
+//			JSONObject jsonObject = new JSONObject(resposne);
+//			sErrorMessage = "";
+//			SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
+//			pref.edit().putBoolean("isSocialLogin",true).commit();
+////			googleLoginCall(jsonObject.optString("name", ""), jsonObject.optString("given_name", ""), jsonObject.optString("id", ""));
+////			new GoogleLoginCall(jsonObject.optString("id", "")
+////                    , jsonObject.optString("given_name", "")
+////                    , jsonObject.optString("name", "")
+////                    , jsonObject.optString("gender", "")
+////                    , jsonObject.optString("name", "")).start();
+////			Intent i=new Intent(LoginSocialActivity.this,YouTubeData.class);
+////			startActivity(i);
+//
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//	}
+	
+//	public void getGoogleToken(String token){
+//		googleToken=token;
+////		SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
+////		pref.edit().putString("googleToken", token).commit();
+////		Log.d(Constant.TAG,"Google api token"+token);
+//	}
+//
+//	public void showToast(final String message) {
+//		if (!isFinishing()) {
+//			runOnUiThread(new Runnable() {
+//
+//				@Override
+//				public void run() {
+//					// TODO Auto-generated method stub
+//					Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+//				}
+//			});
+//		}
+//	}
+//
+//	public void showError(final String message) {
+//
+//		if (!isFinishing()) {
+//			runOnUiThread(new Runnable() {
+//
+//				@Override
+//				public void run() {
+//					// TODO Auto-generated method stub
+//					Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+//					Utility.HideDialog(mContext);
+//				}
+//			});
+//		}
+
+//	}
+
+
+	private void startHomeActivity(){
+		final Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 		finish();
 	}
 
-	private void getUserAccountRequest(){
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
-			@Override
-			public void onSuccess(UserAccountResponse object) {
-				Utility.HideDialog(mContext);
-				if (object.getUser().getUserContinentId() == 0) {
-					startSelectCurrentRegionActivity();
-				} else startHomeActivity();
-			}
-
-			@Override
-			public void onFailure(String error) {
-				Utility.HideDialog(mContext);
-				startHomeActivity();
-			}
-		});
+	private void startWelcomeActivity(){
+		final Intent intent = new Intent(this, WelcomeVideoActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+		finish();
 	}
 
 	private void startSelectCurrentRegionActivity(){
@@ -635,176 +798,14 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		finish();
 	}
 
-
-	private void startHomeActivity(){
-		Intent intent = new Intent(mContext, HomeActivity.class);
-		startActivity(intent);
-		finish();
-	}
-
-	void OkayAlertDialog(final String msg) {
-
-		if (!isFinishing()) {
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
-
-					// set title
-					alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
-
-					// set dialog message
-					alertDialogBuilder.setMessage(msg).setCancelable(false).setNeutralButton("OK", null);
-
-					// create alert dialog
-					AlertDialog alertDialog = alertDialogBuilder.create();
-
-					// show it
-					alertDialog.show();
-				}
-			});
-		}
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		facebookManager.onActivityResult(requestCode, resultCode, data);
-		googlePlusManager.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQUEST_CODE_PICK_ACCOUNT) {
-			if (resultCode == RESULT_OK) {
-				mEmail = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-				getUsername();
-			} else if (resultCode == RESULT_CANCELED) {
-				Toast.makeText(this, getString(R.string.you_must_pick_an_account), Toast.LENGTH_SHORT).show();
-			}
-		} else if ((requestCode == REQUEST_CODE_RECOVER_FROM_AUTH_ERROR || requestCode == REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR) && resultCode == RESULT_OK) {
-			handleAuthorizeResult(resultCode, data);
-			return;
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-
-	private void handleAuthorizeResult(int resultCode, Intent data) {
-		if (data == null) {
-			showToast(getString(R.string.unknown_error_click_button));
-			return;
-		}
-		if (resultCode == RESULT_OK) {
-			showToast(getString(R.string.retrying));
-			getTask(this, mEmail, SCOPE).execute();
-			return;
-		}
-		if (resultCode == RESULT_CANCELED) {
-			showToast(getString(R.string.user_rejected_authorization));
-			return;
-		}
-		showToast(getString(R.string.unknown_error_click_button));
-	}
-
-	private AbstractGetNameTask getTask(LoginSocialActivity activity, String email, String scope) {
-
-		return new GetNameInForeground(activity, email, scope);
-
-	}
-
-	/**
-	 * This method is a hook for background threads and async tasks that need to
-	 * provide the user a response UI when an exception occurs.
-	 */
-	public void handleException(final Exception e) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (e instanceof GooglePlayServicesAvailabilityException) {
-					// The Google Play services APK is old, disabled, or not
-					// present.
-					// Show a dialog created by Google Play services that allows
-					// the user to update the APK
-					int statusCode = ((GooglePlayServicesAvailabilityException) e).getConnectionStatusCode();
-					Dialog dialog = GooglePlayServicesUtil.getErrorDialog(statusCode, LoginSocialActivity.this, REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
-					dialog.show();
-				} else if (e instanceof UserRecoverableAuthException) {
-					// Unable to authenticate, such as when the user has not yet
-					// granted
-					// the app access to the account, but the user can fix this.
-					// Forward the user to an activity in Google Play services.
-					Intent intent = ((UserRecoverableAuthException) e).getIntent();
-					startActivityForResult(intent, REQUEST_CODE_RECOVER_FROM_PLAY_SERVICES_ERROR);
-				}
-			}
-		});
-	}
-
-	public void GetGoogleLoginInfo(final String resposne) {
-//		Log.v(Constant.TAG, "resposne " + resposne);
-		try {
-			JSONObject jsonObject = new JSONObject(resposne);
-			sErrorMessage = "";
-			SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-			pref.edit().putBoolean("isSocialLogin",true).commit();
-//			googleLoginCall(jsonObject.optString("name", ""), jsonObject.optString("given_name", ""), jsonObject.optString("id", ""));
-//			new GoogleLoginCall(jsonObject.optString("id", "")
-//                    , jsonObject.optString("given_name", "")
-//                    , jsonObject.optString("name", "")
-//                    , jsonObject.optString("gender", "")
-//                    , jsonObject.optString("name", "")).start();
-//			Intent i=new Intent(LoginSocialActivity.this,YouTubeData.class);
-//			startActivity(i);
-
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-	
-	public void getGoogleToken(String token){
-		googleToken=token;
-//		SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-//		pref.edit().putString("googleToken", token).commit();
-//		Log.d(Constant.TAG,"Google api token"+token);
-	}
-
-	public void showToast(final String message) {
-		if (!isFinishing()) {
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-				}
-			});
-		}
-	}
-
-	public void showError(final String message) {
-
-		if (!isFinishing()) {
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-					Utility.HideDialog(mContext);
-				}
-			});
-		}
-
-	}
-
 	private void startSignUpActivity(){
-		final Intent intent = new Intent(mContext, SignUpActivity.class);
+		final Intent intent = new Intent(this, SignUpActivity.class);
 		startActivity(intent);
 		finish();
 	}
 
 	private void startLoginActivity(){
-		final Intent intent = new Intent(mContext, LoginActivity.class);
+		final Intent intent = new Intent(this, LoginActivity.class);
 		startActivity(intent);
 		finish();
 	}

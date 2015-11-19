@@ -34,8 +34,8 @@ import com.mobstar.adapters.CategoriesAdapter;
 import com.mobstar.adapters.ContinentsAdapter;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.CategoriesFilterResponse;
-import com.mobstar.api.responce.ContinentFilterResponse;
+import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.gcm.GcmIntentService;
 import com.mobstar.gcm.NewEntryPush;
@@ -276,6 +276,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //                okayAlertDialog(error);
 
             }
+
+            @Override
+            public void onServerError(com.mobstar.api.responce.Error error) {
+
+            }
         });
     }
 
@@ -298,6 +303,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
                 Log.d(LOG_TAG, "getContinentsFilters.onFailure=" + error);
 
 //                okayAlertDialog(error);
+
+            }
+
+            @Override
+            public void onServerError(Error error) {
 
             }
         });
@@ -470,6 +480,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
 //                                okayAlertDialog(error);
 //                                showToastNotification(error);
             }
+
+            @Override
+            public void onServerError(Error error) {
+
+            }
         });
     }
 
@@ -503,6 +518,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
                 hideProgress();
 //                                okayAlertDialog(error);
 //                                showToastNotification(error);
+            }
+
+            @Override
+            public void onServerError(Error error) {
+
             }
         });
     }

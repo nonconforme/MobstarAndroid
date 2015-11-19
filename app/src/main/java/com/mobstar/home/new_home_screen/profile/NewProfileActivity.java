@@ -17,8 +17,8 @@ import com.mobstar.R;
 import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.call.StarCall;
-import com.mobstar.api.responce.StarResponse;
-import com.mobstar.api.responce.UserProfileResponse;
+import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
 import com.mobstar.home.new_home_screen.VideoListBaseFragment;
 import com.mobstar.upload.MessageActivity;
 import com.mobstar.utils.Constant;
@@ -206,6 +206,11 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
             public void onFailure(String error) {
                 Utility.HideDialog(NewProfileActivity.this);
             }
+
+            @Override
+            public void onServerError(com.mobstar.api.responce.Error error) {
+
+            }
         });
     }
 
@@ -226,6 +231,11 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onFailure(String error) {
                 Utility.HideDialog(NewProfileActivity.this);
+            }
+
+            @Override
+            public void onServerError(Error error) {
+
             }
         });
     }
@@ -272,6 +282,11 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onFailure(String error) {
                 Utility.HideDialog(NewProfileActivity.this);
+            }
+
+            @Override
+            public void onServerError(Error error) {
+
             }
         });
     }

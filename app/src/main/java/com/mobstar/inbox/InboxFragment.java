@@ -33,7 +33,7 @@ import android.widget.Toast;
 import com.mobstar.R;
 import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.responce.ChatListResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.gcm.GcmIntentService;
 import com.mobstar.inbox.newMessagesScreen.MessageDetail;
 import com.mobstar.pojo.MessagePojo;
@@ -299,7 +299,12 @@ public class InboxFragment extends Fragment {
                 Log.d(LOG_TAG,"updateChatList.onFailure.error="+error);
                 Utility.HideDialog(mContext);
             }
-        });
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
+			}
+		});
 
     }
 

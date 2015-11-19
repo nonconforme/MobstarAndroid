@@ -79,7 +79,7 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener {
 
 	}
 
-	void InitControls() {
+	private void InitControls() {
 
 		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
 

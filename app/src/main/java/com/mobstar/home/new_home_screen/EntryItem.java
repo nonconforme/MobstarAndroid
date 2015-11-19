@@ -21,8 +21,8 @@ import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.call.StarCall;
-import com.mobstar.api.responce.StarResponse;
-import com.mobstar.api.responce.VoteResponse;
+import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
 import com.mobstar.home.CommentActivity;
 import com.mobstar.home.ShareActivity;
@@ -440,6 +440,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 Log.d(LOG_TAG, "StarCall.addStarCall.onFailure.error=" + error);
                 Utility.HideDialog(baseActivity);
             }
+
+            @Override
+            public void onServerError(com.mobstar.api.responce.Error error) {
+
+            }
         });
     }
 
@@ -477,6 +482,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                     public void onFailure(String error) {
                         Log.d(LOG_TAG, "StarCall.delStarCall.onFailure.error=" + error);
                         Utility.HideDialog(baseActivity);
+                    }
+
+                    @Override
+                    public void onServerError(Error error) {
+
                     }
                 });
     }
@@ -625,6 +635,11 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
             @Override
             public void onFailure(String error) {
+
+            }
+
+            @Override
+            public void onServerError(Error error) {
 
             }
         });

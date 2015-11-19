@@ -28,8 +28,7 @@ import android.widget.Toast;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.BaseResponse;
-import com.mobstar.api.responce.CategoryResponse;
+import com.mobstar.api.responce.*;
 //import com.mobstar.custom.CustomTextviewBold;
 
 import com.mobstar.custom.CustomTextviewBold;
@@ -267,6 +266,11 @@ public class SelectCategoryActivity extends Activity implements OnClickListener 
 			@Override
 			public void onFailure(String error) {
 				OkayAlertDialog(error);
+			}
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
 			}
 		});
 	}

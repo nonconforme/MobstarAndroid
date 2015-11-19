@@ -3,7 +3,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import com.mobstar.api.responce.BaseResponse;
+
+import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
 
 /**
  * Created by lipcha on 08.09.15.
@@ -12,6 +14,7 @@ public abstract class ConnectCallback<T extends BaseResponse> {
 
     public abstract void onSuccess(T object);
     public abstract void onFailure(String error);
+    public abstract void onServerError(Error error);
 
     public void parse(JSONObject o) {
         T object = null;
@@ -34,7 +37,10 @@ public abstract class ConnectCallback<T extends BaseResponse> {
             }
             return;
         }
-        onSuccess(object);
+        if (object.hasError())
+            onServerError(object.getError());
+        else
+            onSuccess(object);
     }
 
     @SuppressWarnings ("unchecked")

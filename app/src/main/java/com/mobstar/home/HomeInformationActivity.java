@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.utils.AppRater;
 import com.mobstar.utils.Constant;
@@ -185,6 +185,11 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 			public void onFailure(String error) {
 				Utility.HideDialog(HomeInformationActivity.this);
 				startHomeActivity();
+			}
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
 			}
 		});
 	}

@@ -26,7 +26,7 @@ import android.widget.Toast;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.pojo.WhoToFollowPojo;
@@ -377,7 +377,12 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 				Utility.HideDialog(WhoToFollowActivity.this);
 				startHomeActivity();
             }
-        });
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
+			}
+		});
     }
     private void startSelectCurrentRegionActivity(){
         final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);

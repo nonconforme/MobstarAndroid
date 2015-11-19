@@ -10,14 +10,14 @@ import android.widget.Toast;
 
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.ContinentResponse;
+import com.mobstar.api.new_api_call.ProfileCall;
+import com.mobstar.api.new_api_model.response.SuccessResponse;
+import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
 import com.mobstar.custom.CheckableView;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.pojo.ContinentsPojo;
-import com.mobstar.utils.Constant;
-
-import java.util.HashMap;
+import com.mobstar.utils.Utility;
 
 /**
  * Created by lipcha on 08.09.15.
@@ -93,24 +93,44 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
     }
 
     private void postCurrentRegionRequest(ContinentsPojo.Continents continents){
-        final HashMap<String, String> params = new HashMap<>();
-        params.put(ContinentResponse.KEY_CONTINENT, Integer.toString(continents.ordinal()));
-        showProgress();
-        RestClient.getInstance(this).postRequest(Constant.USER_CONTINENT, params, new ConnectCallback<ContinentResponse>() {
-
+        ProfileCall.postUserContinent(this, continents, new ConnectCallback<SuccessResponse>() {
             @Override
-            public void onSuccess(ContinentResponse object) {
-                hideProgress();
+            public void onSuccess(SuccessResponse object) {
+                Utility.HideDialog(SelectCurrentRegionActivity.this);
                 startHomeActivity();
             }
 
             @Override
             public void onFailure(String error) {
-                hideProgress();
-                showToastNotification(error);
+                Utility.HideDialog(SelectCurrentRegionActivity.this);
+            }
+
+            @Override
+            public void onServerError(Error error) {
+                Utility.HideDialog(SelectCurrentRegionActivity.this);
             }
         });
     }
+
+//    private void postCurrentRegionRequest(ContinentsPojo.Continents continents){
+//        final HashMap<String, String> params = new HashMap<>();
+//        params.put(ContinentResponse.KEY_CONTINENT, Integer.toString(continents.ordinal()));
+//        showProgress();
+//        RestClient.getInstance(this).postRequest(Constant.USER_CONTINENT, params, new ConnectCallback<ContinentResponse>() {
+//
+//            @Override
+//            public void onSuccess(ContinentResponse object) {
+//                hideProgress();
+//                startHomeActivity();
+//            }
+//
+//            @Override
+//            public void onFailure(String error) {
+//                hideProgress();
+//                showToastNotification(error);
+//            }
+//        });
+//    }
 
     private void startHomeActivity(){
         if (startHomeActivity) {
@@ -150,15 +170,4 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
 
     }
 
-    private void showProgress(){
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(getString(R.string.loading));
-        progressDialog.show();
-    }
-
-    private void hideProgress(){
-        if (progressDialog != null)
-            progressDialog.hide();
-    }
 }

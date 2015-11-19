@@ -32,8 +32,7 @@ import com.mobstar.AdWordsManager;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.BaseResponse;
-import com.mobstar.api.responce.UploadYouTubeVideoResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.home.split.SplitActivity;
 import com.mobstar.home.youtube.YouTubeVideo;
 import com.mobstar.pojo.EntryPojo;
@@ -433,6 +432,11 @@ public class UploadFileActivity extends Activity implements OnClickListener {
 				Utility.HideDialog(UploadFileActivity.this);
 				setResult(Activity.RESULT_CANCELED);
 				onBackPressed();
+			}
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
 			}
 		});
 

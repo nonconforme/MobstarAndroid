@@ -25,8 +25,8 @@ import android.widget.TextView;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.call.NotificationCall;
-import com.mobstar.api.responce.NotificationResponse;
-import com.mobstar.api.responce.NullResponse;
+import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
 import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.inbox.newMessagesScreen.MessageDetail;
@@ -225,6 +225,11 @@ public class NotificationsFragment extends Fragment {
 			public void onFailure(String error) {
 				Utility.HideDialog(NotificationsFragment.this.getActivity());
 			}
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
+			}
 		});
 	}
 
@@ -243,6 +248,11 @@ public class NotificationsFragment extends Fragment {
 			public void onFailure(String error) {
 				Utility.HideDialog(getActivity());
 			}
+
+			@Override
+			public void onServerError(Error error) {
+
+			}
 		});
 	}
 
@@ -255,6 +265,11 @@ public class NotificationsFragment extends Fragment {
 
 			@Override
 			public void onFailure(String error) {
+
+			}
+
+			@Override
+			public void onServerError(Error error) {
 
 			}
 		});
@@ -283,6 +298,11 @@ public class NotificationsFragment extends Fragment {
 			@Override
 			public void onFailure(String error) {
 				Utility.HideDialog(NotificationsFragment.this.getActivity());
+			}
+
+			@Override
+			public void onServerError(Error error) {
+
 			}
 		});
 	}

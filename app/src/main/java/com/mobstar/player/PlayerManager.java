@@ -11,7 +11,7 @@ import android.view.Surface;
 
 import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.responce.CountResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.utils.Constant;
 
@@ -62,6 +62,11 @@ public class PlayerManager {
 
             @Override
             public void onFailure(String error) {
+
+            }
+
+            @Override
+            public void onServerError(com.mobstar.api.responce.Error error) {
 
             }
         });

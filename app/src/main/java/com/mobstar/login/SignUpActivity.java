@@ -26,7 +26,7 @@ import com.mobstar.api.new_api_model.Login;
 import com.mobstar.api.new_api_model.Profile;
 import com.mobstar.api.new_api_model.Settings;
 import com.mobstar.api.new_api_model.response.LoginResponse;
-import com.mobstar.api.responce.UserAccountResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
@@ -344,6 +344,11 @@ public class SignUpActivity extends Activity implements OnClickListener {
 			@Override
 			public void onFailure(String error) {
 				Utility.HideDialog(SignUpActivity.this);
+			}
+
+			@Override
+			public void onServerError(com.mobstar.api.responce.Error error) {
+
 			}
 		});
 	}

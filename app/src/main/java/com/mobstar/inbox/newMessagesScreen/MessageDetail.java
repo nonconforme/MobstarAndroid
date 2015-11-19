@@ -26,8 +26,8 @@ import android.widget.Toast;
 import com.mobstar.R;
 import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.responce.BaseResponse;
-import com.mobstar.api.responce.MessageListResponse;
+import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.gcm.GcmIntentService;
 import com.mobstar.home.new_home_screen.profile.NewProfileActivity;
@@ -249,6 +249,11 @@ public class MessageDetail extends Activity implements OnClickListener {
 //                        Utility.HideDialog(mContext);
 //                        isRefresh = false;
                     }
+
+                    @Override
+                    public void onServerError(com.mobstar.api.responce.Error error) {
+
+                    }
                 });
 
 //				if (Utility.isNetworkAvailable(mContext)) {
@@ -303,6 +308,11 @@ public class MessageDetail extends Activity implements OnClickListener {
             public void onFailure(String error) {
                 Log.d(LOG_TAG, "updateMessageList.onFailure.error=" + error);
                 Utility.HideDialog(mContext);
+            }
+
+            @Override
+            public void onServerError(Error error) {
+
             }
         });
     }
@@ -419,6 +429,11 @@ public class MessageDetail extends Activity implements OnClickListener {
             @Override
             public void onFailure(String error) {
                 Log.d(LOG_TAG, "messagesReaded.onFailure.error=" + error);
+            }
+
+            @Override
+            public void onServerError(Error error) {
+
             }
         });
     }
