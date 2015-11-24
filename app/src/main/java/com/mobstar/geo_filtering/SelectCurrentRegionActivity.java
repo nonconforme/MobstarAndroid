@@ -12,7 +12,6 @@ import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.new_api_call.ProfileCall;
 import com.mobstar.api.new_api_model.response.SuccessResponse;
-import com.mobstar.api.responce.*;
 import com.mobstar.api.responce.Error;
 import com.mobstar.custom.CheckableView;
 import com.mobstar.home.HomeActivity;
@@ -31,7 +30,7 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
     private CheckableView checkedRegionView;
     private Toast mToast;
     private ProgressDialog progressDialog;
-    private boolean startHomeActivity;
+    private boolean isStartHomeActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,7 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
         setContentView(R.layout.activity_select_current_region);
         findViews();
         final Intent intent = getIntent();
-        startHomeActivity = intent.getBooleanExtra(START_HOME_ACTIVITY, true);
+        isStartHomeActivity = intent.getBooleanExtra(START_HOME_ACTIVITY, true);
         setListeners();
         assignedContinents();
     }
@@ -103,11 +102,13 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
             @Override
             public void onFailure(String error) {
                 Utility.HideDialog(SelectCurrentRegionActivity.this);
+                startHomeActivity();
             }
 
             @Override
             public void onServerError(Error error) {
                 Utility.HideDialog(SelectCurrentRegionActivity.this);
+                startHomeActivity();
             }
         });
     }
@@ -133,7 +134,7 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
 //    }
 
     private void startHomeActivity(){
-        if (startHomeActivity) {
+        if (isStartHomeActivity) {
             final Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
         }

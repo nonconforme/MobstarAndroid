@@ -27,7 +27,7 @@ import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.DownloadFileManager;
 import com.mobstar.api.new_api_call.AuthCall;
 import com.mobstar.api.new_api_model.response.WelcomeVideoResponse;
-import com.mobstar.login.WhoToFollowActivity;
+import com.mobstar.login.who_to_follow.WhoToFollowActivity;
 import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
 
@@ -118,14 +118,12 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener, O
 
 		String cbText = cbPrivacyPolicy.getText().toString();
 		String text= cbText.substring(0,cbText.indexOf("\n")+1);
-//		Log.d("text", text);
-		Spannable word = new SpannableString(text); 
+		Spannable word = new SpannableString(text);
 		word.setSpan(new ForegroundColorSpan(Color.WHITE), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		cbPrivacyPolicy.setText(word);
 
 		int posNewLine=cbText.indexOf("\n");
 		String text1=cbText.substring(posNewLine+1,cbText.indexOf("&"));
-//		Log.d("text1", text1);
 
 		Spannable word1 = new SpannableString(text1); 
 		word1.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, word1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -134,30 +132,16 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener, O
 		int pos=cbText.indexOf("&");
 
 		String text3=cbText.substring(pos,pos+1);//white
-//		Log.d("text3", text3);
 
 		Spannable word3 = new SpannableString(text3); 
 		word3.setSpan(new ForegroundColorSpan(Color.WHITE), 0, word3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		cbPrivacyPolicy.append(word3);
 
 		String text4=cbText.substring(pos+1);
-//		Log.d("text4", text4);
 		Spannable word4 = new SpannableString(text4);
 		word4.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, word4.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		cbPrivacyPolicy.append(word4);
 
-		//		****
-
-
-//		if (Utility.isNetworkAvailable(this)) {
-//
-//			new WelcomeCall().start();
-//
-//		} else {
-//
-//			Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-//
-//		}
 	}
 
 
@@ -166,19 +150,14 @@ public class WelcomeVideoActivity extends Activity implements OnClickListener, O
 
 			btnPausePlay.setImageResource(R.drawable.btn_pause);
 			btnPausePlay.setSelected(false);
-
 			if (mediaPlayer != null) {
 				mediaPlayer.start();
 			}
-
 			mediaPlayerProgressUpdater();
-
 		} else {
-
 			if (mediaPlayer.isPlaying()) {
 				mediaPlayer.pause();
 			}
-
 			btnPausePlay.setImageResource(R.drawable.btn_play);
 			btnPausePlay.setSelected(true);
 		}

@@ -29,6 +29,7 @@ import com.mobstar.api.new_api_model.Settings;
 import com.mobstar.api.new_api_model.response.LoginResponse;
 import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
+import com.mobstar.login.who_to_follow.WhoToFollowActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.UserPreference;
@@ -45,8 +46,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private EditText editEmail, editPassword;
 	private TextView textEmailHint, textPasswordHint;
 	private LinearLayout btnNewUser, btnResetPassword;
-	private String sUserID = "", sToken = "", sUserFullName = "", sUserName = "", sUserDisplayName = "";
-	private String ProfileImage = "", ProfileCover = "", UserTagLine = "",UserBio;
 	private String sErrorMessage = "";
 
 	@Override
@@ -102,20 +101,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
 				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 				textEmailHint.setVisibility(View.INVISIBLE);
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -124,20 +120,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
 				editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 				textPasswordHint.setVisibility(View.INVISIBLE);
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -191,17 +184,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		if (isValid) {
 			Utility.ShowProgressDialog(this, getString(R.string.loading));
-//			sErrorMessage = "";
-//			if (Utility.isNetworkAvailable(mContext)) {
-////					String s=Utility.getRegistrationId(mContext);
-////					Log.d("mobstar","Login=>"+s);
-//				new AuthCall(editEmail.getText().toString().trim(), editPassword.getText().toString().trim()).start();
-//
-//			} else {
-//
-//				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-//				Utility.HideDialog(mContext);
-//			}
 			loginRequest(editEmail.getText().toString().trim(), editPassword.getText().toString().trim());
 		}
 	}
@@ -224,335 +206,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 		});
 	}
-
-//	class AuthCall extends Thread {
-//
-//		String password, email;
-//
-//		public AuthCall(String email, String password) {
-//
-//			this.email = email;
-//			this.password = password;
-//		}
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-////			Log.d("mobstar","GCM RegId is=>"+Utility.getRegistrationId(mContext));
-//
-//			String[] name = { "email", "password","deviceToken","device"};
-//			String[] value = { email, password,Utility.getRegistrationId(mContext),"google" };
-//
-//			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.LOGIN, name, value,null);
-//
-//			Log.v(Constant.TAG, "AuthCall response " + response);
-//
-//			if (response != null) {
-//
-//				try {
-//
-//					JSONObject jsonObject = new JSONObject(response);
-//
-//					if (jsonObject.has("error")) {
-//						sErrorMessage = jsonObject.getString("error");
-//					}
-//
-//					if (jsonObject.has("token")) {
-//						sToken = jsonObject.getString("token");
-//					}
-//
-//					if (jsonObject.has("userId")) {
-//						sUserID = jsonObject.getString("userId");
-//					}
-//
-//					if (jsonObject.has("userName")) {
-//						sUserName = jsonObject.getString("userName");
-//					}
-//
-//					if (jsonObject.has("userFullName")) {
-//						sUserFullName = jsonObject.getString("userFullName");
-//					}
-//
-//					if (jsonObject.has("userDisplayName")) {
-//						sUserDisplayName = jsonObject.getString("userDisplayName");
-//					}
-//
-//					if (jsonObject.has("profileImage")) {
-//						ProfileImage = jsonObject.getString("profileImage");
-//					}
-//
-//					if (jsonObject.has("profileCover")) {
-//						ProfileCover = jsonObject.getString("profileCover");
-//					}
-//
-//					if (jsonObject.has("userTagline")) {
-//						UserTagLine = jsonObject.getString("userTagline");
-//					}
-//
-//					if (jsonObject.has("userBio")) {
-//						UserBio = jsonObject.getString("userBio");
-//					}
-//
-//
-//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-//						handlerLogin.sendEmptyMessage(0);
-//					} else {
-//						handlerLogin.sendEmptyMessage(1);
-//					}
-//
-//				} catch (Exception e) {
-//					// TODO: handle exception
-//					e.printStackTrace();
-//					handlerLogin.sendEmptyMessage(0);
-//				}
-//
-//			} else {
-//
-//				handlerLogin.sendEmptyMessage(0);
-//			}
-//
-//		}
-//	}
-//
-//	void OkayAlertDialog(final String msg) {
-//
-//		if (!isFinishing()) {
-//			runOnUiThread(new Runnable() {
-//
-//				@Override
-//				public void run() {
-//					// TODO Auto-generated method stub
-//					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
-//
-//					// set title
-//					alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
-//
-//					// set dialog message
-//					alertDialogBuilder.setMessage(msg).setCancelable(false).setNeutralButton("OK", null);
-//
-//					// create alert dialog
-//					AlertDialog alertDialog = alertDialogBuilder.create();
-//
-//					// show it
-//					alertDialog.show();
-//				}
-//			});
-//		}
-//
-//	}
-//
-//	Handler handlerLogin = new Handler() {
-//
-//		@Override
-//		public void handleMessage(Message msg) {
-//			// TODO Auto-generated method stub
-//			Utility.HideDialog(mContext);
-//
-//			if (msg.what == 1) {
-//
-//				SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-//
-//				pref.edit().putString("token", sToken).commit();
-//				pref.edit().putString("userid", sUserID).commit();
-//				pref.edit().putString("email_address", editEmail.getText().toString()).commit();
-//
-//
-////				pref.edit().putString("username", sUserName).commit();
-////				pref.edit().putString("fullName", sUserFullName).commit();
-////				pref.edit().putString("displayName", sUserDisplayName).commit();
-////				pref.edit().putString("profile_image", ProfileImage).commit();
-////				pref.edit().putString("cover_image", ProfileCover).commit();
-////				pref.edit().putString("tagline", UserTagLine).commit();
-////				pref.edit().putString("bio", UserBio).commit();
-////				pref.edit().putBoolean("isLogin", true).commit();
-////				pref.edit().putBoolean("isVerifyMobileCode",true).commit();
-//
-////				Intent intent = new Intent(mContext, HomeActivity.class);
-////				startActivity(intent);
-////				finish();
-//
-//				Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-//				sErrorMessage = "";
-//				if (Utility.isNetworkAvailable(mContext)) {
-////					String s=Utility.getRegistrationId(mContext);
-////					Log.d("mobstar","Login=>"+s);
-//					new GetProfileCall(sUserID).start();
-//
-//				} else {
-//
-//					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-//					Utility.HideDialog(mContext);
-//				}
-//
-//			} else {
-//
-//				editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-//				textEmailHint.setText("");
-//				textEmailHint.setVisibility(View.VISIBLE);
-//
-//				editPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-//				textPasswordHint.setText("");
-//				textPasswordHint.setVisibility(View.VISIBLE);
-//
-//				OkayAlertDialog(sErrorMessage);
-//			}
-//		}
-//	};
-//
-//	class GetProfileCall extends Thread {
-//
-//		String UserID;
-//
-//		public GetProfileCall(String UserID) {
-//			this.UserID = UserID;
-//		}
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//
-//			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.GET_PROFILE + UserID,sToken);
-//
-////			Log.v(Constant.TAG, "GetProfile response " + response);
-//
-//			if (response != null) {
-//
-//				String ErrorMessage = "";
-//
-//				try {
-//
-//					JSONObject jsonObject = new JSONObject(response);
-//
-//					if (jsonObject.has("error")) {
-//						ErrorMessage = jsonObject.getString("error");
-//					}
-//
-//					if (jsonObject.has("users")) {
-//
-//						JSONArray jsonArrayUser = jsonObject.getJSONArray("users");
-//
-//						if (jsonArrayUser.length() > 0) {
-//
-//							JSONObject jsonObj = jsonArrayUser.getJSONObject(0);
-//
-//							if (jsonObj.has("user")) {
-//								JSONObject jsonObjUser = jsonObj.getJSONObject("user");
-//
-//								// entryPojo.setUserID(jsonObjUser.getString("id"));
-//								// entryPojo.setUserName(jsonObjUser.getString("userName"));
-//								// entryPojo.setUserDisplayName(jsonObjUser.getString("displayName"));
-//								// entryPojo.setProfileImage(jsonObjUser.getString("profileImage"));
-//								// entryPojo.setProfileCover(jsonObjUser.getString("profileCover"));
-//								// entryPojo.setTagline(jsonObjUser.getString("tagLine"));
-//								//								UserName = jsonObjUser.getString("userName");
-//								//								UserDisplayName = jsonObjUser.getString("displayName");
-//								sUserName=jsonObjUser.getString("userName");
-//								sUserFullName=jsonObjUser.getString("fullName");
-//								sUserDisplayName=jsonObjUser.getString("displayName");
-//								ProfileImage=jsonObjUser.getString("profileImage");
-//								ProfileCover=jsonObjUser.getString("profileCover");
-//								UserTagLine=jsonObjUser.getString("tagLine");
-//								UserBio=jsonObjUser.getString("bio");
-//							}
-//						}
-//					}
-//
-//					if (ErrorMessage != null && !ErrorMessage.equals("")) {
-//						handlerProfile.sendEmptyMessage(0);
-//					} else {
-//						handlerProfile.sendEmptyMessage(1);
-//					}
-//
-//				} catch (Exception exception) {
-//					// TODO: handle exception
-//					exception.printStackTrace();
-//					handlerProfile.sendEmptyMessage(0);
-//				}
-//
-//			} else {
-//				handlerProfile.sendEmptyMessage(0);
-//			}
-//
-//		}
-//	}
-//
-//	Handler handlerProfile = new Handler() {
-//
-//		@Override
-//		public void handleMessage(Message msg) {
-//			// TODO Auto-generated method stub
-//			Utility.HideDialog(mContext);
-//
-//			if (msg.what == 1) {
-//				//				if (UserCoverImage.equals("")) {
-//				//					imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
-//				//				} else {
-//				//					imgCoverPage.setBackgroundResource(R.drawable.cover_bg);
-//				//
-//				//					Picasso.with(mContext).load(UserCoverImage).fit().centerCrop().placeholder(R.drawable.cover_bg).error(R.drawable.cover_bg).into(imgCoverPage);
-//				//				}
-//				//
-//				//				if (UserPic.equals("")) {
-//				//					imgUserPic.setImageResource(R.drawable.profile_pic_new);
-//				//				} else {
-//				//					imgUserPic.setImageResource(R.drawable.profile_pic_new);
-//				//
-//				//					Picasso.with(mContext).load(UserPic).resize(Utility.dpToPx(mContext, 126), Utility.dpToPx(mContext, 126)).centerCrop().placeholder(R.drawable.profile_pic_new)
-//				//					.error(R.drawable.profile_pic_new).transform(new RoundedTransformation(Utility.dpToPx(mContext, 126), 0)).into(imgUserPic);
-//				//				}
-//				//
-//				//				textUserName.setText(UserName);
-//				//				textUserDisplayName.setText(UserDisplayName);
-////				textTagline.setText(StringEscapeUtils.unescapeJava(UserTagline));
-//
-//				//				UpdatesFragment updatesFragment = new UpdatesFragment();
-//				//				Bundle extras = new Bundle();
-//				//				extras.putString("UserID",UserID);
-//				//				updatesFragment.setArguments(extras);
-//				//				replaceFragment(updatesFragment, "UpdatesFragment");
-//
-//				//add dynamically layout header height
-//				//				ViewGroup.LayoutParams params = topTransparent.getLayoutParams();
-//				//				params.height = llHeader.getHeight()+150;
-//				//				topTransparent.setLayoutParams(params);
-//				//				topTransparent.requestLayout();
-//
-//				SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-//				pref.edit().putString("username", sUserName).commit();
-//				pref.edit().putString("fullName", sUserFullName).commit();
-//				pref.edit().putString("displayName", sUserDisplayName).commit();
-//				pref.edit().putString("profile_image", ProfileImage).commit();
-//				pref.edit().putString("cover_image", ProfileCover).commit();
-//				pref.edit().putString("tagline", UserTagLine).commit();
-//				pref.edit().putString("bio", UserBio).commit();
-//				pref.edit().putBoolean("isLogin", true).commit();
-//				pref.edit().putBoolean("isVerifyMobileCode",true).commit();
-//				pref.edit().putBoolean("isSocialLogin",false).commit();
-//
-////				Intent intent = new Intent(mContext, HomeActivity.class);
-////				startActivity(intent);
-////				finish();
-//                AdWordsManager.getInstance().sendSingupEvent();
-//				sendAnalytics();
-//
-//				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
-//					Intent intent = new Intent(mContext, WelcomeVideoActivity.class);
-//					startActivity(intent);
-//					finish();
-//				}
-//				else {
-//					Intent intent = new Intent(mContext, WhoToFollowActivity.class);
-//					startActivity(intent);
-//					finish();
-//				}
-//
-//
-//			} else {
-//
-//			}
-//		}
-//	};
-
 
 	private void onLoginSuccess(final LoginResponse loginResponse){
 		Utility.HideDialog(this);

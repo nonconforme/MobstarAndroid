@@ -101,9 +101,6 @@ public class FacebookManager {
         return sharePhoto;
     }
 
-
-
-
     private void initFacebook(final Context context) {
         mFacebookLoginButton = new LoginButton(context);
         mFacebookLoginButton.setReadPermissions(FACEBOOK_PERMISSIONS);

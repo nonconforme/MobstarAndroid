@@ -22,8 +22,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-
+import java.util.List;
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.cookie.Cookie;
 
 /**
  * Created by lipcha on 08.09.15.
@@ -45,18 +46,50 @@ public class RestClient {
         if (instance == null) {
             instance = new RestClient();
             instance.httpClient = new AsyncHttpClient();
-            final PersistentCookieStore myCookieStore = new PersistentCookieStore(_context);
-            instance.httpClient.setCookieStore(myCookieStore);
+            addCookieStore(_context);
         }
+
         if (instance.preferences == null)
             instance.preferences = _context.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
         instance.context = _context;
         instance.httpClient.setTimeout(Constant.TIMEOUTCONNECTION);
         instance.httpClient.addHeader("Content-Type", "application/json; charset=utf-8");
-//        instance.httpClient.addHeader("Content-Type", "multipart/form-data");
-        instance.httpClient.addHeader("X-API-KEY", Constant.API_KEY);
-        instance.httpClient.addHeader("X-API-TOKEN", instance.preferences.getString("token", null));
         return instance;
+    }
+
+    private static void addCookieStore(final Context _context){
+        final PersistentCookieStore myCookieStore = new PersistentCookieStore(_context);
+        instance.httpClient.setCookieStore(myCookieStore);
+    }
+
+
+    public static boolean existCookie(final Context context){
+        final PersistentCookieStore myCookieStore = new PersistentCookieStore(context);
+        final List<Cookie> cookies = myCookieStore.getCookies();
+
+        if (cookies.isEmpty()) {
+            return false;
+        } else {
+            for (int i = 0; i < cookies.size(); i++) {
+                if (cookies.get(i).getName().equalsIgnoreCase("mobstar.sid"))
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void clearCookie(final Context context) {
+        final PersistentCookieStore myCookieStore = new PersistentCookieStore(context);
+        final List<Cookie> cookies = myCookieStore.getCookies();
+
+        if (cookies.isEmpty()) {
+            return;
+        } else {
+            for (int i = 0; i < cookies.size(); i++) {
+                if (cookies.get(i).getName().equalsIgnoreCase("mobstar.sid"))
+                    myCookieStore.deleteCookie(cookies.get(i));
+            }
+        }
     }
 
     public void getRequest(final String url, HashMap<String, String> params, final ConnectCallback callback){
@@ -68,7 +101,7 @@ public class RestClient {
             return;
         }
         final RequestParams requestParams = new RequestParams(params);
-        final String absoluteUrl = Constant.SERVER_URL + url;
+        final String absoluteUrl = ApiConstant.BASE_SERVER_URL + url;
         Log.d(LOG_TAG, "http request get: "+ absoluteUrl + "?" + requestParams.toString());
         httpClient.get(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
@@ -170,7 +203,7 @@ public class RestClient {
             return;
         }
         final RequestParams requestParams = new RequestParams(params);
-        final String absoluteUrl = Constant.SERVER_URL + url;
+        final String absoluteUrl = ApiConstant.BASE_SERVER_URL + url;
         Log.d(LOG_TAG, "http request delete: "+ absoluteUrl + "?" + requestParams.toString());
         httpClient.delete(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override

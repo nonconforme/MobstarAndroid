@@ -1,4 +1,4 @@
-package com.mobstar.login;
+package com.mobstar.login.who_to_follow;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,39 +34,35 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class WhoToFollowActivity extends Activity implements OnClickListener{
 
-	GridView grid;
-	Button btnSkip,btnFollow;
-	Context mContext;
-	SharedPreferences preferences;
-	ArrayList<WhoToFollowPojo> arrFollowPojos = new ArrayList<WhoToFollowPojo>();
-	String sErrorMessage = "";
+	private GridView grid;
+	private Button btnSkip,btnFollow;
+	private SharedPreferences preferences;
+	private ArrayList<WhoToFollowPojo> arrFollowPojos = new ArrayList<WhoToFollowPojo>();
+	private String sErrorMessage = "";
 	private GridAdapter gridListAdapter;
-	LinearLayout llBottom;
-	String star="";
+	private LinearLayout llBottom;
+	private String star="";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_who_to_follow);
 
-		mContext = WhoToFollowActivity.this;
-		gridListAdapter=new GridAdapter();
+		gridListAdapter = new GridAdapter();
 		preferences = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
 		InitControls();
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
 		sErrorMessage = "";
-		if (Utility.isNetworkAvailable(mContext)) {
+		if (Utility.isNetworkAvailable(this)) {
 			new WhoToFollowList().start();
 		} else {
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 		}
 		
 		Utility.SendDataToGA("WhoToFollow Screen", WhoToFollowActivity.this);
@@ -158,7 +154,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(WhoToFollowActivity.this);
 
 					// set title
 					alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
@@ -181,7 +177,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 
 		@Override
 		public void handleMessage(Message msg) {
-			Utility.HideDialog(mContext);
+			Utility.HideDialog(WhoToFollowActivity.this);
 
 			if (msg.what == 1) {
 				grid.setAdapter(gridListAdapter);
@@ -243,7 +239,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 
 		@Override
 		public void handleMessage(Message msg) {
-			Utility.HideDialog(mContext);
+			Utility.HideDialog(WhoToFollowActivity.this);
 
 			if (msg.what == 1) {
                 getUserAccountRequest();
@@ -274,7 +270,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final ViewHolder viewHolder;
 			final int pos=position;
-			LayoutInflater inflater = (LayoutInflater) mContext
+			LayoutInflater inflater = (LayoutInflater) WhoToFollowActivity.this
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			if (convertView == null) {
 				convertView = inflater.inflate(R.layout.row_who_to_follow, null);
@@ -297,7 +293,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 			} else {
 				//						imgUserPic.setImageResource(R.drawable.ic_pic_small);
 
-				Picasso.with(mContext).load(arrFollowPojos.get(position).getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop()
+				Picasso.with(WhoToFollowActivity.this).load(arrFollowPojos.get(position).getProfileImage()).resize(Utility.dpToPx(WhoToFollowActivity.this, 45), Utility.dpToPx(WhoToFollowActivity.this, 45)).centerCrop()
 				.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(viewHolder.imgUserPic);
 			}
 
@@ -344,10 +340,10 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 				}
 			}
 			sErrorMessage = "";
-			if (Utility.isNetworkAvailable(mContext)) {
+			if (Utility.isNetworkAvailable(this)) {
 				new WhoToFollowAdd(star).start();
 			} else {
-				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
 			}
 		}
 		else if(btnSkip.equals(view)){
@@ -356,7 +352,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 	}
 
     private void startHomeActivity() {
-        Intent intent = new Intent(mContext, HomeActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("isHomeInfo",true);
         startActivity(intent);
         finish();

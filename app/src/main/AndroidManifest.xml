@@ -416,7 +416,7 @@
             <!--android:screenOrientation="portrait" >-->
         <!--</activity>-->
         <activity
-            android:name=".login.WhoToFollowActivity"
+            android:name=".login.who_to_follow.WhoToFollowActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity

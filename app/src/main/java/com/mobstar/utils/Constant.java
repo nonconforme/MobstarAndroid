@@ -31,13 +31,13 @@ public class Constant {
 	
 	public static String SIGNUP = "user/";
 
-	public static String LOGIN = "login/";
-
-	public static String FACEBOOK_LOGIN = "login/facebook";
-
-	public static String TWITTER_LOGIN = "login/twitter";
-
-	public static String GOOGLE_LOGIN = "login/google";
+//	public static String LOGIN = "login/";
+//
+//	public static String FACEBOOK_LOGIN = "login/facebook";
+//
+//	public static String TWITTER_LOGIN = "login/twitter";
+//
+//	public static String GOOGLE_LOGIN = "login/google";
 	
 	public static String ENTRY = "entry";
 

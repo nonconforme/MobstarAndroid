@@ -29,16 +29,9 @@ import com.mobstar.utils.Utility;
 public class SignUpActivity extends Activity implements OnClickListener {
 
 	private Button btnBack, btnFinish;
-
-	private Typeface typefaceBtn;
 	private EditText editFullName, editEmail, editDisplayName, editPassword, editConfirmPassword;
 	private TextView textFullNameHint, textEmailHint, textDisplayNameHint, textPasswordHint, textConfirmPasswordHint;
 
-//	private boolean isAlreadyRegistered = false;
-//	private boolean isAlreadyTaken = false;
-//	private String sUserID = "";
-//	private String sToken = "";
-//	private String ProfileImage = "", ProfileCover = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,25 +66,15 @@ public class SignUpActivity extends Activity implements OnClickListener {
 	}
 
 	private void setTypeface(){
-		typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
-		btnBack.setTypeface(typefaceBtn);
-		btnFinish.setTypeface(typefaceBtn);
-		editFullName.setTypeface(typefaceBtn);
-		editEmail.setTypeface(typefaceBtn);
-		editDisplayName.setTypeface(typefaceBtn);
-		editPassword.setTypeface(typefaceBtn);
-		editConfirmPassword.setTypeface(typefaceBtn);
+		final Typeface typefaceBtn = Typeface.createFromAsset(getAssets(), "GOTHAM-BOLD.TTF");
+		final TextView[] views = {btnBack, btnFinish, editFullName, editEmail, editDisplayName, editPassword, editConfirmPassword};
+		for (TextView view : views) view.setTypeface(typefaceBtn);
+
 	}
 
 	private void settListeners(){
-		btnBack.setOnClickListener(this);
-		btnFinish.setOnClickListener(this);
-		editFullName.setOnClickListener(this);
-		editEmail.setOnClickListener(this);
-		editDisplayName.setOnClickListener(this);
-		editPassword.setOnClickListener(this);
-		editConfirmPassword.setOnClickListener(this);
-
+		final View[] views = {btnBack, btnFinish, editFullName, editEmail, editDisplayName, editPassword, editConfirmPassword};
+		for (View view : views) view.setOnClickListener(this);
 	}
 
 	@Override
@@ -310,15 +293,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 		if (isValid) {
 			Utility.ShowProgressDialog(this, getString(R.string.loading));
 			signUpRequest(editEmail.getText().toString().trim(), editFullName.getText().toString().trim(), editDisplayName.getText().toString().trim(), editPassword.getText().toString().trim());
-//			if (Utility.isNetworkAvailable(mContext)) {
-//
-//				new SignUPCall(editFullName.getText().toString().trim(), editEmail.getText().toString().trim(), editDisplayName.getText().toString().trim(), editPassword.getText().toString().trim()).start();
-//
-//			} else {
-//
-//				Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-//				Utility.HideDialog(mContext);
-//			}
+
 		}
 	}
 
@@ -368,130 +343,6 @@ public class SignUpActivity extends Activity implements OnClickListener {
 
 	}
 
-//	class SignUPCall extends Thread {
-//
-//		String displayName, password, fullName, email;
-//
-//		public SignUPCall(String fullName, String email, String displayName, String password) {
-//			this.fullName = fullName;
-//			this.displayName = displayName;
-//			this.email = email;
-//			this.password = password;
-//		}
-//
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//
-//			String[] name = { "userName", "email", "fullName", "displayName", "password","deviceToken","device" };
-//			String[] value = { displayName, email, fullName, displayName, password ,Utility.getRegistrationId(mContext),"google"};
-//
-//			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.SIGNUP, name, value, null);
-//
-////			Log.v(Constant.TAG, "SignUPCall response " + response);
-//
-//			if (response != null) {
-//
-//				try {
-//
-//					JSONObject jsonObject = new JSONObject(response);
-//
-//					if (jsonObject.has("token")) {
-//						sToken = jsonObject.getString("token");
-//					}
-//
-//					if (jsonObject.has("userId")) {
-//						sUserID = jsonObject.getString("userId");
-//					}
-//
-//					if (jsonObject.has("email") && jsonObject.getString("email").contains("already registered")) {
-//						isAlreadyRegistered = true;
-//					}
-//
-//					if (jsonObject.has("userName") && jsonObject.getString("userName").contains("already taken")) {
-//						isAlreadyTaken = true;
-//					}
-//
-//					if (jsonObject.has("profileImage")) {
-//						ProfileImage = jsonObject.getString("profileImage");
-//					}
-//
-//					if (jsonObject.has("profileCover")) {
-//						ProfileCover = jsonObject.getString("profileCover");
-//					}
-//
-//					if (isAlreadyRegistered || isAlreadyTaken) {
-//						handlerSignUP.sendEmptyMessage(0);
-//					} else {
-//						handlerSignUP.sendEmptyMessage(1);
-//					}
-//
-//				} catch (Exception e) {
-//					// TODO: handle exception
-//					e.printStackTrace();
-//					handlerSignUP.sendEmptyMessage(0);
-//				}
-//
-//			} else {
-//
-//				handlerSignUP.sendEmptyMessage(0);
-//			}
-//
-//		}
-//	}
-//
-//	Handler handlerSignUP = new Handler() {
-//
-//		@Override
-//		public void handleMessage(Message msg) {
-//			// TODO Auto-generated method stub
-//			Utility.HideDialog(mContext);
-//
-//			if (msg.what == 1) {
-//
-//				SharedPreferences pref = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-//				pref.edit().putString("username", editDisplayName.getText().toString().trim()).commit();
-//				pref.edit().putString("fullName", editFullName.getText().toString().trim()).commit();
-//				pref.edit().putString("displayName", editDisplayName.getText().toString().trim()).commit();
-//				pref.edit().putString("token", sToken).commit();
-//				pref.edit().putString("userid", sUserID).commit();
-//				pref.edit().putString("email_address", editEmail.getText().toString()).commit();
-//				pref.edit().putBoolean("isLogin", true).commit();
-//				pref.edit().putString("profile_image", ProfileImage).commit();
-//				pref.edit().putString("cover_image", ProfileCover).commit();
-//
-//
-//                AdWordsManager.getInstance().sendSingupEvent();
-//				if (pref.getBoolean(WelcomeVideoActivity.WELCOME_IS_CHECKED, true)) {
-//					startWelcomeActivity();
-//				}else {
-//					getUserAccountRequest();
-//				}
-//
-//
-////				Intent intent = new Intent(mContext, VerifyMobileNoActivity.class);
-////				startActivity(intent);
-////				finish();
-//
-//			} else {
-//
-//				if (isAlreadyRegistered) {
-//					editEmail.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-//					textEmailHint.setText(getString(R.string.already_registered));
-//					textEmailHint.setVisibility(View.VISIBLE);
-//					isAlreadyRegistered = false;
-//				}
-//				if (isAlreadyTaken) {
-//					editDisplayName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.signup_cross, 0);
-//					textDisplayNameHint.setText(getString(R.string.already_taken));
-//					textDisplayNameHint.setVisibility(View.VISIBLE);
-//					isAlreadyTaken = false;
-//				}
-//
-//			}
-//		}
-//	};
-
 	private void startWelcomeActivity(){
 		final Intent intent = new Intent(this, WelcomeVideoActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -499,26 +350,6 @@ public class SignUpActivity extends Activity implements OnClickListener {
 		startActivity(intent);
 		finish();
 	}
-
-
-//	private void getUserAccountRequest(){
-//		Utility.ShowProgressDialog(this, getString(R.string.loading));
-//		RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
-//			@Override
-//			public void onSuccess(UserAccountResponse object) {
-//				Utility.HideDialog(SignUpActivity.this);
-//				if (object.getUser().getUserContinentId() == 0) {
-//					startSelectCurrentRegionActivity();
-//				} else startHomeActivity();
-//			}
-//
-//			@Override
-//			public void onFailure(String error) {
-//				Utility.HideDialog(SignUpActivity.this);
-//				startHomeActivity();
-//			}
-//		});
-//	}
 
 	private void startSelectCurrentRegionActivity(){
 		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);

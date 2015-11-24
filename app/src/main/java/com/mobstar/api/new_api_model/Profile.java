@@ -11,6 +11,8 @@ public class Profile {
     private String profileImage;
     private String bio;
     private String tagline;
+    private boolean iAmStar;
+    private boolean isMyStar;
 
     public String getId() {
         return id;
@@ -38,5 +40,13 @@ public class Profile {
 
     public String getTagline() {
         return tagline;
+    }
+
+    public boolean isiAmStar() {
+        return iAmStar;
+    }
+
+    public boolean isMyStar() {
+        return isMyStar;
     }
 }
