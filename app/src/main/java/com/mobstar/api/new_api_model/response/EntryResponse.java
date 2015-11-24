@@ -20,7 +20,7 @@ public class EntryResponse extends BaseResponse {
     private void  fromEntryResponse(final EntryResponse entryResponse){
         timestamp = entryResponse.getTimestamp();
         entries = entryResponse.getEntries();
-        next = entryResponse.isNext();
+        next = entryResponse.hasNextPage();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class EntryResponse extends BaseResponse {
         this.entries = entries;
     }
 
-    public boolean isNext() {
+    public boolean hasNextPage() {
         return next;
     }
 

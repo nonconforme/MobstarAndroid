@@ -35,4 +35,8 @@ public abstract class BaseResponse {
         return new Gson();
     }
 
+    protected <T> T fromJson(final JSONObject jsonObject, Class<T> obj){
+        return getGson().fromJson(jsonObject.toString(), obj);
+    }
+
 }

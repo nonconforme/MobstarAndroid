@@ -20,7 +20,11 @@ import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.DownloadFileManager;
 import com.mobstar.api.RestClient;
+import com.mobstar.api.new_api_call.EntryCall;
+import com.mobstar.api.new_api_model.EntryP;
+import com.mobstar.api.new_api_model.response.EntryResponse;
 import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
 import com.mobstar.custom.pull_to_refresh.PullToRefreshBase;
 import com.mobstar.custom.pull_to_refresh.PullToRefreshRecyclerView;
 import com.mobstar.custom.recycler_view.EndlessRecyclerOnScrollListener;
@@ -169,22 +173,62 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     }
 
     protected void getEntry(final String url, final HashMap<String, String> params, final int pageNo){
-        RestClient.getInstance(getActivity()).getRequest(url, params, new ConnectCallback<EntriesResponse>() {
-
+//        RestClient.getInstance(getActivity()).getRequest(url, params, new ConnectCallback<EntriesResponse>() {
+//
+//            @Override
+//            public void onSuccess(EntriesResponse object) {
+//                if (getActivity() == null)
+//                    return;
+//                ArrayList<EntryPojo> arrEntry = object.getArrEntry();
+//                if (pageNo == 1) {
+//                    if (!(!arrEntry.isEmpty() &&
+//                            (arrEntry.get(0).getID().isEmpty() || arrEntry.get(0).getID().equals("null")))) {
+//                        entryAdapter.setArrEntryes(arrEntry);
+//                        endlessRecyclerOnScrollListener.reset();
+//                        downloadFirstFile();
+//                    }
+//                } else {
+//                    entryAdapter.addArrEntries(arrEntry);
+//                }
+//                if (object.hasNextPage())
+//                    endlessRecyclerOnScrollListener.existNextPage();
+//                refreshEntryList();
+//                Utility.HideDialog(getActivity());
+//                pullToRefreshRecyclerView.onRefreshComplete();
+//                setNoEntriesMessage();
+//            }
+//
+//            @Override
+//            public void onFailure(String error) {
+//                if (getActivity() == null)
+//                    return;
+//                Log.d(LOG_TAG, "http request get:getEntryRequest.onFailure.error=" + error);
+//                endlessRecyclerOnScrollListener.onFailedLoading();
+//                pullToRefreshRecyclerView.onRefreshComplete();
+//                Utility.HideDialog(getActivity());
+//                setNoEntriesMessage();
+//            }
+//
+//            @Override
+//            public void onServerError(com.mobstar.api.responce.Error error) {
+//
+//            }
+//        });
+        EntryCall.getEntry(getActivity(), params, new ConnectCallback<EntryResponse>() {
             @Override
-            public void onSuccess(EntriesResponse object) {
+            public void onSuccess(EntryResponse object) {
                 if (getActivity() == null)
                     return;
-                ArrayList<EntryPojo> arrEntry = object.getArrEntry();
+                ArrayList<EntryP> arrEntry = object.getEntries();
                 if (pageNo == 1) {
-                    if (!(!arrEntry.isEmpty() &&
-                            (arrEntry.get(0).getID().isEmpty() || arrEntry.get(0).getID().equals("null")))) {
-                        entryAdapter.setArrEntryes(arrEntry);
-                        endlessRecyclerOnScrollListener.reset();
-                        downloadFirstFile();
-                    }
+//                    if (!(!arrEntry.isEmpty() &&
+//                            (arrEntry.get(0).getID().isEmpty() || arrEntry.get(0).getID().equals("null")))) {
+//                        entryAdapter.setArrEntryes(arrEntry);
+//                        endlessRecyclerOnScrollListener.reset();
+//                        downloadFirstFile();
+//                    }
                 } else {
-                    entryAdapter.addArrEntries(arrEntry);
+//                    entryAdapter.addArrEntries(arrEntry);
                 }
                 if (object.hasNextPage())
                     endlessRecyclerOnScrollListener.existNextPage();
@@ -206,7 +250,7 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
             }
 
             @Override
-            public void onServerError(com.mobstar.api.responce.Error error) {
+            public void onServerError(Error error) {
 
             }
         });
