@@ -303,7 +303,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
-            android:name=".help.TakeTourActivity"
+            android:name=".help.take_tour.TakeTourActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity

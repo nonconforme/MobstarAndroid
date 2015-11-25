@@ -23,7 +23,6 @@ import com.mobstar.api.new_api_model.DefaultNotification;
 import com.mobstar.api.new_api_model.response.DefaultNotificationResponse;
 import com.mobstar.api.new_api_model.response.SuccessResponse;
 import com.mobstar.api.responce.Error;
-import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.home.HomeInformationActivity;
 import com.mobstar.login.LoginSocialActivity;
@@ -82,10 +81,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 		if (UserPreference.isLogin(this)) {
 
 			if( deepLinkedId != null) {
-				final String userContinents = UserPreference.getUserContinent(this);
-				if (userContinents.equalsIgnoreCase("") || userContinents.equalsIgnoreCase("0"))
-					startSelectCurrentRegionActivity();
-				else startHomeActivity();
+				startHomeActivity();
 			}
 			else {
 				//clear badge
@@ -139,12 +135,6 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 				registerInBackground();
 			}
 		}
-	}
-
-	private void startSelectCurrentRegionActivity(){
-		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
-		startActivity(intent);
-		finish();
 	}
 
 	private void startHomeActivity(){

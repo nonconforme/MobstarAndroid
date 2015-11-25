@@ -27,6 +27,7 @@ import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.DownloadFileManager;
 import com.mobstar.api.new_api_call.AuthCall;
 import com.mobstar.api.new_api_model.response.WelcomeVideoResponse;
+import com.mobstar.help.take_tour.TakeTourActivity;
 import com.mobstar.login.who_to_follow.WhoToFollowActivity;
 import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;

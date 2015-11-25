@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.new_api_call.ProfileCall;

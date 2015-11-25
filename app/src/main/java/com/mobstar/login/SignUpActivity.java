@@ -18,9 +18,7 @@ import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.new_api_call.AuthCall;
 import com.mobstar.api.new_api_model.Login;
 import com.mobstar.api.new_api_model.Profile;
-import com.mobstar.api.new_api_model.Settings;
 import com.mobstar.api.new_api_model.response.LoginResponse;
-import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.utils.UserPreference;
@@ -328,30 +326,15 @@ public class SignUpActivity extends Activity implements OnClickListener {
 			if (UserPreference.welcomeIsChecked(this)) {
 				startWelcomeActivity();
 			}else {
-				if (login.getSettings() != null)
-					verifyUserContinent(login.getSettings());
+				startHomeActivity();
 			}
 		}
-	}
-
-	private void verifyUserContinent(final Settings settings){
-		final String userContinents = settings.getContinent();
-		if (userContinents == null || userContinents.equalsIgnoreCase("") || userContinents.equalsIgnoreCase("0"))
-			startSelectCurrentRegionActivity();
-		else startHomeActivity();
-
 	}
 
 	private void startWelcomeActivity(){
 		final Intent intent = new Intent(this, WelcomeVideoActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
-		finish();
-	}
-
-	private void startSelectCurrentRegionActivity(){
-		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
 		startActivity(intent);
 		finish();
 	}

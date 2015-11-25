@@ -207,18 +207,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 			if (UserPreference.welcomeIsChecked(this)) {
 				startWelcomeActivity();
 			}else {
-				if (login.getSettings() != null)
-					verifyUserContinent(login.getSettings());
+				startWhoToFollowActivity();
 			}
 		}
-	}
-
-	private void verifyUserContinent(final Settings settings){
-		final String userContinents = settings.getContinent();
-		if (userContinents == null || userContinents.equalsIgnoreCase("") || userContinents.equalsIgnoreCase("0"))
-			startSelectCurrentRegionActivity();
-		else startWhoToFollowActivity();
-
 	}
 
 	private void sendAnalytic(){
@@ -238,12 +229,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			}
 		});
-	}
-
-	private void startSelectCurrentRegionActivity(){
-		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
-		startActivity(intent);
-		finish();
 	}
 
 	private void startWhoToFollowActivity(){
