@@ -145,7 +145,7 @@ public class ProfileEntryAdapter extends RecyclerViewAdapter implements StickyRe
     }
 
     @Override
-    public void onFollowEntry(String uId, String isMyStar) {
+    public void onFollowEntry(String uId, boolean isMyStar) {
         super.onFollowEntry(uId, isMyStar);
         ((NewProfileActivity)baseActivity).setIsMyStar(isMyStar);
     }

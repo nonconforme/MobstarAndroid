@@ -221,14 +221,13 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
                     return;
                 ArrayList<EntryP> arrEntry = object.getEntries();
                 if (pageNo == 1) {
-//                    if (!(!arrEntry.isEmpty() &&
-//                            (arrEntry.get(0).getID().isEmpty() || arrEntry.get(0).getID().equals("null")))) {
-//                        entryAdapter.setArrEntryes(arrEntry);
-//                        endlessRecyclerOnScrollListener.reset();
-//                        downloadFirstFile();
-//                    }
+                    if (!arrEntry.isEmpty()) {
+                        entryAdapter.setArrEntryes(arrEntry);
+                        endlessRecyclerOnScrollListener.reset();
+                        downloadFirstFile();
+                    }
                 } else {
-//                    entryAdapter.addArrEntries(arrEntry);
+                    entryAdapter.addArrEntries(arrEntry);
                 }
                 if (object.hasNextPage())
                     endlessRecyclerOnScrollListener.existNextPage();
@@ -280,15 +279,15 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
         handler.postDelayed(
                 new Runnable() {
                     public void run() {
-                        final EntryPojo entryPojo = entryAdapter.getEntry(0);
+                        final EntryP entryPojo = entryAdapter.getEntry(0);
                         if (entryPojo == null)
                             return;
                         switch (entryPojo.getType()) {
                             case "audio":
-                                downloadFileManager.downloadFile(entryPojo.getAudioLink(), 0);
+                                downloadFileManager.downloadFile(entryPojo.getEntryFile(0).getPath(), 0);
                                 break;
                             case "video":
-                                downloadFileManager.downloadFile(entryPojo.getVideoLink(), 0);
+                                downloadFileManager.downloadFile(entryPojo.getEntryFile(0).getPath(), 0);
                                 break;
                             case "video_youtube":
 //                                downloadFile(0);
@@ -381,15 +380,15 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     protected void cancelDownloadFile(int cancelPosition) {
         if(cancelPosition == -1 || cancelPosition >= entryAdapter.getItemCount())
             return;
-        final EntryPojo entryPojo = entryAdapter.getEntry(cancelPosition);
+        final EntryP entryPojo = entryAdapter.getEntry(cancelPosition);
         if (entryPojo == null || entryPojo.getType() == null)
             return;
         switch (entryPojo.getType()) {
             case "audio":
-                downloadFileManager.cancelFile(entryPojo.getAudioLink());
+                downloadFileManager.cancelFile(entryPojo.getEntryFile(0).getPath());
                 break;
             case "video":
-                downloadFileManager.cancelFile(entryPojo.getVideoLink());
+                downloadFileManager.cancelFile(entryPojo.getEntryFile(0).getPath());
                 break;
             case "video_youtube":
 //                YouTubePlayerManager.getInstance().cancelPlayer((BaseActivity) getActivity());
@@ -398,15 +397,15 @@ public class VideoListBaseFragment extends Fragment implements PullToRefreshBase
     }
 
     protected void downloadFile(int currentPosition) {
-        final EntryPojo entryPojo = entryAdapter.getEntry(currentPosition);
+        final EntryP entryPojo = entryAdapter.getEntry(currentPosition);
         if (entryPojo == null || entryPojo.getType() == null)
             return;
         switch (entryPojo.getType()) {
             case "audio":
-                downloadFileManager.downloadFile(entryPojo.getAudioLink(), currentPosition);
+                downloadFileManager.downloadFile(entryPojo.getEntryFile(0).getPath(), currentPosition);
                 break;
             case "video":
-                downloadFileManager.downloadFile(entryPojo.getVideoLink(), currentPosition);
+                downloadFileManager.downloadFile(entryPojo.getEntryFile(0).getPath(), currentPosition);
                 break;
             case "video_youtube":
 //                if (entryAdapter.getEntryAtPosition(currentPosition) != null)

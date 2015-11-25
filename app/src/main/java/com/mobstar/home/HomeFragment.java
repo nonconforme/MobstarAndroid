@@ -34,6 +34,7 @@ import com.mobstar.adapters.CategoriesAdapter;
 import com.mobstar.adapters.ContinentsAdapter;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.api.responce.*;
 import com.mobstar.api.responce.Error;
 import com.mobstar.custom.CustomTextviewBold;
@@ -144,11 +145,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
                     if (listChoosenCategories.contains(newEntryPush.getCategory()) || listChoosenCategories.isEmpty()) {
                         VideoListBaseFragment videoListBaseFragment = (VideoListBaseFragment) mFragmentManager.findFragmentById(R.id.childFragmentContent);
                         if (videoListBaseFragment != null) {
-                            ArrayList<EntryPojo> entryPojos = videoListBaseFragment.getEntryAdapter().getArrEntries();
+                            ArrayList<EntryP> entryPojos = videoListBaseFragment.getEntryAdapter().getArrEntries();
                             if (!entryPojos.isEmpty()) {
-                                long timeExistEntry = TimeUtility.getTimeInMillis(entryPojos.get(0).getCreatedString());
+                                long timeExistEntry = entryPojos.get(0).getEntry().getCreated();
                                 long timeNewEntry = newEntryPush.getTimeUpload();
-                                int idExistEntry = Integer.parseInt(entryPojos.get(0).getID());
+                                int idExistEntry = Integer.parseInt(entryPojos.get(0).getEntry().getId());
                                 int idNewEntry = newEntryPush.getId();
                                 if ((timeNewEntry > timeExistEntry) && (idNewEntry > idExistEntry)) {
                                     canShow = true;

@@ -247,7 +247,7 @@ public class LikesActivity extends Activity {
 		final UserProfile userProfile = UserProfile.newBuilder()
 				.setUserId(arrStarPojos.get(position).getUserID())
 				.setUserName(arrStarPojos.get(position).getUserDisplayName())
-				.setIsMyStar(arrStarPojos.get(position).getIsMyStar())
+				.setIsMyStar(arrStarPojos.get(position).getIsMyStar() == "1")
 				.setUserPic(arrStarPojos.get(position).getProfileImage())
 				.setUserCoverImage(arrStarPojos.get(position).getProfileCover())
 				.build();

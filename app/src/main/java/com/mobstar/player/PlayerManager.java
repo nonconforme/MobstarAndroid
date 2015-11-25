@@ -43,7 +43,7 @@ public class PlayerManager {
 //        standardizePrevious();
         this.mContext = context;
         this.mEntryItem = entryItem;
-        isVideoFile = (mEntryItem.getEntryPojo().getType().equals("video"));
+        isVideoFile = (mEntryItem.getEntryPojo().getEntryFile(0).getType().equals("video"));
         mFilePath = fileName;
         onChangeEntryListener = _onChangeEntryListener;
     }
@@ -51,12 +51,12 @@ public class PlayerManager {
     private void sendRequestAddCount() {
         Log.d(LOG_TAG, "sendRequestAddCount");
         SharedPreferences preferences = mContext.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
-        Api.sendRequestAddCount(mContext, mEntryItem.getEntryPojo().getID(), preferences.getString("userid", "0"), new ConnectCallback<CountResponse>() {
+        Api.sendRequestAddCount(mContext, mEntryItem.getEntryPojo().getEntry().getId(), preferences.getString("userid", "0"), new ConnectCallback<CountResponse>() {
 
             @Override
             public void onSuccess(CountResponse response) {
                 if(response.getArrEntry() != null && response.getArrEntry().size() > 0 && onChangeEntryListener != null){
-                    onChangeEntryListener.onChangeEntry(response.getArrEntry().get(0));
+//                    onChangeEntryListener.onChangeEntry(response.getArrEntry().get(0));
                 }
             }
 
@@ -76,7 +76,7 @@ public class PlayerManager {
     public boolean tryToPlayNew() {
         if (mContext == null) return false;
         Log.d(LOG_TAG, "mEntryItem.pos=" + mEntryItem.getPos());
-        Log.d(LOG_TAG, "mEntryItem.pgetDescription=" + mEntryItem.getEntryPojo().getDescription());
+        Log.d(LOG_TAG, "mEntryItem.pgetDescription=" + mEntryItem.getEntryPojo().getEntry().getName());
 //        Log.d(LOG_TAG,"mEntryItem.pos"+mEntryItem.getPos());
 
         releaseMP();

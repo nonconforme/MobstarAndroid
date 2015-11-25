@@ -21,6 +21,7 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Utility;
 import org.json.JSONObject;
@@ -64,7 +65,7 @@ public class FacebookManager {
         return accessToken != null;
     }
 
-    public void post(final EntryPojo entryPojo, final boolean isTalent, final String userImg, final String shareText, final FacebookCallback<Sharer.Result> callback){
+    public void post(final EntryP entryPojo, final boolean isTalent, final String userImg, final String shareText, final FacebookCallback<Sharer.Result> callback){
         Bitmap bitmap = null;
         if (isTalent) {
             bitmap = Utility.getBitmapFromURL(userImg);
@@ -74,14 +75,14 @@ public class FacebookManager {
         ShareApi.share(getSharePhotoContent(getSharePhoto(bitmap, shareText)), callback);
     }
 
-    private Bitmap getShareBitmap(final EntryPojo entryPojo){
+    private Bitmap getShareBitmap(final EntryP entryPojo){
         Bitmap bitmap = null;
         if (entryPojo.getType().equalsIgnoreCase("image")) {
-            bitmap = Utility.getBitmapFromURL(entryPojo.getImageLink());
+            bitmap = Utility.getBitmapFromURL(entryPojo.getEntryFile(0).getPath());
         } else if (entryPojo.getType().equalsIgnoreCase("audio")) {
-            bitmap = Utility.getBitmapFromURL(entryPojo.getImageLink());
+            bitmap = Utility.getBitmapFromURL(entryPojo.getEntryFile(0).getPath());
         } else if (entryPojo.getType().equalsIgnoreCase("video")) {
-            bitmap = Utility.getBitmapFromURL(entryPojo.getVideoThumb());
+            bitmap = Utility.getBitmapFromURL(entryPojo.getEntryFile(0).getThumbnail());
         }
         return bitmap;
     }

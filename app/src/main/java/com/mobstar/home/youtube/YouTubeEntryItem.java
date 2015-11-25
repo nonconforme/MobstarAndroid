@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.player.YouTubePlayerManager;
 import com.mobstar.pojo.EntryPojo;
@@ -35,7 +36,7 @@ public class YouTubeEntryItem extends EntryItem {
     }
 
     @Override
-    public void init(EntryPojo _entryPojo, int _position, BaseActivity _activity, OnChangeEntryListener _onChangeEntryListener) {
+    public void init(EntryP _entryPojo, int _position, BaseActivity _activity, OnChangeEntryListener _onChangeEntryListener) {
         super.init(_entryPojo, _position, _activity, _onChangeEntryListener);
         rlVotingContainer.setVisibility(View.GONE);
         rlVotingContainer.setBackgroundColor(ContextCompat.getColor(baseActivity, R.color.background_transparent));
@@ -43,7 +44,7 @@ public class YouTubeEntryItem extends EntryItem {
 
     @Override
     protected void setYouTubeContentType() {
-        YouTubePlayerManager.getInstance().initialize(baseActivity, getEntryPojo().getVideoLink(), getContainerPlayer());
+        YouTubePlayerManager.getInstance().initialize(baseActivity, getEntryPojo().getEntryFile(0).getPath(), getContainerPlayer());
     }
 
     @Override

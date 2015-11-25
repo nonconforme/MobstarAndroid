@@ -391,5 +391,13 @@
 
     <string name="you_tube">YOUTUBE</string>
     <string name="you_have_no_you_tube_video">There are no videos on your YouTube account to use yet</string>
+    <string-array name="categoryes">
+        <item>MUSIC</item>
+        <item>MODELING</item>
+        <item>DANCE</item>
+        <item>SPORTS</item>
+        <item>ACTING</item>
+
+    </string-array>
 
 </resources>

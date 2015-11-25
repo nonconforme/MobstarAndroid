@@ -39,7 +39,6 @@ public class SignUpActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_sign_up);
 		initControls();
 		Utility.SendDataToGA("SignUp Screen", SignUpActivity.this);
-
 	}
 
 	private void initControls() {
@@ -324,7 +323,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 		final Login login = loginResponse.getLogin();
 		final Profile profile = login.getProfile();
 		if (profile != null){
-//			UserPreference.saveUserProfileToPreference(this, profile, true);
+			UserPreference.saveUserProfileToPreference(this, profile, true, login.getSettings().getContinent());
 			AdWordsManager.getInstance().sendSingupEvent();
 			if (UserPreference.welcomeIsChecked(this)) {
 				startWelcomeActivity();

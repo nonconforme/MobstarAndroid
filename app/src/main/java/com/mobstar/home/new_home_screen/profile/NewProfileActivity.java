@@ -46,7 +46,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     protected TextView btnEdit;
     protected UserProfile user;
     protected VideoListBaseFragment profileFragment;
-    private String iAmStar;
+    private boolean iAmStar;
     protected boolean isNotification = false;
 
     @Override
@@ -80,7 +80,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
             btnEdit.setVisibility(View.VISIBLE);
             imgFollow.setVisibility(View.GONE);
             imgMsg.setVisibility(View.GONE);
-        } else if (user.getIsMyStar() != null && !user.getIsMyStar().equalsIgnoreCase("0")) {
+        } else if (user.getIsMyStar()) {
             btnEdit.setVisibility(View.GONE);
             imgFollow.setBackground(getResources().getDrawable(R.drawable.yellow_btn));
             imgFollow.setText(getString(R.string.following));
@@ -94,7 +94,7 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
             imgMsg.setVisibility(View.VISIBLE);
         }
 
-        if(iAmStar != null && iAmStar.length() > 0 && iAmStar.equalsIgnoreCase("1") && user.getIsMyStar().equalsIgnoreCase("1") ){
+        if(iAmStar && user.getIsMyStar()){
             Picasso.with(this).load(R.drawable.msg_act_btn).into(imgMsg);
         }
         else{
@@ -123,14 +123,14 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
                 startEditProfileActivity();
                 break;
             case R.id.imgMsg:
-                if (iAmStar != null && iAmStar.length() > 0 && iAmStar.equalsIgnoreCase("1") && user.getIsMyStar().equalsIgnoreCase("1")) {
+                if (iAmStar && user.getIsMyStar()) {
                     startMessageActivity();
                 }else startMessageErrorDialog();
                 break;
         }
     }
 
-    public void setIAmStar(final String _iAmStar){
+    public void setIAmStar(final boolean _iAmStar){
         iAmStar = _iAmStar;
         setupViews();
     }
@@ -177,14 +177,14 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
 
     private void onClickFollow() {
         if (user != null)
-            if (!user.getIsMyStar().equalsIgnoreCase("0")) {
+            if (user.getIsMyStar()) {
                 deleteStarRequest();
             } else {
                 addStarRequest();
             }
     }
 
-    public void setIsMyStar(final String star){
+    public void setIsMyStar(final boolean star){
         user.setIsMyStar(star);
         setupViews();
     }
@@ -197,8 +197,8 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
                 Utility.HideDialog(NewProfileActivity.this);
                 if (!object.hasError()) {
                     if (profileFragment != null)
-                        getProfileFragment().onFollowEntry(user.getUserId(), "0");
-                    setIsMyStar("0");
+                        getProfileFragment().onFollowEntry(user.getUserId(), false);
+                    setIsMyStar(false);
                 }
             }
 
@@ -223,8 +223,8 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
                 Utility.HideDialog(NewProfileActivity.this);
                 if (object.getError() == null || object.getError().equals("")) {
                     if (profileFragment != null)
-                        getProfileFragment().onFollowEntry(user.getUserId(), "1");
-                    setIsMyStar("1");
+                        getProfileFragment().onFollowEntry(user.getUserId(), true);
+                    setIsMyStar(true);
                 }
             }
 

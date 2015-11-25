@@ -21,6 +21,7 @@ import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.call.StarCall;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.api.responce.*;
 import com.mobstar.api.responce.Error;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
@@ -79,7 +80,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private int position;
 
     protected BaseActivity baseActivity;
-    private EntryPojo entryPojo;
+    private EntryP entryPojo;
     private SharedPreferences preferences;
     protected OnChangeEntryListener onChangeEntryListener;
     private FrameLayout containerPlayer;
@@ -100,55 +101,55 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     protected void findView(final View convertView) {
-        buttonVideoSplit = (TextView) convertView.findViewById(R.id.splitVideoButton);
-        textUserName = (TextView) convertView.findViewById(R.id.textUserName);
-        textTime = (TextView) convertView.findViewById(R.id.textTime);
-        textViews = (TextView) convertView.findViewById(R.id.textViews);
-        textDescription = (TextView) convertView.findViewById(R.id.textDescription);
-        imageFrame = (ImageView) convertView.findViewById(R.id.imageFrame);
-        progressbar = (ProgressBar) convertView.findViewById(R.id.progressbar);
-        textureView = (TextureView) convertView.findViewById(R.id.textureView);
-        btnShare = (FrameLayout) convertView.findViewById(R.id.btnShare);
-        btnFollow = (TextView) convertView.findViewById(R.id.btnFollow);
-        btnInfo = (FrameLayout) convertView.findViewById(R.id.btnInfo);
-        layoutStatastics = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
-        textStatasticCount = (TextView) convertView.findViewById(R.id.textStatasticCount);
-        ivAudioIcon = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
-        textCommentCount = (TextView) convertView.findViewById(R.id.textCommentCount);
-        imgUserPic = (ImageView) convertView.findViewById(R.id.imgUserPic);
-        imgPlaceHolder = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
-        flPlaceHolder = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
-        imgMsg = (ImageView) convertView.findViewById(R.id.imgMsg);
-        ivIndicator = (ImageView) convertView.findViewById(R.id.ivIndicator);
-        swipeCardView = (SwipeCardView) convertView.findViewById(R.id.swipe_card_view);
-        votingNo = convertView.findViewById(R.id.voting_no);
-        votingYes = convertView.findViewById(R.id.voting_yes);
-        cardView = (CardView) convertView.findViewById(R.id.cardView);
-        containerPlayer = (FrameLayout) convertView.findViewById(R.id.conteiner_player);
+        buttonVideoSplit    = (TextView) convertView.findViewById(R.id.splitVideoButton);
+        textUserName        = (TextView) convertView.findViewById(R.id.textUserName);
+        textTime            = (TextView) convertView.findViewById(R.id.textTime);
+        textViews           = (TextView) convertView.findViewById(R.id.textViews);
+        textDescription     = (TextView) convertView.findViewById(R.id.textDescription);
+        imageFrame          = (ImageView) convertView.findViewById(R.id.imageFrame);
+        progressbar         = (ProgressBar) convertView.findViewById(R.id.progressbar);
+        textureView         = (TextureView) convertView.findViewById(R.id.textureView);
+        btnShare            = (FrameLayout) convertView.findViewById(R.id.btnShare);
+        btnFollow           = (TextView) convertView.findViewById(R.id.btnFollow);
+        btnInfo             = (FrameLayout) convertView.findViewById(R.id.btnInfo);
+        layoutStatastics    = (FrameLayout) convertView.findViewById(R.id.layoutStatastic);
+        textStatasticCount  = (TextView) convertView.findViewById(R.id.textStatasticCount);
+        ivAudioIcon         = (ImageView) convertView.findViewById(R.id.ivAudioIcon);
+        textCommentCount    = (TextView) convertView.findViewById(R.id.textCommentCount);
+        imgUserPic          = (ImageView) convertView.findViewById(R.id.imgUserPic);
+        imgPlaceHolder      = (ImageView) convertView.findViewById(R.id.imgPlaceHolder);
+        flPlaceHolder       = (FrameLayout) convertView.findViewById(R.id.flPlaceHolder);
+        imgMsg              = (ImageView) convertView.findViewById(R.id.imgMsg);
+        ivIndicator         = (ImageView) convertView.findViewById(R.id.ivIndicator);
+        swipeCardView       = (SwipeCardView) convertView.findViewById(R.id.swipe_card_view);
+        votingNo            = convertView.findViewById(R.id.voting_no);
+        votingYes           = convertView.findViewById(R.id.voting_yes);
+        cardView            = (CardView) convertView.findViewById(R.id.cardView);
+        containerPlayer     = (FrameLayout) convertView.findViewById(R.id.conteiner_player);
         youTubePlayerContainer = (FrameLayout) convertView.findViewById(R.id.container);
-        llItemEntry = (LinearLayout) convertView.findViewById(R.id.llRowEntry);
-        llItemUser = (LinearLayout) convertView.findViewById(R.id.llItemUser);
-        imgUserItemPic = (ImageView) convertView.findViewById(R.id.imgUserItemPic);
-        tvUserItemName = (TextView) convertView.findViewById(R.id.textUserItemName);
+        llItemEntry         = (LinearLayout) convertView.findViewById(R.id.llRowEntry);
+        llItemUser          = (LinearLayout) convertView.findViewById(R.id.llItemUser);
+        imgUserItemPic      = (ImageView) convertView.findViewById(R.id.imgUserItemPic);
+        tvUserItemName      = (TextView) convertView.findViewById(R.id.textUserItemName);
 
     }
 
-    public void init(final EntryPojo _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onChangeEntryListener) {
+    public void init(final EntryP _entryPojo, int _position, final BaseActivity _activity, OnChangeEntryListener _onChangeEntryListener) {
         entryPojo = _entryPojo;
         baseActivity = _activity;
         position = _position;
         swipeCardView.resetTopView();
         swipeCardView.setEnableSwipeAction(isEnableSwipeAction);
         onChangeEntryListener = _onChangeEntryListener;
-        if (entryPojo.getCategory() != null && entryPojo.getCategory().equalsIgnoreCase("onlyprofile")){
-            setupUserViews();
-        }
-        else {
+//        if (entryPojo.getCategory() != null && entryPojo.getCategory().equalsIgnoreCase("onlyprofile")){
+//            setupUserViews();
+//        }
+//        else {
             setupEntryViews();
             setListeners();
             setupImage();
             initItemContentType();
-        }
+//        }
     }
 
     public void removeItemAfterVotingNo(boolean isRemoveItemAfterVotingNo) {
@@ -159,18 +160,18 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         llItemUser.setVisibility(View.VISIBLE);
         llItemEntry.setVisibility(View.GONE);
         llItemUser.setOnClickListener(this);
-        tvUserItemName.setText(entryPojo.getUserName());
-        if (entryPojo.getProfileImage().equals("")) {
+        tvUserItemName.setText(entryPojo.getUser().getFullName());
+        if (entryPojo.getUser().getProfileImage().equals("")) {
             imgUserItemPic.setImageResource(R.drawable.ic_pic_small);
         } else {
             imgUserItemPic.setImageResource(R.drawable.ic_pic_small);
 
-            Picasso.with(baseActivity).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(baseActivity, 45), Utility.dpToPx(baseActivity, 45)).centerCrop()
+            Picasso.with(baseActivity).load(entryPojo.getUser().getProfileImage()).resize(Utility.dpToPx(baseActivity, 45), Utility.dpToPx(baseActivity, 45)).centerCrop()
                     .placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(imgUserItemPic);
         }
     }
 
-    public void refreshEntry(final EntryPojo _entryPojo){
+    public void refreshEntry(final EntryP _entryPojo){
         entryPojo = _entryPojo;
         setupEntryViews();
     }
@@ -181,39 +182,40 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         swipeCardView.setSwipeLeftViewIndicator(votingNo);
         swipeCardView.setSwipeRightViewIndicator(votingYes);
 
-        textCommentCount.setText(entryPojo.getTotalComments());
-        textUserName.setText(entryPojo.getUserDisplayName());
-        if (entryPojo.getDescription() != null)
-            textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
+        textCommentCount.setText(Integer.toString(entryPojo.getEntry().getTotalComents()));
+        textUserName.setText(entryPojo.getUser().getDisplayName());
+        if (entryPojo.getEntry().getName() != null)
+            textDescription.setText(Utility.unescape_perl_string(entryPojo.getEntry().getName()));
 
-        textTime.setText(entryPojo.getCreated());
-        textViews.setText(entryPojo.getTotalViews());
+        textTime.setText(entryPojo.getEntry().getCreatedAgo());
+        textViews.setText(Integer.toString(entryPojo.getEntry().getTotalViews()));
 
-        textStatasticCount.setText(entryPojo.getUpVotesCount());
+        textStatasticCount.setText(Integer.toString(entryPojo.getEntry().getUpVotes()));
         if (preferences == null)
             preferences = baseActivity.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
-        if (preferences.getString("userid", "0").equalsIgnoreCase(entryPojo.getUserID())) {
+        if (preferences.getString("userid", "0").equalsIgnoreCase(entryPojo.getUser().getId())) {
             btnFollow.setVisibility(View.GONE);
         } else {
             btnFollow.setVisibility(View.VISIBLE);
-            if (entryPojo.getIsMyStar() != null) {
-                if (!entryPojo.getIsMyStar().equalsIgnoreCase("0")) {
-                    btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.yellow_btn));
-                    btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.white_color));
-                    btnFollow.setText(baseActivity.getString(R.string.following));
-                } else {
-                    btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.selector_oval_button));
-                    btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.comment_color));
-                    btnFollow.setText(baseActivity.getString(R.string.follow));
-                }
+            if (!entryPojo.getUser().isMyStar()) {
+                btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.yellow_btn));
+                btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.white_color));
+                btnFollow.setText(baseActivity.getString(R.string.following));
+            } else {
+                btnFollow.setBackground(baseActivity.getResources().getDrawable(R.drawable.selector_oval_button));
+                btnFollow.setTextColor(baseActivity.getResources().getColor(R.color.comment_color));
+                btnFollow.setText(baseActivity.getString(R.string.follow));
             }
+
         }
 
         try {
-            if (!entryPojo.getType().equals("video") || entryPojo.getSplitVideoId() != null) {
+            if (!entryPojo.getEntry().getFiles().get(0).getType().equals("video")
+//                    || entryPojo.getSplitVideoId() != null
+                    ) {
                 buttonVideoSplit.setEnabled(false);
                 buttonVideoSplit.setTextColor(baseActivity.getResources().getColor(R.color.comment_color_state_disable));
-            } else if (entryPojo.getType().equals("video")) {
+            } else if (entryPojo.getEntry().getFiles().get(0).getType().equals("video")) {
                 buttonVideoSplit.setEnabled(true);
                 buttonVideoSplit.setTextColor(baseActivity.getResources().getColor(R.color.comment_color));
                 buttonVideoSplit.setOnClickListener(this);
@@ -277,23 +279,23 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     protected void onClickContainerPlayer(){
         PlayerManager.getInstance().tryToPause(position);
-        if (entryPojo.getType().equalsIgnoreCase(YOU_TUBE_TYPE))
+        if (entryPojo.getEntry().getFiles().get(0).getType().equalsIgnoreCase(YOU_TUBE_TYPE))
             startYouTubePlayerActivity();
     }
 
     private void setupImage() {
-        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1") && entryPojo.getIsMyStar() != null && entryPojo.getIsMyStar().equalsIgnoreCase("1")) {
+        if (entryPojo.getUser().isiAmStar() && entryPojo.getUser().isMyStar()) {
             Picasso.with(baseActivity).load(R.drawable.msg_act_btn).into(imgMsg);
         } else {
             Picasso.with(baseActivity).load(R.drawable.msg_btn).into(imgMsg);
         }
 
-        if (entryPojo.getProfileImage().equals("")) {
+        if (entryPojo.getUser().getProfileImage().equals("")) {
             imgUserPic.setImageResource(R.drawable.ic_pic_small);
         } else {
             imgUserPic.setImageResource(R.drawable.ic_pic_small);
 
-            Picasso.with(baseActivity).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(baseActivity, 45), Utility.dpToPx(baseActivity, 45)).centerCrop()
+            Picasso.with(baseActivity).load(entryPojo.getUser().getProfileImage()).resize(Utility.dpToPx(baseActivity, 45), Utility.dpToPx(baseActivity, 45)).centerCrop()
                     .placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(imgUserPic);
         }
 
@@ -301,7 +303,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void initItemContentType() {
-        switch (entryPojo.getType()) {
+        switch (entryPojo.getEntry().getFiles().get(0).getType()) {
             case IMAGE_TYPE:
                 setImageContentType();
                 break;
@@ -335,7 +337,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imgPlaceHolder.setImageResource(R.drawable.image_placeholder);
         imageFrame.setVisibility(View.GONE);
 
-        Picasso.with(baseActivity).load(entryPojo.getImageLink())
+        Picasso.with(baseActivity).load(entryPojo.getEntry().getFiles().get(0).getPath())
                 .placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(imageFrame, new Callback() {
 
             @Override
@@ -365,7 +367,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         imgPlaceHolder.setImageResource(R.drawable.audio_placeholder);
         imageFrame.setVisibility(View.GONE);
 
-        Picasso.with(baseActivity).load(entryPojo.getImageLink())
+        Picasso.with(baseActivity).load(entryPojo.getEntryFile(0).getPath())
                 .into(imageFrame, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -395,7 +397,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void loadVideoThumb(){
-        Picasso.with(baseActivity).load(entryPojo.getVideoThumb())
+        Picasso.with(baseActivity).load(entryPojo.getEntryFile(0).getThumbnail())
                 .placeholder(R.drawable.image_placeholder).error(R.drawable.image_placeholder).into(imageFrame, new Callback() {
             @Override
             public void onSuccess() {
@@ -412,7 +414,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void onClickBtnFollow() {
-        if (entryPojo.getIsMyStar() != null && !entryPojo.getIsMyStar().equalsIgnoreCase("0")) {
+        if (entryPojo.getUser().isMyStar()) {
             deleteStarRequest();
         } else {
             addStarRequest();
@@ -421,17 +423,17 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     private void addStarRequest() {
         final HashMap<String, String> params = new HashMap<>();
-        params.put("star", entryPojo.getUserID());
+        params.put("star", entryPojo.getUser().getId());
         Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
         showStarDialog();
-        StarCall.addStarCall(baseActivity, entryPojo.getUserID(), new ConnectCallback<StarResponse>() {
+        StarCall.addStarCall(baseActivity, entryPojo.getUser().getId(), new ConnectCallback<StarResponse>() {
             @Override
             public void onSuccess(StarResponse object) {
                 Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
                 Utility.HideDialog(baseActivity);
                 if (!object.hasError()) {
                     if (onChangeEntryListener != null)
-                        onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "1");
+                        onChangeEntryListener.onFollowEntry(entryPojo.getUser().getId(), true);
                 }
             }
 
@@ -466,7 +468,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     private void deleteStarRequest() {
         Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
-        StarCall.delStarCall(baseActivity, entryPojo.getUserID(),
+        StarCall.delStarCall(baseActivity, entryPojo.getUser().getId(),
                 new ConnectCallback<StarResponse>() {
                     @Override
                     public void onSuccess(StarResponse object) {
@@ -474,7 +476,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                         Utility.HideDialog(baseActivity);
                         if (!object.hasError()) {
                             if (onChangeEntryListener != null)
-                                onChangeEntryListener.onFollowEntry(entryPojo.getUserID(), "0");
+                                onChangeEntryListener.onFollowEntry(entryPojo.getUser().getId(), false);
                         }
                     }
 
@@ -494,7 +496,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     private void startCommentActivity() {
         final Intent intent = new Intent(baseActivity, CommentActivity.class);
-        intent.putExtra("entry_id", entryPojo.getID());
+        intent.putExtra("entry_id", entryPojo.getUser().getId());
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
@@ -523,13 +525,13 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private void startProfileActivity() {
         final Intent intent = new Intent(baseActivity, NewProfileActivity.class);
         final UserProfile userProfile =  UserProfile.newBuilder()
-                .setUserId(entryPojo.getUserID())
-                .setUserName(entryPojo.getUserName())
-                .setUserDisplayName(entryPojo.getUserDisplayName())
-                .setUserPic(entryPojo.getProfileImage())
-                .setUserCoverImage(entryPojo.getProfileCover())
-                .setIsMyStar(entryPojo.getIsMyStar())
-                .setUserTagline(entryPojo.getTagline())
+                .setUserId(entryPojo.getUser().getId())
+                .setUserName(entryPojo.getUser().getDisplayName())
+                .setUserDisplayName(entryPojo.getUser().getFullName())
+                .setUserPic(entryPojo.getUser().getProfileImage())
+                .setUserCoverImage(entryPojo.getUser().getCoverImage())
+                .setIsMyStar(entryPojo.getUser().isMyStar())
+                .setUserTagline(entryPojo.getUser().getTagline())
                 .build();
         intent.putExtra(NewProfileActivity.USER, userProfile);
         startActivity(intent);
@@ -539,7 +541,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void startSplitActivity() {
-        if (entryPojo.getVideoLink() == null)
+        if (entryPojo.getEntryFile(0).getPath() == null)
             return;
         Intent intent = new Intent(baseActivity, SplitActivity.class);
         intent.putExtra(SplitActivity.ENTRY_SPLIT, entryPojo);
@@ -560,10 +562,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void startMessageActivity() {
-        if (entryPojo.getIAmStar() != null && entryPojo.getIAmStar().equalsIgnoreCase("1") && entryPojo.getIsMyStar() != null && entryPojo.getIsMyStar().equalsIgnoreCase("1")) {
+        if (entryPojo.getUser().isMyStar() && entryPojo.getUser().isiAmStar()) {
             //following
             final Intent intent = new Intent(baseActivity, MessageActivity.class);
-            intent.putExtra("recipent", entryPojo.getUserID());
+            intent.putExtra("recipent", entryPojo.getUser().getId());
             intent.putExtra("isDisableCompose", true);
             startActivity(intent);
         }else startMessageErrorDialog();
@@ -622,14 +624,14 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     private void likeRequest() {
         final HashMap<String, String> params = new HashMap<>();
-        params.put("entry", entryPojo.getID());
+        params.put("entry", entryPojo.getEntry().getId());
         params.put("type", "up");
         RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, new ConnectCallback<VoteResponse>() {
 
             @Override
             public void onSuccess(VoteResponse object) {
                 if (object.getArrEntry() != null & object.getArrEntry().size() > 0 && onChangeEntryListener != null) {
-                    onChangeEntryListener.onChangeEntry(object.getArrEntry().get(0));
+//                    onChangeEntryListener.onChangeEntry(object.getArrEntry().get(0));
                 }
             }
 
@@ -648,7 +650,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     protected void dislikeRequest() {
         final HashMap<String, String> params = new HashMap<>();
-        params.put("entry", entryPojo.getID());
+        params.put("entry", entryPojo.getUser().getId());
         params.put("type", "down");
         RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
         AdWordsManager.getInstance().sendEngagementEvent();
@@ -688,12 +690,12 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     public interface OnChangeEntryListener {
         void onRemoveEntry(int position);
 
-        void onFollowEntry(String uId, String isMyStar);
+        void onFollowEntry(String uId, boolean isMyStar);
 
-        void onChangeEntry(final EntryPojo entryPojo);
+        void onChangeEntry(final EntryP entryPojo);
     }
 
-    public EntryPojo getEntryPojo() {
+    public EntryP getEntryPojo() {
         return entryPojo;
     }
 

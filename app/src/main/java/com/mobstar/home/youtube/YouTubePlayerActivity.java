@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.pojo.EntryPojo;
 
@@ -19,7 +20,7 @@ public class YouTubePlayerActivity extends BaseActivity implements View.OnClickL
     public static final String ENTRY_POSITION = "position";
     public static final int REMOVE_ENTRY = 150;
 
-    private EntryPojo entryPojo;
+    private EntryP entryPojo;
     private int entryPosition;
 
     private ImageButton btnClose;
@@ -70,7 +71,7 @@ public class YouTubePlayerActivity extends BaseActivity implements View.OnClickL
         final Intent args = getIntent();
         if (args == null)
             return;
-        entryPojo = (EntryPojo) args.getSerializableExtra(ENTRY_POJO);
+        entryPojo = (EntryP) args.getSerializableExtra(ENTRY_POJO);
         entryPosition = args.getIntExtra(ENTRY_POSITION, -1);
     }
 
@@ -83,13 +84,13 @@ public class YouTubePlayerActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
-    public void onFollowEntry(String uId, String isMyStar) {
-        entryPojo.setIsMyStar(isMyStar);
+    public void onFollowEntry(String uId, boolean isMyStar) {
+        entryPojo.getUser().setIsMyStar(isMyStar);
         youTubeEntryItem.refreshEntry(entryPojo);
     }
 
     @Override
-    public void onChangeEntry(EntryPojo _entryPojo) {
+    public void onChangeEntry(EntryP _entryPojo) {
         entryPojo = _entryPojo;
         youTubeEntryItem.refreshEntry(_entryPojo);
 

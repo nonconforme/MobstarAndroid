@@ -8,6 +8,7 @@ import com.mobstar.api.ApiConstant;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
 import com.mobstar.api.new_api_model.SocialType;
+import com.mobstar.api.new_api_model.response.DefaultNotificationResponse;
 import com.mobstar.api.new_api_model.response.LoginResponse;
 import com.mobstar.api.new_api_model.response.SuccessResponse;
 import com.mobstar.api.new_api_model.response.WelcomeVideoResponse;
@@ -101,7 +102,6 @@ public class AuthCall {
         params.put("osVersion", Build.VERSION.RELEASE);
         params.put("appVersion", Integer.toString(versionCode));
         RestClient.getInstance(context).postRequest(USER_ANALYTIC, params, connectCallback);
-
     }
 
 

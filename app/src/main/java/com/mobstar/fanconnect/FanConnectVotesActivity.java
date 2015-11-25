@@ -422,7 +422,7 @@ public class FanConnectVotesActivity extends Activity {
 							.setUserName(arrEntryPojos.get(position).getUserName())
 							.setUserDisplayName(arrEntryPojos.get(position).getUserDisplayName())
 							.setUserPic(arrEntryPojos.get(position).getProfileImage())
-							.setIsMyStar(arrEntryPojos.get(position).getIsMyStar())
+							.setIsMyStar(arrEntryPojos.get(position).getIsMyStar() == "1")
 							.setUserTagline(arrEntryPojos.get(position).getTagline())
 							.build();
 					intent.putExtra(NewProfileActivity.USER, userProfile);

@@ -138,13 +138,19 @@ public class Utility {
 	}
 
     public static void ShowProgressDialog(Context mContext, String message) {
+		try {
+			HideDialog(mContext);
+			if (mContext != null) {
+				dialog = new ProgressDialog(mContext);
+				dialog.setMessage(message);
+				dialog.show();
+			}
 
-        HideDialog(mContext);
-        if (mContext != null) {
-            dialog = new ProgressDialog(mContext);
-            dialog.setMessage(message);
-            dialog.show();
-        }
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
     }
 
 	public static void HideDialog(Context mContext) {

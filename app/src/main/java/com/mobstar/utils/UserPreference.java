@@ -29,7 +29,7 @@ public class UserPreference {
 
     private static final String IS_FIRST_OPEN_PREFERENCE = "is first open";
 
-    public static final void saveUserProfileToPreference(final Context context, final Profile profile, final boolean isLogin, final int userContinent){
+    public static final void saveUserProfileToPreference(final Context context, final Profile profile, final boolean isLogin, final String userContinent){
         getPreference(context).edit()
                 .putString(USER_NAME, profile.getDisplayName())
                 .putString(FULL_NAME, profile.getFullName())
@@ -39,7 +39,7 @@ public class UserPreference {
                 .putString(TAGLINE, profile.getTagline())
                 .putString(BIO, profile.getBio())
                 .putBoolean(IS_LOGIN, isLogin)
-                .putInt(USER_CONTINENT, userContinent)
+                .putString(USER_CONTINENT, userContinent)
                 .apply();
     }
 
@@ -47,8 +47,8 @@ public class UserPreference {
         getPreference(context).edit().putBoolean(IS_SOCIAL_LOGIN, isSocial).apply();
     }
 
-    public static int getUserContinent(final Context context){
-        return getPreference(context).getInt(USER_CONTINENT, 0);
+    public static String getUserContinent(final Context context){
+        return getPreference(context).getString(USER_CONTINENT, "");
     }
 
     public static boolean welcomeIsChecked(final Context context){

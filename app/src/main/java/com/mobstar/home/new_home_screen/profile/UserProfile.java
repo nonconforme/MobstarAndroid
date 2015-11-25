@@ -16,7 +16,7 @@ public class UserProfile extends BaseResponse implements Serializable {
     private boolean isProfile;
     private String userTagline = "";
     private String userCoverImage = "";
-    private String isMyStar = "";
+    private boolean isMyStar;
     private String userPic = "";
     private String userName = "";
     private String userId = "";
@@ -87,7 +87,7 @@ public class UserProfile extends BaseResponse implements Serializable {
         this.userCoverImage = userCoverImage;
     }
 
-    public void setIsMyStar(String isMyStar) {
+    public void setIsMyStar(boolean isMyStar) {
         this.isMyStar = isMyStar;
     }
 
@@ -127,7 +127,7 @@ public class UserProfile extends BaseResponse implements Serializable {
         return userCoverImage;
     }
 
-    public String getIsMyStar() {
+    public boolean getIsMyStar() {
         return isMyStar;
     }
 
@@ -183,7 +183,7 @@ public class UserProfile extends BaseResponse implements Serializable {
             return this;
         }
 
-        public Builder setIsMyStar(String isMyStar) {
+        public Builder setIsMyStar(boolean isMyStar) {
             UserProfile.this.setIsMyStar(isMyStar);
             return this;
         }

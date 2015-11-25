@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
 import com.mobstar.pojo.EntryPojo;
@@ -32,7 +33,7 @@ public class InformationReportActivity extends Activity implements OnClickListen
 
 	private CustomTextviewBold btnReportThis, btnEntryInformation,btnDeleteEntry;
 
-	private EntryPojo entryPojo;
+	private EntryP entryPojo;
 	private ImageView imgUserPic;
 	private TextView textUserName, textTime, textDescription;
 	private String sErrorMessage,UserID;
@@ -52,7 +53,7 @@ public class InformationReportActivity extends Activity implements OnClickListen
 
 		UserID = preferences.getString("userid", "");
 
-		entryPojo = (EntryPojo) getIntent().getSerializableExtra("entry");
+		entryPojo = (EntryP) getIntent().getSerializableExtra("entry");
 
 		InitControls();
 		
@@ -66,9 +67,9 @@ public class InformationReportActivity extends Activity implements OnClickListen
 		textTime = (TextView) findViewById(R.id.textTime);
 		textDescription = (TextView) findViewById(R.id.textDescription);
 
-		textUserName.setText(entryPojo.getName());
-		textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
-		textTime.setText(entryPojo.getCreated());
+		textUserName.setText(entryPojo.getUser().getDisplayName());
+		textDescription.setText(Utility.unescape_perl_string(entryPojo.getEntry().getName()));
+		textTime.setText(entryPojo.getEntry().getCreatedAgo());
 
 		btnReportThis = (CustomTextviewBold) findViewById(R.id.btnReportThis);
 		btnReportThis.setOnClickListener(new OnClickListener() {
@@ -102,7 +103,7 @@ public class InformationReportActivity extends Activity implements OnClickListen
 		});
 		
 		btnDeleteEntry=(CustomTextviewBold)findViewById(R.id.btnDeleteEntry);
-		if(entryPojo.getUserID().equalsIgnoreCase(UserID)){
+		if(entryPojo.getUser().getId().equalsIgnoreCase(UserID)){
 			btnDeleteEntry.setVisibility(View.VISIBLE);
 			btnDeleteEntry.setOnClickListener(new OnClickListener() {
 				
@@ -135,12 +136,12 @@ public class InformationReportActivity extends Activity implements OnClickListen
 
 		imgUserPic = (ImageView) findViewById(R.id.imgUserPic);
 
-		if (entryPojo.getProfileImage().equals("")) {
+		if (entryPojo.getUser().getProfileImage().equals("")) {
 			imgUserPic.setImageResource(R.drawable.ic_pic_small);
 		} else {
 			imgUserPic.setImageResource(R.drawable.ic_pic_small);
 			
-			Picasso.with(mContext).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop().placeholder(R.drawable.ic_pic_small)
+			Picasso.with(mContext).load(entryPojo.getUser().getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop().placeholder(R.drawable.ic_pic_small)
 			.error(R.drawable.ic_pic_small).transform(new RoundedTransformation(Utility.dpToPx(mContext, 45), 0)).into(imgUserPic);
 			
 //			Ion.with(mContext).load(entryPojo.getProfileImage()).withBitmap().placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop().asBitmap().setCallback(new FutureCallback<Bitmap>() {

@@ -77,7 +77,7 @@ public class Constant {
 
 	public static String GET_MENTOR = "mentor/";
 
-	public static String GET_WINNER = "winner/";
+//	public static String GET_WINNER = "winner/";
 
 	public static String SEARCH_ENTRY = "entry/search4";
 
@@ -95,17 +95,17 @@ public class Constant {
 	
 	public static String GET_FEEDBACK = "fan/feedback";
 	
-	public static String VERIFY_MOBILE= "login/verifyphonenumber";
+//	public static String VERIFY_MOBILE= "login/verifyphonenumber";
 	
-	public static String VERIFY_MOBILE_CODE= "login/verifyCode";
+//	public static String VERIFY_MOBILE_CODE= "login/verifyCode";
 	
 	public static String UPDATE_VIEW_COUNT= "entry/updateViewCount";
 	
-	public static String WHO_TO_FOLLOW_LIST= "user/team";
+//	public static String WHO_TO_FOLLOW_LIST= "user/team";
 	
-	public static String WHO_TO_FOLLOW= "user/follow";
+//	public static String WHO_TO_FOLLOW= "user/follow";
 	
-	public static String GET_PROFILE= "user/";
+//	public static String GET_PROFILE= "user/";
 
 	public static final String USER = "/user/";
 

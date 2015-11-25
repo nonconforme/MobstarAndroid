@@ -210,7 +210,7 @@ public class PositionActivity extends Activity {
 				final UserProfile userProfile = UserProfile.newBuilder()
 						.setUserId(arrTalentPojos.get(position).getUserID())
 						.setUserName(arrTalentPojos.get(position).getUserName())
-						.setIsMyStar(arrTalentPojos.get(position).getIsMyStar())
+						.setIsMyStar(arrTalentPojos.get(position).getIsMyStar() == "1")
 						.setUserPic(arrTalentPojos.get(position).getProfileImage())
 						.setIsProfile(true)
 						.build();

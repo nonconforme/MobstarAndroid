@@ -22,6 +22,7 @@ import com.facebook.share.Sharer;
 import com.google.android.gms.plus.PlusShare;
 import com.mobstar.AdWordsManager;
 import com.mobstar.R;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.custom.RoundedTransformation;
 import com.mobstar.login.facebook.FacebookManager;
 import com.mobstar.login.facebook.FacebookResponse;
@@ -44,7 +45,7 @@ import static com.rosaloves.bitlyj.Bitly.shorten;
 
 public class ShareActivity extends Activity implements OnClickListener, FacebookManager.OnFacebookSignInCompletedListener, FacebookCallback<Sharer.Result> {
 
-	private EntryPojo entryPojo;
+	private EntryP entryPojo;
 	private TextView textUserName, textTime, textDescription;
 	private ImageView imgUserPic;
 	private ImageButton btnClose;
@@ -106,7 +107,7 @@ public class ShareActivity extends Activity implements OnClickListener, Facebook
                 }
 
             } else {
-                entryPojo = (EntryPojo) getIntent().getSerializableExtra("entry");
+                entryPojo = (EntryP) getIntent().getSerializableExtra("entry");
             }
         }
     }
@@ -129,7 +130,7 @@ public class ShareActivity extends Activity implements OnClickListener, Facebook
                     // TODO Auto-generated method stub
                     Url url = null;
                     url = as("niravspaceo",
-                            "R_5e9eb981a6e34baea49713adbff50779").call(shorten("http://share.mobstar.com/info.php?id=" + entryPojo.getID()));
+                            "R_5e9eb981a6e34baea49713adbff50779").call(shorten("http://share.mobstar.com/info.php?id=" + entryPojo.getEntry().getId()));
                     //		 }
 
                     ShortURL = url.getShortUrl();
@@ -138,18 +139,18 @@ public class ShareActivity extends Activity implements OnClickListener, Facebook
                 }
             }).start();
 
-            textUserName.setText(entryPojo.getName());
-            textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
-            textTime.setText(entryPojo.getCreated());
+            textUserName.setText(entryPojo.getUser().getFullName());
+            textDescription.setText(Utility.unescape_perl_string(entryPojo.getEntry().getName()));
+            textTime.setText(entryPojo.getEntry().getCreatedAgo());
 
             imgUserPic = (ImageView) findViewById(R.id.imgUserPic);
 
-            if (entryPojo.getProfileImage().equals("")) {
+            if (entryPojo.getUser().getProfileImage().equals("")) {
                 imgUserPic.setImageResource(R.drawable.ic_pic_small);
             } else {
                 imgUserPic.setImageResource(R.drawable.ic_pic_small);
 
-                Picasso.with(this).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(this, 45), Utility.dpToPx(this, 45)).centerCrop().placeholder(R.drawable.ic_pic_small)
+                Picasso.with(this).load(entryPojo.getUser().getProfileImage()).resize(Utility.dpToPx(this, 45), Utility.dpToPx(this, 45)).centerCrop().placeholder(R.drawable.ic_pic_small)
                         .error(R.drawable.ic_pic_small).transform(new RoundedTransformation(Utility.dpToPx(this, 45), 0)).into(imgUserPic);
 
             }

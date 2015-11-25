@@ -6,10 +6,12 @@ import com.mobstar.R;
 import com.mobstar.api.ApiConstant;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.RestClient;
+import com.mobstar.api.new_api_model.Profile;
 import com.mobstar.api.new_api_model.response.ProfileResponse;
 import com.mobstar.api.new_api_model.response.StarsResponse;
 import com.mobstar.api.new_api_model.response.SuccessResponse;
 import com.mobstar.api.new_api_model.response.UserSettingsResponse;
+import com.mobstar.api.new_api_model.response.WhoToFollowResponse;
 import com.mobstar.api.responce.ContinentResponse;
 import com.mobstar.pojo.ContinentsPojo;
 import com.mobstar.utils.Utility;
@@ -50,5 +52,16 @@ public class ProfileCall {
         final HashMap<String, String> params = new HashMap<>();
         params.put("page", Integer.toString(page));
         RestClient.getInstance(context).getRequest(USER_STARED_BY, params, connectCallback);
+    }
+
+    public static final void followUsers(final Context context, final String strsArr, final ConnectCallback<SuccessResponse> connectCallback){
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("stars" , strsArr);
+        RestClient.getInstance(context).postRequest(USER_FOLLOW, params, connectCallback);
+
+    }
+
+    public static final void getWhoToFollowUsers(final Context context, final ConnectCallback<WhoToFollowResponse> connectCallback){
+        RestClient.getInstance(context).getRequest(WHO_TO_FOLLOW, null, connectCallback);
     }
 }

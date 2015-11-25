@@ -137,7 +137,7 @@ public class FansActivity extends Activity {
 				final UserProfile userProfile = UserProfile.newBuilder()
 						.setUserId(arrStarPojos.get(position).getStarID())
 						.setUserName(arrStarPojos.get(position).getStarName())
-						.setIsMyStar(arrStarPojos.get(position).getIsMyStar())
+						.setIsMyStar(arrStarPojos.get(position).getIsMyStar() == "1")
 						.setUserPic(arrStarPojos.get(position).getProfileImage())
 						.setUserCoverImage(arrStarPojos.get(position).getProfileCover())
 						.build();
@@ -200,7 +200,7 @@ public class FansActivity extends Activity {
 		final UserProfile userProfile = UserProfile.newBuilder()
 				.setUserId(arrStarPojos.get(position).getStarID())
 				.setUserName(arrStarPojos.get(position).getStarName())
-				.setIsMyStar(arrStarPojos.get(position).getIsMyStar())
+				.setIsMyStar(arrStarPojos.get(position).getIsMyStar() == "1")
 				.setUserPic(arrStarPojos.get(position).getProfileImage())
 				.setUserCoverImage(arrStarPojos.get(position).getProfileCover())
 				.build();

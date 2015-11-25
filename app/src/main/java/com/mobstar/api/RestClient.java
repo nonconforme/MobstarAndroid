@@ -106,18 +106,11 @@ public class RestClient {
         httpClient.get(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
-                try {
-                    String jsonStr = new String(bytes, "UTF-8");
-                    if (jsonStr.equals("[]"))
-                        jsonStr = "{}";
-                    final JSONObject jsonObject = new JSONObject(jsonStr);
-                    if (callback != null) {
-                        callback.parse(jsonObject);
-                    }
-                } catch (UnsupportedEncodingException | JSONException e) {
-                    e.printStackTrace();
-                    if (callback != null)
-                        callback.onFailure(e.toString());
+                final JSONObject jsonObject = getJsonObject(bytes);
+                if (jsonObject != null && callback != null) {
+                    callback.parse(jsonObject);
+                }else if(callback != null){
+                    callback.onFailure("");
                 }
             }
 
@@ -128,6 +121,32 @@ public class RestClient {
                     callback.onFailure(throwable.toString());
             }
         });
+    }
+
+    public JSONObject getJsonObject(final byte[] bytes){
+        String jsonStr = "{}";
+        try {
+            jsonStr = new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            jsonStr = "{}";
+        }
+        if (jsonStr.equals("[]"))
+            jsonStr = "{}";
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(jsonStr);
+        } catch (JSONException e) {
+            jsonStr = "{\"jsonarr\":" + jsonStr + "}";
+            try {
+                jsonObject = new JSONObject(jsonStr);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+
+        return jsonObject;
     }
 
     public void postRequest(final String url, HashMap<String, String> params, final ConnectCallback callback){

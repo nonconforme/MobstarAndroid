@@ -299,7 +299,7 @@ public class TalentPoolActivity extends Activity {
 		final UserProfile userProfile = UserProfile.newBuilder()
 				.setUserId(arrStarPojos.get(position).getStarID())
 				.setUserName(arrStarPojos.get(position).getStarName())
-				.setIsMyStar("1")
+				.setIsMyStar(true)
 				.setUserPic(arrStarPojos.get(position).getProfileImage())
 				.setUserCoverImage(arrStarPojos.get(position).getProfileCover())
 				.build();

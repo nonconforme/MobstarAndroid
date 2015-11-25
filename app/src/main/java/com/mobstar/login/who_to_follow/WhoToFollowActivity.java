@@ -1,388 +1,136 @@
 package com.mobstar.login.who_to_follow;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.RestClient;
-import com.mobstar.api.responce.*;
-import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
+import com.mobstar.api.new_api_call.ProfileCall;
+import com.mobstar.api.new_api_model.WhoToFollowUser;
+import com.mobstar.api.new_api_model.response.SuccessResponse;
+import com.mobstar.api.new_api_model.response.WhoToFollowResponse;
+import com.mobstar.api.responce.Error;
 import com.mobstar.home.HomeActivity;
-import com.mobstar.pojo.WhoToFollowPojo;
-import com.mobstar.utils.Constant;
-import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
-import com.squareup.picasso.Picasso;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class WhoToFollowActivity extends Activity implements OnClickListener{
 
 	private GridView grid;
 	private Button btnSkip,btnFollow;
-	private SharedPreferences preferences;
-	private ArrayList<WhoToFollowPojo> arrFollowPojos = new ArrayList<WhoToFollowPojo>();
-	private String sErrorMessage = "";
-	private GridAdapter gridListAdapter;
 	private LinearLayout llBottom;
-	private String star="";
+	private WhoToFollowAdapter whoToFollowAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_who_to_follow);
-
-		gridListAdapter = new GridAdapter();
-		preferences = getSharedPreferences("mobstar_pref", MODE_PRIVATE);
-		InitControls();
-		Utility.ShowProgressDialog(this, getString(R.string.loading));
-		sErrorMessage = "";
-		if (Utility.isNetworkAvailable(this)) {
-			new WhoToFollowList().start();
-		} else {
-			Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-		}
-		
+		findViews();
+		setListeners();
+		getWhoToFollowUserRequest();
 		Utility.SendDataToGA("WhoToFollow Screen", WhoToFollowActivity.this);
 
 	}
 
-	private void InitControls() {
+	private void findViews() {
+		grid        = (GridView)findViewById(R.id.gried_whoTOFollow);
+		llBottom    = (LinearLayout)findViewById(R.id.llBottom);
+		btnFollow   = (Button)findViewById(R.id.btnFollow);
+		btnSkip     = (Button)findViewById(R.id.btnSkip);
+	}
 
-		grid=(GridView)findViewById(R.id.gried_whoTOFollow);
-		llBottom=(LinearLayout)findViewById(R.id.llBottom);
-		btnFollow=(Button)findViewById(R.id.btnFollow);
+	private void setListeners(){
 		btnFollow.setOnClickListener(this);
-
-		btnSkip=(Button)findViewById(R.id.btnSkip);
 		btnSkip.setOnClickListener(this);
-	
-
 	}
 
-	class WhoToFollowList extends Thread {
-
-		@Override
-		public void run() {
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.WHO_TO_FOLLOW_LIST, null,null,preferences.getString("token", null));
-
-//			Log.v(Constant.TAG, "WhoToFollow List response " + response);
-
-			if (response != null) {
-
-				try {
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					JSONArray jsonArrayEntries = null;
-					if (jsonObject.has("users")){
-						jsonArrayEntries = jsonObject.getJSONArray("users");
-					}
-					if(jsonArrayEntries.length()>0){
-						
-						arrFollowPojos.clear();
-
-						for (int i = 0; i < jsonArrayEntries.length(); i++) {
-
-							JSONObject jsonObj=jsonArrayEntries.getJSONObject(i);
-							JSONObject jsonObjEntry=null;
-							WhoToFollowPojo whoToFollowPojo = new WhoToFollowPojo();
-							if (jsonObj.has("user")) {
-								jsonObjEntry=jsonObj.getJSONObject("user");
-								whoToFollowPojo.setID(jsonObjEntry.getString("id"));
-								whoToFollowPojo.setDisplayName(jsonObjEntry.getString("displayName"));
-								whoToFollowPojo.setProfileImage(jsonObjEntry.getString("profileImage"));
-								whoToFollowPojo.setSelected(false);
-								arrFollowPojos.add(whoToFollowPojo);
-							}
-
-						}
-					}
-
-
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerWhoToFollow.sendEmptyMessage(0);
-					} else {
-						handlerWhoToFollow.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					handlerWhoToFollow.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerWhoToFollow.sendEmptyMessage(0);
+	private void getWhoToFollowUserRequest(){
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
+		ProfileCall.getWhoToFollowUsers(this, new ConnectCallback<WhoToFollowResponse>() {
+			@Override
+			public void onSuccess(WhoToFollowResponse object) {
+				Utility.HideDialog(WhoToFollowActivity.this);
+				createWhoToFollowList(object);
 			}
 
-		}
+			@Override
+			public void onFailure(String error) {
+				Utility.HideDialog(WhoToFollowActivity.this);
+			}
+
+			@Override
+			public void onServerError(Error error) {
+				Utility.HideDialog(WhoToFollowActivity.this);
+			}
+		});
 	}
 
-	void OkayAlertDialog(final String msg) {
-
-		if (!isFinishing()) {
-			runOnUiThread(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(WhoToFollowActivity.this);
-
-					// set title
-					alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
-
-					// set dialog message
-					alertDialogBuilder.setMessage(msg).setCancelable(false).setNeutralButton("OK", null);
-
-					// create alert dialog
-					AlertDialog alertDialog = alertDialogBuilder.create();
-
-					// show it
-					alertDialog.show();
-				}
-			});
-		}
-
+	private void createWhoToFollowList(final WhoToFollowResponse whoToFollowResponse){
+		whoToFollowAdapter = new WhoToFollowAdapter(this, whoToFollowResponse.getUser());
+		grid.setAdapter(whoToFollowAdapter);
 	}
 
-	Handler handlerWhoToFollow= new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			Utility.HideDialog(WhoToFollowActivity.this);
-
-			if (msg.what == 1) {
-				grid.setAdapter(gridListAdapter);
-//				gridListAdapter.notifyDataSetChanged();
-//				grid.invalidate();
-			} else {
-				OkayAlertDialog(sErrorMessage);
-			}
-		}
-	};
-
-	class WhoToFollowAdd extends Thread {
-
-		String stars;
-
-		WhoToFollowAdd(String mystar){
-			stars=mystar;
-		}
-
-		@Override
-		public void run() {
-
-			String[] name = {"star"};
-			String[] value = {stars};
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.WHO_TO_FOLLOW, name,value,preferences.getString("token", null));
-
-//			Log.v(Constant.TAG, "WhoToFollow List response " + response);
-
-			if (response != null) {
-
-				try {
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerAddFollow.sendEmptyMessage(0);
-					} else {
-						handlerAddFollow.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					handlerWhoToFollow.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerAddFollow.sendEmptyMessage(0);
-			}
-
-		}
-	}
-
-	Handler handlerAddFollow= new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			Utility.HideDialog(WhoToFollowActivity.this);
-
-			if (msg.what == 1) {
-                getUserAccountRequest();
-			} else {
-				OkayAlertDialog(sErrorMessage);
-			}
-		}
-	};
-
-	class GridAdapter extends BaseAdapter{
-
-		@Override
-		public int getCount() {
-			return arrFollowPojos.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return position;
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			final ViewHolder viewHolder;
-			final int pos=position;
-			LayoutInflater inflater = (LayoutInflater) WhoToFollowActivity.this
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			if (convertView == null) {
-				convertView = inflater.inflate(R.layout.row_who_to_follow, null);
-				viewHolder=new ViewHolder();
-				viewHolder.textName = (TextView) convertView.findViewById(R.id.textName);
-				viewHolder.cbFollow = (CheckBox)convertView.findViewById(R.id.cbFollow);
-				viewHolder.imgUserPic=(ImageView)convertView.findViewById(R.id.imgUserPic);
-				
-				convertView.setTag(viewHolder);
-
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-			
-			viewHolder.textName.setText(arrFollowPojos.get(position).getDisplayName());
-			
-
-			if (arrFollowPojos.get(position).getProfileImage().equals("")) {
-				viewHolder.imgUserPic.setImageResource(R.drawable.ic_pic_small);
-			} else {
-				//						imgUserPic.setImageResource(R.drawable.ic_pic_small);
-
-				Picasso.with(WhoToFollowActivity.this).load(arrFollowPojos.get(position).getProfileImage()).resize(Utility.dpToPx(WhoToFollowActivity.this, 45), Utility.dpToPx(WhoToFollowActivity.this, 45)).centerCrop()
-				.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(viewHolder.imgUserPic);
-			}
-
-			viewHolder.cbFollow.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if(isChecked){
-						arrFollowPojos.get(pos).setSelected(true);
-						notifyDataSetChanged();
-					}
-					else {
-						notifyDataSetChanged();
-						arrFollowPojos.get(pos).setSelected(false);
-					}
-
-				}
-			});
-
-			
-			return convertView;
-		}
-		
-		class ViewHolder{
-			TextView textName;
-			CheckBox cbFollow;
-			ImageView imgUserPic;
-		}
-
-	}
 
 	@Override
 	public void onClick(View view) {
-		gridListAdapter.notifyDataSetChanged();
-		if (btnFollow.equals(view)) {
-			for (int i = 0; i < arrFollowPojos.size(); i++) {
-				if(arrFollowPojos.get(i).getSelected()){
-					if(star.equals(null) || star.equalsIgnoreCase("")){
-						star=arrFollowPojos.get(i).getID();
-					}
-					else {
-						star=star+","+arrFollowPojos.get(i).getID();
-					}
-				}
-			}
-			sErrorMessage = "";
-			if (Utility.isNetworkAvailable(this)) {
-				new WhoToFollowAdd(star).start();
-			} else {
-				Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-			}
-		}
-		else if(btnSkip.equals(view)){
-            getUserAccountRequest();
+		whoToFollowAdapter.notifyDataSetChanged();
+		switch (view.getId()){
+			case R.id.btnFollow:
+				postFollowUserRequest(getFollowUsersArr());
+				break;
+			case R.id.btnSkip:
+				startHomeActivity();
+				break;
 		}
 	}
 
-    private void startHomeActivity() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.putExtra("isHomeInfo",true);
-        startActivity(intent);
-        finish();
-    }
-    private void getUserAccountRequest(){
-		Utility.ShowProgressDialog(this, getString(R.string.loading));
-        RestClient.getInstance(this).getRequest(Constant.USER_ACCOUNT, null, new ConnectCallback<UserAccountResponse>() {
-            @Override
-            public void onSuccess(UserAccountResponse object) {
-				Utility.HideDialog(WhoToFollowActivity.this);
-                if (object.getUser().getUserContinentId() == 0) {
-                    startSelectCurrentRegionActivity();
-                } else startHomeActivity();
-            }
+	private String getFollowUsersArr(){
+		String star = "";
+		final ArrayList<WhoToFollowUser> whoToFollowUsers = whoToFollowAdapter.getWhoToFollowList();
+		for (int i = 0; i < whoToFollowUsers.size(); i++) {
+			if(whoToFollowUsers.get(i).isChecked()){
+				if(star.equals(null) || star.equalsIgnoreCase("")){
+					star = whoToFollowUsers.get(i).getId();
+				}
+				else {
+					star = star + "," + whoToFollowUsers.get(i).getId();
+				}
+			}
+		}
+		return star;
+	}
 
-            @Override
-            public void onFailure(String error) {
+	private void postFollowUserRequest(final String usersId){
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
+		ProfileCall.followUsers(this, usersId, new ConnectCallback<SuccessResponse>() {
+			@Override
+			public void onSuccess(SuccessResponse object) {
 				Utility.HideDialog(WhoToFollowActivity.this);
 				startHomeActivity();
-            }
+			}
 
 			@Override
-			public void onServerError(com.mobstar.api.responce.Error error) {
+			public void onFailure(String error) {
+				Utility.HideDialog(WhoToFollowActivity.this);
+			}
 
+			@Override
+			public void onServerError(Error error) {
+				Utility.HideDialog(WhoToFollowActivity.this);
 			}
 		});
-    }
-    private void startSelectCurrentRegionActivity(){
-        final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
-        startActivity(intent);
-        finish();
-    }
+	}
+
+	private void startHomeActivity() {
+		final Intent intent = new Intent(this, HomeActivity.class);
+		intent.putExtra("isHomeInfo",true);
+		startActivity(intent);
+		finish();
+	}
 }

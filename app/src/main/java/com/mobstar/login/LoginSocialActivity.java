@@ -146,7 +146,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		AuthCall.signSocial(this, displayName, fullName, socialId, socialType, new ConnectCallback<LoginResponse>() {
 			@Override
 			public void onSuccess(LoginResponse object) {
-//				UserPreference.isSocialLoginToPreference(LoginSocialActivity.this, true);
+				UserPreference.isSocialLoginToPreference(LoginSocialActivity.this, true);
 				onLoginSuccess(object);
 			}
 
@@ -169,7 +169,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 		final Login login = loginResponse.getLogin();
 		final Profile profile = login.getProfile();
 		if (profile != null){
-//			UserPreference.saveUserProfileToPreference(this, profile, true);
+			UserPreference.saveUserProfileToPreference(this, profile, true, login.getSettings().getContinent());
 			AdWordsManager.getInstance().sendSingupEvent();
 			if (UserPreference.welcomeIsChecked(this)) {
 				startWelcomeActivity();

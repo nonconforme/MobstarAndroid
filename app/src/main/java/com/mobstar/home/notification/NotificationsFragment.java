@@ -186,7 +186,7 @@ public class NotificationsFragment extends Fragment {
 		final UserProfile userProfile = UserProfile.newBuilder()
 				.setUserId(notificationPojo.getEntryId())
 				.setUserName(notificationPojo.getEntryName())
-				.setIsMyStar("1")
+				.setIsMyStar(true)
 				.setUserPic(notificationPojo.getProfileImage())
 				.setUserCoverImage(notificationPojo.getProfileCover())
 				.build();

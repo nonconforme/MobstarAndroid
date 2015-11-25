@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.mobstar.BaseActivity;
 import com.mobstar.api.DownloadFileManager;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.custom.recycler_view.RemoveAnimation;
 import com.mobstar.custom.recycler_view.sticky_recycler_view.StickyHeadersTouchListener;
 import com.mobstar.home.new_home_screen.EntryItem;
@@ -169,7 +170,7 @@ public class ProfileFragment extends VideoListBaseFragment implements EntryItem.
     protected void refreshEntryList() {
         super.refreshEntryList();
         if (entryAdapter.getArrEntries().size() > 0 && getActivity() != null)
-            ((NewProfileActivity) getActivity()).setIAmStar(entryAdapter.getEntry(0).getIAmStar());
+            ((NewProfileActivity) getActivity()).setIAmStar(entryAdapter.getEntry(0).getUser().isiAmStar());
     }
 
     @Override
@@ -178,12 +179,12 @@ public class ProfileFragment extends VideoListBaseFragment implements EntryItem.
     }
 
     @Override
-    public void onFollowEntry(String uId, String isMyStar) {
+    public void onFollowEntry(String uId, boolean isMyStar) {
         entryAdapter.onFollowEntry(uId, isMyStar);
     }
 
     @Override
-    public void onChangeEntry(EntryPojo entryPojo) {
+    public void onChangeEntry(EntryP entryPojo) {
 
     }
 }
