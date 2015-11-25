@@ -72,6 +72,10 @@ public class AuthCall {
         RestClient.getInstance(context).postRequest(SIGN_SOCIAL, params, connectCallback);
     }
 
+    public static final void signOut(final Context context, final ConnectCallback<SuccessResponse> connectCallback){
+        RestClient.getInstance(context).postRequest(SIGN_OUT, null, connectCallback);
+    }
+
 
     public static final void getWelcomeVideo(final Context context, final ConnectCallback<WelcomeVideoResponse> connectCallback){
         RestClient.getInstance(context).getRequest(ApiConstant.WELCOME, null, connectCallback);

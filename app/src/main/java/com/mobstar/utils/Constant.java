@@ -133,7 +133,7 @@ public class Constant {
 	
 	public static String GUIDELINES="video/show";
 	
-	public static String HOME_INFO="defaultNotification";
+//	public static String HOME_INFO="defaultNotification";
 	
 	public static String BOLG="blogs";
 	
@@ -155,15 +155,15 @@ public class Constant {
 	
 	public static String MESSAGE_SHOW_PARTICIPANTS="message/showParticipants";
 	
-	public static String NOTIFICATION_MARK_READ="/notification/markread";
+//	public static String NOTIFICATION_MARK_READ="/notification/markread";
 	
-	public static String ANALYTICS_READ="user/analytic";
+//	public static String ANALYTICS_READ="user/analytic";
 	
-	public static String BADGE_READ="message/badgeread";
+//	public static String BADGE_READ="message/badgeread";
 	
-	public static String LOGOUT="user/logout";
+//	public static String LOGOUT="user/logout";
 
-	public static final String USER_CONTINENT = "settings/userContinent/";
+//	public static final String USER_CONTINENT = "settings/userContinent/";
 
 	public static final String USER_ACCOUNT = "settings/account/";
 

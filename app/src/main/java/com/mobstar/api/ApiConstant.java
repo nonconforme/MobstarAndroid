@@ -15,6 +15,7 @@ public class ApiConstant {
     public static final String WELCOME               = "welcome";
     public static final String FORGOT_PASSWORD       = "forgotPassword";
     public static final String USER_ANALYTIC         = "user/analytic";
+    public static final String SIGN_OUT              = "signOut";
 
     //   ENTRY
     public static final String GET_ENTRY             = "entry";
