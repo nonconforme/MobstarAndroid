@@ -43,6 +43,27 @@ public class UserPreference {
                 .apply();
     }
 
+    public static final Profile getUserProfile(final Context context){
+        final Profile profile = new Profile();
+        final SharedPreferences preferences = getPreference(context);
+        profile.setDisplayName(preferences.getString(USER_NAME, ""));
+        profile.setFullName(preferences.getString(FULL_NAME, ""));
+        profile.setId(preferences.getString(USER_ID, ""));
+        profile.setProfileImage(preferences.getString(PROFILE_IMAGE, ""));
+        profile.setCoverImage(preferences.getString(COVER_IMAGE, ""));
+        profile.setTagline(preferences.getString(TAGLINE, ""));
+        profile.setBio(preferences.getString(BIO, ""));
+        return profile;
+    }
+
+    public static final void logOut(final Context context){
+        getPreference(context).edit().putBoolean(IS_LOGIN, false).apply();
+    }
+
+    public static final String getUserField(final Context context, final String field){
+        return getPreference(context).getString(field, "");
+    }
+
     public static void isSocialLoginToPreference(final Context context, final boolean isSocial){
         getPreference(context).edit().putBoolean(IS_SOCIAL_LOGIN, isSocial).apply();
     }
