@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.mobstar.R;
 import com.mobstar.api.new_api_model.DefaultNotification;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.utils.AppRater;
+import com.mobstar.utils.UserPreference;
 import com.squareup.picasso.Picasso;
 
 public class HomeInformationActivity extends Activity implements View.OnClickListener {
@@ -63,9 +65,21 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 	public void onClick(View v) {
 		switch (v.getId()){
 			case R.id.btnClose:
-				startHomeActivity();
+				verifyUserContinent();
 				break;
 		}
+	}
+
+	private void verifyUserContinent(){
+		if (UserPreference.existUserContinent(this))
+			startHomeActivity();
+		else startSelectCurrentRegionActivity();
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	private void startHomeActivity(){

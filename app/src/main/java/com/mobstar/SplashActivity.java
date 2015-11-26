@@ -23,6 +23,7 @@ import com.mobstar.api.new_api_model.DefaultNotification;
 import com.mobstar.api.new_api_model.response.DefaultNotificationResponse;
 import com.mobstar.api.new_api_model.response.SuccessResponse;
 import com.mobstar.api.responce.Error;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.home.HomeInformationActivity;
 import com.mobstar.login.LoginSocialActivity;
@@ -38,9 +39,6 @@ import java.util.TimerTask;
 
 public class SplashActivity extends Activity implements OnNetworkChangeListener {
 
-    private Timer timer;
-	private Context mContext;
-
 	private GoogleCloudMessaging gcm;
 	private String regid;
 	private String deepLinkedId;
@@ -54,12 +52,6 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		String android_id = Secure.getString(this.getContentResolver(),
-				Secure.ANDROID_ID);
-		String device_id=android_id;
-		Log.d("mobstar","device id"+device_id);
-
-		mContext = SplashActivity.this;
 
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
 			StrictMode.ThreadPolicy tp = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -68,11 +60,9 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 
         if (UserPreference.isFirstOpenApp(this))
             AdWordsManager.getInstance().sendFirstOpenEvent();
-
 		parseIntent();
 		initLastState();
 		Utility.SendDataToGA("Splash Screen", SplashActivity.this);
-
 		registerGoogleCloudMessaging();
 
 	}
@@ -81,11 +71,11 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 		if (UserPreference.isLogin(this)) {
 
 			if( deepLinkedId != null) {
-				startHomeActivity();
+				verifyUserContinent();
 			}
 			else {
 				//clear badge
-				Utility.clearBadge(mContext);
+				Utility.clearBadge(this);
 //				new BadgeRead().run();
 				sendAnalytic();
 				getSystemDefaultNotification();
@@ -93,18 +83,21 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 			}
 
 		} else {
-			sendAnalytic();
-			timer = new Timer();
-			TimerTask task = new TimerTask() {
-
-				@Override
-				public void run() {
-					startLoginSocialActivity();
-				}
-			};
-			timer.schedule(task, 3000);
+			startLoginSocialActivityPostDelay();
 		}
 
+	}
+
+	private void startLoginSocialActivityPostDelay(){
+		final Timer timer = new Timer();
+		final TimerTask task = new TimerTask() {
+
+			@Override
+			public void run() {
+				startLoginSocialActivity();
+			}
+		};
+		timer.schedule(task, 3000);
 	}
 
 	private void parseIntent(){
@@ -129,7 +122,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 		// GCM Push Notification
 		if (checkPlayServices()) {
 			gcm = GoogleCloudMessaging.getInstance(this);
-			regid = Utility.getRegistrationId(mContext);
+			regid = Utility.getRegistrationId(this);
 			//Log.v(Constant.TAG, "GCM Registration ID "+regid);
 			if (regid.isEmpty()) {
 				registerInBackground();
@@ -138,8 +131,20 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 	}
 
 	private void startHomeActivity(){
-		final Intent intent = new Intent(mContext, HomeActivity.class);
+		final Intent intent = new Intent(this, HomeActivity.class);
 		intent.putExtra("deepLinkedId", deepLinkedId);
+		startActivity(intent);
+		finish();
+	}
+
+	private void verifyUserContinent(){
+		if (UserPreference.existUserContinent(this))
+			startHomeActivity();
+		else startSelectCurrentRegionActivity();
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
 		startActivity(intent);
 		finish();
 	}
@@ -164,9 +169,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 		if (networkConnect)
 			return;
 		networkConnect = true;
-//		if (homeInfoCall == null)
-//			homeInfoCall = new HomeInfoCall();
-//		homeInfoCall.start();
+		initLastState();
 	}
 
 	@Override
@@ -197,7 +200,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 			// TODO Auto-generated method stub
 			try {
 				if (gcm == null) {
-					gcm = GoogleCloudMessaging.getInstance(mContext);
+					gcm = GoogleCloudMessaging.getInstance(SplashActivity.this);
 				}
 				regid = gcm.register(Constant.SENDER_ID);
 				Log.v(Constant.TAG, "GCM Registration ID "+regid);
@@ -238,7 +241,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 					startHomeInformationActivity(object.getDefaultNotification());
 				else {
 					if (UserPreference.isLogin(SplashActivity.this))
-						startHomeActivity();
+						verifyUserContinent();
 					else startLoginSocialActivity();
 				}
 			}
@@ -256,7 +259,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 	}
 
 	private void startHomeInformationActivity(final DefaultNotification defaultNotification){
-		final Intent intent = new Intent(mContext, HomeInformationActivity.class);
+		final Intent intent = new Intent(this, HomeInformationActivity.class);
 		intent.putExtra(HomeInformationActivity.DEFAULT_NOTIFICATION, defaultNotification);
 		startActivity(intent);
 		finish();
@@ -289,7 +292,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SplashActivity.this);
 
 				// set title
 				alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
@@ -316,7 +319,7 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 	}
 
 	private void startLoginSocialActivity(){
-		final Intent i = new Intent(mContext, LoginSocialActivity.class);
+		final Intent i = new Intent(this, LoginSocialActivity.class);
 		startActivity(i);
 		finish();
 	}

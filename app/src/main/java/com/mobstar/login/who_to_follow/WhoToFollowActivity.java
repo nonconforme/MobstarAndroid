@@ -15,7 +15,9 @@ import com.mobstar.api.new_api_model.WhoToFollowUser;
 import com.mobstar.api.new_api_model.response.SuccessResponse;
 import com.mobstar.api.new_api_model.response.WhoToFollowResponse;
 import com.mobstar.api.responce.Error;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
+import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
 
 import java.util.ArrayList;
@@ -85,7 +87,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 				postFollowUserRequest(getFollowUsersArr());
 				break;
 			case R.id.btnSkip:
-				startHomeActivity();
+				verifyUserContinent();
 				break;
 		}
 	}
@@ -112,7 +114,7 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 			@Override
 			public void onSuccess(SuccessResponse object) {
 				Utility.HideDialog(WhoToFollowActivity.this);
-				startHomeActivity();
+				verifyUserContinent();
 			}
 
 			@Override
@@ -125,6 +127,18 @@ public class WhoToFollowActivity extends Activity implements OnClickListener{
 				Utility.HideDialog(WhoToFollowActivity.this);
 			}
 		});
+	}
+
+	private void verifyUserContinent(){
+		if (UserPreference.existUserContinent(this))
+			startHomeActivity();
+		else startSelectCurrentRegionActivity();
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	private void startHomeActivity() {

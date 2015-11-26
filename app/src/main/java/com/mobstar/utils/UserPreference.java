@@ -72,6 +72,10 @@ public class UserPreference {
         return getPreference(context).getString(USER_CONTINENT, "");
     }
 
+    public static final boolean existUserContinent(final Context context){
+        return !getPreference(context).getString(USER_CONTINENT, "").equals("");
+    }
+
     public static boolean welcomeIsChecked(final Context context){
         return getPreference(context).getBoolean(WELCOME_IS_CHECKED, true);
     }

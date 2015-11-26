@@ -15,6 +15,7 @@ import com.mobstar.api.responce.Error;
 import com.mobstar.custom.CheckableView;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.pojo.ContinentsPojo;
+import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
 
 /**
@@ -95,21 +96,33 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
             @Override
             public void onSuccess(SuccessResponse object) {
                 Utility.HideDialog(SelectCurrentRegionActivity.this);
-                startHomeActivity();
+                verifyUserContinent();
             }
 
             @Override
             public void onFailure(String error) {
                 Utility.HideDialog(SelectCurrentRegionActivity.this);
-                startHomeActivity();
+                verifyUserContinent();
             }
 
             @Override
             public void onServerError(Error error) {
                 Utility.HideDialog(SelectCurrentRegionActivity.this);
-                startHomeActivity();
+                verifyUserContinent();
             }
         });
+    }
+
+    private void verifyUserContinent(){
+        if (UserPreference.existUserContinent(this))
+            startHomeActivity();
+        else startSelectCurrentRegionActivity();
+    }
+
+    private void startSelectCurrentRegionActivity(){
+        final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 //    private void postCurrentRegionRequest(ContinentsPojo.Continents continents){

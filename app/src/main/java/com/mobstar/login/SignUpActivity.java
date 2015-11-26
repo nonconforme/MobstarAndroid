@@ -19,6 +19,7 @@ import com.mobstar.api.new_api_call.AuthCall;
 import com.mobstar.api.new_api_model.Login;
 import com.mobstar.api.new_api_model.Profile;
 import com.mobstar.api.new_api_model.response.LoginResponse;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.utils.UserPreference;
@@ -326,7 +327,7 @@ public class SignUpActivity extends Activity implements OnClickListener {
 			if (UserPreference.welcomeIsChecked(this)) {
 				startWelcomeActivity();
 			}else {
-				startHomeActivity();
+				verifyUserContinent();
 			}
 		}
 	}
@@ -339,11 +340,24 @@ public class SignUpActivity extends Activity implements OnClickListener {
 		finish();
 	}
 
+	private void verifyUserContinent(){
+		if (UserPreference.existUserContinent(this))
+			startHomeActivity();
+		else startSelectCurrentRegionActivity();
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
 	private void startHomeActivity(){
 		final Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 		finish();
 	}
+
 
 	private void startLoginSocialActivity(){
 		final Intent intent = new Intent(this, LoginSocialActivity.class);

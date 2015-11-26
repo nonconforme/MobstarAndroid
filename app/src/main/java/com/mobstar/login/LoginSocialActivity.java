@@ -17,6 +17,7 @@ import com.mobstar.api.new_api_model.SocialType;
 import com.mobstar.api.new_api_model.response.LoginResponse;
 import com.mobstar.custom.CustomTextview;
 import com.mobstar.custom.CustomTextviewBold;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.help.WelcomeVideoActivity;
 import com.mobstar.home.HomeActivity;
 import com.mobstar.login.facebook.FacebookLoginDialog;
@@ -172,7 +173,7 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 			if (UserPreference.welcomeIsChecked(this)) {
 				startWelcomeActivity();
 			}else {
-				startHomeActivity();
+				verifyUserContinent();
 			}
 		}
 	}
@@ -186,6 +187,18 @@ public class LoginSocialActivity extends Activity implements OnClickListener, Fa
 
 	private void startHomeActivity(){
 		final Intent intent = new Intent(this, HomeActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void verifyUserContinent(){
+		if (UserPreference.existUserContinent(this))
+			startHomeActivity();
+		else startSelectCurrentRegionActivity();
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
 		startActivity(intent);
 		finish();
 	}

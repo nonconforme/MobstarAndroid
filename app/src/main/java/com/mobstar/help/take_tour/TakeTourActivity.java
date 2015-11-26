@@ -12,7 +12,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.mobstar.R;
+import com.mobstar.geo_filtering.SelectCurrentRegionActivity;
 import com.mobstar.home.HomeActivity;
+import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
@@ -76,9 +78,21 @@ public class TakeTourActivity extends FragmentActivity implements OnClickListene
 				mPager.setCurrentItem(0);
 				break;
 			case R.id.btnFinishTour:
-				startHomeActivity();
+				verifyUserContinent();
 				break;
 		}
+	}
+
+	private void verifyUserContinent(){
+		if (UserPreference.existUserContinent(this))
+			startHomeActivity();
+		else startSelectCurrentRegionActivity();
+	}
+
+	private void startSelectCurrentRegionActivity(){
+		final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	private void startHomeActivity(){
