@@ -19,9 +19,12 @@ import com.mobstar.AdWordsManager;
 import com.mobstar.BaseActivity;
 import com.mobstar.R;
 import com.mobstar.api.ConnectCallback;
-import com.mobstar.api.RestClient;
 import com.mobstar.api.call.StarCall;
+import com.mobstar.api.new_api_call.EntryCall;
+import com.mobstar.api.new_api_call.ProfileCall;
 import com.mobstar.api.new_api_model.EntryP;
+import com.mobstar.api.new_api_model.response.EntrySingleResponse;
+import com.mobstar.api.new_api_model.response.SuccessResponse;
 import com.mobstar.api.responce.*;
 import com.mobstar.api.responce.Error;
 import com.mobstar.custom.swipe_card_view.SwipeCardView;
@@ -34,7 +37,6 @@ import com.mobstar.home.split.SplitActivity;
 import com.mobstar.home.youtube.YouTubePlayerActivity;
 import com.mobstar.info.report.InformationReportActivity;
 import com.mobstar.player.PlayerManager;
-import com.mobstar.pojo.EntryPojo;
 import com.mobstar.upload.MessageActivity;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
@@ -415,39 +417,10 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     private void onClickBtnFollow() {
         if (entryPojo.getUser().isMyStar()) {
-            deleteStarRequest();
+            unFollowRequest();
         } else {
-            addStarRequest();
+            followRequest();
         }
-    }
-
-    private void addStarRequest() {
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("star", entryPojo.getUser().getId());
-        Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
-        showStarDialog();
-        StarCall.addStarCall(baseActivity, entryPojo.getUser().getId(), new ConnectCallback<StarResponse>() {
-            @Override
-            public void onSuccess(StarResponse object) {
-                Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
-                Utility.HideDialog(baseActivity);
-                if (!object.hasError()) {
-                    if (onChangeEntryListener != null)
-                        onChangeEntryListener.onFollowEntry(entryPojo.getUser().getId(), true);
-                }
-            }
-
-            @Override
-            public void onFailure(String error) {
-                Log.d(LOG_TAG, "StarCall.addStarCall.onFailure.error=" + error);
-                Utility.HideDialog(baseActivity);
-            }
-
-            @Override
-            public void onServerError(com.mobstar.api.responce.Error error) {
-
-            }
-        });
     }
 
     private void showStarDialog() {
@@ -466,33 +439,56 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
         timer.schedule(task, 1000);
     }
 
-    private void deleteStarRequest() {
+    private void followRequest(){
         Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
-        StarCall.delStarCall(baseActivity, entryPojo.getUser().getId(),
-                new ConnectCallback<StarResponse>() {
-                    @Override
-                    public void onSuccess(StarResponse object) {
-                        Log.d(LOG_TAG, "StarCall.delStarCall.onSuccess");
-                        Utility.HideDialog(baseActivity);
-                        if (!object.hasError()) {
-                            if (onChangeEntryListener != null)
-                                onChangeEntryListener.onFollowEntry(entryPojo.getUser().getId(), false);
-                        }
-                    }
+        showStarDialog();
+        ProfileCall.follow(baseActivity, entryPojo.getUser().getId(), new ConnectCallback<SuccessResponse>() {
+            @Override
+            public void onSuccess(SuccessResponse object) {
+                Log.d(LOG_TAG, "StarCall.addStarCall.onSuccess");
+                Utility.HideDialog(baseActivity);
+                if (!object.hasError()) {
+                    if (onChangeEntryListener != null)
+                        onChangeEntryListener.onFollowEntry(entryPojo.getUser().getId(), true);
+                }
+            }
 
-                    @Override
-                    public void onFailure(String error) {
-                        Log.d(LOG_TAG, "StarCall.delStarCall.onFailure.error=" + error);
-                        Utility.HideDialog(baseActivity);
-                    }
+            @Override
+            public void onFailure(String error) {
 
-                    @Override
-                    public void onServerError(Error error) {
+            }
 
-                    }
-                });
+            @Override
+            public void onServerError(Error error) {
+
+            }
+        });
     }
 
+    public void unFollowRequest(){
+        Utility.ShowProgressDialog(baseActivity, baseActivity.getString(R.string.loading));
+        ProfileCall.unFollow(baseActivity, entryPojo.getUser().getId(), new ConnectCallback<SuccessResponse>() {
+            @Override
+            public void onSuccess(SuccessResponse object) {
+                Log.d(LOG_TAG, "StarCall.delStarCall.onSuccess");
+                Utility.HideDialog(baseActivity);
+                if (!object.hasError()) {
+                    if (onChangeEntryListener != null)
+                        onChangeEntryListener.onFollowEntry(entryPojo.getUser().getId(), false);
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+
+            @Override
+            public void onServerError(Error error) {
+
+            }
+        });
+    }
 
     private void startCommentActivity() {
         final Intent intent = new Intent(baseActivity, CommentActivity.class);
@@ -623,15 +619,34 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void likeRequest() {
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("entry", entryPojo.getEntry().getId());
-        params.put("type", "up");
-        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, new ConnectCallback<VoteResponse>() {
+//        final HashMap<String, String> params = new HashMap<>();
+//        params.put("entry", entryPojo.getEntry().getId());
+//        params.put("type", "up");
+//        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, new ConnectCallback<VoteResponse>() {
+//
+//            @Override
+//            public void onSuccess(VoteResponse object) {
+//                if (object.getArrEntry() != null & object.getArrEntry().size() > 0 && onChangeEntryListener != null) {
+////                    onChangeEntryListener.onChangeEntry(object.getArrEntry().get(0));
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(String error) {
+//
+//            }
+//
+//            @Override
+//            public void onServerError(Error error) {
+//
+//            }
+//        });
 
+        EntryCall.voteUp(baseActivity, entryPojo.getEntry().getId(), new ConnectCallback<EntrySingleResponse>() {
             @Override
-            public void onSuccess(VoteResponse object) {
-                if (object.getArrEntry() != null & object.getArrEntry().size() > 0 && onChangeEntryListener != null) {
-//                    onChangeEntryListener.onChangeEntry(object.getArrEntry().get(0));
+            public void onSuccess(EntrySingleResponse object) {
+                if (object.getEntry() != null && onChangeEntryListener != null) {
+                    onChangeEntryListener.onChangeEntry(object.getEntry());
                 }
             }
 
@@ -649,10 +664,26 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     protected void dislikeRequest() {
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("entry", entryPojo.getUser().getId());
-        params.put("type", "down");
-        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
+//        final HashMap<String, String> params = new HashMap<>();
+//        params.put("entry", entryPojo.getUser().getId());
+//        params.put("type", "down");
+//        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
+        EntryCall.voteDown(baseActivity, entryPojo.getEntry().getId(), new ConnectCallback<EntrySingleResponse>() {
+            @Override
+            public void onSuccess(EntrySingleResponse object) {
+
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+
+            @Override
+            public void onServerError(Error error) {
+
+            }
+        });
         AdWordsManager.getInstance().sendEngagementEvent();
     }
 

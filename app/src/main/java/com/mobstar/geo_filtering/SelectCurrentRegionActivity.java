@@ -91,38 +91,27 @@ public class SelectCurrentRegionActivity extends Activity implements CheckableVi
         postCurrentRegionRequest(selectedContinents);
     }
 
-    private void postCurrentRegionRequest(ContinentsPojo.Continents continents){
+    private void postCurrentRegionRequest(final ContinentsPojo.Continents continents){
         ProfileCall.postUserContinent(this, continents, new ConnectCallback<SuccessResponse>() {
             @Override
             public void onSuccess(SuccessResponse object) {
                 Utility.HideDialog(SelectCurrentRegionActivity.this);
-                verifyUserContinent();
+                UserPreference.setUserContinent(SelectCurrentRegionActivity.this, Integer.toString(continents.ordinal()));
+                startHomeActivity();
             }
 
             @Override
             public void onFailure(String error) {
                 Utility.HideDialog(SelectCurrentRegionActivity.this);
-                verifyUserContinent();
+                startHomeActivity();
             }
 
             @Override
             public void onServerError(Error error) {
                 Utility.HideDialog(SelectCurrentRegionActivity.this);
-                verifyUserContinent();
+                startHomeActivity();
             }
         });
-    }
-
-    private void verifyUserContinent(){
-        if (UserPreference.existUserContinent(this))
-            startHomeActivity();
-        else startSelectCurrentRegionActivity();
-    }
-
-    private void startSelectCurrentRegionActivity(){
-        final Intent intent = new Intent(this, SelectCurrentRegionActivity.class);
-        startActivity(intent);
-        finish();
     }
 
 //    private void postCurrentRegionRequest(ContinentsPojo.Continents continents){

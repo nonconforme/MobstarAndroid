@@ -17,6 +17,8 @@ import com.mobstar.R;
 import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
 import com.mobstar.api.call.StarCall;
+import com.mobstar.api.new_api_call.ProfileCall;
+import com.mobstar.api.new_api_model.response.SuccessResponse;
 import com.mobstar.api.responce.*;
 import com.mobstar.api.responce.Error;
 import com.mobstar.home.new_home_screen.VideoListBaseFragment;
@@ -178,15 +180,42 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
     private void onClickFollow() {
         if (user != null)
             if (user.getIsMyStar()) {
-                deleteStarRequest();
+//                deleteStarRequest();
+                unFollowRequest();
             } else {
-                addStarRequest();
+//                addStarRequest();
+                followRequest();
             }
     }
 
     public void setIsMyStar(final boolean star){
         user.setIsMyStar(star);
         setupViews();
+    }
+
+    private void unFollowRequest(){
+        Utility.ShowProgressDialog(this, getString(R.string.loading));
+        ProfileCall.unFollow(this, user.getUserId(), new ConnectCallback<SuccessResponse>() {
+            @Override
+            public void onSuccess(SuccessResponse object) {
+                Utility.HideDialog(NewProfileActivity.this);
+                if (!object.hasError()) {
+                    if (profileFragment != null)
+                        getProfileFragment().onFollowEntry(user.getUserId(), false);
+                    setIsMyStar(false);
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+
+            @Override
+            public void onServerError(Error error) {
+
+            }
+        });
     }
 
     private void deleteStarRequest() {
@@ -209,6 +238,31 @@ public class NewProfileActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void onServerError(com.mobstar.api.responce.Error error) {
+
+            }
+        });
+    }
+
+    private void followRequest(){
+        Utility.ShowProgressDialog(this, getString(R.string.loading));
+        ProfileCall.follow(this, user.getUserId(), new ConnectCallback<SuccessResponse>() {
+            @Override
+            public void onSuccess(SuccessResponse object) {
+                Utility.HideDialog(NewProfileActivity.this);
+                if (object.getError() == null || object.getError().equals("")) {
+                    if (profileFragment != null)
+                        getProfileFragment().onFollowEntry(user.getUserId(), true);
+                    setIsMyStar(true);
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+
+            @Override
+            public void onServerError(Error error) {
 
             }
         });

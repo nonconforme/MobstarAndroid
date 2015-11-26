@@ -223,12 +223,48 @@ public class RestClient {
         }
         final RequestParams requestParams = new RequestParams(params);
         final String absoluteUrl = ApiConstant.BASE_SERVER_URL + url;
-        Log.d(LOG_TAG, "http request delete: "+ absoluteUrl + "?" + requestParams.toString());
+        Log.d(LOG_TAG, "http request delete: " + absoluteUrl + "?" + requestParams.toString());
         httpClient.delete(absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int i, Header[] headers, byte[] bytes) {
                 try {
                     final JSONObject jsonObject = new JSONObject(new String(bytes, "US-ASCII"));
+                    if (callback != null) {
+                        callback.parse(jsonObject);
+                    }
+                } catch (UnsupportedEncodingException | JSONException e) {
+                    e.printStackTrace();
+                    if (callback != null)
+                        callback.onFailure(e.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+                showToastNotification(throwable.getMessage());
+                if (callback != null)
+                    callback.onFailure(throwable.toString());
+            }
+        });
+    }
+
+    public void putRequest(final String url, HashMap<String, String> params, final ConnectCallback callback){
+        if (!Utility.isNetworkAvailable(context)) {
+            showToastNotification(context.getString(R.string.no_internet_access));
+            if (callback == null)
+                return;
+            callback.onFailure("");
+            return;
+        }
+        final String absoluteUrl = ApiConstant.BASE_SERVER_URL + url;
+        final RequestParams requestParams = new RequestParams(params);
+        Log.d(LOG_TAG, "http request post: "+ absoluteUrl + "?" + requestParams.toString());
+        httpClient.removeHeader("Content-Type");
+        httpClient.put(null, absoluteUrl, requestParams, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, Header[] headers, byte[] bytes) {
+                try {
+                    final JSONObject jsonObject = new JSONObject(new String(bytes, "UTF-8"));
                     if (callback != null) {
                         callback.parse(jsonObject);
                     }

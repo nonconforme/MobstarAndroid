@@ -14,6 +14,7 @@ import com.mobstar.pojo.ContinentsPojo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Alexandr on 08.09.2015.
@@ -21,12 +22,12 @@ import java.util.Collections;
 public class ContinentsAdapter extends BaseAdapter {
     public final static String LOG_TAG = ContinentsAdapter.class.getName();
     private final LayoutInflater inflater;
-    private final ArrayList<Integer> choosenContinents;
+    private final List<Integer> choosenContinents;
     private final Context context;
     private final String[] continents;
 
-    public ContinentsAdapter(Dialog dialog, ArrayList<Integer> choosenContinents) {
-        this.context = dialog.getContext();
+    public ContinentsAdapter(final Context context, List<Integer> choosenContinents) {
+        this.context = context;
         this.choosenContinents = choosenContinents;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //        continents = context.getResources().getStringArray(R.array.continents_name);

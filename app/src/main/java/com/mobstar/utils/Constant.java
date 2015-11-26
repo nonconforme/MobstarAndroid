@@ -43,7 +43,7 @@ public class Constant {
 
 	public static String VOTE = "vote/";
 
-	public static String WELCOME = "welcome/";
+//	public static String WELCOME = "welcome/";
 
 	public static String STAR = "star/";
 

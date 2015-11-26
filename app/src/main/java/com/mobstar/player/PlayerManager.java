@@ -11,7 +11,10 @@ import android.view.Surface;
 
 import com.mobstar.api.Api;
 import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.new_api_call.EntryCall;
+import com.mobstar.api.new_api_model.response.EntrySingleResponse;
 import com.mobstar.api.responce.*;
+import com.mobstar.api.responce.Error;
 import com.mobstar.home.new_home_screen.EntryItem;
 import com.mobstar.utils.Constant;
 
@@ -48,29 +51,16 @@ public class PlayerManager {
         onChangeEntryListener = _onChangeEntryListener;
     }
 
-    private void sendRequestAddCount() {
-        Log.d(LOG_TAG, "sendRequestAddCount");
-        SharedPreferences preferences = mContext.getSharedPreferences(Constant.MOBSTAR_PREF, Activity.MODE_PRIVATE);
-        Api.sendRequestAddCount(mContext, mEntryItem.getEntryPojo().getEntry().getId(), preferences.getString("userid", "0"), new ConnectCallback<CountResponse>() {
-
+    private void sendRequestAddCount(){
+        EntryCall.updateViewCounts(mContext, mEntryItem.getEntryPojo().getEntry().getId(), new ConnectCallback<EntrySingleResponse>() {
             @Override
-            public void onSuccess(CountResponse response) {
-                if(response.getArrEntry() != null && response.getArrEntry().size() > 0 && onChangeEntryListener != null){
-//                    onChangeEntryListener.onChangeEntry(response.getArrEntry().get(0));
+            public void onSuccess(EntrySingleResponse object) {
+                if(object.getEntry() != null && onChangeEntryListener != null){
+                    onChangeEntryListener.onChangeEntry(object.getEntry());
                 }
             }
 
-            @Override
-            public void onFailure(String error) {
-
-            }
-
-            @Override
-            public void onServerError(com.mobstar.api.responce.Error error) {
-
-            }
         });
-
     }
 
     public boolean tryToPlayNew() {

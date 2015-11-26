@@ -19,6 +19,13 @@ public class ApiConstant {
 
     //   ENTRY
     public static final String GET_ENTRY             = "entry";
+    public static final String VOTE_UP               = "entry/voteUp/";
+    public static final String VOTE_DOWN             = "entry/voteDown/";
+    public static final String UPDATE_VIEW_COUNTS    = "entry/view/";
+
+    //   FILTERS
+
+    public static final String CATEGORIES             = "categories";
 
     //   PROFILE
     public static final String SETTING_USER_CONTINENT = "settings/userContinent/";
@@ -28,6 +35,9 @@ public class ApiConstant {
     public static final String USER_STARED_BY         = "user/staredBy";
     public static final String WHO_TO_FOLLOW          = "user/team";
     public static final String USER_FOLLOW            = "user/followTeam";
+    public static final String FOLLOW                 = "user/follow/";
+    public static final String UNFOLLOW               = "user/unfollow/";
+
 
     //  NOTIFICATION
     public static final String DEFAULT_NOTIFICATION  = "notification/default";

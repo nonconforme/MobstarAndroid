@@ -1,5 +1,6 @@
 package com.mobstar.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.mobstar.R;
+import com.mobstar.api.new_api_model.Category;
 import com.mobstar.custom.CheckableView;
-import com.mobstar.pojo.CategoryPojo;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,11 +22,11 @@ public class CategoriesAdapter extends BaseAdapter {
     public final static String LOG_TAG = CategoriesAdapter.class.getName();
     private final LayoutInflater inflater;
     private final ArrayList<Integer> choosenCategories;
-    private final ArrayList<CategoryPojo> allCategories;
+    private final ArrayList<Category> allCategories;
     private final Context context;
     private final int size;
 
-    public CategoriesAdapter(Context context,ArrayList<CategoryPojo> allCategories, ArrayList<Integer> choosenCategories) {
+    public CategoriesAdapter(Context context,ArrayList<Category> allCategories, ArrayList<Integer> choosenCategories) {
         this.context = context;
         this.allCategories = allCategories;
         this.choosenCategories = choosenCategories;
@@ -107,15 +108,15 @@ public class CategoriesAdapter extends BaseAdapter {
 
     private void setupCategorieItems(final CheckableView checkableView, final int position){
         checkableView.getTvTitle().setTextColor(context.getResources().getColor(R.color.white_color));
-        final CategoryPojo categoryObj = allCategories.get(position - 1);
-        if (categoryObj.getCategoryName() != null && categoryObj.getCategoryName().length() > 0) {
+        final Category categoryObj = allCategories.get(position - 1);
+        if (categoryObj.getName() != null && categoryObj.getName().length() > 0) {
 
-            checkableView.setTitle(categoryObj.getCategoryName());
+            checkableView.setTitle(categoryObj.getName());
         }
         checkableView.getIvLeftImage().getLayoutParams().height= size;
         checkableView.getIvLeftImage().getLayoutParams().width= size;
-        if (categoryObj.getCategoryDescription() != null && categoryObj.getCategoryDescription().length() > 0) {
-            Picasso.with(context).load(categoryObj.getCategoryDescription())
+        if (categoryObj.getImage() != null && categoryObj.getImage().length() > 0) {
+            Picasso.with(context).load(categoryObj.getImage())
                     .placeholder(R.drawable.ic_pic_small)
                     .into(checkableView.getIvLeftImage());
         } else {
@@ -123,24 +124,24 @@ public class CategoriesAdapter extends BaseAdapter {
                     .into(checkableView.getIvLeftImage());
         }
         //set background
-        if(!categoryObj.getCategoryActive()){
+        if(!categoryObj.isActive()){
             checkableView.setVisibleChecked(false);
             checkableView.setMainBackground(context.getResources().getDrawable(R.drawable.btn_coming_soon));
             checkableView.setIsVisibleShadow(false);
             checkableView.setCustomOnClickListener(null);
         }
         else {
-            checkableView.setOnlyCheck(choosenCategories.contains(Integer.parseInt(categoryObj.getID())));
+            checkableView.setOnlyCheck(choosenCategories.contains(categoryObj.getId()));
             checkableView.setMainBackground(context.getResources().getDrawable(R.drawable.yellow_btn));
             checkableView.setOnCheckedChangeListener(new CheckableView.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChange(CheckableView _view, boolean _checked) {
-                    if (choosenCategories.contains(Integer.parseInt(categoryObj.getID()))) {
-                        choosenCategories.remove((Integer)Integer.parseInt(categoryObj.getID()));
+                    if (choosenCategories.contains(categoryObj.getId())) {
+                        choosenCategories.remove(categoryObj.getId());
                     } else {
-                        choosenCategories.add(Integer.parseInt(categoryObj.getID()));
+                        choosenCategories.add(categoryObj.getId());
                     }
-                    Log.d(LOG_TAG, "position=" + categoryObj.getID());
+                    Log.d(LOG_TAG, "position=" + categoryObj.getId());
                     Log.d(LOG_TAG, "choosenContinents.size()=" + choosenCategories.size());
                 }
             });
@@ -151,9 +152,9 @@ public class CategoriesAdapter extends BaseAdapter {
 
     private void allChoose() {
         choosenCategories.clear();
-        for (CategoryPojo allCategory : allCategories) {
-            if(allCategory.getCategoryActive()){
-                choosenCategories.add(Integer.parseInt(allCategory.getID()));
+        for (Category allCategory : allCategories) {
+            if(allCategory.isActive()){
+                choosenCategories.add(allCategory.getId());
             }
         }
     }

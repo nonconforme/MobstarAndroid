@@ -13,8 +13,12 @@ import com.mobstar.api.responce.Error;
 public abstract class ConnectCallback<T extends BaseResponse> {
 
     public abstract void onSuccess(T object);
-    public abstract void onFailure(String error);
-    public abstract void onServerError(Error error);
+    protected void onFailure(String error){
+
+    };
+    protected void onServerError(Error error){
+
+    };
 
     public void parse(JSONObject o) {
         T object = null;

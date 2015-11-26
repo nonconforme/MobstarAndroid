@@ -68,6 +68,12 @@ public class UserPreference {
         getPreference(context).edit().putBoolean(IS_SOCIAL_LOGIN, isSocial).apply();
     }
 
+    public static final void setUserContinent(final Context context, final String userContinent){
+        if (userContinent == null)
+            return;
+        getPreference(context).edit().putString(USER_CONTINENT, userContinent).apply();
+    }
+
     public static String getUserContinent(final Context context){
         return getPreference(context).getString(USER_CONTINENT, "");
     }

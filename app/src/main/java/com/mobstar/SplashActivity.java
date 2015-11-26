@@ -2,14 +2,12 @@ package com.mobstar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.provider.Settings.Secure;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -248,12 +246,22 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 
 			@Override
 			public void onFailure(String error) {
-				OkayAlertDialog(error);
+				if (error.contains("Unauthorized")){
+					UserPreference.logOut(SplashActivity.this);
+					initLastState();
+				}
+				else
+					OkayAlertDialog(error);
 			}
 
 			@Override
 			public void onServerError(Error error) {
-				OkayAlertDialog(error.getMessage());
+				if (error.getMessage().equalsIgnoreCase("unauthorized")) {
+					UserPreference.logOut(SplashActivity.this);
+					initLastState();
+				}
+				else OkayAlertDialog(error.getMessage());
+
 			}
 		});
 	}

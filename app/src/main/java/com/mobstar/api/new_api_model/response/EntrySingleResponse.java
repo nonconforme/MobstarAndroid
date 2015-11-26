@@ -1,25 +1,25 @@
 package com.mobstar.api.new_api_model.response;
 
-import com.mobstar.api.new_api_model.Settings;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.api.responce.BaseResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by lipcha on 24.11.15.
+ * Created by lipcha on 26.11.15.
  */
-public class UserSettingsResponse extends BaseResponse {
+public class EntrySingleResponse extends BaseResponse {
 
-    private Settings settings;
+    private EntryP entry;
 
     @Override
     public void configure(JSONObject jsonObject) throws JSONException {
         super.configure(jsonObject);
-        settings = fromJson(jsonObject, Settings.class);
+        entry = fromJson(jsonObject, EntryP.class);
     }
 
-    public Settings getSettings() {
-        return settings;
+    public EntryP getEntry() {
+        return entry;
     }
 }
