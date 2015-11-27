@@ -6,6 +6,7 @@ package com.mobstar.api;
 public class ApiConstant {
 
     public static final String BASE_SERVER_URL  = "http://192.168.88.250:8841/";
+//    public static final String BASE_SERVER_URL  = "http://192.168.88.82:8841/";
 
     //   LOGIN
 
@@ -14,7 +15,7 @@ public class ApiConstant {
     public static final String SIGN_IN               = "signIn";
     public static final String WELCOME               = "welcome";
     public static final String FORGOT_PASSWORD       = "forgotPassword";
-    public static final String USER_ANALYTIC         = "user/analytic";
+    public static final String USER_ANALYTIC         = "user/analytic/";
     public static final String SIGN_OUT              = "signOut";
 
     //   ENTRY

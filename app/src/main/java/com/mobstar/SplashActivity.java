@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
@@ -72,11 +73,10 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 				verifyUserContinent();
 			}
 			else {
-				//clear badge
 				Utility.clearBadge(this);
 //				new BadgeRead().run();
 				sendAnalytic();
-				getSystemDefaultNotification();
+				getSystemDefaultNotificationPostDelay();
 
 			}
 
@@ -84,6 +84,16 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 			startLoginSocialActivityPostDelay();
 		}
 
+	}
+
+	private void getSystemDefaultNotificationPostDelay(){
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				getSystemDefaultNotification();
+			}
+		}, 200);
 	}
 
 	private void startLoginSocialActivityPostDelay(){
@@ -195,7 +205,6 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 	class GCMRegistrationCall extends Thread {
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			try {
 				if (gcm == null) {
 					gcm = GoogleCloudMessaging.getInstance(SplashActivity.this);
@@ -283,12 +292,12 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 
 			@Override
 			public void onFailure(String error) {
-
+				Log.d("errorTag", error);
 			}
 
 			@Override
 			public void onServerError(com.mobstar.api.responce.Error error) {
-
+				Log.d("errorTag", error.getMessage());
 			}
 		});
 	}
@@ -299,19 +308,10 @@ public class SplashActivity extends Activity implements OnNetworkChangeListener 
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(SplashActivity.this);
-
-				// set title
 				alertDialogBuilder.setTitle(getResources().getString(R.string.app_name));
-
-				// set dialog message
 				alertDialogBuilder.setMessage(msg).setCancelable(false).setNeutralButton("OK", null);
-
-				// create alert dialog
 				AlertDialog alertDialog = alertDialogBuilder.create();
-
-				// show it
 				alertDialog.show();
 			}
 		});

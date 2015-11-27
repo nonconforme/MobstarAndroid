@@ -18,7 +18,6 @@ import com.squareup.picasso.Picasso;
 public class HomeInformationActivity extends Activity implements View.OnClickListener {
 
 	public static final String DEFAULT_NOTIFICATION   = "default_notification";
-	private Context mContext;
 	private TextView textTitle,textDes;
 	private ImageView imgInfo;
 	private ImageButton btnClose;
@@ -28,9 +27,8 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_home_info);
-		mContext=HomeInformationActivity.this;
 		getBundleExtra();
-		AppRater.app_launched(mContext);
+		AppRater.app_launched(this);
 		findViews();
 		setListeners();
 		setupViews();
@@ -58,7 +56,7 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 	private void setupViews(){
 		textTitle.setText(defaultNotification.getDescription());
 		textDes.setText(defaultNotification.getTitle());
-		Picasso.with(mContext).load(defaultNotification.getImage()).into(imgInfo);
+		Picasso.with(this).load(defaultNotification.getImage()).into(imgInfo);
 	}
 
 	@Override
@@ -83,7 +81,7 @@ public class HomeInformationActivity extends Activity implements View.OnClickLis
 	}
 
 	private void startHomeActivity(){
-		Intent intent = new Intent(mContext, HomeActivity.class);
+		final Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 		finish();
 	}

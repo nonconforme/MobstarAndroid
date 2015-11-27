@@ -60,6 +60,10 @@ public class UserPreference {
         getPreference(context).edit().putBoolean(IS_LOGIN, false).apply();
     }
 
+    public static final String getUserId(final Context context){
+        return getUserField(context, USER_ID);
+    }
+
     public static final String getUserField(final Context context, final String field){
         return getPreference(context).getString(field, "");
     }

@@ -42,8 +42,6 @@ import com.mobstar.utils.Constant;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,6 +54,8 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     private static final String IMAGE_TYPE = "image";
     private static final String VIDEO_TYPE = "video";
     private static final String YOU_TUBE_TYPE = "video_youtube";
+
+    public static final String ENTRY          = "entry";
 
     private static final String LOG_TAG = EntryItem.class.getName();
     private TextView textUserName, textDescription, textTime, textViews, buttonVideoSplit;
@@ -513,7 +513,7 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
 
     private void startShareActivity() {
         final Intent intent = new Intent(baseActivity, ShareActivity.class);
-        intent.putExtra("entry", entryPojo);
+        intent.putExtra(ENTRY, entryPojo);
         startActivity(intent);
         baseActivity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
@@ -619,29 +619,6 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
     }
 
     private void likeRequest() {
-//        final HashMap<String, String> params = new HashMap<>();
-//        params.put("entry", entryPojo.getEntry().getId());
-//        params.put("type", "up");
-//        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, new ConnectCallback<VoteResponse>() {
-//
-//            @Override
-//            public void onSuccess(VoteResponse object) {
-//                if (object.getArrEntry() != null & object.getArrEntry().size() > 0 && onChangeEntryListener != null) {
-////                    onChangeEntryListener.onChangeEntry(object.getArrEntry().get(0));
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(String error) {
-//
-//            }
-//
-//            @Override
-//            public void onServerError(Error error) {
-//
-//            }
-//        });
-
         EntryCall.voteUp(baseActivity, entryPojo.getEntry().getId(), new ConnectCallback<EntrySingleResponse>() {
             @Override
             public void onSuccess(EntrySingleResponse object) {
@@ -650,39 +627,17 @@ public class EntryItem extends RecyclerView.ViewHolder implements View.OnClickLi
                 }
             }
 
-            @Override
-            public void onFailure(String error) {
-
-            }
-
-            @Override
-            public void onServerError(Error error) {
-
-            }
         });
         AdWordsManager.getInstance().sendEngagementEvent();
     }
 
     protected void dislikeRequest() {
-//        final HashMap<String, String> params = new HashMap<>();
-//        params.put("entry", entryPojo.getUser().getId());
-//        params.put("type", "down");
-//        RestClient.getInstance(baseActivity).postRequest(Constant.VOTE, params, null);
         EntryCall.voteDown(baseActivity, entryPojo.getEntry().getId(), new ConnectCallback<EntrySingleResponse>() {
             @Override
             public void onSuccess(EntrySingleResponse object) {
 
             }
 
-            @Override
-            public void onFailure(String error) {
-
-            }
-
-            @Override
-            public void onServerError(Error error) {
-
-            }
         });
         AdWordsManager.getInstance().sendEngagementEvent();
     }

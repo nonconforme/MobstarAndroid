@@ -47,7 +47,7 @@ public class Constant {
 
 	public static String STAR = "star/";
 
-	public static String GET_STAR = "user/";
+//	public static String GET_STAR = "user/";
 	
 	public static String GET_FOLLOWING="user/following";
 
@@ -147,9 +147,9 @@ public class Constant {
 
 	public static String DELETE_THREAD="message/deleteThread";
 
-	public static String DELETE_MESSAGE="message/deleteMessage";
-	
-	public static String MESSAGE_COUNT="message/msgcount";
+//	public static String DELETE_MESSAGE="message/deleteMessage";
+//
+//	public static String MESSAGE_COUNT="message/msgcount";
 	
 	public static String MESSAGE_READ="message/read";
 	
@@ -165,9 +165,9 @@ public class Constant {
 
 //	public static final String USER_CONTINENT = "settings/userContinent/";
 
-	public static final String USER_ACCOUNT = "settings/account/";
+//	public static final String USER_ACCOUNT = "settings/account/";
 
-    public static final String USER_CONTINENT_FILTERS = "settings/continentFilter";
+//    public static final String USER_CONTINENT_FILTERS = "settings/continentFilter";
 
 	public static final String SEARCH_BEGIN = "search/users/beginsWith/";
 
@@ -179,7 +179,7 @@ public class Constant {
     public static final String THREAD_VALUE = "thread";
     public static final String MESSAGE_VALUE = "message";
 
-    public static final String USER_CATEGORIES_FILTERS = "settings/categoryFilter";
+//    public static final String USER_CATEGORIES_FILTERS = "settings/categoryFilter";
 
 
 //	app constant
