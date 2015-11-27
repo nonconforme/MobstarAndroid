@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +37,10 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.mobstar.R;
+import com.mobstar.api.ConnectCallback;
+import com.mobstar.api.new_api_call.ProfileCall;
+import com.mobstar.api.new_api_model.response.StarsResponse;
+import com.mobstar.api.responce.*;
 import com.mobstar.custom.PullToRefreshListView;
 import com.mobstar.custom.PullToRefreshListView.OnRefreshListener;
 import com.mobstar.home.ShareActivity;
@@ -44,37 +49,38 @@ import com.mobstar.home.new_home_screen.profile.UserProfile;
 import com.mobstar.pojo.StarPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
+import com.mobstar.utils.UserPreference;
 import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-public class TalentPoolActivity extends Activity {
+public class TalentPoolActivity extends Activity implements MultiChoiceModeListener, OnClickListener, OnRefreshListener, OnItemClickListener, OnScrollListener {
 
-	Context mContext;
-
-	TextView textTalentPool;
-	MyStarAdapter myStarAdapter;
-	PullToRefreshListView listUser;
-
-	SharedPreferences preferences;
-
+	private TextView textTalentPool;
+	private MyStarAdapter myStarAdapter;
+	private PullToRefreshListView listUser;
 	public String sErrorMessage;
 
-	String UserID;
-	ArrayList<StarPojo> arrEntryPojosChild = new ArrayList<StarPojo>();
-	ArrayList<StarPojo> arrStarPojos = new ArrayList<StarPojo>();
+	private String UserID;
+	private ArrayList<StarPojo> arrEntryPojosChild = new ArrayList<StarPojo>();
+	private ArrayList<StarPojo> arrStarPojos = new ArrayList<StarPojo>();
 
-	ArrayList<String> arrSelectionStarID = new ArrayList<String>();
+	private ArrayList<String> arrSelectionStarID = new ArrayList<String>();
 
-	TextView textNoData;
+	private TextView textNoData;
 
 	// pagination
-	int mFirstVisibleItem = 0;
+	private int mFirstVisibleItem = 0;
 	private boolean isRefresh = false;
 	private boolean isWebCall = false;
 	private static int currentPage = 1;
 	private boolean isNextPageAvail=false;
 	
 	private AdView adView;
+
+
+	private int visibleThreshold = 1;
+	private int previousTotal = 0;
+	private boolean loading = true;
 	
 
 	@Override
@@ -82,196 +88,139 @@ public class TalentPoolActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_talent_pool);
 
-		mContext = TalentPoolActivity.this;
+		UserID = UserPreference.getUserId(this);
+		findViews();
+		setListeners();
+		initUserList();
+		getMyStarsRequest(currentPage);
+	}
 
-		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
+	private void findViews(){
+		textNoData     = (TextView) findViewById(R.id.textNoData);
+		listUser       = (PullToRefreshListView) findViewById(R.id.listUser);
+		adView         = (AdView)findViewById(R.id.adView);
+		textTalentPool = (TextView) findViewById(R.id.textTalentPool);
+	}
 
-		UserID = preferences.getString("userid", "");
+	private void setListeners(){
+		listUser.setMultiChoiceModeListener(this);
+		textTalentPool.setOnClickListener(this);
+		listUser.setOnRefreshListener(this);
+		listUser.setOnItemClickListener(this);
+		listUser.setOnScrollListener(this);
+	}
 
-		InitControls();
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.textTalentPool:
+				onBackPressed();
+				break;
+		}
+	}
 
-		listUser.setOnRefreshListener(new OnRefreshListener() {
-
-			@Override
-			public void onRefresh() {
-				// TODO Auto-generated method stub\
-				if (Utility.isNetworkAvailable(mContext)) {
-					isRefresh = true;
-					isWebCall = true;
-					currentPage=1;
-					new MyStarCall(UserID,currentPage).start();
-				} else {
-					Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-
+	private void initUserList() {
+		listUser.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		myStarAdapter = new MyStarAdapter();
 		listUser.setAdapter(myStarAdapter);
+	}
 
-		if (Utility.isNetworkAvailable(mContext)) {
-
-			new MyStarCall(UserID,currentPage).start();
-
-		} else {
-
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-			Utility.HideDialog(mContext);
-		}
-
-		listUser.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				// TODO Auto-generated method stub
-				// Intent intent = new Intent(mContext, ProfileActivity.class);
-				// intent.putExtra("UserID",
-				// arrStarPojos.get(position).getStarID());
-				// intent.putExtra("UserName",
-				// arrStarPojos.get(position).getStarName());
-				// intent.putExtra("IsMyStar", "true");
-				// intent.putExtra("UserPic",
-				// arrStarPojos.get(position).getProfileImage());
-				// intent.putExtra("UserTagline", "");
-				//
-				// startActivity(intent);
-				// overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-			}
-		});
-
-
-
-		listUser.setOnScrollListener(new OnScrollListener() {
-
-			private int visibleThreshold = 1;
-			private int previousTotal = 0;
-			private boolean loading = true;
-
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if (loading) {
-					if (totalItemCount > previousTotal) {
-						loading = false;
-						previousTotal = totalItemCount;
-
-					}
-				}
-				if (!loading && !isWebCall && isNextPageAvail && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-					Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-					isWebCall = true;
-					currentPage++;
-					if (Utility.isNetworkAvailable(mContext)) {
-						new MyStarCall(UserID,currentPage).start();
-					} else {
-						Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-						Utility.HideDialog(mContext);
-					}
-					loading = true;
-				}
-
-			}
-
-		});
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
 
 	}
 
-	void InitControls() {
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		if (loading) {
+			if (totalItemCount > previousTotal) {
+				loading = false;
+				previousTotal = totalItemCount;
 
-		textNoData = (TextView) findViewById(R.id.textNoData);
-		textNoData.setVisibility(View.GONE);
-
-		listUser = (PullToRefreshListView) findViewById(R.id.listUser);
-		listUser.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		
-		adView = (AdView)findViewById(R.id.adView);
-
-		listUser.setMultiChoiceModeListener(new MultiChoiceModeListener() {
-
-			@Override
-			public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
-				// TODO Auto-generated method stub
-				switch (item.getItemId()) {
-				case R.id.menu_delete:
-					DeleteStar();
-					mode.finish(); // Action picked, so close the CAB
-					return true;
-				default:
-					return false;
-				}
 			}
+		}
+		if (!loading && !isWebCall && isNextPageAvail && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+			Utility.ShowProgressDialog(this, getString(R.string.loading));
+			isWebCall = true;
+			currentPage++;
+			if (Utility.isNetworkAvailable(this)) {
+				new MyStarCall(UserID,currentPage).start();
+			} else {
+				Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+				Utility.HideDialog(this);
+			}
+			loading = true;
+		}
 
-			@Override
-			public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
-				// TODO Auto-generated method stub
-				MenuInflater inflater = mode.getMenuInflater();
-				inflater.inflate(R.menu.context_menu, menu);
+	}
 
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+	}
+
+	@Override
+	public void onRefresh() {
+		isRefresh = true;
+		isWebCall = true;
+		currentPage = 1;
+		getMyStarsRequest(currentPage);
+	}
+
+
+	@Override
+	public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+		final int checkedCount = listUser.getCheckedItemCount();
+		mode.setTitle(checkedCount + " " + getString(R.string.selected));
+
+		if (arrSelectionStarID.contains(arrStarPojos.get(position).getStarID() + "")) {
+			arrSelectionStarID.remove(arrStarPojos.get(position).getStarID() + "");
+		} else {
+			arrSelectionStarID.add(arrStarPojos.get(position).getStarID() + "");
+		}
+	}
+
+	@Override
+	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+		MenuInflater inflater = mode.getMenuInflater();
+		inflater.inflate(R.menu.context_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+		return false;
+	}
+
+	@Override
+	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_delete:
+				DeleteStar();
+				mode.finish(); // Action picked, so close the CAB
 				return true;
-			}
-
-			@Override
-			public void onDestroyActionMode(android.view.ActionMode arg0) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public boolean onPrepareActionMode(android.view.ActionMode arg0, Menu arg1) {
-				// TODO Auto-generated method stub
+			default:
 				return false;
-			}
+		}
+	}
 
-			@Override
-			public void onItemCheckedStateChanged(android.view.ActionMode arg0, int position, long arg2, boolean arg3) {
-				// TODO Auto-generated method stub
-				final int checkedCount = listUser.getCheckedItemCount();
-				// Set the CAB title according to total checked items
-				arg0.setTitle(checkedCount + " " + getString(R.string.selected));
-
-				if (arrSelectionStarID.contains(arrStarPojos.get(position).getStarID() + "")) {
-					arrSelectionStarID.remove(arrStarPojos.get(position).getStarID() + "");
-				} else {
-					arrSelectionStarID.add(arrStarPojos.get(position).getStarID() + "");
-				}
-
-			}
-		});
-
-
-		textTalentPool = (TextView) findViewById(R.id.textTalentPool);
-		textTalentPool.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View view) {
-				// TODO Auto-generated method stub
-				onBackPressed();
-			}
-		});
-
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
-
-
+	@Override
+	public void onDestroyActionMode(ActionMode mode) {
 
 	}
 
 	void DeleteStar() {
 
-		Utility.ShowProgressDialog(mContext, getString(R.string.loading));
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
 
-		if (Utility.isNetworkAvailable(mContext)) {
+		if (Utility.isNetworkAvailable(this)) {
 
 			new DeleteStarCall(arrSelectionStarID.get(0)).start();
 
 		} else {
 
-			Toast.makeText(mContext, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
-			Utility.HideDialog(mContext);
+			Toast.makeText(this, getString(R.string.no_internet_access), Toast.LENGTH_SHORT).show();
+			Utility.HideDialog(this);
 		}
 
 	}
@@ -295,7 +244,7 @@ public class TalentPoolActivity extends Activity {
 
 	private void startProfileActivity(int position){
 
-		final Intent intent = new Intent(mContext, NewProfileActivity.class);
+		final Intent intent = new Intent(this, NewProfileActivity.class);
 		final UserProfile userProfile = UserProfile.newBuilder()
 				.setUserId(arrStarPojos.get(position).getStarID())
 				.setUserName(arrStarPojos.get(position).getStarName())
@@ -304,15 +253,6 @@ public class TalentPoolActivity extends Activity {
 				.setUserCoverImage(arrStarPojos.get(position).getProfileCover())
 				.build();
 		intent.putExtra(NewProfileActivity.USER, userProfile);
-//		intent.putExtra("UserID",
-//				arrStarPojos.get(position).getStarID());
-//		intent.putExtra("UserName",
-//				arrStarPojos.get(position).getStarName());
-//		intent.putExtra("IsMyStar","1");
-//		intent.putExtra("UserPic",
-//				arrStarPojos.get(position).getProfileImage());
-//		intent.putExtra("UserCoverImage",arrStarPojos.get(position).getProfileCover());
-		//					intent.putExtra("isProfile",true);
 		startActivity(intent);
 		overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
@@ -354,7 +294,7 @@ public class TalentPoolActivity extends Activity {
 		public View getView(final int position, View convertView, ViewGroup parent) {
 			final ViewHolder viewHolder;
 
-			LayoutInflater mInflater = (LayoutInflater) mContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater mInflater = (LayoutInflater) TalentPoolActivity.this.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 			if (convertView == null) {
 
 				convertView = mInflater.inflate(R.layout.row_item_stars, null);
@@ -396,7 +336,7 @@ public class TalentPoolActivity extends Activity {
 
 				@Override
 				public void onClick(View v) {
-					Intent intent = new Intent(mContext, ShareActivity.class);
+					Intent intent = new Intent(TalentPoolActivity.this, ShareActivity.class);
 					intent.putExtra("isTalent",true);
 					intent.putExtra("UserName",arrStarPojos.get(position).getStarName());
 					intent.putExtra("UserImg",arrStarPojos.get(position).getProfileImage());
@@ -429,11 +369,11 @@ public class TalentPoolActivity extends Activity {
 				viewHolder.imgUserPic.setImageResource(R.drawable.ic_pic_small);
 				viewHolder.imgUserPicTalent.setImageResource(R.drawable.ic_pic_small);
 
-				Picasso.with(mContext).load(arrStarPojos.get(position).getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop()
+				Picasso.with(TalentPoolActivity.this).load(arrStarPojos.get(position).getProfileImage()).resize(Utility.dpToPx(TalentPoolActivity.this, 45), Utility.dpToPx(TalentPoolActivity.this, 45)).centerCrop()
 				.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(viewHolder.imgUserPic);
 
 
-				Picasso.with(mContext).load(arrStarPojos.get(position).getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop()
+				Picasso.with(TalentPoolActivity.this).load(arrStarPojos.get(position).getProfileImage()).resize(Utility.dpToPx(TalentPoolActivity.this, 45), Utility.dpToPx(TalentPoolActivity.this, 45)).centerCrop()
 				.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(viewHolder.imgUserPicTalent);
 
 				// Ion.with(mContext).load(arrStarPojos.get(position).getProfileImage()).withBitmap().placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).resize(Utility.dpToPx(mContext,
@@ -515,85 +455,30 @@ public class TalentPoolActivity extends Activity {
 		}
 	}
 
-	//	class MyStarCall extends Thread {
-	//
-	//		String UserID;
-	//		int PageNo;
-	//
-	//		public MyStarCall(String UserID,int pageNo) {
-	//			this.UserID = UserID;
-	//			this.PageNo=pageNo;
-	//		}
-	//
-	//		@Override
-	//		public void run() {
-	//			// TODO Auto-generated method stub
-	//
-	//			String response = JSONParser.getRequest(Constant.SERVER_URL + Constant.GET_STAR + "302"+ "&page=" + PageNo, preferences.getString("token", null));
-	//
-	//			// Log.v(Constant.TAG, "MyStarCall response " + response);
-	//
-	//			if (response != null) {
-	//
-	//				try {
-	//
-	//					JSONObject jsonObject = new JSONObject(response);
-	//
-	//					if (jsonObject.has("error")) {
-	//						sErrorMessage = jsonObject.getString("error");
-	//					}
-	//
-	//					if (jsonObject.has("users")) {
-	//						
-	//
-	//						JSONArray jsonArrayUsers = jsonObject.getJSONArray("users");
-	//
-	//						for (int i = 0; i < jsonArrayUsers.length(); i++) {
-	//
-	//							JSONObject jsonObjUserRow = jsonArrayUsers.getJSONObject(i);
-	//
-	//							JSONObject jsonObjUser = jsonObjUserRow.getJSONObject("user");
-	//
-	//							JSONArray jsonArrayStars = jsonObjUser.getJSONArray("stars");
-	//
-	//							for (int j = 0; j < jsonArrayStars.length(); j++) {
-	//
-	//								JSONObject jsonObjStar = jsonArrayStars.getJSONObject(j);
-	//
-	//								StarPojo tempPojo = new StarPojo();
-	//								tempPojo.setStarID(jsonObjStar.getString("starId"));
-	//								tempPojo.setStarName(jsonObjStar.getString("starName"));
-	//								tempPojo.setProfileImage(jsonObjStar.getString("profileImage"));
-	//								tempPojo.setProfileCover(jsonObjStar.getString("profileCover"));
-	//								tempPojo.setStarredDate(jsonObjStar.getString("starredDate"));
-	//								tempPojo.setRank(jsonObjStar.getString("rank"));
-	//								tempPojo.setStats(jsonObjStar.getString("stat"));
-	//								arrStarPojos.add(tempPojo);
-	//							}
-	//						}
-	//						
-	//						
-	//					}
-	//
-	//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-	//						handlerMyStar.sendEmptyMessage(0);
-	//					} else {
-	//						handlerMyStar.sendEmptyMessage(1);
-	//					}
-	//
-	//				} catch (Exception e) {
-	//					// TODO: handle exception
-	//					e.printStackTrace();
-	//					handlerMyStar.sendEmptyMessage(0);
-	//				}
-	//
-	//			} else {
-	//
-	//				handlerMyStar.sendEmptyMessage(0);
-	//			}
-	//
-	//		}
-	//	}
+	private void getMyStarsRequest(final int page){
+		Utility.ShowProgressDialog(this, getString(R.string.loading));
+		ProfileCall.getUserStars(this, page, new ConnectCallback<StarsResponse>() {
+			@Override
+			public void onSuccess(StarsResponse object) {
+				Utility.HideDialog(TalentPoolActivity.this);
+				onLoad(object);
+			}
+
+			@Override
+			protected void onFailure(String error) {
+				Utility.HideDialog(TalentPoolActivity.this);
+			}
+
+			@Override
+			protected void onServerError(com.mobstar.api.responce.Error error) {
+				Utility.HideDialog(TalentPoolActivity.this);
+			}
+		});
+	}
+
+	private void onLoad(final StarsResponse starsResponse){
+		isNextPageAvail = starsResponse.isNext();
+	}
 
 	class MyStarCall extends Thread {
 
@@ -609,92 +494,92 @@ public class TalentPoolActivity extends Activity {
 		public void run() {
 			// TODO Auto-generated method stub
 
-			String[] name = {"user", "page"};
-			String[] value = {UserID,String.valueOf(PageNo)};
-
-			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.GET_FOLLOWING ,name,value, preferences.getString("token", null));
-
-			// Log.v(Constant.TAG, "MyStarCall response " + response);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					JSONArray jsonArrayStars = jsonObject.getJSONArray("stars");
-					arrEntryPojosChild.clear();
-					for (int j = 0; j < jsonArrayStars.length(); j++) {
-
-						JSONObject jsonObjStar = jsonArrayStars.getJSONObject(j);
-
-						StarPojo tempPojo = new StarPojo();
-						tempPojo.setStarID(jsonObjStar.getString("starId"));
-						tempPojo.setStarName(jsonObjStar.getString("starName"));
-						tempPojo.setProfileImage(jsonObjStar.getString("profileImage"));
-						tempPojo.setProfileCover(jsonObjStar.getString("profileCover"));
-						tempPojo.setStarredDate(jsonObjStar.getString("starredDate"));
-						tempPojo.setRank(jsonObjStar.getString("rank"));
-						tempPojo.setStats(jsonObjStar.getString("stat"));
-						arrEntryPojosChild.add(tempPojo);
-					}
-
-					if (isRefresh) {
-						mFirstVisibleItem = 0;
-						runOnUiThread(new Runnable() {
-							public void run() {
-								listUser.onRefreshComplete();
-							}
-						});
-
-						isRefresh = false;
-						arrStarPojos.clear();
-						arrStarPojos.addAll(arrEntryPojosChild);
-
-					} else {
-						if (arrStarPojos != null && arrStarPojos.size() > 0) {
-							mFirstVisibleItem = arrStarPojos.size();
-							arrStarPojos.addAll(arrEntryPojosChild);
-
-						} else {
-							mFirstVisibleItem = 0;
-							arrStarPojos.clear();
-							arrStarPojos.addAll(arrEntryPojosChild);
-						}
-					}
-					
-					if(jsonObject.has("next")){
-						String next=jsonObject.getString("next");
-						if(next.length()>0){
-							isNextPageAvail=true;
-						}
-					}
-					else{
-						isNextPageAvail=false;
-					}
-
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerMyStar.sendEmptyMessage(0);
-					} else {
-						handlerMyStar.sendEmptyMessage(1);
-					}
-					
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerMyStar.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerMyStar.sendEmptyMessage(0);
-			}
+//			String[] name = {"user", "page"};
+//			String[] value = {UserID,String.valueOf(PageNo)};
+//
+//			String response = JSONParser.postRequest(Constant.SERVER_URL + Constant.GET_FOLLOWING ,name,value, preferences.getString("token", null));
+//
+//			// Log.v(Constant.TAG, "MyStarCall response " + response);
+//
+//			if (response != null) {
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						sErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					JSONArray jsonArrayStars = jsonObject.getJSONArray("stars");
+//					arrEntryPojosChild.clear();
+//					for (int j = 0; j < jsonArrayStars.length(); j++) {
+//
+//						JSONObject jsonObjStar = jsonArrayStars.getJSONObject(j);
+//
+//						StarPojo tempPojo = new StarPojo();
+//						tempPojo.setStarID(jsonObjStar.getString("starId"));
+//						tempPojo.setStarName(jsonObjStar.getString("starName"));
+//						tempPojo.setProfileImage(jsonObjStar.getString("profileImage"));
+//						tempPojo.setProfileCover(jsonObjStar.getString("profileCover"));
+//						tempPojo.setStarredDate(jsonObjStar.getString("starredDate"));
+//						tempPojo.setRank(jsonObjStar.getString("rank"));
+//						tempPojo.setStats(jsonObjStar.getString("stat"));
+//						arrEntryPojosChild.add(tempPojo);
+//					}
+//
+//					if (isRefresh) {
+//						mFirstVisibleItem = 0;
+//						runOnUiThread(new Runnable() {
+//							public void run() {
+//								listUser.onRefreshComplete();
+//							}
+//						});
+//
+//						isRefresh = false;
+//						arrStarPojos.clear();
+//						arrStarPojos.addAll(arrEntryPojosChild);
+//
+//					} else {
+//						if (arrStarPojos != null && arrStarPojos.size() > 0) {
+//							mFirstVisibleItem = arrStarPojos.size();
+//							arrStarPojos.addAll(arrEntryPojosChild);
+//
+//						} else {
+//							mFirstVisibleItem = 0;
+//							arrStarPojos.clear();
+//							arrStarPojos.addAll(arrEntryPojosChild);
+//						}
+//					}
+//
+//					if(jsonObject.has("next")){
+//						String next=jsonObject.getString("next");
+//						if(next.length()>0){
+//							isNextPageAvail=true;
+//						}
+//					}
+//					else{
+//						isNextPageAvail=false;
+//					}
+//
+//
+//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
+//						handlerMyStar.sendEmptyMessage(0);
+//					} else {
+//						handlerMyStar.sendEmptyMessage(1);
+//					}
+//
+//
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//					e.printStackTrace();
+//					handlerMyStar.sendEmptyMessage(0);
+//				}
+//
+//			} else {
+//
+//				handlerMyStar.sendEmptyMessage(0);
+//			}
 
 		}
 	}
@@ -704,7 +589,7 @@ public class TalentPoolActivity extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
-			Utility.HideDialog(mContext);
+			Utility.HideDialog(TalentPoolActivity.this);
 			listUser.onRefreshComplete();
 			isWebCall = false;
 			if (msg.what == 1) {
@@ -730,36 +615,36 @@ public class TalentPoolActivity extends Activity {
 			String[] name = { "star" };
 			String[] value = { UserID };
 
-			String response = JSONParser.deleteRequest(Constant.SERVER_URL + Constant.DELETE_STAR + UserID, name, value, preferences.getString("token", null));
-
-			//			Log.v(Constant.TAG, "DeleteStarCall response " + response + " UserID " + UserID);
-
-			if (response != null) {
-
-				try {
-
-					JSONObject jsonObject = new JSONObject(response);
-
-					if (jsonObject.has("error")) {
-						sErrorMessage = jsonObject.getString("error");
-					}
-
-					if (sErrorMessage != null && !sErrorMessage.equals("")) {
-						handlerDeleteStar.sendEmptyMessage(0);
-					} else {
-						handlerDeleteStar.sendEmptyMessage(1);
-					}
-
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					handlerDeleteStar.sendEmptyMessage(0);
-				}
-
-			} else {
-
-				handlerDeleteStar.sendEmptyMessage(0);
-			}
+//			String response = JSONParser.deleteRequest(Constant.SERVER_URL + Constant.DELETE_STAR + UserID, name, value, preferences.getString("token", null));
+//
+//			//			Log.v(Constant.TAG, "DeleteStarCall response " + response + " UserID " + UserID);
+//
+//			if (response != null) {
+//
+//				try {
+//
+//					JSONObject jsonObject = new JSONObject(response);
+//
+//					if (jsonObject.has("error")) {
+//						sErrorMessage = jsonObject.getString("error");
+//					}
+//
+//					if (sErrorMessage != null && !sErrorMessage.equals("")) {
+//						handlerDeleteStar.sendEmptyMessage(0);
+//					} else {
+//						handlerDeleteStar.sendEmptyMessage(1);
+//					}
+//
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//					e.printStackTrace();
+//					handlerDeleteStar.sendEmptyMessage(0);
+//				}
+//
+//			} else {
+//
+//				handlerDeleteStar.sendEmptyMessage(0);
+//			}
 
 		}
 	}
@@ -774,7 +659,7 @@ public class TalentPoolActivity extends Activity {
 
 				Intent intent = new Intent("star_removed");
 				intent.putExtra("UserID", arrSelectionStarID.get(0));
-				LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+				LocalBroadcastManager.getInstance(TalentPoolActivity.this).sendBroadcast(intent);
 
 				int tempIndex = -1;
 
@@ -789,13 +674,13 @@ public class TalentPoolActivity extends Activity {
 				arrSelectionStarID.remove(0);
 
 				if (arrSelectionStarID.size() == 0) {
-					Utility.HideDialog(mContext);
+					Utility.HideDialog(TalentPoolActivity.this);
 				} else {
 					new DeleteStarCall(arrSelectionStarID.get(0)).start();
 				}
 
 			} else {
-				Utility.HideDialog(mContext);
+				Utility.HideDialog(TalentPoolActivity.this);
 			}
 		}
 	};
