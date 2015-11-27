@@ -5,7 +5,6 @@ import java.util.TimerTask;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -15,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobstar.R;
+import com.mobstar.api.new_api_model.EntryP;
 import com.mobstar.custom.CustomTextviewBold;
 import com.mobstar.custom.RoundedTransformation;
-import com.mobstar.pojo.EntryPojo;
 import com.mobstar.utils.Constant;
 import com.mobstar.utils.JSONParser;
 import com.mobstar.utils.Utility;
@@ -25,8 +24,7 @@ import com.squareup.picasso.Picasso;
 
 public class ReportActivity extends Activity implements OnClickListener {
 
-	private Context mContext;
-	private EntryPojo entryPojo;
+	private EntryP entryPojo;
 	private TextView textUserName, textTime, textDescription;
 	private ImageView imgUserPic;
 	private CustomTextviewBold btnInAppropriateImage, btnInAppropriateLanguage, btnSpam, btnOthers;
@@ -37,56 +35,63 @@ public class ReportActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_report);
-
-		mContext = ReportActivity.this;
-
-		entryPojo = (EntryPojo) getIntent().getSerializableExtra("entry");
+		entryPojo = (EntryP) getIntent().getSerializableExtra("entry");
 
 		preferences = getSharedPreferences("mobstar_pref", Activity.MODE_PRIVATE);
-
-		InitControls();
+		findViews();
+		setListeners();
+		setupControls();
 
 		Utility.SendDataToGA("Report Screen", ReportActivity.this);
 	}
 
-	void InitControls() {
-		btnClose = (ImageButton) findViewById(R.id.btnClose);
-		btnClose.setOnClickListener(this);
-		textUserName = (TextView) findViewById(R.id.textUserName);
-		textTime = (TextView) findViewById(R.id.textTime);
-		textDescription = (TextView) findViewById(R.id.textDescription);
+	private void findViews(){
+		btnClose                 = (ImageButton) findViewById(R.id.btnClose);
+		textUserName             = (TextView) findViewById(R.id.textUserName);
+		textTime                 = (TextView) findViewById(R.id.textTime);
+		textDescription          = (TextView) findViewById(R.id.textDescription);
+		btnInAppropriateImage    = (CustomTextviewBold) findViewById(R.id.btnInAppropriateImage);
+		btnInAppropriateLanguage = (CustomTextviewBold) findViewById(R.id.btnInAppropriateLanguage);
+		btnSpam                  = (CustomTextviewBold) findViewById(R.id.btnSpam);
+		btnOthers                = (CustomTextviewBold) findViewById(R.id.btnOthers);
+		imgUserPic               = (ImageView) findViewById(R.id.imgUserPic);
 
-		if(entryPojo.getName()!=null && entryPojo.getName().length()>0){
-			textUserName.setText(entryPojo.getName());
+	}
+
+	private void setListeners(){
+		btnClose.setOnClickListener(this);
+		btnInAppropriateImage.setOnClickListener(this);
+		btnInAppropriateLanguage.setOnClickListener(this);
+		btnSpam.setOnClickListener(this);
+		btnOthers.setOnClickListener(this);
+	}
+
+	private void setupControls() {
+
+		if(entryPojo.getUser().getDisplayName() != null && entryPojo.getUser().getDisplayName().length() > 0){
+			textUserName.setText(entryPojo.getUser().getDisplayName());
 		}
-		else if(entryPojo.getUserName()!=null && entryPojo.getUserName().length()>0){
-			textUserName.setText(entryPojo.getUserName());
+		else if(entryPojo.getUser().getFullName()!=null && entryPojo.getUser().getFullName().length()>0){
+			textUserName.setText(entryPojo.getUser().getFullName());
 		}
 		
-		textDescription.setText(Utility.unescape_perl_string(entryPojo.getDescription()));
-		textTime.setText(entryPojo.getCreated());
+		textDescription.setText(Utility.unescape_perl_string(entryPojo.getEntry().getName()));
+		textTime.setText(entryPojo.getEntry().getCreatedAgo());
 
-		btnInAppropriateImage = (CustomTextviewBold) findViewById(R.id.btnInAppropriateImage);
-		btnInAppropriateImage.setOnClickListener(this);
-
-		btnInAppropriateLanguage = (CustomTextviewBold) findViewById(R.id.btnInAppropriateLanguage);
-		btnInAppropriateLanguage.setOnClickListener(this);
-
-		btnSpam = (CustomTextviewBold) findViewById(R.id.btnSpam);
-		btnSpam.setOnClickListener(this);
-
-		btnOthers = (CustomTextviewBold) findViewById(R.id.btnOthers);
-		btnOthers.setOnClickListener(this);
-
-		imgUserPic = (ImageView) findViewById(R.id.imgUserPic);
-
-		if (entryPojo.getProfileImage().equals("")) {
+		if (entryPojo.getUser().getProfileImage().equals("")) {
 			imgUserPic.setImageResource(R.drawable.ic_pic_small);
 		} else {
 			imgUserPic.setImageResource(R.drawable.ic_pic_small);
 
-			Picasso.with(mContext).load(entryPojo.getProfileImage()).resize(Utility.dpToPx(mContext, 45), Utility.dpToPx(mContext, 45)).centerCrop()
-					.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).transform(new RoundedTransformation(Utility.dpToPx(mContext, 45), 0)).into(imgUserPic);
+			Picasso
+					.with(this)
+					.load(entryPojo.getUser().getProfileImage())
+					.resize(Utility.dpToPx(this, 45), Utility.dpToPx(this, 45))
+					.centerCrop()
+					.placeholder(R.drawable.ic_pic_small)
+					.error(R.drawable.ic_pic_small)
+					.transform(new RoundedTransformation(Utility.dpToPx(this, 45), 0))
+					.into(imgUserPic);
 
 		}
 
@@ -94,21 +99,27 @@ public class ReportActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		if (v.equals(btnInAppropriateImage)) {
-			OpenReportedDialog();
-			new ReportCall(entryPojo.getID(), "inappropriate imagery").start();
-		} else if (v.equals(btnInAppropriateLanguage)) {
-			OpenReportedDialog();
-			new ReportCall(entryPojo.getID(), "inappropriate language").start();
-		} else if (v.equals(btnSpam)) {
-			OpenReportedDialog();
-			new ReportCall(entryPojo.getID(), "spam").start();
-		} else if (v.equals(btnOthers)) {
-			OpenReportedDialog();
-			new ReportCall(entryPojo.getID(), "other").start();
-		}else if (v.equals(btnClose)){
-			onBackPressed();
+		switch (v.getId()){
+			case R.id.btnInAppropriateImage:
+				OpenReportedDialog();
+				new ReportCall(entryPojo.getEntry().getId(), "inappropriate imagery").start();
+				break;
+			case R.id.btnInAppropriateLanguage:
+				OpenReportedDialog();
+				new ReportCall(entryPojo.getEntry().getId(), "inappropriate language").start();
+				break;
+			case R.id.btnSpam:
+				OpenReportedDialog();
+				new ReportCall(entryPojo.getEntry().getId(), "spam").start();
+				break;
+			case R.id.btnOthers:
+				OpenReportedDialog();
+				new ReportCall(entryPojo.getEntry().getId(), "other").start();
+				break;
+			case R.id.btnClose:
+				onBackPressed();
+				break;
+
 		}
 	}
 
@@ -123,7 +134,6 @@ public class ReportActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 
 				dialog.dismiss();
 
@@ -131,7 +141,6 @@ public class ReportActivity extends Activity implements OnClickListener {
 
 					@Override
 					public void run() {
-						// TODO Auto-generated method stub
 						onBackPressed();
 					}
 				});

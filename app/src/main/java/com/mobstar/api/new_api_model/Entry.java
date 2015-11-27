@@ -5,6 +5,8 @@ import com.mobstar.utils.TimeUtility;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by lipcha on 20.11.15.
@@ -68,10 +70,6 @@ public class Entry implements Serializable {
         return language;
     }
 
-    public String getTagline() {
-        return tagline;
-    }
-
     public int getUpVotes() {
         return upVotes;
     }
@@ -117,7 +115,7 @@ public class Entry implements Serializable {
     }
 
     public ArrayList<String> getTags(){
-        return new ArrayList<>();
+        return new ArrayList<String>(Arrays.asList(tagline.split(",")));
     }
 
 

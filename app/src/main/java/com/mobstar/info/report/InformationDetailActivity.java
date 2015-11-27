@@ -18,9 +18,9 @@ import com.mobstar.utils.Utility;
 import com.squareup.picasso.Picasso;
 import com.tokenautocomplete.TokenCompleteTextView.TokenClickStyle;
 
-public class InformationDetailActivity extends Activity {
+public class InformationDetailActivity extends Activity implements OnClickListener {
 
-	private SharedPreferences preferences;
+
 	private TextView textInformation;
 	private EntryP entryPojo;
 	private TextView textUserName, textTime, textDescription;
@@ -37,6 +37,7 @@ public class InformationDetailActivity extends Activity {
 		setContentView(R.layout.activity_information_detail);
 		getBundleExtra();
 		findViews();
+		setListeners();
 		initControls();
 		Utility.SendDataToGA("InformationDetail Screen", InformationDetailActivity.this);
 	}
@@ -59,6 +60,21 @@ public class InformationDetailActivity extends Activity {
 		textCategoryName  = (TextView) findViewById(R.id.textCategoryName);
 		textLanguage      = (TextView) findViewById(R.id.textLanguage);
 		textTags          = (TagView) findViewById(R.id.textTags);
+		textInformation   = (TextView) findViewById(R.id.textInformation);
+		imgUserPic        = (ImageView) findViewById(R.id.imgUserPic);
+	}
+
+	private void setListeners(){
+		textInformation.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.textInformation:
+				onBackPressed();
+				break;
+		}
 	}
 
 	private void initControls() {
@@ -89,18 +105,6 @@ public class InformationDetailActivity extends Activity {
 		textCategoryName.setText(Long.toString(entryPojo.getEntry().getCategiryId()));
 		textLanguage.setText(entryPojo.getEntry().getLanguage().toUpperCase());
 
-		textInformation = (TextView) findViewById(R.id.textInformation);
-		textInformation.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				onBackPressed();
-			}
-		});
-
-		imgUserPic = (ImageView) findViewById(R.id.imgUserPic);
-
 		if (entryPojo.getUser().getProfileImage().equals("")) {
 			imgUserPic.setImageResource(R.drawable.ic_pic_small);
 		} else {
@@ -108,23 +112,6 @@ public class InformationDetailActivity extends Activity {
 
 			Picasso.with(this).load(entryPojo.getUser().getProfileImage()).resize(Utility.dpToPx(this, 45), Utility.dpToPx(this, 45)).centerCrop()
 					.placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).into(imgUserPic);
-
-			// Ion.with(mContext).load(entryPojo.getProfileImage()).withBitmap().placeholder(R.drawable.ic_pic_small).error(R.drawable.ic_pic_small).resize(Utility.dpToPx(mContext,
-			// 45), Utility.dpToPx(mContext,
-			// 45)).centerCrop().asBitmap().setCallback(new
-			// FutureCallback<Bitmap>() {
-			//
-			// @Override
-			// public void onCompleted(Exception exception, Bitmap bitmap) {
-			// // TODO Auto-generated method stub
-			// if (exception == null) {
-			// imgUserPic.setImageBitmap(bitmap);
-			// } else {
-			// // Log.v(Constant.TAG, "Exception " +
-			// // exception.toString());
-			// }
-			// }
-			// });
 		}
 
 		arrayTags = entryPojo.getEntry().getTags();
@@ -132,5 +119,4 @@ public class InformationDetailActivity extends Activity {
 			textTags.addObject(arrayTags.get(i).toUpperCase());
 		}
 	}
-
 }
