@@ -38,6 +38,7 @@ public class ApiConstant {
     public static final String USER_FOLLOW            = "user/followTeam";
     public static final String FOLLOW                 = "user/follow/";
     public static final String UNFOLLOW               = "user/unfollow/";
+    public static final String USER_STARS             = "user/stars";
 
 
     //  NOTIFICATION

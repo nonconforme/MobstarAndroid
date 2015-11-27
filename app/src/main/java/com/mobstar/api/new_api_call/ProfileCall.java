@@ -47,6 +47,7 @@ public class ProfileCall {
     public static final void getUserStars(final Context context, final int page, final ConnectCallback<StarsResponse> connectCallback){
         final HashMap<String, String> params = new HashMap<>();
         params.put("page", Integer.toString(page));
+        RestClient.getInstance(context).getRequest(USER_STARS, null, connectCallback);
 
     }
 
